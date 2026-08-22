@@ -79,6 +79,51 @@ src/
 6. Server-only modules carry `import "server-only"`. Secrets, FeelStack private
    config and HMAC helpers must never enter a client bundle.
 
+## 1b. Dead-code audit (2026-08-22)
+
+Two levels were checked, because passing one says nothing about the other.
+
+**Module level.** A reachability walk from every `src/app/**` entry point plus
+`src/proxy.ts`: 173 modules, 171 reachable, **0 import cycles**. The two
+unreachable modules (`lib/media/image-manifest.ts`, `lib/security/booking-allowlist.ts`)
+are not dead — they are consumed by CI tests that enforce invariants
+(`tests/unit/image-usage.spec.ts`, `tests/security/booking-allowlist.spec.ts`).
+
+**Export level.** Module reachability does not catch an unused export inside a
+live module, so exports were swept separately. Getting this right took three
+attempts and both failure modes are worth recording, because a naive sweep is
+confidently wrong in both directions:
+
+| Attempt | Bug | Effect |
+|---|---|---|
+| 1 | skipped every line starting with `export` | hid uses inside *exported function signatures* — reported 27, inflated |
+| 2 | matched re-export blocks only when `export` began the line | missed **multi-line** `export { … }` blocks, so a forwarded symbol counted as a use — reported 15, undercounted |
+| 3 | comments stripped, template literals **kept**, multi-line re-export blocks masked | 12 — matches manual confirmation |
+
+Two traps to avoid if this is ever re-run. Stripping template literals produces
+false positives: `fontVariables` consumes `fraunces`/`plexSans`/`plexSansArabic`/
+`plexMono` inside a backtick literal, and `localePath` and `currency` are used
+the same way. Counting comments produces false negatives: `resolveContent` is
+named in its own docstring, which is enough to hide it. **Neither pass alone is
+trustworthy — confirm every hit by eye.**
+
+Five dead exports introduced or relocated by the refactor were removed
+(`navRoutes`, `sitemapRoutes`, `indexableRoutes`, `canonicalUrl`,
+`getAestheticsDoctors`). The remainder are pre-existing and deliberately left
+for the repository owner, split into two kinds:
+
+- **Genuinely unreferenced code** — `isFeatureEnabled`, `SiteConfig`,
+  `getManifestEntry`, `FeelStackEntityType`, `FeelstackWebhookBody`,
+  `ConsultationRequestValues`, `doctorUrl`, `doctorsForService`, and
+  `resolveContent` (a documented legacy shim superseded by the
+  `FeelStackResult` contract).
+- **NEEDS_REVIEW, not dead** — `aestheticsHours` (the real aesthetics
+  schedule), `categoryTaglines` (five bilingual catalogue taglines) and
+  `productBrands` (the SkinMedica brand record). These are *approved, sourced,
+  translated content* that happens to have no current consumer. Deleting
+  sourced facts to satisfy a reachability check is the wrong trade on a medical
+  site; wiring them up or retiring them is a content decision, not a cleanup.
+
 ## 2. Rendering model
 
 Almost every route is **statically generated** (`generateStaticParams` over the
