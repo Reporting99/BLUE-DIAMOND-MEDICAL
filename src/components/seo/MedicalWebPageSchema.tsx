@@ -4,7 +4,7 @@ import type { Locale } from "@/i18n/config";
 /**
  * `MedicalWebPage` JSON-LD for individual medical-service and
  * aesthetic-treatment pages — the gap tracked as "not yet implemented" in
- * docs/SEO_SCHEMA_SUMMARY.md, closed in this remediation pass.
+ * docs/ARCHITECTURE.md, closed in this remediation pass.
  *
  * Deliberately narrow: only `name`, `description`, `url`, and a reference
  * back to the one clinic `@id` already declared on the homepage

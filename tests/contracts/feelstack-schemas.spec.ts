@@ -24,7 +24,7 @@ import type { LegalPageContent } from "../../src/types/legal";
  * FeelStack contract tests — brief §18 "FeelStack contracts": valid page
  * response, valid route response, malformed JSON, missing required
  * fields, invalid block type (n/a — no generic block model, see
- * docs/DFEELINGS_TO_BLUE_ARCHITECTURE_MAP.md §3), invalid locale.
+ * docs/ARCHITECTURE.md), invalid locale.
  */
 test.describe("FeelStack schemas", () => {
   test("accepts a valid resolve response", () => {

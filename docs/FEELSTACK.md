@@ -1,10 +1,7 @@
 # FeelStack Integration
 
-Consolidates what were five separate documents (`FEELSTACK_CONTRACTS`,
-`FEELSTACK_MIGRATION_MANIFEST`, `CACHE_INVALIDATION_MATRIX`,
-`ERROR_HANDLING_REPORT`, `WEBHOOK_SECURITY_REPORT`). Code is the source of
-truth; this describes the contract those files implement and the decisions
-behind it.
+The CMS contract, its failure semantics, and the decisions behind them. Code is
+the source of truth; this describes what it implements and why.
 
 **Current state: nothing is live.** `FEELSTACK_API_URL` and
 `FEELSTACK_REVALIDATE_SECRET` are unset, `FEELSTACK_CONTENT_MODE` defaults to
@@ -27,8 +24,8 @@ header would leak a credential to no purpose.
 **Not verified against a live instance.** No live endpoint or admin API
 documentation has been available in any session so far. These shapes are
 carried forward from this repo's own adapter rather than guessed; see
-`DFEELINGS_TO_BLUE_ARCHITECTURE_MAP.md` §0/§2 for why the recovered Dfeelings
-source could not be used to confirm them (it calls a different, older surface).
+`ARCHITECTURE.md` §3 for why the Dfeelings source could not be used to confirm
+them (it calls a different, older surface).
 
 ## 2. Content modes
 
@@ -134,7 +131,7 @@ Registry: `src/lib/feelstack/cache-tags.ts`. Rules:
 a matching invalidation entry, and rejects any rule naming a tag that does not
 exist.
 
-Every tag has all three of the things brief §17 requires:
+Every tag has all three of the things a working invalidation model requires:
 
 - **Producer** — `entityCacheTags()` builds the detail + index + page tag set,
   and `resolveEntity` passes it to `fetch(..., { next: { tags } })`.

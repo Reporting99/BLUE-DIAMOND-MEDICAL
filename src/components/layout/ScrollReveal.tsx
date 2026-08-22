@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 
 /**
- * One global scroll-reveal observer — docs/UI_UX_FOUNDATION.md §9-10.
+ * One global scroll-reveal observer — docs/ARCHITECTURE.md-10.
  * Deliberately not a wrapper component or a Framer Motion tree: this is a
  * single Client Component mounted once in the root layout, using one
  * IntersectionObserver for the whole page. Every Server Component stays a

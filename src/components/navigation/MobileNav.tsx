@@ -27,7 +27,7 @@ import { getBookingUrl } from "@/config/booking";
 /**
  * Full-screen drawer opening from the trailing edge, focus-trapped and
  * Escape-closable via shadcn Sheet (Base UI Dialog underneath) —
- * docs/UI_UX_FOUNDATION.md §9. Mirrors the desktop order exactly (brief
+ * docs/ARCHITECTURE.md Mirrors the desktop order exactly (brief
  * §3/§12): Home, Services, Treatments (accordion), Medical Aesthetics, Our
  * Team, About, Contact. "Book Appointment" stays outside the collapsible
  * groups as a persistent, prominent action, never buried in an accordion.

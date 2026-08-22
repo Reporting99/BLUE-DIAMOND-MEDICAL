@@ -15,7 +15,7 @@ html {
 
 /*
  * Blue Diamond Medical design tokens.
- * Source of truth: docs/UI_UX_FOUNDATION.md
+ * Source of truth: docs/ARCHITECTURE.md
  * Three-layer architecture: primitive -> semantic -> component.
  * No raw hex may appear in .tsx files — everything routes through the
  * semantic tokens below.
@@ -55,7 +55,7 @@ html {
 
   --surface: #f5f8fa;
   --surface-muted: #eef3f6;
-  /* Homepage surface rhythm — docs/UI_UX_FOUNDATION.md §15.1. The
+  /* Homepage surface rhythm — docs/ARCHITECTURE.md The
      alternating surfaces that keep the page from reading as one long
      white scroll: soft blue washes, a deep-blue feature band, and a dark
      charcoal-blue footer, all derived from the same brand primitives. */
@@ -198,7 +198,7 @@ html {
   --spacing-section: var(--space-section);
   --spacing-section-mobile: var(--space-section-mobile);
 
-  /* Type scale — docs/UI_UX_FOUNDATION.md §3.3/§3.4. Mobile-first values;
+  /* Type scale — docs/ARCHITECTURE.md Mobile-first values;
      display sizes are stepped up again at lg via responsive classes in
      components (clamp is not used directly here so the scale stays
      legible in Tailwind class form: text-display-1 lg:text-display-1-lg). */
@@ -308,7 +308,7 @@ html {
 }
 
 @layer utilities {
-  /* Section rhythm helper — see docs/UI_UX_FOUNDATION.md §4 */
+  /* Section rhythm helper — see docs/ARCHITECTURE.md */
   .section-y {
     padding-block: var(--space-section-mobile);
   }
@@ -318,7 +318,7 @@ html {
     }
   }
 
-  /* Signature "Facet Line" motif — docs/UI_UX_FOUNDATION.md §17.
+  /* Signature "Facet Line" motif — docs/ARCHITECTURE.md
      One shallow-angle clipped corner. Used sparingly; never on every element. */
   .facet-corner {
     clip-path: polygon(0 0, 100% 0, 100% 100%, 12% 100%, 0 88%);
@@ -355,7 +355,7 @@ html {
   }
 
   /*
-   * Global scroll-reveal system — docs/UI_UX_FOUNDATION.md §9-10.
+   * Global scroll-reveal system — docs/ARCHITECTURE.md-10.
    * Progressive enhancement: [data-reveal] elements are fully visible by
    * default (server-rendered, no JS required, nothing hidden from
    * crawlers). Only once src/components/layout/ScrollReveal.tsx mounts

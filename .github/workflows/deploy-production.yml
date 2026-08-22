@@ -43,7 +43,7 @@ jobs:
       # ImageKit endpoint is build-time (NEXT_PUBLIC_*, inlined into the
       # bundle). Unset is a supported state: next.config.ts keeps
       # remotePatterns empty and every image renders through the existing
-      # fallback -- see docs/IMAGEKIT_SETUP.md.
+      # fallback -- see docs/CONTENT_MODEL.md.
       NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT: ${{ vars.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT }}
 
     steps:

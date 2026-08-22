@@ -12,7 +12,7 @@ import { z } from "zod";
  * pass, `src/lib/feelstack/client.ts`): `/public/v1/sites/:siteKey/resolve`
  * and `/public/v1/sites/:siteKey/routes`. These are the two endpoints the
  * brief names as verified. No live FeelStack API reference was available
- * this session (see docs/DFEELINGS_TO_BLUE_ARCHITECTURE_MAP.md §4) — the
+ * this session (see docs/ARCHITECTURE.md) — the
  * recovered Dfeelings source (C:\Users\user\Downloads\dfeelings) calls a
  * *different*, older FeelStack surface (`/posts/slug/:slug`,
  * `/case-studies/published`, etc.) with no Zod validation at all, so it
@@ -402,4 +402,3 @@ export const feelstackWebhookBodySchema = z.union([
   // reviewable changes", not a breaking change to an in-flight contract.
   z.object({ path: z.string().min(1).max(2048) }),
 ]);
-export type FeelstackWebhookBody = z.infer<typeof feelstackWebhookBodySchema>;

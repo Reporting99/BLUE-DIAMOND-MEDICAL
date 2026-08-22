@@ -15,7 +15,7 @@ import { getRouteMetadata } from "@/lib/seo/metadata";
  * photography has been supplied, and the brief explicitly forbids
  * fabricating clinical results imagery. Route/template exist so real,
  * consented photography can be added later without new code — see
- * docs/IMAGE_REPLACEMENT_MANIFEST.md.
+ * docs/CONTENT_MODEL.md.
  */
 export async function generateMetadata({
   params,

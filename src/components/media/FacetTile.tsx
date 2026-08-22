@@ -1,7 +1,7 @@
 /**
  * Code-generated abstract placeholder used wherever a required image is
  * missing or not yet approved — most importantly doctor portraits (never a
- * stock photo, generated face, or silhouette; see docs/UI_UX_FOUNDATION.md §18).
+ * stock photo, generated face, or silhouette; see docs/ARCHITECTURE.md).
  *
  * Built from the signature "Facet Line" motif: 2-3 flat brand-blue planes
  * meeting at diagonal seams, echoing the logo's facet construction without

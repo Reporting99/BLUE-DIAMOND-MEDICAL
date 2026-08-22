@@ -8,7 +8,7 @@ import type { HealthHubArticle } from "@/types/article";
  * src/app/[locale]/health-hub/[articleId]/page.tsx) so publishing the
  * first article is a matter of adding one typed entry here — reviewed and
  * approved first, per brief §21 ("Do not publish machine-generated
- * medical claims without review"). See docs/MISSING_CONTENT_REPORT.md.
+ * medical claims without review"). See docs/CONTENT_MODEL.md.
  */
 export const healthHubArticles: HealthHubArticle[] = [];
 

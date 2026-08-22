@@ -30,6 +30,17 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
+# No log or scratch file belongs in source. Anything a run produces is either
+# reproducible or not worth keeping; a committed log is a claim about a build
+# that no longer exists.
+*.log
+*.tmp
+*.bak
+*.old
+*.orig
+*.zip
+*.trace.zip
+
 # env files (can opt-in for committing if needed)
 .env*
 !.env.example

@@ -4,7 +4,7 @@ import type { BeforeAfterPair } from "@/types/before-after";
  * No before/after pair is approved yet. The 15 candidate assets found in
  * the licensed image archive this pass are flagged for clinical/marketing
  * review before any of them can be added here — see
- * docs/IMAGEKIT_IMPORT_REPORT.md and docs/DATA_APPROVAL_BLOCKERS.md. Never
+ * docs/CONTENT_MODEL.md and docs/CONTENT_MODEL.md. Never
  * populate this array with an unreviewed or unconfirmed pairing — an
  * empty array here is what keeps `beforeAfterEnabled: false` honest.
  */

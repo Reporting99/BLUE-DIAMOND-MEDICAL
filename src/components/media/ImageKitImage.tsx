@@ -24,7 +24,7 @@ interface ImageKitImageProps {
 /**
  * Single entry point for every production image on the site. Page/section
  * components must never construct transformation URLs or reach for
- * next/image directly — see docs/UI_UX_FOUNDATION.md §8/§18. Renders
+ * next/image directly — see docs/ARCHITECTURE.md Renders
  * through the official @imagekit/next SDK's <Image> component (brief §8),
  * which wraps next/image and applies the ImageKit transformation pipeline.
  *

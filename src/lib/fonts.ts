@@ -1,6 +1,6 @@
 import { Fraunces, IBM_Plex_Sans, IBM_Plex_Sans_Arabic, IBM_Plex_Mono } from "next/font/google";
 
-// Type system — docs/UI_UX_FOUNDATION.md §3. Each face is subset to the
+// Type system — docs/ARCHITECTURE.md Each face is subset to the
 // script it's actually used for, avoiding unnecessary payload and layout
 // shift (next/font self-hosts + inlines size-adjust metrics automatically).
 export const fraunces = Fraunces({

@@ -8,7 +8,7 @@ import { otherLocale, type Locale } from "@/i18n/config";
 
 /**
  * Opens the equivalent translated page for the current route, not just a
- * naive /en/ -> /ar/ prefix swap — docs/UI_UX_FOUNDATION.md / brief §6.
+ * naive /en/ -> /ar/ prefix swap — docs/ARCHITECTURE.md / brief §6.
  * If no registered route matches the current path, falls back to the
  * other locale's homepage rather than guessing an unrelated page.
  */

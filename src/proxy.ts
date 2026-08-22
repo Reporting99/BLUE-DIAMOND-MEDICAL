@@ -12,7 +12,7 @@ import { isSiteLaunched, PRE_LAUNCH_ROBOTS_HEADER } from "@/config/launch";
  * pretty Arabic path to its canonical English-slug path internally, on
  * the same "ar" locale, so the browser's address bar keeps the Arabic URL
  * while Next's file-system router resolves it against the English folder
- * tree. See docs/EN_AR_ROUTE_MAP.md.
+ * tree. See docs/ARCHITECTURE.md.
  */
 const arabicToCanonicalPath = new Map(
   routes.filter((r) => r.path.ar !== r.path.en).map((r) => [r.path.ar, r.path.en]),

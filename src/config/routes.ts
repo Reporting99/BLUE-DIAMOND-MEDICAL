@@ -10,13 +10,13 @@ import { technologies } from "@/content/technologies";
 /**
  * Central bilingual route registry. Nav, breadcrumbs, hreflang, canonical
  * tags, and the sitemap all read from this single list — see
- * docs/EN_AR_ROUTE_MAP.md and docs/ROUTE_INVENTORY.md.
+ * docs/ARCHITECTURE.md and docs/ARCHITECTURE.md.
  *
  * This registry currently covers the routes actually implemented in this
  * build pass. Routes described in the master brief but not yet built
  * (individual treatment/concern/service pages, the Botox sub-pages, Health
  * Hub articles, shop, legal pages, etc.) are tracked as "planned" in
- * docs/ROUTE_INVENTORY.md and intentionally absent here — an unregistered
+ * docs/ARCHITECTURE.md and intentionally absent here — an unregistered
  * route cannot be linked from nav or the sitemap, which is what keeps the
  * brief's "never link to an empty page" rule enforceable by construction.
  */
@@ -465,10 +465,6 @@ export function localePath(id: string, locale: "en" | "ar"): string {
   const route = getRoute(id);
   if (!route) throw new Error(`Unknown route id: ${id}`);
   return route.path[locale];
-}
-
-export function navRoutes(): RouteEntry[] {
-  return routes.filter((r) => r.inNav);
 }
 
 /** Full locale-prefixed href for a route id, e.g. href("contact", "ar") -> "/ar/تواصل-معنا". */

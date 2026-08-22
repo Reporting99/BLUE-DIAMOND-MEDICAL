@@ -1,7 +1,6 @@
 # Deployment
 
-Consolidates `PRODUCTION_DEPLOYMENT`, `DEPLOYMENT_GUIDE`,
-`PRE_LAUNCH_INDEXING_GUARD` and `DNS_LEGACY_DOMAIN_GUIDE`.
+Release model, launch gate, redirect tables and cutover procedure.
 
 **Nothing has been deployed and no DNS exists.** This describes how a release
 works and what must be true before one happens; it does not authorize one.
@@ -141,8 +140,8 @@ link is enough for a crawler to try.
 
 1. **Provision ImageKit** — set `NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT`,
    `NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY`, `IMAGEKIT_PRIVATE_KEY`. Upload the
-   photography listed in `IMAGE_REPLACEMENT_MANIFEST.md`, then flip each
-   asset's `status` to `"approved"` in `src/content/media/image-manifest.ts`.
+   photography listed in `CONTENT_MODEL.md` §6, then flip each asset's
+   `status` to `"approved"` in `src/content/media/image-manifest.ts`.
 2. **Provision FeelStack** — see `FEELSTACK.md` §7. The adapter builds and
    typechecks without these set.
 3. **Wire a contact-form delivery provider** — set `CONTACT_DELIVERY_PROVIDER`
@@ -152,25 +151,70 @@ link is enough for a crawler to try.
 4. **Replace the recreated logo SVG** (`src/components/layout/Logo.tsx`) with
    the master vector file.
 5. **Run the full suite green**: `npm run validate` and `npx playwright test`.
-6. **Get sign-off** on `CONTENT_APPROVAL_MATRIX.md` and
-   `TRANSLATION_REVIEW_REPORT.md`. No page goes live with unreviewed medical
-   claims or unreviewed Arabic copy.
+6. **Get sign-off** on content provenance and the Arabic review status
+   (`CONTENT_MODEL.md` §2–3). No page goes live with unreviewed medical claims
+   or unreviewed Arabic copy.
 7. **Set `SITE_LAUNCHED=true`** as a deliberate, separate step (§3).
 8. **DNS cutover** (§5) — requires explicit approval.
 
 ## 5. DNS and the legacy domains
 
+Source of truth for redirects: `src/lib/seo/legacy-redirects.ts`, consumed by
+`src/proxy.ts`. All are direct (no chains), exact-match, and return 301.
+
 - **`bluediamondmedical.ca`** — becomes canonical. `src/proxy.ts` handles its
-  own legacy-URL 301s natively (see `REDIRECT_MAP.md`).
+  own legacy-URL 301s natively, including the bare-path locale prefix
+  (`/` → `/en/`, a genuine 301 because `defaultLocale` is a static constant, not
+  Accept-Language negotiation).
 - **`bluediamondmedicalaesthetics.ca`** — a separate legacy domain. This app
   cannot redirect requests it never receives, so retiring it needs either:
   1. pointing it at the same hosting and adding a host-aware branch to the
-     proxy plus the aesthetics redirect table in `legacyRedirects`; or
+     proxy plus the table below in `legacyRedirects`; or
   2. configuring redirects at the DNS/host/CDN level straight to
-     `https://bluediamondmedical.ca/en/...` per `REDIRECT_MAP.md`.
+     `https://bluediamondmedical.ca/en/...` per the table below.
 
   Option 2 is simpler to operate and keeps the proxy host-agnostic. Pursue
   option 1 only if one deploy must serve both domains directly.
+
+### bluediamondmedicalaesthetics.ca → bluediamondmedical.ca
+
+This table is **not** in code — it exists only here and must be configured at
+the host or CDN.
+
+| Old path | New path |
+|---|---|
+| `/` | `/en/aesthetics` |
+| `/treatments` | `/en/aesthetics/treatments` |
+| `/area-concern` | `/en/aesthetics/concerns` |
+| `/our-technologies` | `/en/aesthetics/technologies` |
+| `/our-team` | `/en/doctors` |
+| `/laser-hair-removal` | `/en/aesthetics/treatments/laser-hair-removal` |
+| `/laser-treatment-1` | `/en/aesthetics/treatments/laser-skin-treatments` |
+| `/radio-frequency` | `/en/aesthetics/treatments/radio-frequency` |
+| `/rf-micro-needeling` | `/en/aesthetics/treatments/rf-microneedling` |
+| `/ultra-treatment` | `/en/aesthetics/treatments/ultra` |
+| `/vitalia` | `/en/aesthetics/treatments/tempsure-vitalia` |
+| `/prp-therapy` | `/en/aesthetics/treatments/prp-skin-rejuvenation` |
+| `/acne-scar-removal` | `/en/aesthetics/concerns/acne-scars` |
+| `/rosacea-abatement` | `/en/aesthetics/concerns/rosacea-redness` |
+| `/dry-skin-remediation` | `/en/aesthetics/concerns/dry-skin` |
+| `/fineline-and-wrinkle` | `/en/aesthetics/concerns/fine-lines-wrinkles` |
+| `/non-invasive-skin` | `/en/aesthetics/concerns/skin-laxity` |
+| `/spider-vein` | `/en/aesthetics/concerns/spider-veins` |
+| `/sun-damage` | `/en/aesthetics/concerns/sun-damage-pigmentation` |
+| `/skin-revitalization` | `/en/aesthetics/concerns/skin-revitalization` |
+| `/razor-bumps` | `/en/aesthetics/concerns/razor-bumps` |
+| `/terms-and-conditions` | `/en/terms` |
+| `/privacy-policy` | `/en/privacy-policy` |
+| `/ols/products` | `/en/shop` |
+
+Notes: the legacy PRP page covered both hair and skin in one page and was split
+in two — this path lands on the skin-rejuvenation half, closer to the original's
+framing. `/vitalia` and `/ols/products` were found by a live sitemap crawl, not
+the source document; `/ols/products` is GoDaddy platform boilerplate with no
+unique editorial content. The two legal targets resolve to a 404 boundary until
+`legalPagesEnabled` is on — correct and deliberate, not a regression. Every
+other target is a live 200 page.
 
 ### Cutover order
 
@@ -178,8 +222,8 @@ link is enough for a crawler to try.
 2. Point `bluediamondmedical.ca` DNS at the host.
 3. Either configure the aesthetics domain's redirects, or leave it live until
    they are verified, to avoid a dead window.
-4. Verify every `REDIRECT_MAP.md` row with a real `curl -I` before
-   decommissioning the old sites.
+4. Verify every row above and every row in `legacy-redirects.ts` with a real
+   `curl -I` before decommissioning the old sites.
 5. Update Search Console / Bing Webmaster Tools with the canonical domain and
    submit `https://bluediamondmedical.ca/sitemap.xml`.
 
