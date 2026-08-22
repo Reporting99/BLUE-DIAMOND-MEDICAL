@@ -9,7 +9,8 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test:e2e": "playwright test",
-    "validate": "npm run typecheck && npm run lint && npm run build"
+    "validate:secrets": "node scripts/validate-no-secrets.mjs",
+    "validate": "npm run typecheck && npm run lint && npm run validate:secrets && npm run build"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",

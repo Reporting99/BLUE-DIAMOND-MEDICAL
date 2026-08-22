@@ -30,6 +30,9 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      - name: Secret scan
+        run: npm run validate:secrets
+
       - name: Build
         run: npm run build
         env:
