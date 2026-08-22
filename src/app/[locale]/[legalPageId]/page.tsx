@@ -5,6 +5,9 @@ import { features } from "@/config/features";
 import { getLegalPage } from "@/content/legal-pages";
 import { LegalPageTemplate } from "@/templates/LegalPageTemplate";
 import { getRouteMetadata } from "@/lib/seo/metadata";
+import { resolvePageContent, entityCacheTags } from "@/lib/feelstack/page-resolver";
+import { cacheTags } from "@/lib/feelstack/cache-tags";
+import { cmsLegalPageSchema } from "@/lib/feelstack/schemas";
 
 /**
  * Feature-flagged off (`legalPagesEnabled`) — see src/content/legal-pages.ts.
@@ -22,6 +25,34 @@ export function generateStaticParams() {
   return []; // nothing pre-rendered while disabled — see notFound() below
 }
 
+
+/**
+ * Hybrid FeelStack resolution for this entity type, following the reference
+ * pattern in medical/[serviceId]. In the default FEELSTACK_CONTENT_MODE=static
+ * this never touches the network: resolvePageContent goes straight to
+ * staticFallback(), so behaviour is unchanged from before this pass.
+ *
+ * The tags are what let the publish webhook invalidate this entry — see
+ * entityCacheTags() in page-resolver.ts.
+ */
+async function loadLegalPage(id: string, locale: Locale) {
+  const cmsPath = `/${id}`;
+  const resolution = await resolvePageContent({
+    path: cmsPath,
+    locale,
+    schema: cmsLegalPageSchema,
+    staticFallback: () => getLegalPage(id),
+    tags: entityCacheTags({
+      detail: cacheTags.legalPage,
+      index: cacheTags.legalPagesIndex,
+      locale,
+      id,
+      path: cmsPath,
+    }),
+  });
+  return resolution.source === "not-found" ? undefined : resolution.data;
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -30,7 +61,7 @@ export async function generateMetadata({
   if (!features.legalPagesEnabled) return {};
   const { locale: rawLocale, legalPageId } = await params;
   const locale: Locale = isLocale(rawLocale) ? rawLocale : "en";
-  const page = getLegalPage(legalPageId);
+  const page = await loadLegalPage(legalPageId, locale);
   if (!page) return {};
 
   return getRouteMetadata(`legal-${page.id}`, locale, {
@@ -47,7 +78,7 @@ export default async function LegalPage({
 
   const { locale: rawLocale, legalPageId } = await params;
   const locale: Locale = isLocale(rawLocale) ? rawLocale : "en";
-  const page = getLegalPage(legalPageId);
+  const page = await loadLegalPage(legalPageId, locale);
   if (!page || !page.body.en || !page.body.ar) notFound();
 
   return <LegalPageTemplate page={page} locale={locale} />;

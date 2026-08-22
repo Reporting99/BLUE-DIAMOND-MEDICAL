@@ -4,7 +4,21 @@ import {
   feelstackRoutesResponseSchema,
   cmsMedicalServiceSchema,
   feelstackWebhookBodySchema,
+  type CmsDoctor,
+  type CmsMedicalService,
+  type CmsAestheticTreatment,
+  type CmsAestheticConcern,
+  type CmsTechnology,
+  type CmsProduct,
+  type CmsHealthHubArticle,
+  type CmsLegalPage,
 } from "../../src/lib/feelstack/schemas";
+import type { Doctor } from "../../src/types/doctor";
+import type { MedicalServiceContent } from "../../src/types/medical-service";
+import type { AestheticTreatment, AestheticConcern, Technology } from "../../src/types/aesthetics";
+import type { Product } from "../../src/types/product";
+import type { HealthHubArticle } from "../../src/types/article";
+import type { LegalPageContent } from "../../src/types/legal";
 
 /**
  * FeelStack contract tests — brief §18 "FeelStack contracts": valid page
@@ -118,5 +132,56 @@ test.describe("FeelStack schemas", () => {
   test("webhook body schema rejects an unrecognized shape entirely", () => {
     const parsed = feelstackWebhookBodySchema.safeParse({ foo: "bar" });
     expect(parsed.success).toBe(false);
+  });
+});
+
+/**
+ * Compile-time contract: every CMS entity schema must `.transform()` into
+ * EXACTLY the local domain type its route falls back to.
+ *
+ * This is the property `resolvePageContent` depends on — it takes one type
+ * parameter `T` shared by the CMS branch and the `src/content/*.ts`
+ * `staticFallback`, so if a schema drifts from its domain type, hybrid mode
+ * stops type-checking at the call site. Asserting it here names the invariant
+ * explicitly instead of leaving it as an incidental consequence, and makes a
+ * drift fail in this file (with a clear message) rather than in seven pages.
+ *
+ * `tsc --noEmit` is the actual assertion; the runtime test body only exists so
+ * the file is exercised by the suite. It caught a real defect when written:
+ * cmsDoctorSchema used the site-wide bookingChannel enum, which is wider than
+ * `Doctor["bookingChannel"]`, and would have let the CMS return "walk-in" for
+ * a named physician.
+ */
+/**
+ * One-directional on purpose: the CMS result must be USABLE AS the domain type.
+ * Exact equality would be wrong — several schemas legitimately narrow a field
+ * (e.g. `sourceVerified: true` where the domain type says `boolean`, because a
+ * record only reaches "published" in FeelStack through the same editorial
+ * approval the local content traces to). Narrowing is safe; widening is the
+ * bug this guards against.
+ */
+type AssertAssignable<Cms, Domain> = [Cms] extends [Domain] ? true : never;
+
+const _doctorMatches: AssertAssignable<CmsDoctor, Doctor> = true;
+const _serviceMatches: AssertAssignable<CmsMedicalService, MedicalServiceContent> = true;
+const _treatmentMatches: AssertAssignable<CmsAestheticTreatment, AestheticTreatment> = true;
+const _concernMatches: AssertAssignable<CmsAestheticConcern, AestheticConcern> = true;
+const _technologyMatches: AssertAssignable<CmsTechnology, Technology> = true;
+const _productMatches: AssertAssignable<CmsProduct, Product> = true;
+const _articleMatches: AssertAssignable<CmsHealthHubArticle, HealthHubArticle> = true;
+const _legalMatches: AssertAssignable<CmsLegalPage, LegalPageContent> = true;
+
+test.describe("CMS schema <-> domain type parity", () => {
+  test("every entity schema transforms into its local domain type", () => {
+    expect([
+      _doctorMatches,
+      _serviceMatches,
+      _treatmentMatches,
+      _concernMatches,
+      _technologyMatches,
+      _productMatches,
+      _articleMatches,
+      _legalMatches,
+    ]).toEqual([true, true, true, true, true, true, true, true]);
   });
 });

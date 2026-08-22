@@ -5,6 +5,9 @@ import { features } from "@/config/features";
 import { getProduct, products } from "@/content/products";
 import { ProductTemplate } from "@/templates/ProductTemplate";
 import { getRouteMetadata } from "@/lib/seo/metadata";
+import { resolvePageContent, entityCacheTags } from "@/lib/feelstack/page-resolver";
+import { cacheTags } from "@/lib/feelstack/cache-tags";
+import { cmsProductSchema } from "@/lib/feelstack/schemas";
 
 /**
  * Statically generates params for every product/locale pair — 46 pages
@@ -26,6 +29,34 @@ export function generateStaticParams() {
  * answer-first overview, never a generic shop-wide description repeated
  * across all 23 pages.
  */
+
+/**
+ * Hybrid FeelStack resolution for this entity type, following the reference
+ * pattern in medical/[serviceId]. In the default FEELSTACK_CONTENT_MODE=static
+ * this never touches the network: resolvePageContent goes straight to
+ * staticFallback(), so behaviour is unchanged from before this pass.
+ *
+ * The tags are what let the publish webhook invalidate this entry — see
+ * entityCacheTags() in page-resolver.ts.
+ */
+async function loadProduct(id: string, locale: Locale) {
+  const cmsPath = `/shop/${id}`;
+  const resolution = await resolvePageContent({
+    path: cmsPath,
+    locale,
+    schema: cmsProductSchema,
+    staticFallback: () => getProduct(id),
+    tags: entityCacheTags({
+      detail: cacheTags.product,
+      index: cacheTags.productsIndex,
+      locale,
+      id,
+      path: cmsPath,
+    }),
+  });
+  return resolution.source === "not-found" ? undefined : resolution.data;
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -34,7 +65,7 @@ export async function generateMetadata({
   if (!features.shopEnabled) return {};
   const { locale: rawLocale, productId } = await params;
   const locale: Locale = isLocale(rawLocale) ? rawLocale : "en";
-  const product = getProduct(productId);
+  const product = await loadProduct(productId, locale);
   if (!product) return {};
 
   return getRouteMetadata(`shop-product-${product.id}`, locale, {
@@ -54,7 +85,7 @@ export default async function ProductPage({
 
   const { locale: rawLocale, productId } = await params;
   const locale: Locale = isLocale(rawLocale) ? rawLocale : "en";
-  const product = getProduct(productId);
+  const product = await loadProduct(productId, locale);
   if (!product) notFound();
 
   return <ProductTemplate product={product} locale={locale} />;
