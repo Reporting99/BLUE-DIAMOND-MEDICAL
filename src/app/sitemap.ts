@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { routes } from "@/lib/routing";
+import { hreflangAlternates, routes } from "@/lib/routing";
 import { siteConfig } from "@/config/site";
 import { features, type FeatureFlags } from "@/config/features";
 import { isSiteLaunched } from "@/config/launch";
@@ -50,13 +50,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     .filter((route) => !route.requiresFeature || features[route.requiresFeature as keyof FeatureFlags]);
 
   const localEntries = published.flatMap((route) => {
-    const enUrl = `${siteConfig.url}/en${route.path.en}`;
-    const arUrl = `${siteConfig.url}/ar${route.path.ar}`;
-    const languages = { "en-CA": enUrl, "ar-CA": arUrl };
+    // Same builder the page-level <link rel="alternate"> tags use, so the two
+    // hreflang surfaces cannot disagree. This is why the sitemap now carries
+    // x-default as well: it previously emitted only en-CA/ar-CA while
+    // getRouteMetadata emitted x-default too, which is exactly the kind of
+    // mismatch Search Console reports as an hreflang error.
+    const languages = hreflangAlternates(route);
 
     return [
-      { url: enUrl, alternates: { languages } },
-      { url: arUrl, alternates: { languages } },
+      { url: languages["en-CA"], alternates: { languages } },
+      { url: languages["ar-CA"], alternates: { languages } },
     ];
   });
 

@@ -7,7 +7,7 @@ import { isLocale, type Locale } from "@/i18n/config";
 import { getRouteMetadata } from "@/lib/seo/metadata";
 import { getRoute, href } from "@/lib/routing";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
-import { PageSchema } from "@/components/shared/schema/PageSchema";
+import { PageSchema } from "@/components/shared/schema";
 
 export async function generateMetadata({
   params,

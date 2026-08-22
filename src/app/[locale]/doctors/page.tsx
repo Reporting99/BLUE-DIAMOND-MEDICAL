@@ -8,7 +8,7 @@ import { getRoute } from "@/lib/routing";
 import { doctors } from "@/features/doctors";
 import { getRouteMetadata } from "@/lib/seo/metadata";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
-import { PageSchema } from "@/components/shared/schema/PageSchema";
+import { PageSchema } from "@/components/shared/schema";
 import { siteConfig } from "@/config/site";
 
 export async function generateMetadata({

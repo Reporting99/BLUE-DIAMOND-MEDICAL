@@ -15,7 +15,7 @@ const PAGE_DESCRIPTION = {
       ar: "علاجات تجميل طبي بإشراف طبي في بلو دايموند — الليزر، والترددات الراديوية، والإبر الدقيقة، والبلازما، وغيرها.",
     } as const;
 
-import { PageSchema } from "@/components/shared/schema/PageSchema";
+import { PageSchema } from "@/components/shared/schema";
 import { siteConfig } from "@/config/site";
 
 export async function generateMetadata({

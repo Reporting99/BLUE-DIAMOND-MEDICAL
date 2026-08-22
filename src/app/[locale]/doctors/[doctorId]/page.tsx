@@ -7,7 +7,7 @@ import { SectionTransition } from "@/components/layout/SectionTransition";
 import { ImageKitImage } from "@/components/shared/ImageKitImage";
 import { Button } from "@/components/ui/button";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
-import { PhysicianSchema } from "@/components/shared/schema/PhysicianSchema";
+import { PhysicianSchema } from "@/components/shared/schema";
 import { isLocale, locales, type Locale } from "@/i18n/config";
 import { doctors, getDoctor } from "@/features/doctors";
 import { getBookingUrl } from "@/config/booking";

@@ -4,7 +4,7 @@ import { SectionTransition } from "@/components/layout/SectionTransition";
 import { isLocale, type Locale } from "@/i18n/config";
 import { getRouteMetadata } from "@/lib/seo/metadata";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
-import { PageSchema } from "@/components/shared/schema/PageSchema";
+import { PageSchema } from "@/components/shared/schema";
 import { getRoute } from "@/lib/routing";
 
 const categories = {

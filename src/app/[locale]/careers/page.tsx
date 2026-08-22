@@ -15,7 +15,7 @@ const PAGE_DESCRIPTION = {
     } as const;
 
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
-import { PageSchema } from "@/components/shared/schema/PageSchema";
+import { PageSchema } from "@/components/shared/schema";
 import { getRoute } from "@/lib/routing";
 
 export async function generateMetadata({

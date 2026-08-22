@@ -10,7 +10,7 @@ import { getRouteMetadata } from "@/lib/seo/metadata";
 import { getBookingUrl } from "@/config/booking";
 import { getRoute, href } from "@/lib/routing";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
-import { PageSchema } from "@/components/shared/schema/PageSchema";
+import { PageSchema } from "@/components/shared/schema";
 
 export async function generateMetadata({
   params,

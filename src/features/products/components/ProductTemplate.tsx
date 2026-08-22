@@ -4,7 +4,7 @@ import { Container } from "@/components/layout/Container";
 import { SectionTransition } from "@/components/layout/SectionTransition";
 import { ImageKitImage } from "@/components/shared/ImageKitImage";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
-import { FaqPageSchema } from "@/components/shared/schema/FaqPageSchema";
+import { FaqPageSchema } from "@/components/shared/schema";
 import { Button } from "@/components/ui/button";
 import { formatPrice } from "@/types/pricing";
 import { getRoute, href } from "@/lib/routing";

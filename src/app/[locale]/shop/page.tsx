@@ -10,7 +10,7 @@ import { features } from "@/config/features";
 import { availabilityNotice, productCategories, productConcerns, products } from "@/features/products";
 import { getRouteMetadata } from "@/lib/seo/metadata";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
-import { PageSchema } from "@/components/shared/schema/PageSchema";
+import { PageSchema } from "@/components/shared/schema";
 import { siteConfig } from "@/config/site";
 
 const copy = {

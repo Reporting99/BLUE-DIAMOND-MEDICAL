@@ -15,7 +15,7 @@ const PAGE_DESCRIPTION = {
       ar: "معدات عالمية من Cynosure في بلو دايموند للتجميل الطبي — Elite iQ وPotenza وTempSure وUltra وTempSure Vitalia.",
     } as const;
 
-import { PageSchema } from "@/components/shared/schema/PageSchema";
+import { PageSchema } from "@/components/shared/schema";
 import { siteConfig } from "@/config/site";
 
 export async function generateMetadata({

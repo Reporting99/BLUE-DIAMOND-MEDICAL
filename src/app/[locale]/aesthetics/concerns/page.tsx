@@ -14,7 +14,7 @@ const PAGE_DESCRIPTION = {
       ar: "تصفّحوا حسب مخاوف البشرة — ندبات حب الشباب، الاحمرار، الجفاف، الخطوط الدقيقة، وغيرها — في بلو دايموند للتجميل الطبي.",
     } as const;
 
-import { PageSchema } from "@/components/shared/schema/PageSchema";
+import { PageSchema } from "@/components/shared/schema";
 import { siteConfig } from "@/config/site";
 import { concerns } from "@/features/concerns";
 

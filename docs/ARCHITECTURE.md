@@ -23,6 +23,56 @@ content depends on hydration. This is verifiable rather than aspirational: run
 a production build and `curl` any route — every heading, body paragraph, entity
 link, breadcrumb and JSON-LD block is in the initial HTML.
 
+## 1a. Source layout and layer rules
+
+```
+src/
+  app/          routing only: params, metadata, route composition, API handlers
+    [locale]/   every public page (this IS the root layout — no src/app/layout.tsx)
+    api/        route handlers; business logic lives in lib/ or features/
+  components/
+    ui/         shadcn primitives (button, sheet, accordion, navigation-menu)
+    layout/     site chrome: Header, Footer, MobileNav, LanguageSwitch, Container
+    shared/     cross-domain presentation: ImageKitImage, FacetTile, Breadcrumbs,
+                schema/ (thin JSON-LD emitters over lib/schema builders)
+  features/     one folder per domain; the only place domain logic lives
+    <domain>/
+      index.ts      public entry point — the ONLY thing outside may import
+      types.ts      domain types
+      data.ts       approved static content for the domain
+      queries.ts    lookups/selectors over that data
+      components/   domain UI, including the page templates
+  lib/          cross-cutting infrastructure
+    feelstack/  CMS client, contracts, schemas, errors, cache tags, webhook
+    seo/        Metadata builders, entity graph
+    schema/     Schema.org builders — pure functions, no React
+    routing/    route lookup, localized paths, canonical/hreflang, redirects
+    security/   HMAC, rate limiting, booking allowlist
+    forms/      delivery adapter boundary
+    media/      ImageKit tints and the image manifest
+  config/       stable configuration and the route registry (data only)
+  i18n/         locale config and dictionaries
+  types/        ONLY genuinely shared types: common, media, pricing, route
+```
+
+**Import rules, enforced by review and verifiable with the dependency graph:**
+
+1. Anything outside a feature imports it through `@/features/<domain>`, never
+   from its internals. Routes under `src/app` follow this without exception.
+2. Two deliberate exceptions import feature *data* modules directly:
+   `src/config/routes.ts` and the `lib/` modules that derive from content
+   (`lib/seo/entity-graph.ts`, `lib/schema/clinic.ts`, `lib/media/image-manifest.ts`,
+   `config/navigation.ts`). The registry is *built from* feature data while
+   feature components read the registry *back*; importing a feature's index
+   there would close an import cycle. The repository currently has **zero**
+   import cycles and this is what keeps it that way.
+3. `lib/schema/` never imports React. Builders return plain objects so a node
+   can be unit-tested or reused from a route handler.
+4. Components never hardcode a URL. Paths resolve through `href()` /
+   `localePath()` in `lib/routing`.
+5. Server-only modules carry `import "server-only"`. Secrets, FeelStack private
+   config and HMAC helpers must never enter a client bundle.
+
 ## 2. Rendering model
 
 Almost every route is **statically generated** (`generateStaticParams` over the
