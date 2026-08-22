@@ -58,7 +58,8 @@ src/
 **Import rules, enforced by review and verifiable with the dependency graph:**
 
 1. Anything outside a feature imports it through `@/features/<domain>`, never
-   from its internals. Routes under `src/app` follow this without exception.
+   from its internals. Every page under `src/app` follows this; the three
+   documented exceptions below are deliberate and each has a measured reason.
 2. Two deliberate exceptions import feature *data* modules directly:
    `src/config/routes.ts` and the `lib/` modules that derive from content
    (`lib/seo/entity-graph.ts`, `lib/schema/clinic.ts`, `lib/media/image-manifest.ts`,
@@ -66,11 +67,16 @@ src/
    feature components read the registry *back*; importing a feature's index
    there would close an import cycle. The repository currently has **zero**
    import cycles and this is what keeps it that way.
-3. `lib/schema/` never imports React. Builders return plain objects so a node
+3. Server actions (`app/**/actions.ts`) import the narrow validation module
+   (`@/features/contact/validation`) rather than the feature barrel. The barrel
+   also exports the feature's Client Components, and pulling those into a
+   `"use server"` module graph is pure cost — measured at +147 bytes of client
+   JS for the contact action alone, for a file that only needs a Zod schema.
+4. `lib/schema/` never imports React. Builders return plain objects so a node
    can be unit-tested or reused from a route handler.
-4. Components never hardcode a URL. Paths resolve through `href()` /
+5. Components never hardcode a URL. Paths resolve through `href()` /
    `localePath()` in `lib/routing`.
-5. Server-only modules carry `import "server-only"`. Secrets, FeelStack private
+6. Server-only modules carry `import "server-only"`. Secrets, FeelStack private
    config and HMAC helpers must never enter a client bundle.
 
 ## 2. Rendering model
