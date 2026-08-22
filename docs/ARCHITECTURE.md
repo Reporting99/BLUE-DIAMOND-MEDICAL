@@ -90,21 +90,29 @@ are not dead — they are consumed by CI tests that enforce invariants
 (`tests/unit/image-usage.spec.ts`, `tests/security/booking-allowlist.spec.ts`).
 
 **Export level.** Module reachability does not catch an unused export inside a
-live module, so exports were swept separately. Getting this right took three
-attempts and both failure modes are worth recording, because a naive sweep is
+live module, so exports were swept separately. Getting this right took four
+attempts and every failure mode is worth recording, because a naive sweep is
 confidently wrong in both directions:
 
 | Attempt | Bug | Effect |
 |---|---|---|
 | 1 | skipped every line starting with `export` | hid uses inside *exported function signatures* — reported 27, inflated |
-| 2 | matched re-export blocks only when `export` began the line | missed **multi-line** `export { … }` blocks, so a forwarded symbol counted as a use — reported 15, undercounted |
-| 3 | comments stripped, template literals **kept**, multi-line re-export blocks masked | 12 — matches manual confirmation |
+| 2 | counted a symbol's own docstring as a use | hid `resolveContent`, named once in its own doc comment — undercounted |
+| 3 | matched re-export blocks only when `export` began the line | missed **multi-line** `export { … }` blocks, so a forwarded symbol counted as a use — 12, still undercounted |
+| 4 | only enumerated `export <kind> NAME` declarations | never saw symbols declared bare and exported via a **trailing `export { … }` block** — this silently omitted the whole of `components/ui/` — **15, confirmed** |
 
-Two traps to avoid if this is ever re-run. Stripping template literals produces
+A fifth trap is one of *criterion*, not implementation: "no use outside the
+declaring file" and "no use anywhere" are different questions. The first flags
+`buttonVariants`, `NavigationMenuPositioner` and `navigationMenuTriggerStyle`,
+all three of which are load-bearing *inside* their own file — that is an
+unnecessary `export`, not dead code, and deleting them breaks the build. Only
+the second question identifies deletable code.
+
+Two further traps to avoid if this is ever re-run. Stripping template literals produces
 false positives: `fontVariables` consumes `fraunces`/`plexSans`/`plexSansArabic`/
 `plexMono` inside a backtick literal, and `localePath` and `currency` are used
 the same way. Counting comments produces false negatives: `resolveContent` is
-named in its own docstring, which is enough to hide it. **Neither pass alone is
+named in its own docstring, which is enough to hide it. **No pass alone is
 trustworthy — confirm every hit by eye.**
 
 Five dead exports introduced or relocated by the refactor were removed
@@ -117,6 +125,11 @@ for the repository owner, split into two kinds:
   `ConsultationRequestValues`, `doctorUrl`, `doctorsForService`, and
   `resolveContent` (a documented legacy shim superseded by the
   `FeelStackResult` contract).
+- **Generator kit surface, not dead** — `SheetFooter`, `SheetDescription` and
+  `NavigationMenuIndicator` are unused members of shadcn component families
+  that *are* rendered. Removing a member of a generated kit means hand-writing
+  the generator's output when it is next needed; an unused whole file is a
+  different case and `components/ui/separator.tsx` was deleted on that basis.
 - **NEEDS_REVIEW, not dead** — `aestheticsHours` (the real aesthetics
   schedule), `categoryTaglines` (five bilingual catalogue taglines) and
   `productBrands` (the SkinMedica brand record). These are *approved, sourced,
