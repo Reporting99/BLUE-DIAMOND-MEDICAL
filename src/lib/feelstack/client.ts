@@ -38,9 +38,13 @@ import { cacheTags } from "./cache-tags";
  * below resolves through the local fallback content instead of a network
  * request (`resolveContent`/`listRoutes`, kept for the existing static
  * build) or returns a `CONFIGURATION_ERROR`-shaped result
- * (`resolveEntity`, the new hybrid-mode path). Imports "server-only" so a
- * client-component import fails the build rather than silently leaking
- * FEELSTACK_* credentials into the browser bundle.
+ * (`resolveEntity`, the new hybrid-mode path).
+ *
+ * This module does NOT import "server-only" — see the note at the top of this
+ * file for why, and why there is no credential for that guard to protect here.
+ * (An earlier version of this comment claimed the opposite; the `server-only`
+ * package was never actually imported anywhere in this repo and has been
+ * removed from package.json.)
  */
 
 const REQUEST_TIMEOUT_MS = 5000;
@@ -179,7 +183,7 @@ export async function resolveEntity<T>(
  * reviewable changes" — this signature predates the FeelStackResult
  * contract and nothing outside this module calls it directly yet). Falls
  * back to local typed content on any failure, matching this build's
- * documented pre-provisioning behavior (docs/DEPLOYMENT_GUIDE.md).
+ * documented pre-provisioning behavior (docs/DEPLOYMENT.md).
  */
 export async function resolveContent(path: string, locale: "en" | "ar"): Promise<FeelstackResolveResponse | null> {
   if (!isConfigured()) {

@@ -35,7 +35,7 @@ jobs:
         env:
           # No real secrets in CI — every ImageKit/FeelStack-dependent code
           # path is designed to fail closed to local fallback content when
-          # these are unset, per docs/DEPLOYMENT_GUIDE.md.
+          # these are unset, per docs/DEPLOYMENT.md.
           NEXT_PUBLIC_SITE_URL: https://bluediamondmedical.ca
 
       - name: Install Playwright browsers

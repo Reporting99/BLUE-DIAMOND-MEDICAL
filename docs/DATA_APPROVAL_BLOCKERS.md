@@ -56,7 +56,7 @@ Conflicts between the approved source document and the legacy live sites, flagge
 
 ## `/vitalia` and `/ols/products` — discovered via live crawl, not in the original DOCX inventory
 
-- Found this pass via a real `sitemap.xml`/`sitemap.website.xml`/`sitemap.blog.xml`/`sitemap.ols.xml` crawl of both legacy domains (brief §3's mandatory discovery step) — see `docs/LEGACY_PAGE_COVERAGE_MATRIX.md`.
+- Found this pass via a real `sitemap.xml`/`sitemap.website.xml`/`sitemap.blog.xml`/`sitemap.ols.xml` crawl of both legacy domains (brief §3's mandatory discovery step).
 - `/vitalia` (aesthetics domain): real page, redirected to the existing `tempsure-vitalia` treatment page (same subject, not a duplicate) — see the statistic discrepancy above, found via this same fetch.
 - `/ols/products` (aesthetics domain): a GoDaddy Website Builder auto-generated "Online Store" module page with generic platform SEO boilerplate, no unique editorial content found — redirected to `/en/shop` as the closest live equivalent rather than omitted.
 - `/tempsure`, `/microneedling` (medical domain, both now redirected in `src/lib/seo/legacy-redirects.ts`) and 7 individual `/about-skinmedica-products/f/<slug>` product pages (all now redirected, 2 required fetching the live `<title>` to disambiguate an ambiguous "tinted" slug used for both the Clear and Tinted products) were also found this way and would otherwise have 404'd with no prior redirect entry at all.

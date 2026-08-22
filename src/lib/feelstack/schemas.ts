@@ -66,7 +66,7 @@ export const feelstackApiErrorSchema = z.object({
  * entity must supply to replace them. NOT yet confirmed against a live
  * FeelStack schema (no Blue Diamond site is provisioned) — treat as a
  * forward-declared contract, reconciled once FeelStack provisioning
- * happens. See docs/FEELSTACK_MIGRATION_MANIFEST.md.
+ * happens. See docs/FEELSTACK.md.
  * ---------------------------------------------------------------------- */
 
 const bilingualSchema = z.object({ en: z.string(), ar: z.string() });
@@ -366,7 +366,7 @@ export type CmsLegalPage = z.infer<typeof cmsLegalPageSchema>;
  * sender — no webhook exists in the recovered Dfeelings source to derive
  * it from (Dfeelings uses time-based ISR only, `revalidate: 30`, no
  * on-demand invalidation at all). Documented as a contract limitation in
- * docs/WEBHOOK_SECURITY_REPORT.md. Falls back to the legacy `{ path }`
+ * docs/FEELSTACK.md. Falls back to the legacy `{ path }`
  * shape this build already shipped, so nothing already deployed breaks.
  */
 export const feelstackWebhookEventSchema = z.enum([

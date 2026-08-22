@@ -7,7 +7,7 @@ import type { ContactFormValues } from "@/lib/validation/contact";
  * typed error rather than silently pretending to send. The server action
  * that calls this catches DeliveryNotConfiguredError and shows the user a
  * clear fallback (call the clinic directly) instead of a false "sent"
- * confirmation. See .env.example and docs/DEPLOYMENT_GUIDE.md.
+ * confirmation. See .env.example and docs/DEPLOYMENT.md.
  */
 export class DeliveryNotConfiguredError extends Error {
   constructor() {

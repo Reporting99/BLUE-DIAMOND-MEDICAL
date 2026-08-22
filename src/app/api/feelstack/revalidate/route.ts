@@ -14,7 +14,7 @@ import { processRevalidationRequest } from "@/lib/feelstack/webhook-handler";
  * No FEELSTACK_REVALIDATE_SECRET is configured for this build — the
  * handler exists and is fully wired, but every request 501s until a real
  * secret is provisioned, rather than silently accepting unverified
- * requests. See docs/DEPLOYMENT_GUIDE.md and docs/WEBHOOK_SECURITY_REPORT.md
+ * requests. See docs/DEPLOYMENT.md and docs/FEELSTACK.md
  * (the structured `{event, siteKey, locale, entityId, path}` body is a
  * forward-declared, unverified contract — no live FeelStack webhook sender
  * was available this session to confirm its real payload shape; the

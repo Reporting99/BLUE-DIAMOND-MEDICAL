@@ -2,7 +2,7 @@
 
 Bilingual (English/Arabic) Next.js site for Blue Diamond Medical Clinic — family medicine, walk-in care, and physician-led medical aesthetics in West Springs, Calgary. Canonical domain: `bluediamondmedical.ca`.
 
-**Status:** the full route inventory (81 registered routes — 50 live/public, 31 built but feature-flagged off pending real content) plus templates, the ImageKit and FeelStack adapters, and the test suite are complete. See `docs/FINAL_QA_REPORT.md` for exact numbers and `docs/MISSING_CONTENT_REPORT.md` for what's gated and why.
+**Status:** the full route inventory (81 registered routes — 50 live/public, 31 built but feature-flagged off pending real content) plus templates, the ImageKit and FeelStack adapters, and the test suite are complete. See `docs/EN_AR_ROUTE_MAP.md` for the full route table and `docs/MISSING_CONTENT_REPORT.md` for what's gated and why.
 
 ## Quick start
 
@@ -50,4 +50,23 @@ npx playwright test tests/accessibility  # axe-core WCAG scan only
 
 ## Documentation
 
-See `docs/` — `UI_UX_FOUNDATION.md`, `SOURCE_INVENTORY.md`, `ROUTE_INVENTORY.md`, `EN_AR_ROUTE_MAPPING.md`, `REDIRECT_MAP.md`, `IMAGE_REPLACEMENT_MANIFEST.md`, `MISSING_CONTENT_REPORT.md`, `CONTENT_APPROVAL_MATRIX.md`, `TRANSLATION_REVIEW_REPORT.md`, `SEO_SCHEMA_SUMMARY.md`, `ACCESSIBILITY_REPORT.md`, `PERFORMANCE_REPORT.md`, `FINAL_QA_REPORT.md`, `DEPLOYMENT_GUIDE.md`, `DNS_LEGACY_DOMAIN_GUIDE.md`.
+Start with these four; everything else is detail they link to.
+
+| Document | Covers |
+|---|---|
+| `docs/ARCHITECTURE.md` | rendering model, routing, server/client split, SEO + GEO/AEO, entity graph, media, testing |
+| `docs/FEELSTACK.md` | CMS contract, content modes, failure semantics, cache tags, webhook, migration steps |
+| `docs/DEPLOYMENT.md` | Blue/Green release model, pre-launch indexing guard, pre-deploy checklist, DNS cutover, CI |
+| `docs/CONTENT_MODEL.md` | entity types, bilingual rules, approval and provenance, feature gating, how to add content |
+
+Supporting detail lives in `docs/` alongside them: the route tables
+(`EN_AR_ROUTE_MAP.md`, `ROUTE_INVENTORY.md`, `ROUTE_DECISION_LOG.md`,
+`REDIRECT_MAP.md`), the design system (`UI_UX_FOUNDATION.md`,
+`VISUAL_CONTINUITY_REPORT.md`), content provenance
+(`CONTENT_APPROVAL_MATRIX.md`, `CONTENT_SOURCE_REGISTER.md`,
+`SOURCE_INVENTORY.md`, `DATA_APPROVAL_BLOCKERS.md`,
+`MISSING_CONTENT_REPORT.md`, `CONTENT_COVERAGE_REPORT.md`,
+`PAGE_CONTENT_REQUIREMENTS.md`, `TRANSLATION_REVIEW_REPORT.md`), media
+(`IMAGEKIT_SETUP.md`, `IMAGEKIT_MEDIA_MANIFEST.md`,
+`IMAGE_REPLACEMENT_MANIFEST.md`, `IMAGEKIT_IMPORT_REPORT.md`), and SEO
+(`SEO_SCHEMA_SUMMARY.md`, `SEARCH_INTENT_MAP.md`).

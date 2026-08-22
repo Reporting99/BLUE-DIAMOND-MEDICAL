@@ -11,7 +11,7 @@ Covers traditional SEO, Generative Engine Optimization (GEO — signals that hel
 - **`sitemap.ts`** — generated from the route registry, filtered to `inSitemap && indexing === "index"` and feature-flag-gated. Produces exactly 100 URLs (50 route entries × 2 locales) as of this pass — verified by a dedicated test that recomputes the expected count from the registry rather than hardcoding it, so it can't silently drift.
 - **Gated-route noindex-by-construction** — every one of the 31 gated route entries has `indexing: "noindex"` and `inSitemap: false` set structurally in the registry, checked by a test that fails if any gated entry is missing either field (not just checked against current flag values, which could be true by accident).
 - **`llms.txt`** — matches what's actually live on the site; no unpublished claims.
-- **Descriptive link text** — the desktop Lighthouse `link-text` audit caught 4 generic "Learn more" links on the homepage this pass; fixed with `sr-only` context spans (see `docs/PERFORMANCE_REPORT.md`). Desktop SEO score: **100**.
+- **Descriptive link text** — the desktop Lighthouse `link-text` audit caught 4 generic "Learn more" links on the homepage this pass; fixed with `sr-only` context spans (). Desktop SEO score: **100**.
 - **Clean URLs** — meaningful Arabic slugs (not `/ar/doctors`), no query-string language switching.
 - **301 redirects** for the legacy domain's known URLs, exact-match, no chains (`src/lib/seo/legacy-redirects.ts`), each covered by `tests/redirects/legacy-redirects.spec.ts`.
 

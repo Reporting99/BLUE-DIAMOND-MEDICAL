@@ -10,7 +10,7 @@ import { technologies } from "@/content/technologies";
 /**
  * Central bilingual route registry. Nav, breadcrumbs, hreflang, canonical
  * tags, and the sitemap all read from this single list — see
- * docs/EN_AR_ROUTE_MAPPING.md and docs/ROUTE_INVENTORY.md.
+ * docs/EN_AR_ROUTE_MAP.md and docs/ROUTE_INVENTORY.md.
  *
  * This registry currently covers the routes actually implemented in this
  * build pass. Routes described in the master brief but not yet built

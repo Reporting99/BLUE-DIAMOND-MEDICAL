@@ -14,7 +14,7 @@ Stacking sections with flat, differently-tinted backgrounds (white → blue-soft
 <SectionTransition from="var(--surface-blue-soft)" to="var(--background)" />
 ```
 
-- Renders one `aria-hidden="true"` `<div>` with `height: clamp(3.5rem, 6vw + 2rem, 11.25rem)` and a `linear-gradient(180deg, from, to)` background — nothing else. No JavaScript, no images, no blur/filter effects, so it costs nothing measurable in Lighthouse's `mainthread-work-breakdown` (confirmed in `docs/PERFORMANCE_REPORT.md`).
+- Renders one `aria-hidden="true"` `<div>` with `height: clamp(3.5rem, 6vw + 2rem, 11.25rem)` and a `linear-gradient(180deg, from, to)` background — nothing else. No JavaScript, no images, no blur/filter effects, so it costs nothing measurable in Lighthouse's `mainthread-work-breakdown`.
 - `margin-block: -1px` (via the `.section-seam` class in `globals.css`) closes any 1px subpixel gap that can appear between adjacent flex/grid sections at fractional zoom levels.
 - Placed between every pair of adjacent sections that have different background tokens; omitted between sections sharing the same background (no seam needed where there's no color change).
 

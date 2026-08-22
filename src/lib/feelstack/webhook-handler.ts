@@ -34,7 +34,7 @@ const allowedPaths = new Set(routes.flatMap((r) => [`/en${r.path.en}`, `/ar${r.p
  * signatures already processed and rejects a repeat. In-memory only —
  * correct for a single server instance; a multi-instance deployment needs
  * a shared store (Redis/KV) for this to hold across instances, which is a
- * documented limitation (docs/WEBHOOK_SECURITY_REPORT.md), not something
+ * documented limitation (docs/FEELSTACK.md), not something
  * fabricated here without real infrastructure to back it.
  */
 const seenSignatures = new Map<string, number>();

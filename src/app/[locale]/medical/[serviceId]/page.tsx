@@ -13,7 +13,7 @@ export function generateStaticParams() {
 
 /**
  * Reference implementation of the hybrid FeelStack resolution pattern —
- * see docs/FEELSTACK_MIGRATION_MANIFEST.md for how this generalizes to
+ * see docs/FEELSTACK.md for how this generalizes to
  * doctors/products/treatments/concerns/technologies/articles/legal pages.
  * In this build's default `FEELSTACK_CONTENT_MODE=static`,
  * `resolvePageContent` never touches the network — it goes straight to

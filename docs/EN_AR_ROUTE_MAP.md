@@ -1,12 +1,12 @@
 # English ↔ Arabic Route Map
 
-Required Part-1 deliverable — consolidates and supersedes `docs/EN_AR_ROUTE_MAPPING.md` (kept for history, no longer the canonical copy) by covering **every** registered route, live and gated, not just the live 50. Source of truth is always `src/config/routes.ts`; this is a generated-by-hand mirror, verified against it this pass.
+Required Part-1 deliverable — covers **every** registered route, live and gated, not just the live 50. Source of truth is always `src/config/routes.ts`; this is a generated-by-hand mirror, verified against it this pass.
 
 **100% EN/AR path parity confirmed** — every one of the 102 registered routes has both `path.en` and `path.ar` populated (enforced structurally by the `RouteEntry` type, which makes `path` a required `{ en; ar }` object — there is no code path that could register an English-only route). This is also asserted by `tests/seo/seo-validators.spec.ts`.
 
-## Live routes (50 — full detail, matches `docs/FINAL_ROUTE_INVENTORY.md`'s KEEP list)
+## Live routes (50 — full detail, matches `docs/EN_AR_ROUTE_MAP.md`'s KEEP list)
 
-See `docs/EN_AR_ROUTE_MAPPING.md` for the complete existing table — verified current and accurate this pass, no changes needed. Reproduced summary:
+See `docs/EN_AR_ROUTE_MAP.md` for the complete existing table — verified current and accurate this pass, no changes needed. Reproduced summary:
 
 | Section | EN root | AR root |
 |---|---|---|

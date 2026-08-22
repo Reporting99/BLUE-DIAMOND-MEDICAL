@@ -36,7 +36,7 @@ Source of truth: `src/lib/seo/legacy-redirects.ts`, consumed by `src/proxy.ts`. 
 
 ## bluediamondmedicalaesthetics.ca (separate legacy domain — cannot be caught by this app's proxy)
 
-This app's `src/proxy.ts` only runs for requests to `bluediamondmedical.ca`. Redirecting the old aesthetics domain requires host-level configuration — see `docs/DNS_LEGACY_DOMAIN_GUIDE.md`. The intended target mapping (same table this app's proxy would use if it ever received these hosts) is:
+This app's `src/proxy.ts` only runs for requests to `bluediamondmedical.ca`. Redirecting the old aesthetics domain requires host-level configuration — see `docs/DEPLOYMENT.md`. The intended target mapping (same table this app's proxy would use if it ever received these hosts) is:
 
 | Old path (bluediamondmedicalaesthetics.ca) | New path (bluediamondmedical.ca) |
 |---|---|
@@ -71,4 +71,4 @@ Only the two legal-page targets (`/en/terms`, `/en/privacy-policy`) still resolv
 
 ## Tested
 
-`tests/e2e/locale-routing.spec.ts` verifies `/services → /en/medical` as a representative case. The full redirect table should get one test per row before launch — tracked in `docs/FINAL_QA_REPORT.md`.
+`tests/e2e/locale-routing.spec.ts` verifies `/services → /en/medical` as a representative case. The full redirect table should get one test per row before launch —.

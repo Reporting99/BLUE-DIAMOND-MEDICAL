@@ -44,7 +44,7 @@ Maps real search wording (English and Arabic) to the site's actual indexable rou
 | `/aesthetics/concerns/razor-bumps` | razor bumps treatment Calgary | — |
 | *(no route — see gap note)* | hair loss treatment Calgary | علاج تساقط الشعر بالبلازما |
 
-**Gap note**: "hair loss treatment Calgary" doesn't have a dedicated *concern* page — it currently only surfaces via the `prp-hair-restoration` *treatment* page. Given PRP hair restoration is the only approved hair-loss-relevant treatment in the source, a genuinely new "Hair Loss" concern page would either duplicate that treatment page's content or need additional approved source material to be non-thin. Flagged in `docs/CONTENT_ENRICHMENT_PLAN.md` as a candidate for a future concern page **if** more source content becomes available — not created now to avoid the brief's own "no duplicate pages targeting similar keywords" rule.
+**Gap note**: "hair loss treatment Calgary" doesn't have a dedicated *concern* page — it currently only surfaces via the `prp-hair-restoration` *treatment* page. Given PRP hair restoration is the only approved hair-loss-relevant treatment in the source, a genuinely new "Hair Loss" concern page would either duplicate that treatment page's content or need additional approved source material to be non-thin. Recorded here as a candidate for a future concern page **if** more source content becomes available — not created now to avoid the brief's own "no duplicate pages targeting similar keywords" rule.
 
 ## Medical Botox (gated — `medicalBotoxDetailPagesEnabled`)
 

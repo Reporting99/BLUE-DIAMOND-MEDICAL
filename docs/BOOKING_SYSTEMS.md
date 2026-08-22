@@ -29,7 +29,7 @@ Rather than assert an unverified fact ("this system is English-only") or invent 
 
 > **AR**: "سيتم فتح هذا النظام في نافذة جديدة، وقد لا يكون متوفرًا باللغة العربية." — **EN equivalent for reference**: "This system opens in a new window and may not be available in Arabic."
 
-This is a content/copy addition, not a visual redesign — tracked here as a Part 2 implementation item (`docs/CONTENT_ENRICHMENT_PLAN.md`) rather than implemented during this content-and-research phase.
+This is a content/copy addition, not a visual redesign — tracked here as a Part 2 implementation item rather than implemented during this content-and-research phase.
 
 ## What is deliberately absent
 

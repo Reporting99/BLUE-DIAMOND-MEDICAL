@@ -101,12 +101,16 @@ test.describe("robots.txt", () => {
 });
 
 test.describe("sitemap.xml", () => {
-  test("publishes no URL inventory when unlaunched", () => {
-    expect(withLaunchFlag(undefined, () => sitemap())).toEqual([]);
+  // sitemap() is async: it may consult FeelStack for CMS-owned pages that have
+  // no local route entry (src/app/sitemap.ts). In the default `static` content
+  // mode that branch makes no network request and returns nothing, so these
+  // assertions still cover the local-registry inventory exactly as before.
+  test("publishes no URL inventory when unlaunched", async () => {
+    expect(await withLaunchFlag(undefined, () => sitemap())).toEqual([]);
   });
 
-  test("publishes the real route inventory once launched", () => {
-    const entries = withLaunchFlag("true", () => sitemap());
+  test("publishes the real route inventory once launched", async () => {
+    const entries = await withLaunchFlag("true", () => sitemap());
     expect(entries.length).toBeGreaterThan(0);
     // Nothing may ever point at a temporary or runtime hostname.
     for (const entry of entries) {

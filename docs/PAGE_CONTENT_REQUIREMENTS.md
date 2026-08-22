@@ -44,7 +44,7 @@ Per-page-type content specification, cross-checked against the **actual current 
 | 15. Alternatives/related treatments | `relatedTreatmentIds` | ✅ |
 | 16. Approved before/after | Not modeled on this type — separate before/after system (gated) | ✅ by design (correctly gated, not a content-model gap) |
 | 17. Relevant doctors | **Not modeled at all** — confirmed via grep, zero doctor cross-linking on any aesthetic treatment page | ❌ **Real gap** |
-| 18. 8-12 FAQs | `faqs` — populated on some treatments already (checked `rf-microneedling` has real FAQs), not audited across all 10 | ⚠️ Needs a per-treatment audit (tracked in `docs/CONTENT_ENRICHMENT_PLAN.md`) |
+| 18. 8-12 FAQs | `faqs` — populated on some treatments already (checked `rf-microneedling` has real FAQs), not audited across all 10 | ⚠️ Needs a per-treatment audit () |
 | 19. External consultation CTA | `getBookingUrl("aesthetics-consultation")` | ✅ |
 | 20. Sources and medical disclaimer | **No medical disclaimer renders on this template at all** — confirmed via grep, zero matches | ❌ **Real gap, same severity as the medical-service disclaimer being present makes this inconsistency notable** |
 
@@ -85,7 +85,7 @@ Per-page-type content specification, cross-checked against the **actual current 
 
 All 16 required elements were confirmed present in the existing homepage build (14-section surface rhythm, documented in earlier session work) — no gaps found. Not re-audited line-by-line here since the homepage was extensively rebuilt and verified in the prior remediation pass; `docs/VISUAL_CONTINUITY_REPORT.md` and the homepage's own inline comments cover it.
 
-## Summary of real content-model gaps found (for `docs/CONTENT_ENRICHMENT_PLAN.md` and Part 2)
+## Summary of real content-model gaps found
 
 **Structural (type + template changes needed, not just content-writing) — highest priority:**
 1. `AestheticTreatmentTemplate` renders no medical disclaimer at all (every medical-service page has one; every aesthetic page should too, given both involve physician-provided care).
@@ -94,6 +94,6 @@ All 16 required elements were confirmed present in the existing homepage build (
 4. `AestheticConcern` has no treatment-comparison, related-concerns, or related-technologies modeling.
 5. No treatment-day-journey or aftercare-instructions field on aesthetic treatments.
 
-**Content-only (existing fields, just need real approved copy written) — see `docs/CONTENT_ENRICHMENT_PLAN.md` for the prioritized list:**
+**Content-only (existing fields, just need real approved copy written) for the prioritized list:**
 - 0 of 7 medical services currently populate their (already-built) `faqs` field.
 - Aesthetic treatment FAQ depth needs a full per-page audit against the 8-12 target.

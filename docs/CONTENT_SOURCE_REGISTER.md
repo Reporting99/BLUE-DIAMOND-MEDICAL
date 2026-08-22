@@ -32,7 +32,7 @@ Scope note: this registers every *route-level* claim (what a page asserts about 
 
 ## Explicitly never sourced from competitors
 
-Per the source-of-truth hierarchy (`docs/COMPETITOR_CONTENT_BENCHMARK.md` §2), zero rows above cite a competitor site as a source — competitors inform structure only, recorded separately.
+Per the source-of-truth hierarchy, zero rows above cite a competitor site as a source — competitors inform structure only, recorded separately.
 
 ## Open items requiring action before launch
 

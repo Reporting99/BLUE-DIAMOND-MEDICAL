@@ -14,7 +14,7 @@ import { FeelStackConfigurationError } from "./errors";
  *
  *  - "static": ignore FeelStack entirely, `src/content/*.ts` is the only
  *    source. This is the default and matches this build's shipped state
- *    (docs/DEPLOYMENT_GUIDE.md) — nothing changes for a deployment that
+ *    (docs/DEPLOYMENT.md) — nothing changes for a deployment that
  *    doesn't set this var.
  *  - "hybrid": try FeelStack first; a confirmed "this entity doesn't exist
  *    in the CMS yet" (NOT_FOUND) falls through to `src/content/*.ts`; a

@@ -27,7 +27,7 @@
  *     indexability baked into it and be promoted to a slot that was not
  *     meant to be public.
  *
- * See docs/PRE_LAUNCH_INDEXING_GUARD.md for the launch procedure.
+ * See docs/DEPLOYMENT.md for the launch procedure.
  */
 
 /**

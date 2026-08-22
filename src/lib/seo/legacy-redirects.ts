@@ -52,7 +52,7 @@ export const legacyRedirects: Record<string, string> = {
 
   // bluediamondmedicalaesthetics.ca — cannot be caught by this app's own
   // proxy (different host), documented for DNS/hosting-level redirect
-  // configuration in docs/DNS_LEGACY_DOMAIN_GUIDE.md. Listed here too so
+  // configuration in docs/DEPLOYMENT.md. Listed here too so
   // the same table can drive that documentation and stay in sync.
   "/treatments": "/en/aesthetics/treatments",
   "/area-concern": "/en/aesthetics/concerns",
