@@ -1,0 +1,206 @@
+- generic [ref=f1e1]:
+  - banner [ref=f1e2]:
+    - link "Skip to content" [ref=f1e3] [cursor=pointer]:
+      - /url: "#main-content"
+    - generic [ref=f1e4]:
+      - link "Blue Diamond Medical — Home" [ref=f1e5] [cursor=pointer]:
+        - /url: /en
+        - generic [ref=f1e12]: Blue Diamond Medical
+      - navigation [ref=f1e13]:
+        - list [ref=f1e14]:
+          - listitem [ref=f1e15]:
+            - link "Home" [ref=f1e16] [cursor=pointer]:
+              - /url: /en
+          - listitem [ref=f1e17]:
+            - link "Services" [ref=f1e18] [cursor=pointer]:
+              - /url: /en/medical
+          - listitem [ref=f1e19]:
+            - button "Treatments" [active] [ref=f1e20] [cursor=pointer]
+          - listitem [ref=f1e23]:
+            - link "Medical Aesthetics" [ref=f1e24] [cursor=pointer]:
+              - /url: /en/aesthetics
+          - listitem [ref=f1e25]:
+            - link "Our Team" [ref=f1e26] [cursor=pointer]:
+              - /url: /en/doctors
+          - listitem [ref=f1e27]:
+            - link "About" [ref=f1e28] [cursor=pointer]:
+              - /url: /en/about
+          - listitem [ref=f1e29]:
+            - link "Contact" [ref=f1e30] [cursor=pointer]:
+              - /url: /en/contact
+      - generic [ref=f1e31]:
+        - link "العربية" [ref=f1e32] [cursor=pointer]:
+          - /url: /ar/التجميل-الطبي/العلاجات
+        - link "Book Appointment" [ref=f1e33] [cursor=pointer]:
+          - /url: https://mika.care
+  - main [ref=f1e34]:
+    - generic [ref=f1e174]:
+      - navigation "Breadcrumb" [ref=f1e175]:
+        - list [ref=f1e176]:
+          - listitem [ref=f1e177]:
+            - link "Home" [ref=f1e178] [cursor=pointer]:
+              - /url: /en
+          - listitem [ref=f1e179]:
+            - link "Medical Aesthetics" [ref=f1e182] [cursor=pointer]:
+              - /url: /en/aesthetics
+          - listitem [ref=f1e183]:
+            - generic [ref=f1e186]: Treatments
+      - heading "Treatments" [level=1] [ref=f1e187]
+      - paragraph [ref=f1e188]: Every treatment starts with a 20-minute consultation with a physician, who listens to your concerns and prescribes a treatment plan that meets your goals.
+      - generic [ref=f1e189]:
+        - link [ref=f1e190] [cursor=pointer]:
+          - /url: /en/aesthetics/treatments/laser-hair-removal
+          - generic [ref=f1e191]:
+            - heading "Laser Hair Removal" [level=2] [ref=f1e192]
+            - paragraph [ref=f1e193]: Long-lasting hair reduction anywhere on the body using the Cynosure Elite+™ laser system.
+        - link [ref=f1e194] [cursor=pointer]:
+          - /url: /en/aesthetics/treatments/laser-skin-treatments
+          - generic [ref=f1e195]:
+            - heading "Laser Skin Treatments" [level=2] [ref=f1e196]
+            - paragraph [ref=f1e197]: State-of-the-art laser equipment for smoother complexions, brightening damaged skin, removing benign pigmented lesions, and treating face and leg veins.
+        - link [ref=f1e198] [cursor=pointer]:
+          - /url: /en/aesthetics/treatments/radio-frequency
+          - generic [ref=f1e199]:
+            - heading "Radio Frequency" [level=2] [ref=f1e200]
+            - paragraph [ref=f1e201]: Non-invasive tightening and smoothing of skin all over the body using RF waves (TempSure), improving tone and reducing the appearance of fine lines and wrinkles.
+        - link [ref=f1e202] [cursor=pointer]:
+          - /url: /en/aesthetics/treatments/rf-microneedling
+          - generic [ref=f1e203]:
+            - heading "RF Micro-Needling" [level=2] [ref=f1e204]
+            - paragraph [ref=f1e205]: The Potenza RF microneedling system adds radiofrequency energy to mechanical microneedling for enhanced skin tightening alongside the benefits of micro-injury stimulation.
+        - link [ref=f1e206] [cursor=pointer]:
+          - /url: /en/aesthetics/treatments/ultra
+          - generic [ref=f1e207]:
+            - heading "Ultra Treatment" [level=2] [ref=f1e208]
+            - paragraph [ref=f1e209]: A low-downtime laser that rejuvenates the skin, giving it a brighter tone and improved texture — treating mild to moderate age spots, freckles, sun spots, pigmented lesions, sun damage, actinic keratosis, melasma, and postinflammatory hyperpigmentation.
+        - link [ref=f1e210] [cursor=pointer]:
+          - /url: /en/aesthetics/treatments/prp-hair-restoration
+          - generic [ref=f1e211]:
+            - heading "PRP Hair Restoration" [level=2] [ref=f1e212]
+            - paragraph [ref=f1e213]: Platelet-Rich Plasma injected into the scalp to stimulate inactive hair follicles and promote denser, fuller hair growth — performed by Dr. Farhat.
+        - link [ref=f1e214] [cursor=pointer]:
+          - /url: /en/aesthetics/treatments/prp-skin-rejuvenation
+          - generic [ref=f1e215]:
+            - heading "PRP Skin Rejuvenation" [level=2] [ref=f1e216]
+            - paragraph [ref=f1e217]: PRP used topically or via microinjections to smooth fine lines and wrinkles, improve tone and elasticity, and reduce acne scars and pigmentation — often called the "vampire facial."
+        - link [ref=f1e218] [cursor=pointer]:
+          - /url: /en/aesthetics/treatments/tempsure-vitalia
+          - generic [ref=f1e219]:
+            - heading "TempSure Vitalia" [level=2] [ref=f1e220]
+            - paragraph [ref=f1e221]: Equipment addressing many pelvic floor issues and sexual health concerns that women experience at all ages and stages of life — roughly 1 in 3 women, often in silence.
+  - contentinfo [ref=f1e72]:
+    - generic [ref=f1e73]:
+      - generic [ref=f1e74]:
+        - link "Blue Diamond Medical — Home" [ref=f1e75] [cursor=pointer]:
+          - /url: /en
+          - generic [ref=f1e82]: Blue Diamond Medical
+        - paragraph [ref=f1e83]: Family medicine and physician-led medical aesthetics in West Springs, Calgary.
+        - generic [ref=f1e84]:
+          - paragraph [ref=f1e85]: 23-8 Weston Drive SW, Calgary AB T3H 5P2
+          - link "+1 (825) 413-1113" [ref=f1e86] [cursor=pointer]:
+            - /url: tel:+18254131113
+        - generic [ref=f1e87]:
+          - link "Facebook" [ref=f1e88] [cursor=pointer]:
+            - /url: https://facebook.com/bluediamondmedical
+          - link "Instagram" [ref=f1e91] [cursor=pointer]:
+            - /url: https://instagram.com/bludiamondmedical
+      - navigation "Medical Care" [ref=f1e96]:
+        - paragraph [ref=f1e97]: Medical Care
+        - list [ref=f1e98]:
+          - listitem [ref=f1e99]:
+            - link "Medical Care" [ref=f1e100] [cursor=pointer]:
+              - /url: /en/medical
+          - listitem [ref=f1e101]:
+            - link "Botox" [ref=f1e102] [cursor=pointer]:
+              - /url: /en/botox
+          - listitem [ref=f1e103]:
+            - link "Our Doctors" [ref=f1e104] [cursor=pointer]:
+              - /url: /en/doctors
+          - listitem [ref=f1e105]:
+            - link "Uninsured Services & Fees" [ref=f1e106] [cursor=pointer]:
+              - /url: /en/medical/uninsured-services
+      - navigation "Medical Aesthetics" [ref=f1e107]:
+        - paragraph [ref=f1e108]: Medical Aesthetics
+        - list [ref=f1e109]:
+          - listitem [ref=f1e110]:
+            - link "Medical Aesthetics" [ref=f1e111] [cursor=pointer]:
+              - /url: /en/aesthetics
+          - listitem [ref=f1e112]:
+            - link "Treatments" [ref=f1e113] [cursor=pointer]:
+              - /url: /en/aesthetics/treatments
+          - listitem [ref=f1e114]:
+            - link "Concerns" [ref=f1e115] [cursor=pointer]:
+              - /url: /en/aesthetics/concerns
+          - listitem [ref=f1e116]:
+            - link "Technologies" [ref=f1e117] [cursor=pointer]:
+              - /url: /en/aesthetics/technologies
+      - navigation "Blue Diamond" [ref=f1e118]:
+        - paragraph [ref=f1e119]: Blue Diamond
+        - list [ref=f1e120]:
+          - listitem [ref=f1e121]:
+            - link "About Blue Diamond Medical" [ref=f1e122] [cursor=pointer]:
+              - /url: /en/about
+          - listitem [ref=f1e123]:
+            - link "Careers" [ref=f1e124] [cursor=pointer]:
+              - /url: /en/careers
+          - listitem [ref=f1e125]:
+            - link "Contact Us" [ref=f1e126] [cursor=pointer]:
+              - /url: /en/contact
+          - listitem [ref=f1e127]:
+            - link "Book an Appointment" [ref=f1e128] [cursor=pointer]:
+              - /url: /en/book-appointment
+      - navigation "Patient Resources" [ref=f1e129]:
+        - paragraph [ref=f1e130]: Patient Resources
+        - list [ref=f1e131]:
+          - listitem [ref=f1e132]:
+            - link "Patient Resources" [ref=f1e133] [cursor=pointer]:
+              - /url: /en/patient-resources
+          - listitem [ref=f1e134]:
+            - link "Health Hub" [ref=f1e135] [cursor=pointer]:
+              - /url: /en/health-hub
+          - listitem [ref=f1e136]:
+            - link "SkinMedica Products" [ref=f1e137] [cursor=pointer]:
+              - /url: /en/shop
+    - generic [ref=f1e139]:
+      - generic [ref=f1e140]: © 2026 Blue Diamond Medical Clinic. All rights reserved.
+      - link "Contact Blue Diamond Medical" [ref=f1e141] [cursor=pointer]:
+        - /url: /en/contact
+  - alert [ref=f1e144]: Treatments · Blue Diamond Medical
+  - generic:
+    - navigation:
+      - generic:
+        - generic:
+          - list:
+            - listitem:
+              - link "Cosmetic Botox":
+                - /url: /en/botox
+            - listitem:
+              - link "RF Micro-Needling":
+                - /url: /en/aesthetics/treatments/rf-microneedling
+            - listitem:
+              - link "Laser Hair Removal":
+                - /url: /en/aesthetics/treatments/laser-hair-removal
+            - listitem:
+              - link "Laser Skin Treatments":
+                - /url: /en/aesthetics/treatments/laser-skin-treatments
+            - listitem:
+              - link "Radio Frequency":
+                - /url: /en/aesthetics/treatments/radio-frequency
+            - listitem:
+              - link "Skin Tightening":
+                - /url: /en/aesthetics/treatments/radio-frequency
+            - listitem:
+              - link "Ultra Treatment":
+                - /url: /en/aesthetics/treatments/ultra
+            - listitem:
+              - link "PRP Hair Restoration":
+                - /url: /en/aesthetics/treatments/prp-hair-restoration
+            - listitem:
+              - link "PRP Skin Rejuvenation":
+                - /url: /en/aesthetics/treatments/prp-skin-rejuvenation
+            - listitem:
+              - link "TempSure Vitalia":
+                - /url: /en/aesthetics/treatments/tempsure-vitalia
+          - generic:
+            - link "View all treatments":
+              - /url: /en/aesthetics/treatments

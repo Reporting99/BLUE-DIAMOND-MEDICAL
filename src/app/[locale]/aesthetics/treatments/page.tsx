@@ -1,0 +1,66 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { Container } from "@/components/layout/Container";
+import { SectionTransition } from "@/components/layout/SectionTransition";
+import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
+import { isLocale, type Locale } from "@/i18n/config";
+import { getRoute, href } from "@/config/routes";
+import { treatments } from "@/content/treatments";
+import { getRouteMetadata } from "@/lib/seo/metadata";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const safeLocale: Locale = isLocale(locale) ? locale : "en";
+  return getRouteMetadata("aesthetics-treatments-hub", safeLocale, {
+    description: {
+      en: "Physician-led aesthetic treatments at Blue Diamond Medical — laser, radio frequency, RF micro-needling, PRP, and more.",
+      ar: "علاجات تجميل طبي بإشراف طبي في بلو دايموند — الليزر، والترددات الراديوية، والإبر الدقيقة، والبلازما، وغيرها.",
+    },
+  });
+}
+
+export default async function TreatmentsHubPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale: rawLocale } = await params;
+  const locale: Locale = isLocale(rawLocale) ? rawLocale : "en";
+  const aestheticsRoute = getRoute("aesthetics-hub")!;
+  const title = locale === "ar" ? "العلاجات" : "Treatments";
+  const intro =
+    locale === "ar"
+      ? "تبدأ جميع علاجاتنا باستشارة مع طبيب لمدة 20 دقيقة يستمع خلالها لمخاوفكم ويضع خطة علاج تناسب أهدافكم."
+      : "Every treatment starts with a 20-minute consultation with a physician, who listens to your concerns and prescribes a treatment plan that meets your goals.";
+
+  return (
+    <>
+      <section className="section-y">
+      <Container>
+        <Breadcrumbs locale={locale} items={[{ label: aestheticsRoute.title[locale], href: href("aesthetics-hub", locale) }, { label: title }]} />
+        <h1 className="mt-4 text-display-1 font-heading lg:text-display-1-lg">{title}</h1>
+        <p className="mt-4 max-w-2xl text-body-lg text-text-secondary">{intro}</p>
+
+        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {treatments.map((t) => {
+            const route = getRoute(`treatment-${t.id}`)!;
+            return (
+              <Link
+                key={t.id}
+                href={`/${locale}${route.path[locale]}`}
+                className="group flex flex-col justify-between rounded-lg border border-border bg-surface p-5 transition-colors hover:border-primary"
+              >
+                <div>
+                  <h2 className="font-heading text-h4">{t.title[locale]}</h2>
+                  <p className="mt-2 text-sm text-text-secondary">{t.summary[locale]}</p>
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+      </Container>
+      </section>
+      <SectionTransition from="var(--background)" to="var(--surface-dark)" />
+    </>
+  );
+}

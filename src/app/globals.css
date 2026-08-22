@@ -1,26 +1,429 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* Keyboard focus and anchor jumps must never land fully behind the sticky
+ * header — WCAG 2.2 "Focus Not Obscured (Minimum)". Matches Header.tsx's
+ * settled 72px height; the homepage's taller 92px floating state is
+ * `fixed`/overlaid by design (the header floats over the hero on purpose),
+ * so this value only needs to cover the shorter, in-flow sticky state. */
+html {
+  scroll-padding-top: 72px;
+}
+
+/*
+ * Blue Diamond Medical design tokens.
+ * Source of truth: docs/UI_UX_FOUNDATION.md
+ * Three-layer architecture: primitive -> semantic -> component.
+ * No raw hex may appear in .tsx files — everything routes through the
+ * semantic tokens below.
+ */
 
 :root {
+  /* ---- 1. Primitives (from BLUE DIAMOND LOGO DOCUMENT[10519].pdf) ---- */
+  --blue-1: #5999bf;
+  --blue-2: #88b9d7;
+  --blue-3: #296589;
+  --blue-4: #1d5678;
+  --grey-1: #9f9f9f;
+  --grey-2: #bebebe;
+  --grey-3: #707070;
+  --grey-4: #636363;
+
+  /* ---- 2. Semantic tokens ---- */
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #2b2e33;
+  --card: #ffffff;
+  --card-foreground: #2b2e33;
+  --popover: #ffffff;
+  --popover-foreground: #2b2e33;
+
+  --primary: var(--blue-3);
+  --primary-hover: var(--blue-4);
+  --primary-foreground: #ffffff;
+
+  --secondary: var(--blue-1);
+  --secondary-foreground: #ffffff;
+
+  --accent: var(--blue-2);
+  --accent-foreground: var(--blue-4);
+
+  --muted: #eef3f6;
+  --muted-foreground: var(--grey-3);
+
+  --surface: #f5f8fa;
+  --surface-muted: #eef3f6;
+  /* Homepage surface rhythm — docs/UI_UX_FOUNDATION.md §15.1. The
+     alternating surfaces that keep the page from reading as one long
+     white scroll: soft blue washes, a deep-blue feature band, and a dark
+     charcoal-blue footer, all derived from the same brand primitives. */
+  --surface-blue-soft: #eaf1f5;
+  --surface-blue-mist: #edf4f7;
+  /* Was #20272c (near-black charcoal) — "SEAMLESS CLOSING SECTION AND
+     FOOTER COLOR REDESIGN" pass replaced it with the deepest stop of the
+     closing-experience gradient below (--footer-blue-bottom) so the
+     footer reads as the natural deepest point of the same blue family
+     instead of an unrelated dark rectangle bolted on underneath. Every
+     template's closing SectionTransition already targets this token, so
+     the fix applies sitewide from this one value change. */
+  --surface-dark: #102f42;
+  --surface-dark-foreground: #ffffff;
+  /* Solid color, not rgba — axe-core flagged the translucent-white version
+     at ~3.9:1 against the dark footer background (an alpha-compositing
+     edge case, not a deliberate choice). --grey-2 solid measures 8.1:1. */
+  --surface-dark-foreground-muted: var(--grey-2);
+  --surface-dark-border: rgba(255, 255, 255, 0.12);
+
+  /* ---- Closing-experience tokens ("SEAMLESS CLOSING SECTION AND FOOTER
+     COLOR REDESIGN" pass) — used only by SiteClosingExperience.tsx and
+     Footer.tsx's own internal gradient, never scattered as raw hex
+     elsewhere. Deliberately separate from the primary brand tokens
+     above: these describe one continuous light-to-dark atmosphere, not
+     reusable UI colors. */
+  --closing-surface-start: #f5f9fb;
+  --closing-mist: #e5f0f5;
+  --closing-blue-soft: #a9c9dc;
+  --closing-blue-mid: #4f88aa;
+  --closing-blue-deep: #245f80;
+  --footer-blue-top: #1d5678;
+  --footer-blue-mid: #17465f;
+  --footer-blue-bottom: #102f42;
+
+  --closing-text-primary: #ffffff;
+  --closing-text-secondary: rgba(255, 255, 255, 0.84);
+  --closing-text-muted: rgba(255, 255, 255, 0.72);
+
+  --footer-heading: #d8edf7;
+  --footer-text: rgba(255, 255, 255, 0.82);
+  --footer-text-muted: rgba(255, 255, 255, 0.66);
+  --footer-link-hover: #ffffff;
+  --footer-focus: #88b9d7;
+
+  --destructive: #b3261e;
+  --destructive-surface: #fbeae9;
+  --success: #2e6b4f;
+  --success-surface: #eaf3ee;
+
+  --border: var(--grey-2);
+  --input: var(--grey-2);
+  --ring: var(--blue-3);
+  --focus: var(--blue-3);
+
+  --text-primary: var(--blue-4);
+  --text-body: #2b2e33;
+  --text-secondary: var(--grey-3);
+  --text-muted: var(--grey-4);
+
+  --radius: 0.5rem;
+
+  /* ---- 3. Spacing rhythm (4px base) ---- */
+  --space-section: 6rem; /* 96px desktop */
+  --space-section-mobile: 3.5rem; /* 56px mobile */
+
+  /* ---- 4. Motion ---- */
+  --motion-fast: 150ms;
+  --motion-normal: 200ms;
+  --motion-slow: 300ms;
+  --motion-ease: cubic-bezier(0.2, 0.7, 0.3, 1);
+  --reveal-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* ---- 5. Fonts (wired to next/font variables in layout.tsx) ---- */
+  --font-display: var(--font-fraunces), "Iowan Old Style", serif;
+  --font-body: var(--font-plex-sans), "Segoe UI", system-ui, sans-serif;
+  --font-arabic: var(--font-plex-sans-arabic), "Segoe UI", system-ui, sans-serif;
+  --font-data: var(--font-plex-mono), ui-monospace, monospace;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-surface-blue-soft: var(--surface-blue-soft);
+  --color-surface-blue-mist: var(--surface-blue-mist);
+  --color-surface-dark: var(--surface-dark);
+  --color-surface-dark-foreground: var(--surface-dark-foreground);
+  --color-surface-dark-foreground-muted: var(--surface-dark-foreground-muted);
+  --color-surface-dark-border: var(--surface-dark-border);
+  --color-destructive: var(--destructive);
+  --color-destructive-surface: var(--destructive-surface);
+  --color-success: var(--success);
+  --color-success-surface: var(--success-surface);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-focus: var(--focus);
+
+  --color-blue-1: var(--blue-1);
+  --color-blue-2: var(--blue-2);
+  --color-blue-3: var(--blue-3);
+  --color-blue-4: var(--blue-4);
+  --color-grey-1: var(--grey-1);
+  --color-grey-2: var(--grey-2);
+  --color-grey-3: var(--grey-3);
+  --color-grey-4: var(--grey-4);
+
+  --color-text-primary: var(--text-primary);
+  --color-text-body: var(--text-body);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+
+  --font-sans: var(--font-body);
+  --font-heading: var(--font-display);
+  --font-arabic: var(--font-arabic);
+  --font-mono: var(--font-data);
+
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+
+  --spacing-section: var(--space-section);
+  --spacing-section-mobile: var(--space-section-mobile);
+
+  /* Type scale — docs/UI_UX_FOUNDATION.md §3.3/§3.4. Mobile-first values;
+     display sizes are stepped up again at lg via responsive classes in
+     components (clamp is not used directly here so the scale stays
+     legible in Tailwind class form: text-display-1 lg:text-display-1-lg). */
+  --text-caption: 0.875rem;
+  --text-caption--line-height: 1.5;
+  --text-body: 1rem;
+  --text-body--line-height: 1.6;
+  --text-body-lg: 1.125rem;
+  --text-body-lg--line-height: 1.6;
+  --text-h4: 1.25rem;
+  --text-h4--line-height: 1.35;
+  --text-h3: 1.75rem;
+  --text-h3--line-height: 1.25;
+  --text-display-2: 1.875rem;
+  --text-display-2--line-height: 1.2;
+  --text-display-2-lg: 2.5rem;
+  --text-display-2-lg--line-height: 1.15;
+  --text-display-1: 2.25rem;
+  --text-display-1--line-height: 1.15;
+  --text-display-1-lg: 3.5rem;
+  --text-display-1-lg--line-height: 1.08;
+
+  --text-caption-ar: 0.875rem;
+  --text-caption-ar--line-height: 1.7;
+  --text-body-ar: 1.0625rem;
+  --text-body-ar--line-height: 1.85;
+  --text-h3-ar: 1.625rem;
+  --text-h3-ar--line-height: 1.5;
+  --text-display-2-ar: 1.5rem;
+  --text-display-2-ar--line-height: 1.4;
+  --text-display-2-ar-lg: 2.25rem;
+  --text-display-2-ar-lg--line-height: 1.4;
+  --text-display-1-ar: 2rem;
+  --text-display-1-ar--line-height: 1.4;
+  --text-display-1-ar-lg: 3rem;
+  --text-display-1-ar-lg--line-height: 1.35;
+
+  --animate-duration-fast: var(--motion-fast);
+  --animate-duration-normal: var(--motion-normal);
+  --animate-duration-slow: var(--motion-slow);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    @apply font-sans scroll-smooth;
+  }
+
+  html[dir="rtl"] body {
+    font-family: var(--font-arabic);
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    /* Safety net for [data-reveal="start"/"end"]: their pre-reveal state
+       is a translateX(±22px) — genuinely off-canvas until the element
+       scrolls into view — which was found (via direct scrollWidth
+       measurement, not visually) to widen the real page beyond the
+       viewport at narrow widths, since nothing previously clipped it.
+       This does not affect any element's own overflow or vertical
+       scrolling — it only prevents the *page* from growing a horizontal
+       scrollbar because of content sitting just outside the viewport. */
+    overflow-x: hidden;
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply font-heading text-[color:var(--text-primary)];
+  }
+
+  html[dir="rtl"] h1,
+  html[dir="rtl"] h2,
+  html[dir="rtl"] h3 {
+    font-family: var(--font-arabic);
+  }
+
+  /* Never remove focus without replacing it. */
+  :focus-visible {
+    outline: 3px solid var(--focus);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  /* LTR-locked runs for numerals/phone/price inside RTL copy. */
+  .ltr-run {
+    direction: ltr;
+    unicode-bidi: isolate;
+    display: inline-block;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer utilities {
+  /* Section rhythm helper — see docs/UI_UX_FOUNDATION.md §4 */
+  .section-y {
+    padding-block: var(--space-section-mobile);
+  }
+  @media (min-width: 1024px) {
+    .section-y {
+      padding-block: var(--space-section);
+    }
+  }
+
+  /* Signature "Facet Line" motif — docs/UI_UX_FOUNDATION.md §17.
+     One shallow-angle clipped corner. Used sparingly; never on every element. */
+  .facet-corner {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 12% 100%, 0 88%);
+  }
+  .facet-corner-sm::after {
+    content: "";
+    position: absolute;
+    inset-inline-end: 0;
+    top: 0;
+    width: 1.5rem;
+    height: 1.5rem;
+    background: linear-gradient(135deg, var(--blue-1) 50%, transparent 50%);
+    opacity: 0;
+    transition: opacity var(--motion-normal) var(--motion-ease);
+    pointer-events: none;
+  }
+  .group:hover .facet-corner-sm::after,
+  .group:focus-within .facet-corner-sm::after {
+    opacity: 0.9;
+  }
+
+  /*
+   * Section-transition seam — src/components/layout/SectionTransition.tsx.
+   * Height follows the brief's recommended depth per breakpoint
+   * (56-96px mobile, 80-130px tablet, 100-180px desktop) via one
+   * continuous clamp() rather than three hard breakpoint jumps. The -1px
+   * margin overlaps both neighboring sections by a sub-pixel amount so no
+   * rendering gap/seam appears at their shared edge.
+   */
+  .section-seam {
+    height: clamp(3.5rem, 6vw + 2rem, 11.25rem);
+    margin-block: -1px;
+    pointer-events: none;
+  }
+
+  /*
+   * Global scroll-reveal system — docs/UI_UX_FOUNDATION.md §9-10.
+   * Progressive enhancement: [data-reveal] elements are fully visible by
+   * default (server-rendered, no JS required, nothing hidden from
+   * crawlers). Only once src/components/layout/ScrollReveal.tsx mounts
+   * and adds `.reveal-active` to <html> do these rules start hiding
+   * elements pending their first intersection — so a JS failure, a slow
+   * connection, or a bot fetch all see complete content immediately.
+   * The hero is deliberately never given data-reveal (see homepage) so
+   * the LCP element is never touched by this system.
+   */
+  html.reveal-active [data-reveal] {
+    opacity: 0;
+    transition:
+      opacity var(--reveal-duration, 800ms) var(--reveal-ease),
+      transform var(--reveal-duration, 800ms) var(--reveal-ease);
+    transition-delay: var(--reveal-delay, 0ms);
+    /* No blanket will-change here (Codex review finding): it was applied
+       to every [data-reveal] element the instant .reveal-active mounts —
+       including everything below the fold — which can hold compositor
+       layers/GPU memory for elements that won't animate for a while.
+       opacity/transform transitions work fine without the hint; the
+       .is-revealed rule below still resets it in case anything else in
+       the tree sets it. */
+  }
+  html.reveal-active [data-reveal="up"] {
+    transform: translateY(24px);
+  }
+  html.reveal-active [data-reveal="start"] {
+    transform: translateX(-22px);
+  }
+  html.reveal-active [data-reveal="start"]:dir(rtl) {
+    transform: translateX(22px);
+  }
+  html.reveal-active [data-reveal="end"] {
+    transform: translateX(22px);
+  }
+  html.reveal-active [data-reveal="end"]:dir(rtl) {
+    transform: translateX(-22px);
+  }
+  html.reveal-active [data-reveal="scale"] {
+    transform: scale(0.96);
+  }
+  html.reveal-active [data-reveal].is-revealed {
+    opacity: 1;
+    transform: none;
+    will-change: auto;
+  }
+
+  html.reveal-active [data-reveal][data-reveal-delay="1"] {
+    --reveal-delay: 90ms;
+  }
+  html.reveal-active [data-reveal][data-reveal-delay="2"] {
+    --reveal-delay: 180ms;
+  }
+  html.reveal-active [data-reveal][data-reveal-delay="3"] {
+    --reveal-delay: 270ms;
+  }
+
+  @media (max-width: 768px) {
+    html.reveal-active [data-reveal] {
+      --reveal-duration: 650ms;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html.reveal-active [data-reveal] {
+      opacity: 1 !important;
+      transform: none !important;
+      transition: none !important;
+    }
+  }
 }

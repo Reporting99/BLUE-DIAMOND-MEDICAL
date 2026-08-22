@@ -1,0 +1,150 @@
+- generic [active] [ref=f6e1]:
+  - banner [ref=f6e2]:
+    - link "Skip to content" [ref=f6e3] [cursor=pointer]:
+      - /url: "#main-content"
+    - generic [ref=f6e4]:
+      - link "Blue Diamond Medical — Home" [ref=f6e5] [cursor=pointer]:
+        - /url: /en
+        - generic [ref=f6e12]: Blue Diamond Medical
+      - navigation [ref=f6e13]:
+        - list [ref=f6e14]:
+          - listitem [ref=f6e15]:
+            - link "Home" [ref=f6e16] [cursor=pointer]:
+              - /url: /en
+          - listitem [ref=f6e17]:
+            - link "Services" [ref=f6e18] [cursor=pointer]:
+              - /url: /en/medical
+          - listitem [ref=f6e19]:
+            - button "Treatments" [ref=f6e20] [cursor=pointer]
+          - listitem [ref=f6e23]:
+            - link "Medical Aesthetics" [ref=f6e24] [cursor=pointer]:
+              - /url: /en/aesthetics
+          - listitem [ref=f6e25]:
+            - link "Our Team" [ref=f6e26] [cursor=pointer]:
+              - /url: /en/doctors
+          - listitem [ref=f6e27]:
+            - link "About" [ref=f6e28] [cursor=pointer]:
+              - /url: /en/about
+          - listitem [ref=f6e29]:
+            - link "Contact" [ref=f6e30] [cursor=pointer]:
+              - /url: /en/contact
+      - generic [ref=f6e31]:
+        - link "العربية" [ref=f6e32] [cursor=pointer]:
+          - /url: /ar/تواصل-معنا
+        - link "Book Appointment" [ref=f6e33] [cursor=pointer]:
+          - /url: https://mika.care
+  - main [ref=f6e34]:
+    - generic [ref=f6e36]:
+      - generic [ref=f6e37]:
+        - heading "Contact Us" [level=1] [ref=f6e38]
+        - heading "Clinic details" [level=2] [ref=f6e39]
+        - generic [ref=f6e40]:
+          - generic [ref=f6e41]:
+            - term [ref=f6e42]: Address
+            - definition [ref=f6e43]: 23-8 Weston Drive SW, Calgary AB T3H 5P2
+          - generic [ref=f6e44]:
+            - term [ref=f6e45]: Phone
+            - definition [ref=f6e46]:
+              - link "+1 (825) 413-1113" [ref=f6e47] [cursor=pointer]:
+                - /url: tel:+18254131113
+          - generic [ref=f6e48]:
+            - term [ref=f6e49]: Fax
+            - definition [ref=f6e50]: +1 (587) 443-0394
+          - generic [ref=f6e51]:
+            - term [ref=f6e52]: Hours
+            - definition [ref=f6e53]: Closed today · Closed all statutory holidays.
+      - generic [ref=f6e54]:
+        - heading "Send us a message" [level=2] [ref=f6e55]
+        - generic [ref=f6e57]:
+          - paragraph [ref=f6e58]: This form is not for medical emergencies or private health information. For emergencies, call 911.
+          - generic [ref=f6e59]:
+            - generic [ref=f6e60]: Full name
+            - textbox "Full name" [ref=f6e61]
+          - generic [ref=f6e62]:
+            - generic [ref=f6e63]: Email
+            - textbox "Email" [ref=f6e64]
+          - generic [ref=f6e65]:
+            - generic [ref=f6e66]: Phone (optional)
+            - textbox "Phone (optional)" [ref=f6e67]
+          - generic [ref=f6e68]:
+            - generic [ref=f6e69]: Message
+            - textbox "Message" [ref=f6e70]
+          - button "Send message" [ref=f6e71]
+  - contentinfo [ref=f6e72]:
+    - generic [ref=f6e73]:
+      - generic [ref=f6e74]:
+        - link "Blue Diamond Medical — Home" [ref=f6e75] [cursor=pointer]:
+          - /url: /en
+          - generic [ref=f6e82]: Blue Diamond Medical
+        - paragraph [ref=f6e83]: Family medicine and physician-led medical aesthetics in West Springs, Calgary.
+        - generic [ref=f6e84]:
+          - paragraph [ref=f6e85]: 23-8 Weston Drive SW, Calgary AB T3H 5P2
+          - link "+1 (825) 413-1113" [ref=f6e86] [cursor=pointer]:
+            - /url: tel:+18254131113
+        - generic [ref=f6e87]:
+          - link "Facebook" [ref=f6e88] [cursor=pointer]:
+            - /url: https://facebook.com/bluediamondmedical
+          - link "Instagram" [ref=f6e91] [cursor=pointer]:
+            - /url: https://instagram.com/bludiamondmedical
+      - navigation "Medical Care" [ref=f6e96]:
+        - paragraph [ref=f6e97]: Medical Care
+        - list [ref=f6e98]:
+          - listitem [ref=f6e99]:
+            - link "Medical Care" [ref=f6e100] [cursor=pointer]:
+              - /url: /en/medical
+          - listitem [ref=f6e101]:
+            - link "Botox" [ref=f6e102] [cursor=pointer]:
+              - /url: /en/botox
+          - listitem [ref=f6e103]:
+            - link "Our Doctors" [ref=f6e104] [cursor=pointer]:
+              - /url: /en/doctors
+          - listitem [ref=f6e105]:
+            - link "Uninsured Services & Fees" [ref=f6e106] [cursor=pointer]:
+              - /url: /en/medical/uninsured-services
+      - navigation "Medical Aesthetics" [ref=f6e107]:
+        - paragraph [ref=f6e108]: Medical Aesthetics
+        - list [ref=f6e109]:
+          - listitem [ref=f6e110]:
+            - link "Medical Aesthetics" [ref=f6e111] [cursor=pointer]:
+              - /url: /en/aesthetics
+          - listitem [ref=f6e112]:
+            - link "Treatments" [ref=f6e113] [cursor=pointer]:
+              - /url: /en/aesthetics/treatments
+          - listitem [ref=f6e114]:
+            - link "Concerns" [ref=f6e115] [cursor=pointer]:
+              - /url: /en/aesthetics/concerns
+          - listitem [ref=f6e116]:
+            - link "Technologies" [ref=f6e117] [cursor=pointer]:
+              - /url: /en/aesthetics/technologies
+      - navigation "Blue Diamond" [ref=f6e118]:
+        - paragraph [ref=f6e119]: Blue Diamond
+        - list [ref=f6e120]:
+          - listitem [ref=f6e121]:
+            - link "About Blue Diamond Medical" [ref=f6e122] [cursor=pointer]:
+              - /url: /en/about
+          - listitem [ref=f6e123]:
+            - link "Careers" [ref=f6e124] [cursor=pointer]:
+              - /url: /en/careers
+          - listitem [ref=f6e125]:
+            - link "Contact Us" [ref=f6e126] [cursor=pointer]:
+              - /url: /en/contact
+          - listitem [ref=f6e127]:
+            - link "Book an Appointment" [ref=f6e128] [cursor=pointer]:
+              - /url: /en/book-appointment
+      - navigation "Patient Resources" [ref=f6e129]:
+        - paragraph [ref=f6e130]: Patient Resources
+        - list [ref=f6e131]:
+          - listitem [ref=f6e132]:
+            - link "Patient Resources" [ref=f6e133] [cursor=pointer]:
+              - /url: /en/patient-resources
+          - listitem [ref=f6e134]:
+            - link "Health Hub" [ref=f6e135] [cursor=pointer]:
+              - /url: /en/health-hub
+          - listitem [ref=f6e136]:
+            - link "SkinMedica Products" [ref=f6e137] [cursor=pointer]:
+              - /url: /en/shop
+    - generic [ref=f6e139]:
+      - generic [ref=f6e140]: © 2026 Blue Diamond Medical Clinic. All rights reserved.
+      - link "Contact Blue Diamond Medical" [ref=f6e141] [cursor=pointer]:
+        - /url: /en/contact
+  - alert [ref=f6e144]

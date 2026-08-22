@@ -1,0 +1,621 @@
+- generic [active] [ref=f18e1]:
+  - banner [ref=f18e2]:
+    - link "Skip to content" [ref=f18e3] [cursor=pointer]:
+      - /url: "#main-content"
+    - generic [ref=f18e4]:
+      - link "Blue Diamond Medical — Home" [ref=f18e5] [cursor=pointer]:
+        - /url: /en
+        - generic [ref=f18e12]: Blue Diamond Medical
+      - generic [ref=f18e13]:
+        - link "العربية" [ref=f18e14] [cursor=pointer]:
+          - /url: /ar
+        - button "Open menu" [ref=f18e15]
+  - main [ref=f18e16]:
+    - generic [ref=f18e18]:
+      - generic [ref=f18e19]:
+        - paragraph [ref=f18e20]: Family Medicine · Physician-Led Medical Aesthetics · West Springs, Calgary
+        - heading "Medical Care and Physician-Led Aesthetics in Calgary" [level=1] [ref=f18e21]
+        - paragraph [ref=f18e22]: One Blue Diamond Medical experience — family medicine, walk-in care, and physician-led medical aesthetics, together in West Springs.
+        - generic [ref=f18e23]:
+          - link "Explore Medical Care" [ref=f18e24] [cursor=pointer]:
+            - /url: /en/medical
+          - link "Explore Medical Aesthetics" [ref=f18e25] [cursor=pointer]:
+            - /url: /en/aesthetics
+        - link "Book Appointment" [ref=f18e26] [cursor=pointer]:
+          - /url: /en/book-appointment
+        - paragraph [ref=f18e27]:
+          - generic [ref=f18e28]: West Springs, Calgary
+          - generic [ref=f18e29]: ·Family Medical Care
+          - generic [ref=f18e30]: ·Medical Aesthetics Consultation
+          - generic [ref=f18e31]: ·Potenza · Elite iQ™ · TempSure · Ultra
+      - generic [ref=f18e32]:
+        - figure [ref=f18e34]:
+          - img "Family medicine at Blue Diamond Medical" [ref=f18e35]
+        - figure [ref=f18e41]:
+          - img "Physician-led medical aesthetics at Blue Diamond Medical" [ref=f18e42]
+    - generic [ref=f18e49]:
+      - generic [ref=f18e50]:
+        - generic [ref=f18e51]: "6"
+        - generic [ref=f18e52]: Physicians
+      - generic [ref=f18e53]:
+        - generic [ref=f18e54]: 28+
+        - generic [ref=f18e56]: Years of Family Medicine Experience
+      - generic [ref=f18e57]:
+        - generic [ref=f18e58]: "2022"
+        - generic [ref=f18e59]: Serving Calgary Since
+    - generic [ref=f18e61]:
+      - heading "Two ways to be cared for, one clinic" [level=2] [ref=f18e62]
+      - generic [ref=f18e63]:
+        - generic [ref=f18e64]:
+          - heading "Medical Care" [level=3] [ref=f18e69]
+          - paragraph [ref=f18e70]: Family medicine, walk-in visits, chronic disease management, preventive care, and more — six physicians, one clinic.
+          - link "Explore Medical Care" [ref=f18e71] [cursor=pointer]:
+            - /url: /en/medical
+        - link [ref=f18e74] [cursor=pointer]:
+          - /url: /en/aesthetics
+          - figure [ref=f18e75]:
+            - img "Medical aesthetics consultation room at Blue Diamond Medical" [ref=f18e76]
+          - heading "Medical Aesthetics" [level=3] [ref=f18e84]
+          - paragraph [ref=f18e85]: Physician-led RF micro-needling, skin tightening, laser treatments, and Botox — delivered by the same clinical team.
+          - generic [ref=f18e86]: Explore Medical Aesthetics
+    - generic [ref=f18e90]:
+      - paragraph [ref=f18e91]: START HERE
+      - heading "Find the right place to begin" [level=2] [ref=f18e92]
+      - paragraph [ref=f18e93]: Explore care and treatment information by medical service, aesthetic treatment, skin concern, or technology.
+      - generic [ref=f18e94]:
+        - link "Medical service Family medicine, chronic care, and more" [ref=f18e95] [cursor=pointer]:
+          - /url: /en/medical
+          - generic [ref=f18e100]: Medical service
+          - generic [ref=f18e101]: Family medicine, chronic care, and more
+        - link "Aesthetic treatment RF micro-needling, laser, and more" [ref=f18e105] [cursor=pointer]:
+          - /url: /en/aesthetics/treatments
+          - generic [ref=f18e109]: Aesthetic treatment
+          - generic [ref=f18e110]: RF micro-needling, laser, and more
+        - link "Skin concern Browse by what you're noticing" [ref=f18e114] [cursor=pointer]:
+          - /url: /en/aesthetics/concerns
+          - generic [ref=f18e118]: Skin concern
+          - generic [ref=f18e119]: Browse by what you're noticing
+        - link "Technology The devices behind the treatments" [ref=f18e123] [cursor=pointer]:
+          - /url: /en/aesthetics/technologies
+          - generic [ref=f18e127]: Technology
+          - generic [ref=f18e128]: The devices behind the treatments
+    - generic [ref=f18e133]:
+      - generic [ref=f18e134]:
+        - generic [ref=f18e135]:
+          - paragraph [ref=f18e136]: MEDICAL CARE
+          - heading "Care for every stage of life." [level=2] [ref=f18e137]
+          - paragraph [ref=f18e138]: Comprehensive AHS-insured family medicine and walk-in care for patients and families in West Springs.
+        - link "Explore all medical services" [ref=f18e139] [cursor=pointer]:
+          - /url: /en/medical
+      - generic [ref=f18e142]:
+        - link [ref=f18e143] [cursor=pointer]:
+          - /url: /en/medical/eye-screening
+          - figure [ref=f18e145]:
+            - img "Eye Disease Screening at Blue Diamond Medical" [ref=f18e146]
+          - generic [ref=f18e151]:
+            - heading "Eye Disease Screening" [level=3] [ref=f18e152]
+            - paragraph [ref=f18e153]: A collaboration with Euclid Telehealth offering AHS-covered eye disease screening at our clinic — in keeping with our belief that prevention is better than cure.
+        - link [ref=f18e154] [cursor=pointer]:
+          - /url: /en/medical/after-hours-care
+          - figure [ref=f18e156]:
+            - img "After-Hours Care at Blue Diamond Medical" [ref=f18e157]
+          - generic [ref=f18e162]:
+            - heading "After-Hours Care" [level=3] [ref=f18e163]
+            - paragraph [ref=f18e164]: When the clinic is closed, our patients are referred to a partner Primary Care Network for urgent, non-emergency needs — not left without a path to care.
+        - link [ref=f18e165] [cursor=pointer]:
+          - /url: /en/medical/chronic-disease-management
+          - figure [ref=f18e167]:
+            - img "Chronic Disease Management at Blue Diamond Medical" [ref=f18e168]
+          - generic [ref=f18e173]:
+            - heading "Chronic Disease Management" [level=3] [ref=f18e174]
+            - paragraph [ref=f18e175]: AHS-insured, ongoing management of chronic conditions through your family physician, with Dr. Bakare's particular focus on chronic disease management and palliative care.
+        - link [ref=f18e176] [cursor=pointer]:
+          - /url: /en/medical/preventive-care
+          - figure [ref=f18e178]:
+            - img "Preventive Care at Blue Diamond Medical" [ref=f18e179]
+          - generic [ref=f18e184]:
+            - heading "Preventive Care" [level=3] [ref=f18e185]
+            - paragraph [ref=f18e186]: "\"Prevention is better than cure\" is at the core of how we practice — from vaccination to Dr. Saeed's clinical focus on preventive medicine and early intervention."
+        - link [ref=f18e187] [cursor=pointer]:
+          - /url: /en/medical/weight-management
+          - figure [ref=f18e189]:
+            - img "Weight Management at Blue Diamond Medical" [ref=f18e190]
+          - generic [ref=f18e195]:
+            - heading "Weight Management" [level=3] [ref=f18e196]
+            - paragraph [ref=f18e197]: AHS-insured weight management support as part of your comprehensive care with your family physician.
+        - link [ref=f18e198] [cursor=pointer]:
+          - /url: /en/medical/pain-management
+          - figure [ref=f18e200]:
+            - img "Pain Management at Blue Diamond Medical" [ref=f18e201]
+          - generic [ref=f18e206]:
+            - heading "Pain Management" [level=3] [ref=f18e207]
+            - paragraph [ref=f18e208]: AHS-insured pain management support from your family physician.
+        - link [ref=f18e209] [cursor=pointer]:
+          - /url: /en/medical/minor-procedures
+          - figure [ref=f18e211]:
+            - img "Minor Procedures at Blue Diamond Medical" [ref=f18e212]
+          - generic [ref=f18e217]:
+            - heading "Minor Procedures" [level=3] [ref=f18e218]
+            - paragraph [ref=f18e219]: AHS-insured minor procedures including suture removal and application, with Dr. Bakare additionally offering in-house minor skin lesion excision and joint injections.
+        - link [ref=f18e220] [cursor=pointer]:
+          - /url: /en/medical/uninsured-services
+          - figure [ref=f18e222]:
+            - img "Uninsured Services at Blue Diamond Medical" [ref=f18e223]
+          - generic [ref=f18e228]:
+            - heading "Uninsured Services" [level=3] [ref=f18e229]
+            - paragraph [ref=f18e230]: Forms, notes, and other uninsured services, with fees listed in advance.
+      - generic [ref=f18e231]:
+        - paragraph [ref=f18e232]: Also included in every visit
+        - paragraph [ref=f18e233]: General Family Medicine · Walk-In Care · Vaccination · Onsite Pediatrician · Mental Health · Women's Health
+      - generic [ref=f18e234]:
+        - generic [ref=f18e235]:
+          - paragraph [ref=f18e236]: New patients
+          - paragraph [ref=f18e237]: Family-doctor and walk-in appointments are both available — book through the family-doctor or walk-in pathway below.
+        - generic [ref=f18e238]:
+          - paragraph [ref=f18e239]: Walk-in visitors
+          - paragraph [ref=f18e240]: Walk-ins have been welcomed consistently since the clinic opened in July 2022.
+        - generic [ref=f18e241]:
+          - paragraph [ref=f18e242]: Existing patients
+          - paragraph [ref=f18e243]: Book your next appointment through the same external booking system as always.
+        - generic [ref=f18e244]:
+          - paragraph [ref=f18e245]: External booking
+          - paragraph [ref=f18e246]: All booking is completed through Mika, Euclid, Jane, or by phone — never on this website.
+    - generic [ref=f18e248]:
+      - generic [ref=f18e249]:
+        - generic [ref=f18e250]:
+          - paragraph [ref=f18e251]: MEDICAL AESTHETICS
+          - heading "Featured aesthetic treatments." [level=2] [ref=f18e252]
+          - paragraph [ref=f18e253]: Physician-led treatments, delivered with the same clinical standards as every other visit.
+        - link "Explore all aesthetic treatments" [ref=f18e254] [cursor=pointer]:
+          - /url: /en/aesthetics/treatments
+      - generic [ref=f18e257]:
+        - link "Acne Scars RF Micro-Needling The Potenza RF microneedling system adds radiofrequency energy to mechanical microneedling for enhanced skin tightening alongside the benefits of micro-injury stimulation." [ref=f18e258] [cursor=pointer]:
+          - /url: /en/aesthetics/treatments/rf-microneedling
+          - figure [ref=f18e259]:
+            - img "RF Micro-Needling at Blue Diamond Medical" [ref=f18e260]
+          - generic [ref=f18e266]: Acne Scars
+          - heading "RF Micro-Needling" [level=3] [ref=f18e267]
+          - paragraph [ref=f18e268]: The Potenza RF microneedling system adds radiofrequency energy to mechanical microneedling for enhanced skin tightening alongside the benefits of micro-injury stimulation.
+        - link "Razor Bumps Laser Hair Removal Long-lasting hair reduction anywhere on the body using the Cynosure Elite+™ laser system." [ref=f18e272] [cursor=pointer]:
+          - /url: /en/aesthetics/treatments/laser-hair-removal
+          - figure [ref=f18e273]:
+            - img "Laser Hair Removal at Blue Diamond Medical" [ref=f18e274]
+          - generic [ref=f18e280]: Razor Bumps
+          - heading "Laser Hair Removal" [level=3] [ref=f18e281]
+          - paragraph [ref=f18e282]: Long-lasting hair reduction anywhere on the body using the Cynosure Elite+™ laser system.
+        - link "Fine Lines & Wrinkles Radio Frequency Non-invasive tightening and smoothing of skin all over the body using RF waves (TempSure), improving tone and reducing the appearance of fine lines and wrinkles." [ref=f18e286] [cursor=pointer]:
+          - /url: /en/aesthetics/treatments/radio-frequency
+          - figure [ref=f18e287]:
+            - img "Radio Frequency at Blue Diamond Medical" [ref=f18e288]
+          - generic [ref=f18e294]: Fine Lines & Wrinkles
+          - heading "Radio Frequency" [level=3] [ref=f18e295]
+          - paragraph [ref=f18e296]: Non-invasive tightening and smoothing of skin all over the body using RF waves (TempSure), improving tone and reducing the appearance of fine lines and wrinkles.
+        - generic [ref=f18e300]:
+          - link "Laser Skin Treatments" [ref=f18e301] [cursor=pointer]:
+            - /url: /en/aesthetics/treatments/laser-skin-treatments
+            - figure [ref=f18e303]:
+              - img "Laser Skin Treatments at Blue Diamond Medical" [ref=f18e304]
+          - link "Ultra Treatment" [ref=f18e310] [cursor=pointer]:
+            - /url: /en/aesthetics/treatments/ultra
+            - figure [ref=f18e312]:
+              - img "Ultra Treatment at Blue Diamond Medical" [ref=f18e313]
+          - link "PRP Hair Restoration" [ref=f18e319] [cursor=pointer]:
+            - /url: /en/aesthetics/treatments/prp-hair-restoration
+            - figure [ref=f18e321]:
+              - img "PRP Hair Restoration at Blue Diamond Medical" [ref=f18e322]
+          - link "PRP Skin Rejuvenation" [ref=f18e328] [cursor=pointer]:
+            - /url: /en/aesthetics/treatments/prp-skin-rejuvenation
+            - figure [ref=f18e330]:
+              - img "PRP Skin Rejuvenation at Blue Diamond Medical" [ref=f18e331]
+          - link "TempSure Vitalia" [ref=f18e337] [cursor=pointer]:
+            - /url: /en/aesthetics/treatments/tempsure-vitalia
+            - figure [ref=f18e339]:
+              - img "TempSure Vitalia at Blue Diamond Medical" [ref=f18e340]
+    - generic [ref=f18e348]:
+      - paragraph [ref=f18e349]: By concern
+      - heading "Explore information and treatment options" [level=2] [ref=f18e350]
+      - paragraph [ref=f18e351]: Browse by what you're noticing, and see the approved treatments and technologies that may be relevant — a starting point for your consultation, not a diagnosis.
+      - generic [ref=f18e352]:
+        - generic [ref=f18e353]:
+          - figure [ref=f18e354]:
+            - img "Acne Scars — Blue Diamond Medical Aesthetics" [ref=f18e355]
+          - generic [ref=f18e360]:
+            - paragraph [ref=f18e361]: Acne Scars
+            - paragraph [ref=f18e362]: Comprehensive care for acne scarring — medical consultations, prescriptions where necessary, and RF micro-needling and laser treatments to reduce scarring, under the supervision of one of our physicians.
+        - list [ref=f18e363]:
+          - listitem [ref=f18e364]:
+            - link [ref=f18e365] [cursor=pointer]:
+              - /url: /en/aesthetics/concerns/acne-scars
+              - generic [ref=f18e366]:
+                - heading "Acne Scars" [level=3] [ref=f18e367]
+                - paragraph [ref=f18e368]: Comprehensive care for acne scarring — medical consultations, prescriptions where necessary, and RF micro-needling and laser treatments to reduce scarring, under the supervision of one of our physicians.
+          - listitem [ref=f18e372]:
+            - link [ref=f18e373] [cursor=pointer]:
+              - /url: /en/aesthetics/concerns/rosacea-redness
+              - generic [ref=f18e374]:
+                - heading "Rosacea & Redness" [level=3] [ref=f18e375]
+                - paragraph [ref=f18e376]: The gentle flush of rosacea can escalate into redness that's distressing to live with. We take a holistic approach, starting with a full medical consultation to discuss what can be achieved — laser treatments often work best for this condition.
+          - listitem [ref=f18e380]:
+            - link [ref=f18e381] [cursor=pointer]:
+              - /url: /en/aesthetics/concerns/dry-skin
+              - generic [ref=f18e382]:
+                - heading "Dry Skin" [level=3] [ref=f18e383]
+                - paragraph [ref=f18e384]: Calgary's climate is unusually harsh on skin. Using RF micro-needling to infuse topicals — including moisturizers and pigment regulators — we help skin stay nourished and glowing for months after treatment.
+          - listitem [ref=f18e388]:
+            - link [ref=f18e389] [cursor=pointer]:
+              - /url: /en/aesthetics/concerns/fine-lines-wrinkles
+              - generic [ref=f18e390]:
+                - heading "Fine Lines & Wrinkles" [level=3] [ref=f18e391]
+                - paragraph [ref=f18e392]: State-of-the-art technologies to smooth and erase fine lines and wrinkles, alongside skin-tightening options for all skin types — bespoke treatments as individual as you are.
+          - listitem [ref=f18e396]:
+            - link [ref=f18e397] [cursor=pointer]:
+              - /url: /en/aesthetics/concerns/skin-laxity
+              - generic [ref=f18e398]:
+                - heading "Skin Laxity" [level=3] [ref=f18e399]
+                - paragraph [ref=f18e400]: Radio-frequency waves promote collagen and elastin production to tighten and smooth skin all over the body — a quick, pain-free treatment (about 15 minutes) with easy, visible results and no downtime.
+          - listitem [ref=f18e404]:
+            - link [ref=f18e405] [cursor=pointer]:
+              - /url: /en/aesthetics/concerns/spider-veins
+              - generic [ref=f18e406]:
+                - heading "Spider Veins" [level=3] [ref=f18e407]
+                - paragraph [ref=f18e408]: Damaged blood vessels under the skin that can appear red, blue, or purple — generally harmless but unsightly. Laser treatments can remove them from anywhere on the body quickly and painlessly.
+          - listitem [ref=f18e412]:
+            - link [ref=f18e413] [cursor=pointer]:
+              - /url: /en/aesthetics/concerns/sun-damage-pigmentation
+              - generic [ref=f18e414]:
+                - heading "Sun Damage & Pigmentation" [level=3] [ref=f18e415]
+                - paragraph [ref=f18e416]: Sun spots and liver spots from time in the sun can be easily reduced using our state-of-the-art laser technologies.
+          - listitem [ref=f18e420]:
+            - link [ref=f18e421] [cursor=pointer]:
+              - /url: /en/aesthetics/concerns/skin-revitalization
+              - generic [ref=f18e422]:
+                - heading "Skin Revitalization" [level=3] [ref=f18e423]
+                - paragraph [ref=f18e424]: Harsh weather and daily stresses can leave skin looking tired. We can refresh skin in under 45 minutes, exposing a natural glow and reducing the appearance of fine lines and wrinkles.
+          - listitem [ref=f18e428]:
+            - link [ref=f18e429] [cursor=pointer]:
+              - /url: /en/aesthetics/concerns/razor-bumps
+              - generic [ref=f18e430]:
+                - heading "Razor Bumps" [level=3] [ref=f18e431]
+                - paragraph [ref=f18e432]: Uncomfortable and prone to infection when combined with ingrown hairs. Our technologies can remove razor bumps, treat the underlying cause, and give you smoother, softer skin with minimally invasive treatment.
+      - link "View all concerns" [ref=f18e436] [cursor=pointer]:
+        - /url: /en/aesthetics/concerns
+    - generic [ref=f18e440]:
+      - generic [ref=f18e441]:
+        - paragraph [ref=f18e442]: TECHNOLOGY BEHIND THE TREATMENT
+        - heading "The devices behind your treatment." [level=2] [ref=f18e443]
+        - paragraph [ref=f18e444]: Every device we use is introduced here — what it is, how it works, and which treatments and concerns it addresses.
+      - generic [ref=f18e445]:
+        - link "01 Potenza A one-of-a-kind radio-frequency micro-needling system, ideal for skin tightening and smoothing all over the body — for fine lines or tightening after rapid weight loss or post-birth. RF Micro-Needling" [ref=f18e446] [cursor=pointer]:
+          - /url: /en/aesthetics/technologies/potenza
+          - figure [ref=f18e448]:
+            - img "Potenza device at Blue Diamond Medical" [ref=f18e449]
+          - generic [ref=f18e455]:
+            - generic [ref=f18e456]: "01"
+            - heading "Potenza" [level=3] [ref=f18e457]
+            - paragraph [ref=f18e458]: A one-of-a-kind radio-frequency micro-needling system, ideal for skin tightening and smoothing all over the body — for fine lines or tightening after rapid weight loss or post-birth.
+            - paragraph [ref=f18e459]: RF Micro-Needling
+        - generic [ref=f18e460]:
+          - link "02 Elite iQ™" [ref=f18e461] [cursor=pointer]:
+            - /url: /en/aesthetics/technologies/elite-iq
+            - figure [ref=f18e463]:
+              - img "Elite iQ™ device at Blue Diamond Medical" [ref=f18e464]
+            - generic [ref=f18e470]:
+              - generic [ref=f18e471]: "02"
+              - heading "Elite iQ™" [level=3] [ref=f18e472]
+          - link "03 TempSure" [ref=f18e475] [cursor=pointer]:
+            - /url: /en/aesthetics/technologies/tempsure
+            - figure [ref=f18e477]:
+              - img "TempSure device at Blue Diamond Medical" [ref=f18e478]
+            - generic [ref=f18e484]:
+              - generic [ref=f18e485]: "03"
+              - heading "TempSure" [level=3] [ref=f18e486]
+        - generic [ref=f18e489]:
+          - link "04 Ultra A low-downtime laser that rejuvenates skin, giving it a brighter tone and improved texture, with treatments customized to your needs and schedule." [ref=f18e490] [cursor=pointer]:
+            - /url: /en/aesthetics/technologies/ultra
+            - figure [ref=f18e492]:
+              - img "Ultra device at Blue Diamond Medical" [ref=f18e493]
+            - generic [ref=f18e499]:
+              - generic [ref=f18e500]: "04"
+              - heading "Ultra" [level=3] [ref=f18e501]
+              - paragraph [ref=f18e502]: A low-downtime laser that rejuvenates skin, giving it a brighter tone and improved texture, with treatments customized to your needs and schedule.
+          - link "05 TempSure Vitalia Equipment addressing many pelvic floor issues and sexual health concerns women experience at all ages and stages of life." [ref=f18e503] [cursor=pointer]:
+            - /url: /en/aesthetics/technologies/tempsure-vitalia
+            - figure [ref=f18e505]:
+              - img "TempSure Vitalia device at Blue Diamond Medical" [ref=f18e506]
+            - generic [ref=f18e512]:
+              - generic [ref=f18e513]: "05"
+              - heading "TempSure Vitalia" [level=3] [ref=f18e514]
+              - paragraph [ref=f18e515]: Equipment addressing many pelvic floor issues and sexual health concerns women experience at all ages and stages of life.
+    - generic [ref=f18e517]:
+      - paragraph [ref=f18e518]: YOUR VISIT
+      - heading "Your visit, made simple." [level=2] [ref=f18e519]
+      - generic [ref=f18e520]:
+        - generic [ref=f18e521]:
+          - generic [ref=f18e522]: "01"
+          - paragraph [ref=f18e523]: Choose a service
+          - paragraph [ref=f18e524]: Medical care or medical aesthetics — or explore both.
+        - generic [ref=f18e525]:
+          - generic [ref=f18e526]: "02"
+          - paragraph [ref=f18e527]: Review information
+          - paragraph [ref=f18e528]: Read what the service or treatment involves before you book.
+        - generic [ref=f18e529]:
+          - generic [ref=f18e530]: "03"
+          - paragraph [ref=f18e531]: Book through the approved system
+          - paragraph [ref=f18e532]: Mika, Euclid, Jane, or a phone call — never on this website.
+        - generic [ref=f18e533]:
+          - generic [ref=f18e534]: "04"
+          - paragraph [ref=f18e535]: Attend your consultation or appointment
+          - paragraph [ref=f18e536]: Every aesthetics treatment starts with a physician consultation.
+    - generic [ref=f18e538]:
+      - generic [ref=f18e539]:
+        - paragraph [ref=f18e540]: OUR PHYSICIANS
+        - heading "Blue Diamond Medical Team" [level=2] [ref=f18e541]
+        - paragraph [ref=f18e542]: Six family physicians, one clinic, one standard of care.
+      - generic [ref=f18e543]:
+        - link [ref=f18e544] [cursor=pointer]:
+          - /url: /en/doctors/mohamed-farhat
+          - figure [ref=f18e546]:
+            - img "Portrait of Dr. Mohamed Farhat" [ref=f18e547]
+          - generic [ref=f18e552]:
+            - paragraph [ref=f18e553]: Dr. Mohamed Farhat
+            - paragraph [ref=f18e554]: Family Physician · Founder
+        - link [ref=f18e555] [cursor=pointer]:
+          - /url: /en/doctors/omaima-saeed
+          - figure [ref=f18e557]:
+            - img "Portrait of Dr. Omaima Saeed" [ref=f18e558]
+          - generic [ref=f18e563]:
+            - paragraph [ref=f18e564]: Dr. Omaima Saeed
+            - paragraph [ref=f18e565]: Family Physician
+        - link [ref=f18e566] [cursor=pointer]:
+          - /url: /en/doctors/reem-hamdi
+          - figure [ref=f18e568]:
+            - img "Portrait of Dr. Reem Hamdi" [ref=f18e569]
+          - generic [ref=f18e574]:
+            - paragraph [ref=f18e575]: Dr. Reem Hamdi
+            - paragraph [ref=f18e576]: Family Physician
+      - link "Learn more about our doctors" [ref=f18e578] [cursor=pointer]:
+        - /url: /en/doctors
+        - text: Learn more
+        - generic [ref=f18e579]: about our doctors
+    - generic [ref=f18e583]:
+      - generic [ref=f18e584]:
+        - generic [ref=f18e585]:
+          - paragraph [ref=f18e586]: SKINMEDICA
+          - heading "Medical-grade skincare, recommended by your physician." [level=2] [ref=f18e587]
+          - paragraph [ref=f18e588]: Blue Diamond Medical carries SkinMedica, a professional skincare line. Availability and pricing are confirmed in person, not through online checkout.
+        - link "View All SkinMedica Products" [ref=f18e589] [cursor=pointer]:
+          - /url: /en/shop
+      - generic [ref=f18e590]:
+        - link [ref=f18e591] [cursor=pointer]:
+          - /url: /en/shop/lumivive-system-day-night
+          - figure [ref=f18e593]:
+            - img "Lumivive® System Day, Night" [ref=f18e594]
+          - paragraph [ref=f18e599]: Lumivive® System Day, Night
+          - paragraph [ref=f18e600]: "A two-step day-and-night system: a daytime step formulated to help shield skin from blue light and environmental stress, and a nighttime step formulated to support skin's overnight repair process."
+          - paragraph [ref=f18e601]: 28.4 g
+          - paragraph [ref=f18e602]: $285.00 CAD
+        - link [ref=f18e603] [cursor=pointer]:
+          - /url: /en/shop/retinol-complex-0-5
+          - figure [ref=f18e605]:
+            - img "Retinol Complex 0.5" [ref=f18e606]
+          - paragraph [ref=f18e611]: Retinol Complex 0.5
+          - paragraph [ref=f18e612]: The mid-strength Retinol Complex — for those who have built tolerance beyond the 0.25 strength.
+          - paragraph [ref=f18e613]: 29.6 g
+          - paragraph [ref=f18e614]: $83.00 CAD
+        - link [ref=f18e615] [cursor=pointer]:
+          - /url: /en/shop/total-defence-repair-spf-34-tinted
+          - figure [ref=f18e617]:
+            - img "Total Defense + Repair SPF 34 (Tinted)" [ref=f18e618]
+          - paragraph [ref=f18e623]: Total Defense + Repair SPF 34 (Tinted)
+          - paragraph [ref=f18e624]: A broad-spectrum SPF 34 sunscreen with sheer tinted coverage, for daily use.
+          - paragraph [ref=f18e625]: 65 g
+          - paragraph [ref=f18e626]: $75.00 CAD
+        - link [ref=f18e627] [cursor=pointer]:
+          - /url: /en/shop/dermal-repair-cream
+          - figure [ref=f18e629]:
+            - img "Dermal Repair Cream" [ref=f18e630]
+          - paragraph [ref=f18e635]: Dermal Repair Cream
+          - paragraph [ref=f18e636]: An ultra-rich facial cream intended to intensely hydrate and help replenish moisture, suited to normal-to-dry skin.
+          - paragraph [ref=f18e637]: 48 g
+          - paragraph [ref=f18e638]: $136.00 CAD
+        - link [ref=f18e639] [cursor=pointer]:
+          - /url: /en/shop/scar-recovery-gel-with-centelline-large
+          - figure [ref=f18e641]:
+            - img "Scar Recovery Gel with Centelline® (Large)" [ref=f18e642]
+          - paragraph [ref=f18e647]: Scar Recovery Gel with Centelline® (Large)
+          - paragraph [ref=f18e648]: A lightweight gel formulated to help minimize the appearance of scars, in the larger of two approved sizes.
+          - paragraph [ref=f18e649]: 56.7 g
+          - paragraph [ref=f18e650]: $108.00 CAD
+        - link [ref=f18e651] [cursor=pointer]:
+          - /url: /en/shop/tns-advanced-plus-serum
+          - figure [ref=f18e653]:
+            - img "TNS® Advanced+ Serum" [ref=f18e654]
+          - paragraph [ref=f18e659]: TNS® Advanced+ Serum
+          - paragraph [ref=f18e660]: A serum built on SkinMedica's TNS® growth-factor technology, formulated to support collagen production and cellular activity.
+          - paragraph [ref=f18e661]: 28.4 g
+          - paragraph [ref=f18e662]: $330.00 CAD
+      - paragraph [ref=f18e663]: Product availability and current pricing should be confirmed directly with Blue Diamond Medical Clinic.
+    - generic [ref=f18e665]:
+      - paragraph [ref=f18e666]: PATIENT RESOURCES
+      - heading "Useful patient resources." [level=2] [ref=f18e667]
+      - generic [ref=f18e668]:
+        - link "Patient resources Clinic policies, no-show fees, and appointment guidance." [ref=f18e669] [cursor=pointer]:
+          - /url: /en/patient-resources
+          - generic [ref=f18e670]: Patient resources
+          - generic [ref=f18e671]: Clinic policies, no-show fees, and appointment guidance.
+        - link "Uninsured services Forms, notes, and fees for services outside AHS coverage." [ref=f18e672] [cursor=pointer]:
+          - /url: /en/medical/uninsured-services
+          - generic [ref=f18e673]: Uninsured services
+          - generic [ref=f18e674]: Forms, notes, and fees for services outside AHS coverage.
+        - link "After-hours care PCN partnerships for guidance outside clinic hours." [ref=f18e675] [cursor=pointer]:
+          - /url: /en/medical/after-hours-care
+          - generic [ref=f18e676]: After-hours care
+          - generic [ref=f18e677]: PCN partnerships for guidance outside clinic hours.
+        - link "Contact the clinic Questions we haven't answered here." [ref=f18e678] [cursor=pointer]:
+          - /url: /en/contact
+          - generic [ref=f18e679]: Contact the clinic
+          - generic [ref=f18e680]: Questions we haven't answered here.
+    - generic [ref=f18e682]:
+      - paragraph [ref=f18e683]: QUESTIONS, ANSWERED
+      - heading "Questions, answered." [level=2] [ref=f18e684]
+      - generic [ref=f18e685]:
+        - group [ref=f18e686]:
+          - generic "Do you accept walk-in patients? +" [ref=f18e687] [cursor=pointer]:
+            - text: Do you accept walk-in patients?
+            - generic [ref=f18e688]: +
+        - group [ref=f18e689]:
+          - generic "Where is the clinic located? +" [ref=f18e690] [cursor=pointer]:
+            - text: Where is the clinic located?
+            - generic [ref=f18e691]: +
+        - group [ref=f18e692]:
+          - generic "What are your hours? +" [ref=f18e693] [cursor=pointer]:
+            - text: What are your hours?
+            - generic [ref=f18e694]: +
+        - group [ref=f18e695]:
+          - generic "Are bookings completed on this website? +" [ref=f18e696] [cursor=pointer]:
+            - text: Are bookings completed on this website?
+            - generic [ref=f18e697]: +
+        - group [ref=f18e698]:
+          - generic "How do I book a medical aesthetics consultation? +" [ref=f18e699] [cursor=pointer]:
+            - text: How do I book a medical aesthetics consultation?
+            - generic [ref=f18e700]: +
+        - group [ref=f18e701]:
+          - generic "Where are Elite iQ™ treatments performed? +" [ref=f18e702] [cursor=pointer]:
+            - text: Where are Elite iQ™ treatments performed?
+            - generic [ref=f18e703]: +
+        - group [ref=f18e704]:
+          - generic "How can I ask about SkinMedica products? +" [ref=f18e705] [cursor=pointer]:
+            - text: How can I ask about SkinMedica products?
+            - generic [ref=f18e706]: +
+        - group [ref=f18e707]:
+          - generic "Can SkinMedica products be purchased online? +" [ref=f18e708] [cursor=pointer]:
+            - text: Can SkinMedica products be purchased online?
+            - generic [ref=f18e709]: +
+        - group [ref=f18e710]:
+          - generic "Is Botox covered by insurance? +" [ref=f18e711] [cursor=pointer]:
+            - text: Is Botox covered by insurance?
+            - generic [ref=f18e712]: +
+    - generic [ref=f18e714]:
+      - generic [ref=f18e715]:
+        - paragraph [ref=f18e716]: OUR COMMUNITY
+        - heading "Visit us in West Springs" [level=2] [ref=f18e717]
+        - paragraph [ref=f18e718]: We love our patients, so feel free to visit during normal business hours. Closed all statutory holidays.
+        - generic [ref=f18e719]:
+          - definition [ref=f18e724]: 23-8 Weston Drive SW, Calgary AB T3H 5P2
+          - definition [ref=f18e728]:
+            - link "+1 (825) 413-1113" [ref=f18e729] [cursor=pointer]:
+              - /url: tel:+18254131113
+        - generic [ref=f18e730]: Closed today·Closed all statutory holidays.
+        - generic [ref=f18e731]:
+          - link "Get directions" [ref=f18e732] [cursor=pointer]:
+            - /url: /en/contact
+          - link "Book Appointment" [ref=f18e733] [cursor=pointer]:
+            - /url: /en/book-appointment
+      - figure [ref=f18e735]:
+        - img "Map to Blue Diamond Medical Clinic" [ref=f18e736]
+    - generic [ref=f18e742]:
+      - heading "Find the right appointment." [level=2] [ref=f18e743]
+      - generic [ref=f18e744]:
+        - link "EXISTING PATIENT Book with your doctor" [ref=f18e745] [cursor=pointer]:
+          - /url: https://mika.care
+          - generic [ref=f18e746]: EXISTING PATIENT
+          - generic [ref=f18e747]: Book with your doctor
+        - link "NEW OR WALK-IN PATIENT Book a walk-in or new-patient visit" [ref=f18e748] [cursor=pointer]:
+          - /url: https://mika.care
+          - generic [ref=f18e749]: NEW OR WALK-IN PATIENT
+          - generic [ref=f18e750]: Book a walk-in or new-patient visit
+        - link "MEDICAL AESTHETICS Book a consultation" [ref=f18e751] [cursor=pointer]:
+          - /url: https://bluediamondmedical.janeapp.com
+          - generic [ref=f18e752]: MEDICAL AESTHETICS
+          - generic [ref=f18e753]: Book a consultation
+        - link "CALL THE CLINIC +1 (825) 413-1113" [ref=f18e754] [cursor=pointer]:
+          - /url: tel:+18254131113
+          - generic [ref=f18e755]: CALL THE CLINIC
+          - generic [ref=f18e756]: +1 (825) 413-1113
+    - generic [ref=f18e758]:
+      - heading "Ready to find the right place to begin?" [level=2] [ref=f18e759]
+      - paragraph [ref=f18e760]: Book with your doctor, a walk-in visit, or a medical aesthetics consultation.
+      - generic [ref=f18e761]:
+        - link "Book Appointment" [ref=f18e762] [cursor=pointer]:
+          - /url: /en/book-appointment
+        - link "Explore Booking Options" [ref=f18e763] [cursor=pointer]:
+          - /url: /en/book-appointment
+      - link "+1 (825) 413-1113" [ref=f18e764] [cursor=pointer]:
+        - /url: tel:+18254131113
+  - contentinfo [ref=f18e768]:
+    - generic [ref=f18e769]:
+      - generic [ref=f18e770]:
+        - link "Blue Diamond Medical — Home" [ref=f18e771] [cursor=pointer]:
+          - /url: /en
+          - generic [ref=f18e778]: Blue Diamond Medical
+        - paragraph [ref=f18e779]: Family medicine and physician-led medical aesthetics in West Springs, Calgary.
+        - generic [ref=f18e780]:
+          - paragraph [ref=f18e781]: 23-8 Weston Drive SW, Calgary AB T3H 5P2
+          - link "+1 (825) 413-1113" [ref=f18e782] [cursor=pointer]:
+            - /url: tel:+18254131113
+        - generic [ref=f18e783]:
+          - link "Facebook" [ref=f18e784] [cursor=pointer]:
+            - /url: https://facebook.com/bluediamondmedical
+          - link "Instagram" [ref=f18e787] [cursor=pointer]:
+            - /url: https://instagram.com/bludiamondmedical
+      - navigation "Medical Care" [ref=f18e792]:
+        - paragraph [ref=f18e793]: Medical Care
+        - list [ref=f18e794]:
+          - listitem [ref=f18e795]:
+            - link "Medical Care" [ref=f18e796] [cursor=pointer]:
+              - /url: /en/medical
+          - listitem [ref=f18e797]:
+            - link "Botox" [ref=f18e798] [cursor=pointer]:
+              - /url: /en/botox
+          - listitem [ref=f18e799]:
+            - link "Our Doctors" [ref=f18e800] [cursor=pointer]:
+              - /url: /en/doctors
+          - listitem [ref=f18e801]:
+            - link "Uninsured Services & Fees" [ref=f18e802] [cursor=pointer]:
+              - /url: /en/medical/uninsured-services
+      - navigation "Medical Aesthetics" [ref=f18e803]:
+        - paragraph [ref=f18e804]: Medical Aesthetics
+        - list [ref=f18e805]:
+          - listitem [ref=f18e806]:
+            - link "Medical Aesthetics" [ref=f18e807] [cursor=pointer]:
+              - /url: /en/aesthetics
+          - listitem [ref=f18e808]:
+            - link "Treatments" [ref=f18e809] [cursor=pointer]:
+              - /url: /en/aesthetics/treatments
+          - listitem [ref=f18e810]:
+            - link "Concerns" [ref=f18e811] [cursor=pointer]:
+              - /url: /en/aesthetics/concerns
+          - listitem [ref=f18e812]:
+            - link "Technologies" [ref=f18e813] [cursor=pointer]:
+              - /url: /en/aesthetics/technologies
+      - navigation "Blue Diamond" [ref=f18e814]:
+        - paragraph [ref=f18e815]: Blue Diamond
+        - list [ref=f18e816]:
+          - listitem [ref=f18e817]:
+            - link "About Blue Diamond Medical" [ref=f18e818] [cursor=pointer]:
+              - /url: /en/about
+          - listitem [ref=f18e819]:
+            - link "Careers" [ref=f18e820] [cursor=pointer]:
+              - /url: /en/careers
+          - listitem [ref=f18e821]:
+            - link "Contact Us" [ref=f18e822] [cursor=pointer]:
+              - /url: /en/contact
+          - listitem [ref=f18e823]:
+            - link "Book an Appointment" [ref=f18e824] [cursor=pointer]:
+              - /url: /en/book-appointment
+      - navigation "Patient Resources" [ref=f18e825]:
+        - paragraph [ref=f18e826]: Patient Resources
+        - list [ref=f18e827]:
+          - listitem [ref=f18e828]:
+            - link "Patient Resources" [ref=f18e829] [cursor=pointer]:
+              - /url: /en/patient-resources
+          - listitem [ref=f18e830]:
+            - link "Health Hub" [ref=f18e831] [cursor=pointer]:
+              - /url: /en/health-hub
+          - listitem [ref=f18e832]:
+            - link "SkinMedica Products" [ref=f18e833] [cursor=pointer]:
+              - /url: /en/shop
+    - generic [ref=f18e835]:
+      - generic [ref=f18e836]: © 2026 Blue Diamond Medical Clinic. All rights reserved.
+      - link "Contact Blue Diamond Medical" [ref=f18e837] [cursor=pointer]:
+        - /url: /en/contact
