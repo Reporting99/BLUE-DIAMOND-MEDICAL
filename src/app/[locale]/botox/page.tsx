@@ -6,6 +6,17 @@ import { isLocale, type Locale } from "@/i18n/config";
 import { getRouteMetadata } from "@/lib/seo/metadata";
 import { getBookingUrl } from "@/config/booking";
 
+/** Single source for this page's description: consumed by both generateMetadata
+ * and the page's JSON-LD node, so the two can never drift apart (brief §9). */
+const PAGE_DESCRIPTION = {
+      en: "Medical Botox for migraine, hyperhidrosis, and bruxism, plus cosmetic Botox — administered by Dr. Farhat at Blue Diamond Medical Clinic.",
+      ar: "بوتوكس طبي لعلاج الشقيقة والتعرق الزائد وصرير الأسنان، إلى جانب البوتوكس التجميلي — يُجريه الدكتور فرحات في عيادة بلو دايموند الطبية.",
+    } as const;
+
+import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
+import { PageSchema } from "@/components/seo/PageSchema";
+import { getRoute } from "@/config/routes";
+
 const medicalConditions = {
   en: ["Migraine treatment", "Hyperhidrosis", "Bruxism (TMJ) & jaw pain"],
   ar: ["علاج الشقيقة (الصداع النصفي)", "التعرق الزائد", "صرير الأسنان (TMJ) وألم الفك"],
@@ -43,12 +54,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const safeLocale: Locale = isLocale(locale) ? locale : "en";
-  return getRouteMetadata("botox-hub", safeLocale, {
-    description: {
-      en: "Medical Botox for migraine, hyperhidrosis, and bruxism, plus cosmetic Botox — administered by Dr. Farhat at Blue Diamond Medical Clinic.",
-      ar: "بوتوكس طبي لعلاج الشقيقة والتعرق الزائد وصرير الأسنان، إلى جانب البوتوكس التجميلي — يُجريه الدكتور فرحات في عيادة بلو دايموند الطبية.",
-    },
-  });
+  return getRouteMetadata("botox-hub", safeLocale, { description: PAGE_DESCRIPTION });
 }
 
 export default async function BotoxHubPage({ params }: { params: Promise<{ locale: string }> }) {
@@ -79,11 +85,22 @@ export default async function BotoxHubPage({ params }: { params: Promise<{ local
     },
   }[locale];
 
+  const ownRoute = getRoute("botox-hub")!;
+
   return (
     <>
+      <PageSchema
+        locale={locale}
+        type="WebPage"
+        name={copy.title}
+        description={PAGE_DESCRIPTION[locale]}
+        path={ownRoute.path[locale]}
+      />
       <section className="section-y">
       <Container>
-        <h1 className="text-display-1 font-heading lg:text-display-1-lg">{copy.title}</h1>
+        <Breadcrumbs locale={locale} items={[{ label: ownRoute.title[locale] }]} />
+
+        <h1 className="mt-4 text-display-1 font-heading lg:text-display-1-lg">{copy.title}</h1>
         <p className="mt-4 max-w-2xl text-body-lg text-text-secondary">{copy.intro}</p>
         <p className="mt-4 max-w-2xl rounded-md border border-border bg-surface p-4 text-sm text-text-secondary">
           {copy.coverageNote}

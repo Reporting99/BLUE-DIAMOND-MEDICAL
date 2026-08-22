@@ -7,6 +7,17 @@ import { isLocale, type Locale } from "@/i18n/config";
 import { getRouteMetadata } from "@/lib/seo/metadata";
 import { siteConfig } from "@/config/site";
 
+/** Single source for this page's description: consumed by both generateMetadata
+ * and the page's JSON-LD node, so the two can never drift apart (brief §9). */
+const PAGE_DESCRIPTION = {
+      en: "Join the team at Blue Diamond Medical Clinic in West Springs, Calgary.",
+      ar: "انضموا إلى فريق عيادة بلو دايموند الطبية في ويست سبرينغز، كالغاري.",
+    } as const;
+
+import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
+import { PageSchema } from "@/components/seo/PageSchema";
+import { getRoute } from "@/config/routes";
+
 export async function generateMetadata({
   params,
 }: {
@@ -14,12 +25,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const safeLocale: Locale = isLocale(locale) ? locale : "en";
-  return getRouteMetadata("careers", safeLocale, {
-    description: {
-      en: "Join the team at Blue Diamond Medical Clinic in West Springs, Calgary.",
-      ar: "انضموا إلى فريق عيادة بلو دايموند الطبية في ويست سبرينغز، كالغاري.",
-    },
-  });
+  return getRouteMetadata("careers", safeLocale, { description: PAGE_DESCRIPTION });
 }
 
 export default async function CareersPage({ params }: { params: Promise<{ locale: string }> }) {
@@ -39,11 +45,22 @@ export default async function CareersPage({ params }: { params: Promise<{ locale
     },
   }[locale];
 
+  const ownRoute = getRoute("careers")!;
+
   return (
     <>
+      <PageSchema
+        locale={locale}
+        type="WebPage"
+        name={copy.title}
+        description={PAGE_DESCRIPTION[locale]}
+        path={ownRoute.path[locale]}
+      />
       <section className="section-y">
       <Container className="max-w-2xl">
-        <h1 className="text-display-1 font-heading lg:text-display-1-lg">{copy.title}</h1>
+        <Breadcrumbs locale={locale} items={[{ label: ownRoute.title[locale] }]} />
+
+        <h1 className="mt-4 text-display-1 font-heading lg:text-display-1-lg">{copy.title}</h1>
         <p className="mt-4 text-body-lg text-text-secondary">{copy.body}</p>
         <Button size="lg" className="mt-8" render={<a href={`mailto:${siteConfig.careersEmail}`} />}>
           <Mail className="me-1 size-4" aria-hidden="true" />

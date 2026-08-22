@@ -8,6 +8,16 @@ import { getRoute, href } from "@/config/routes";
 import { treatments } from "@/content/treatments";
 import { getRouteMetadata } from "@/lib/seo/metadata";
 
+/** Single source for this page's description: consumed by both generateMetadata
+ * and the page's JSON-LD node, so the two can never drift apart (brief §9). */
+const PAGE_DESCRIPTION = {
+      en: "Physician-led aesthetic treatments at Blue Diamond Medical — laser, radio frequency, RF micro-needling, PRP, and more.",
+      ar: "علاجات تجميل طبي بإشراف طبي في بلو دايموند — الليزر، والترددات الراديوية، والإبر الدقيقة، والبلازما، وغيرها.",
+    } as const;
+
+import { PageSchema } from "@/components/seo/PageSchema";
+import { siteConfig } from "@/config/site";
+
 export async function generateMetadata({
   params,
 }: {
@@ -15,12 +25,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const safeLocale: Locale = isLocale(locale) ? locale : "en";
-  return getRouteMetadata("aesthetics-treatments-hub", safeLocale, {
-    description: {
-      en: "Physician-led aesthetic treatments at Blue Diamond Medical — laser, radio frequency, RF micro-needling, PRP, and more.",
-      ar: "علاجات تجميل طبي بإشراف طبي في بلو دايموند — الليزر، والترددات الراديوية، والإبر الدقيقة، والبلازما، وغيرها.",
-    },
-  });
+  return getRouteMetadata("aesthetics-treatments-hub", safeLocale, { description: PAGE_DESCRIPTION });
 }
 
 export default async function TreatmentsHubPage({ params }: { params: Promise<{ locale: string }> }) {
@@ -33,8 +38,22 @@ export default async function TreatmentsHubPage({ params }: { params: Promise<{ 
       ? "تبدأ جميع علاجاتنا باستشارة مع طبيب لمدة 20 دقيقة يستمع خلالها لمخاوفكم ويضع خطة علاج تناسب أهدافكم."
       : "Every treatment starts with a 20-minute consultation with a physician, who listens to your concerns and prescribes a treatment plan that meets your goals.";
 
+  const ownRoute = getRoute("aesthetics-treatments-hub")!;
+  // Same array this page renders, so the structured list cannot diverge.
+  const listItems = treatments.flatMap((entity) => {
+    const r = getRoute(`treatment-${entity.id}`);
+    return r ? [{ name: entity.title[locale], url: `${siteConfig.url}/${locale}${r.path[locale]}` }] : [];
+  });
+
   return (
     <>
+      <PageSchema
+        locale={locale}
+        name={title}
+        description={PAGE_DESCRIPTION[locale]}
+        path={ownRoute.path[locale]}
+        items={listItems}
+      />
       <section className="section-y">
       <Container>
         <Breadcrumbs locale={locale} items={[{ label: aestheticsRoute.title[locale], href: href("aesthetics-hub", locale) }, { label: title }]} />

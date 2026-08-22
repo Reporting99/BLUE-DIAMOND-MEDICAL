@@ -9,6 +9,9 @@ import { getRouteMetadata } from "@/lib/seo/metadata";
 import { getBookingUrl } from "@/config/booking";
 import { getRoute, href } from "@/config/routes";
 import { medicalServices } from "@/content/medical-services";
+import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
+import { PageSchema } from "@/components/seo/PageSchema";
+import { siteConfig } from "@/config/site";
 
 /** AHS-insured services with no dedicated page yet — listed plainly, no fabricated detail. */
 const otherInsuredServices = {
@@ -62,11 +65,25 @@ export default async function MedicalHubPage({ params }: { params: Promise<{ loc
     },
   }[locale];
 
+  const ownRoute = getRoute("medical-hub")!;
+  // Built from the same array the grid below maps over, so the structured
+  // list can never drift from what is visibly rendered.
+  const listItems = medicalServices.map((s) => ({ name: s.title[locale], url: `${siteConfig.url}/${locale}${getRoute(`medical-${s.id}`)!.path[locale]}` }));
+
   return (
     <>
+      <PageSchema
+        locale={locale}
+        name={copy.title}
+        description={copy.intro}
+        path={ownRoute.path[locale]}
+        items={listItems}
+      />
       <section className="section-y">
         <Container>
-          <h1 className="text-display-1 font-heading lg:text-display-1-lg">{copy.title}</h1>
+          <Breadcrumbs locale={locale} items={[{ label: ownRoute.title[locale] }]} />
+
+          <h1 className="mt-4 text-display-1 font-heading lg:text-display-1-lg">{copy.title}</h1>
           <p className="mt-4 max-w-2xl text-body-lg text-text-secondary">{copy.intro}</p>
           <div className="mt-8 flex flex-wrap gap-4">
             <Button size="lg" render={<a href={walkIn.href} target="_blank" rel="noopener noreferrer" />}>

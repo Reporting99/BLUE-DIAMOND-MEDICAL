@@ -9,6 +9,17 @@ import { siteConfig } from "@/config/site";
 import { getOpenStatus, statutoryHolidayNotice } from "@/config/clinic-hours";
 import { getProduct } from "@/content/products";
 
+/** Single source for this page's description: consumed by both generateMetadata
+ * and the page's JSON-LD node, so the two can never drift apart (brief §9). */
+const PAGE_DESCRIPTION = {
+      en: "Contact Blue Diamond Medical Clinic in West Springs, Calgary — address, phone, fax, and hours.",
+      ar: "تواصلوا مع عيادة بلو دايموند الطبية في ويست سبرينغز، كالغاري — العنوان والهاتف والفاكس وساعات العمل.",
+    } as const;
+
+import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
+import { PageSchema } from "@/components/seo/PageSchema";
+import { getRoute } from "@/config/routes";
+
 export async function generateMetadata({
   params,
 }: {
@@ -16,12 +27,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const safeLocale: Locale = isLocale(locale) ? locale : "en";
-  return getRouteMetadata("contact", safeLocale, {
-    description: {
-      en: "Contact Blue Diamond Medical Clinic in West Springs, Calgary — address, phone, fax, and hours.",
-      ar: "تواصلوا مع عيادة بلو دايموند الطبية في ويست سبرينغز، كالغاري — العنوان والهاتف والفاكس وساعات العمل.",
-    },
-  });
+  return getRouteMetadata("contact", safeLocale, { description: PAGE_DESCRIPTION });
 }
 
 export default async function ContactPage({
@@ -73,12 +79,23 @@ export default async function ContactPage({
   const pageTitle = product ? dict.askAboutProduct(product.name[locale]) : isSkinMedicaTopic ? dict.skinMedicaTitle : dict.title;
   const defaultMessage = product ? dict.messagePrefill(product.name[locale]) : isSkinMedicaTopic ? dict.skinMedicaPrefill : undefined;
 
+  const ownRoute = getRoute("contact")!;
+
   return (
     <>
+      <PageSchema
+        locale={locale}
+        type="ContactPage"
+        name={ownRoute.title[locale]}
+        description={PAGE_DESCRIPTION[locale]}
+        path={ownRoute.path[locale]}
+      />
       <section className="section-y">
       <Container className="grid gap-12 lg:grid-cols-[1fr_1.2fr]">
         <div>
-          <h1 className="text-display-1 font-heading lg:text-display-1-lg">{pageTitle}</h1>
+          <Breadcrumbs locale={locale} items={[{ label: ownRoute.title[locale] }]} />
+
+          <h1 className="mt-4 text-display-1 font-heading lg:text-display-1-lg">{pageTitle}</h1>
 
           {product ? (
             <div className="mt-6 flex items-center gap-4 rounded-lg border border-border p-4">
