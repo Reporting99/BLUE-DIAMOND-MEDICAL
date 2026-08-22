@@ -10,13 +10,13 @@ import { technologies } from "@/features/technologies/data";
 /**
  * Central bilingual route registry. Nav, breadcrumbs, hreflang, canonical
  * tags, and the sitemap all read from this single list — see
- * docs/EN_AR_ROUTE_MAP.md and docs/ROUTE_INVENTORY.md.
+ * docs/ROUTING.md and docs/ROUTING.md.
  *
  * This registry currently covers the routes actually implemented in this
  * build pass. Routes described in the master brief but not yet built
  * (individual treatment/concern/service pages, the Botox sub-pages, Health
  * Hub articles, shop, legal pages, etc.) are tracked as "planned" in
- * docs/ROUTE_INVENTORY.md and intentionally absent here — an unregistered
+ * docs/ROUTING.md and intentionally absent here — an unregistered
  * route cannot be linked from nav or the sitemap, which is what keeps the
  * brief's "never link to an empty page" rule enforceable by construction.
  */

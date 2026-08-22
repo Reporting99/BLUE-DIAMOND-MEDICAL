@@ -2,7 +2,7 @@ import type { MedicalServiceContent } from "@/features/medical-services/types";
 
 /**
  * Every field traces to Blue-Diamond-Medical-Website-Content-Extraction_1.docx
- * — see docs/CONTENT_APPROVAL_MATRIX.md. Where the source only listed a
+ * — see docs/CONTENT_MODEL.md. Where the source only listed a
  * service name with no detail (weight management, pain management), the
  * page stays short and honest rather than inventing clinical specifics.
  */

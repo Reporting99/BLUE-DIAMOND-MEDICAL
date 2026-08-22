@@ -12,8 +12,8 @@ import { MEDIA_ROOT } from "@/config/imagekit";
  * ImageKitImage instance should have a matching entry here with its real
  * dimensions, focal point, and bilingual alt text once uploaded. Today
  * every entry is `status: "pending"` because no ImageKit account exists
- * yet (docs/MISSING_CONTENT_REPORT.md) — this file is what
- * docs/IMAGE_REPLACEMENT_MANIFEST.md is generated from by hand; keep them
+ * yet (docs/CONTENT_MODEL.md) — this file is what
+ * docs/MEDIA.md is generated from by hand; keep them
  * in sync when either changes.
  */
 export const imageManifest: ImageKitAsset[] = [

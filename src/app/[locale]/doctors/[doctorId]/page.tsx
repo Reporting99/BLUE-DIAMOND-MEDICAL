@@ -21,7 +21,7 @@ import { cmsDoctorSchema } from "@/lib/feelstack/schemas";
 /**
  * Canonical English-slug route for every doctor, in both locales — the
  * pretty Arabic URL (e.g. /ar/الأطباء/محمد-فرحات) is rewritten to this
- * physical path by src/proxy.ts. See docs/EN_AR_ROUTE_MAP.md.
+ * physical path by src/proxy.ts. See docs/ROUTING.md.
  */
 export function generateStaticParams() {
   return locales.flatMap((locale) => doctors.map((doctor) => ({ locale, doctorId: doctor.id })));

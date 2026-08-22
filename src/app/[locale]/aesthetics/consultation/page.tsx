@@ -9,7 +9,7 @@ import { getRoute, href } from "@/lib/routing";
 import { features } from "@/config/features";
 import { getRouteMetadata } from "@/lib/seo/metadata";
 
-/** Feature-flagged off (`consultationFormEnabled`) — see docs/MISSING_CONTENT_REPORT.md. */
+/** Feature-flagged off (`consultationFormEnabled`) — see docs/CONTENT_MODEL.md. */
 export async function generateMetadata({
   params,
 }: {

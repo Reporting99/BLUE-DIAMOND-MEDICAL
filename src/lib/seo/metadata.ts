@@ -47,7 +47,7 @@ export function getRouteMetadata(
   // passed. Now it actually resolves through ImageKit's og-image preset
   // (1200x630, matching the standard OG/Twitter card size) when ImageKit
   // is configured; when it isn't (no live account yet — see
-  // docs/IMAGEKIT_IMPORT_REPORT.md), `images` is omitted entirely rather
+  // docs/MEDIA.md), `images` is omitted entirely rather
   // than pointing at a URL that would 404, which is the same honest
   // fallback behavior used everywhere else in the app.
   const ogImage =

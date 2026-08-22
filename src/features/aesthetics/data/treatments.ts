@@ -2,12 +2,12 @@ import type { AestheticTreatment } from "@/features/aesthetics/types";
 
 /**
  * Every field traces to Blue-Diamond-Medical-Website-Content-Extraction_1.docx
- * (bluediamondmedicalaesthetics.ca section) — see docs/CONTENT_APPROVAL_MATRIX.md.
+ * (bluediamondmedicalaesthetics.ca section) — see docs/CONTENT_MODEL.md.
  * "Cosmetic Botox" and "Skin Tightening" from the brief's route list are
  * built (route, typed data, template — see `gatedTreatments` below) but
  * kept feature-flagged off since the only available source content for
  * each would duplicate the Botox hub / Radio Frequency page rather than
- * add anything unique. See docs/MISSING_CONTENT_REPORT.md.
+ * add anything unique. See docs/CONTENT_MODEL.md.
  */
 export const treatments: AestheticTreatment[] = [
   {
@@ -494,7 +494,7 @@ export const treatments: AestheticTreatment[] = [
  *   stated function, not a distinct procedure. Gated behind
  *   `skinTighteningTreatmentPageEnabled`.
  *
- * See docs/MISSING_CONTENT_REPORT.md and docs/CONTENT_APPROVAL_MATRIX.md.
+ * See docs/CONTENT_MODEL.md and docs/CONTENT_MODEL.md.
  */
 export const gatedTreatments: (AestheticTreatment & { requiresFeature: string })[] = [
   {

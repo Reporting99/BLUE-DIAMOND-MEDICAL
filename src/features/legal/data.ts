@@ -9,7 +9,7 @@ import type { LegalPageContent } from "@/features/legal/types";
  * src/features/legal/components/LegalPageTemplate.tsx) so publishing is a matter of
  * populating one entry once counsel/the client approves real copy, not
  * new code. Gated behind `legalPagesEnabled`. See
- * docs/MISSING_CONTENT_REPORT.md and docs/CONTENT_APPROVAL_MATRIX.md.
+ * docs/CONTENT_MODEL.md and docs/CONTENT_MODEL.md.
  */
 export const legalPages: LegalPageContent[] = [
   {

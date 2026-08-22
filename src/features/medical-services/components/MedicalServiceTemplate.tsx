@@ -16,7 +16,7 @@ import type { Locale } from "@/i18n/config";
  * Reusable "medical service" page template — brief §26. Renders only the
  * sections that have real source-backed content for a given service; a
  * missing optional field means the section is omitted, never filled with
- * placeholder text. See docs/CONTENT_APPROVAL_MATRIX.md.
+ * placeholder text. See docs/CONTENT_MODEL.md.
  */
 export function MedicalServiceTemplate({
   service,
@@ -173,7 +173,7 @@ export function MedicalServiceTemplate({
       </Container>
       </article>
       {/* Soften the plain-background → dark-footer boundary, matching the
-          homepage's visual-continuity system (docs/VISUAL_CONTINUITY_REPORT.md).
+          homepage's visual-continuity system (docs/UI_UX_FOUNDATION.md).
           Deliberately a sibling of <article>, not its last child: .section-y's
           own padding-bottom would otherwise leave a flat band of
           var(--background) between the gradient and the footer. */}

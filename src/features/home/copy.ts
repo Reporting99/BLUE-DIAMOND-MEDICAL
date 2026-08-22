@@ -5,7 +5,7 @@ import type { BookingChannel } from "@/config/booking";
 
 /**
  * Homepage-only copy, grounded in Blue-Diamond-Medical-Website-Content-Extraction_1.docx
- * — see docs/CONTENT_COVERAGE_REPORT.md. Kept local to this file rather
+ * — see docs/CONTENT_MODEL.md. Kept local to this file rather
  * than the shared i18n dictionary since it isn't reused elsewhere (the
  * dictionary's `home.*` keys still carry the hero/pathways/doctors/
  * location/final-CTA strings that ARE simple enough to live there).

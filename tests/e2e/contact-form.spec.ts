@@ -17,7 +17,7 @@ test.describe("Contact form", () => {
     await page.fill("textarea[name=message]", "This is a test message for the contact form.");
     await page.getByRole("button", { name: /send message/i }).click();
     // No CONTACT_DELIVERY_PROVIDER is configured in this build — see
-    // src/lib/forms/contact-delivery.ts — so the honest fallback state is
+    // src/lib/forms/delivery.ts — so the honest fallback state is
     // shown rather than a false "sent" confirmation. Next.js's own
     // route-announcer also carries role="alert", so scope to the form's copy.
     await expect(page.getByText(/825 413 1113/)).toBeVisible();

@@ -1,9 +1,9 @@
 "use server";
 
 import { headers } from "next/headers";
-import { contactFormSchema, sanitizeText } from "@/lib/validation/contact";
+import { contactFormSchema, sanitizeText } from "@/features/contact/validation";
 import { checkRateLimit } from "@/lib/security/rate-limit";
-import { sendContactMessage, DeliveryNotConfiguredError } from "@/lib/forms/contact-delivery";
+import { sendContactMessage, DeliveryNotConfiguredError } from "@/lib/forms/delivery";
 
 export type ContactFormState = {
   status: "idle" | "success" | "error" | "not-configured";

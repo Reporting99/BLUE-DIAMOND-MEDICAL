@@ -1,4 +1,4 @@
-import type { ContactFormValues } from "@/lib/validation/contact";
+import type { ContactFormValues } from "@/features/contact/validation";
 
 /**
  * Delivery adapter boundary — brief §27: "Do not activate email or CRM

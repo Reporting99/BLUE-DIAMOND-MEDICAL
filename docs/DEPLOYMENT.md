@@ -141,7 +141,7 @@ link is enough for a crawler to try.
 
 1. **Provision ImageKit** — set `NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT`,
    `NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY`, `IMAGEKIT_PRIVATE_KEY`. Upload the
-   photography listed in `IMAGE_REPLACEMENT_MANIFEST.md`, then flip each
+   photography listed in `MEDIA.md`, then flip each
    asset's `status` to `"approved"` in `src/content/media/image-manifest.ts`.
 2. **Provision FeelStack** — see `FEELSTACK.md` §7. The adapter builds and
    typechecks without these set.
@@ -152,8 +152,8 @@ link is enough for a crawler to try.
 4. **Replace the recreated logo SVG** (`src/components/layout/Logo.tsx`) with
    the master vector file.
 5. **Run the full suite green**: `npm run validate` and `npx playwright test`.
-6. **Get sign-off** on `CONTENT_APPROVAL_MATRIX.md` and
-   `TRANSLATION_REVIEW_REPORT.md`. No page goes live with unreviewed medical
+6. **Get sign-off** on `CONTENT_MODEL.md` and
+   `CONTENT_MODEL.md`. No page goes live with unreviewed medical
    claims or unreviewed Arabic copy.
 7. **Set `SITE_LAUNCHED=true`** as a deliberate, separate step (§3).
 8. **DNS cutover** (§5) — requires explicit approval.
@@ -161,13 +161,13 @@ link is enough for a crawler to try.
 ## 5. DNS and the legacy domains
 
 - **`bluediamondmedical.ca`** — becomes canonical. `src/proxy.ts` handles its
-  own legacy-URL 301s natively (see `REDIRECT_MAP.md`).
+  own legacy-URL 301s natively (see `ROUTING.md`).
 - **`bluediamondmedicalaesthetics.ca`** — a separate legacy domain. This app
   cannot redirect requests it never receives, so retiring it needs either:
   1. pointing it at the same hosting and adding a host-aware branch to the
      proxy plus the aesthetics redirect table in `legacyRedirects`; or
   2. configuring redirects at the DNS/host/CDN level straight to
-     `https://bluediamondmedical.ca/en/...` per `REDIRECT_MAP.md`.
+     `https://bluediamondmedical.ca/en/...` per `ROUTING.md`.
 
   Option 2 is simpler to operate and keeps the proxy host-agnostic. Pursue
   option 1 only if one deploy must serve both domains directly.
@@ -178,7 +178,7 @@ link is enough for a crawler to try.
 2. Point `bluediamondmedical.ca` DNS at the host.
 3. Either configure the aesthetics domain's redirects, or leave it live until
    they are verified, to avoid a dead window.
-4. Verify every `REDIRECT_MAP.md` row with a real `curl -I` before
+4. Verify every `ROUTING.md` row with a real `curl -I` before
    decommissioning the old sites.
 5. Update Search Console / Bing Webmaster Tools with the canonical domain and
    submit `https://bluediamondmedical.ca/sitemap.xml`.

@@ -12,7 +12,7 @@ export interface AestheticTreatment {
    * Set only when a treatment is performed at a different address than
    * the main clinic (e.g. Elite iQ™ at Citizen Studio) — brief: "Do not
    * imply every treatment is performed at West Springs." See
-   * src/config/site.ts `eliteIQLocation` and docs/DATA_APPROVAL_BLOCKERS.md.
+   * src/config/site.ts `eliteIQLocation` and docs/CONTENT_MODEL.md.
    */
   serviceLocationNote?: Bilingual;
   concernsTreated?: { en: string[]; ar: string[] };

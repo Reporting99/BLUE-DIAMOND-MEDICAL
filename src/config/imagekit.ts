@@ -5,7 +5,7 @@ import type { Transformation } from "@imagekit/next";
  * (brief §8 — "Install the official SDK... use one centralized provider").
  * No production images live in public/ or point at unapproved external
  * hosts — see docs/UI_UX_FOUNDATION.md §8/§18 and
- * docs/IMAGE_REPLACEMENT_MANIFEST.md.
+ * docs/MEDIA.md.
  *
  * The approved ImageKit account/endpoint is now known (brief §12) even
  * though no asset has been uploaded to it yet — `DEFAULT_URL_ENDPOINT`
@@ -13,7 +13,7 @@ import type { Transformation } from "@imagekit/next";
  * public key), used unless overridden by the env var. This only changes
  * *where a real image would be requested from* — every asset in
  * `src/lib/media/image-manifest.ts` still carries `status: "pending"`
- * (docs/MISSING_CONTENT_REPORT.md), and `ImageKitImage` only renders the
+ * (docs/CONTENT_MODEL.md), and `ImageKitImage` only renders the
  * real CDN path when `status === "approved"`, so nothing currently renders
  * differently: still the FacetTile placeholder everywhere until real
  * photography is uploaded and each entry's status flips.

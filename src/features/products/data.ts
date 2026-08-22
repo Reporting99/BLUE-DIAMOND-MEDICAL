@@ -19,13 +19,13 @@ import { MEDIA_ROOT } from "@/config/imagekit";
  *    Every `detail.sources` entry names the exact page and retrieval
  *    date. Where research didn't confirm a fact (e.g. a complete
  *    ingredient list, an exact skin-type claim), that field is simply
- *    omitted — see `docs/CONTENT_SOURCE_REGISTER.md` for the full
+ *    omitted — see `docs/CONTENT_MODEL.md` for the full
  *    per-product source trace.
  *
  * `shopEnabled` stays `false` (src/config/features.ts): the data blocker
  * is resolved (23/23 approved records, all with real detail content now),
  * but no SkinMedica product photography exists in the approved image
- * archive — see docs/IMAGEKIT_IMPORT_REPORT.md. Nothing else blocks
+ * archive — see docs/MEDIA.md. Nothing else blocks
  * flipping the flag once photography exists.
  *
  * Availability notice (brief-mandated, shown near every price — see

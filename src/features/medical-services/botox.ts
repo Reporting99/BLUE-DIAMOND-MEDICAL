@@ -9,8 +9,8 @@ import type { MedicalServiceContent } from "@/features/medical-services/types";
  * already published in full on /botox (the brief §16 educational hub) and
  * summarized on /medical (the Medical Care hub's Botox card). A separate
  * subtree repeating the same facts, split three ways, would be duplicate
- * content rather than unique pages. See docs/MISSING_CONTENT_REPORT.md
- * and docs/CONTENT_APPROVAL_MATRIX.md.
+ * content rather than unique pages. See docs/CONTENT_MODEL.md
+ * and docs/CONTENT_MODEL.md.
  */
 export const medicalBotoxHub = {
   title: { en: "Medical Botox", ar: "البوتوكس الطبي" },

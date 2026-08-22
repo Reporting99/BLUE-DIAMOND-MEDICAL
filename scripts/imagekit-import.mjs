@@ -57,7 +57,7 @@ const hasCredentials = Boolean(urlEndpoint && publicKey && privateKey);
 
 /**
  * Identity-confirmed doctor portraits, verified by visual inspection this
- * pass (see docs/IMAGEKIT_IMPORT_REPORT.md):
+ * pass (see docs/MEDIA.md):
  *  - medical/dr.farhat.jpg — unambiguous, filename + subject match.
  *  - medical/3p0a4127.jpg and its resized duplicate
  *    aesthetics/rs-w_388-h_388-cg_true(.webp/-m.webp) — a visible embroidered

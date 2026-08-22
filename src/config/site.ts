@@ -4,7 +4,7 @@
  *
  * Source: Blue-Diamond-Medical-Website-Content-Extraction_1.docx
  * (approved content extraction of the two live legacy sites).
- * See docs/CONTENT_APPROVAL_MATRIX.md for provenance of every field.
+ * See docs/CONTENT_MODEL.md for provenance of every field.
  */
 
 export const siteConfig = {

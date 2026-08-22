@@ -23,7 +23,7 @@ export interface AestheticConcern {
    * link appeared mismatched to its concern (e.g. a redness/pigmentation
    * concern linking to the hair-removal page) — cross-linked here to the
    * treatment page whose actual content matches the concern instead. See
-   * docs/CONTENT_APPROVAL_MATRIX.md.
+   * docs/CONTENT_MODEL.md.
    */
   correctedFromSource?: boolean;
 }

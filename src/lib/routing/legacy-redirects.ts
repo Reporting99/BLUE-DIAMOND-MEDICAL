@@ -2,12 +2,12 @@
  * Direct 301 redirect map for every legacy URL — brief §33. Consumed by
  * src/proxy.ts. Kept as a flat exact-match table (no chains, no wildcard
  * regex) so each entry is auditable and testable 1:1 — see
- * docs/REDIRECT_MAP.md and tests/redirects.
+ * docs/ROUTING.md and tests/redirects.
  *
  * Only routes that exist in src/config/routes.ts today are targeted here;
  * entries whose destination page isn't built yet point at the closest
  * live parent hub instead of a 404, and are flagged in
- * docs/REDIRECT_MAP.md for retargeting once the child page ships.
+ * docs/ROUTING.md for retargeting once the child page ships.
  */
 export const legacyRedirects: Record<string, string> = {
   // bluediamondmedical.ca (primary legacy site)
@@ -75,7 +75,7 @@ export const legacyRedirects: Record<string, string> = {
   // Point at the real final canonical route, not an unrelated live page.
   // Both still resolve through the gated-route 404 boundary until
   // legalPagesEnabled flips true (real copy withheld — see
-  // docs/MISSING_CONTENT_REPORT.md and docs/DATA_APPROVAL_BLOCKERS.md),
+  // docs/CONTENT_MODEL.md and docs/CONTENT_MODEL.md),
   // which is more honest than landing a visitor looking for legal terms
   // on an unrelated aesthetics marketing page.
   "/terms-and-conditions": "/en/terms",

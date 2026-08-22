@@ -57,6 +57,6 @@ Resolved scope, confirmed with the user: build the **complete, production-ready 
 
 The brief's target tree (`app/[locale]/[[...path]]/page.tsx` catch-all, `src/feelstack/*`) was **adapted**, not mechanically imposed, per §3's own instruction ("Adapt this structure to the actual repository instead of mechanically replacing working files"):
 
-- No `[[...path]]` catch-all was introduced — Blue Diamond's explicit per-content-type routes (`medical/[serviceId]`, `aesthetics/concerns/[concernId]`, `shop/[productId]`, etc.) are the approved, SEO-audited route registry (`docs/ROUTE_DECISION_LOG.md`, `docs/EN_AR_ROUTE_MAP.md`) and rule 10 requires preserving them as-is.
+- No `[[...path]]` catch-all was introduced — Blue Diamond's explicit per-content-type routes (`medical/[serviceId]`, `aesthetics/concerns/[concernId]`, `shop/[productId]`, etc.) are the approved, SEO-audited route registry (`docs/ROUTING.md`, `docs/ROUTING.md`) and rule 10 requires preserving them as-is.
 - `src/feelstack/*` (brief's suggested path) → kept at the pre-existing `src/lib/feelstack/*` location rather than moved, per §3 "do not create duplicate clients, route resolvers, metadata systems."
 - `app/[locale]/[[...path]]/{loading,error,not-found}.tsx` → adapted to `app/[locale]/error.tsx` (one shared boundary at the locale segment, since there is no catch-all segment to attach it to); `not-found.tsx` already existed at the same level and was left untouched.

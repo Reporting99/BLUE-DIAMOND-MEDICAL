@@ -10,7 +10,7 @@ import type { AestheticConcern } from "./types";
  * Rather than propagate that apparent CMS bug, those concerns are
  * cross-linked here to Laser Skin Treatments, whose own content explicitly
  * covers redness, spider veins, and pigmentation. Flagged with
- * `correctedFromSource: true`. See docs/CONTENT_APPROVAL_MATRIX.md.
+ * `correctedFromSource: true`. See docs/CONTENT_MODEL.md.
  */
 export const concerns: AestheticConcern[] = [
   {

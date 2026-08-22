@@ -1,8 +1,8 @@
 "use server";
 
 import { headers } from "next/headers";
-import { consultationRequestSchema } from "@/lib/validation/consultation";
-import { sanitizeText } from "@/lib/validation/contact";
+import { consultationRequestSchema } from "@/features/booking/validation";
+import { sanitizeText } from "@/features/contact/validation";
 import { checkRateLimit } from "@/lib/security/rate-limit";
 
 export type ConsultationFormState = {
@@ -12,7 +12,7 @@ export type ConsultationFormState = {
 
 /**
  * Same fail-closed delivery pattern as the general contact form
- * (src/lib/forms/contact-delivery.ts) — no CONSULTATION_DELIVERY_PROVIDER
+ * (src/lib/forms/delivery.ts) — no CONSULTATION_DELIVERY_PROVIDER
  * exists yet, so submissions validate and rate-limit correctly but never
  * claim a false "sent" success. Route itself is unreachable while
  * `consultationFormEnabled` is false (src/app/[locale]/aesthetics/consultation/page.tsx).
@@ -53,7 +53,7 @@ export async function submitConsultationRequest(
   const sanitized = { ...parsed.data, name: sanitizeText(parsed.data.name), message: sanitizeText(parsed.data.message) };
 
   // No delivery provider configured for this build — fail closed rather
-  // than claim a false "sent" success. See src/lib/forms/contact-delivery.ts
+  // than claim a false "sent" success. See src/lib/forms/delivery.ts
   // for the equivalent, fuller adapter on the general contact form.
   console.warn("[consultation-form] submission received but no delivery provider is configured");
   void sanitized;

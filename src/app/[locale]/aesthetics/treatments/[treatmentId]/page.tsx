@@ -75,7 +75,7 @@ export default async function TreatmentPage({
   }
 
   // Fully built but feature-flagged off — see src/features/aesthetics/data/treatments.ts
-  // `gatedTreatments` and docs/MISSING_CONTENT_REPORT.md.
+  // `gatedTreatments` and docs/CONTENT_MODEL.md.
   const gated = getGatedTreatment(treatmentId);
   if (gated && features[gated.requiresFeature as keyof FeatureFlags]) {
     return <AestheticTreatmentTemplate treatment={gated} locale={locale} />;
