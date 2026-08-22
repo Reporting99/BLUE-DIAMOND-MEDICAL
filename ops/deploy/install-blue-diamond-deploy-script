@@ -1,0 +1,182 @@
+#!/usr/bin/env bash
+#
+# Installs the deployment script belonging to the exact CI-passed commit.
+#
+# WHY THIS EXISTS
+# ---------------
+# CI runs `sudo -n /usr/local/sbin/deploy-blue-diamond` on the server. Without
+# this installer, nothing would ever copy that file out of the repository, and
+# the reviewed version and the executed version could drift silently. That is
+# not hypothetical: it happened on this host in August 2026 on the sibling
+# project, where an ISR prerender-cache fix landed in the repository while
+# production kept executing a script that predated it.
+#
+# The invariant this restores:
+#
+#   CI-passed SHA == application release SHA == deployment-script source SHA
+#
+# WHY A SEPARATE INSTALLER RATHER THAN `sudo cp`
+# ----------------------------------------------
+# The CI user's entire root authority is one sudoers line granting exactly
+# this script and the deploy script. Granting `sudo cp`, `install`, `tee`, `mv`
+# or `bash` to place the file would hand that user arbitrary root write access
+# -- a far larger privilege than deploying an application.
+#
+# This installer is the narrowest alternative: it takes NO arguments, so there
+# is no parameter through which a caller can redirect the source or the
+# destination. Both paths are compiled in below, and the sudoers entry pins it
+# to zero arguments as well, so even a compromised CI job can only ask one
+# question: "install the candidate you already uploaded".
+#
+# TRUST ANCHOR / BOOTSTRAP
+# ------------------------
+# This installer is deliberately NOT self-updating. A script that can rewrite
+# its own validation logic on the say-so of the party it validates is not a
+# privilege boundary. It is installed once, by hand, by root -- see
+# ops/deploy/README.md. It is versioned here so the intended content is
+# reviewable, not so CI can push changes to it.
+set -Eeuo pipefail
+umask 022
+
+readonly SRC="/home/deploy-blue-diamond/uploads/deploy-blue-diamond.candidate"
+readonly SUM="/home/deploy-blue-diamond/uploads/deploy-blue-diamond.candidate.sha256"
+readonly DEST="/usr/local/sbin/deploy-blue-diamond"
+readonly BACKUP="/usr/local/sbin/deploy-blue-diamond.prev"
+readonly BACKUP_SUM="/usr/local/sbin/deploy-blue-diamond.prev.sha256"
+readonly EXPECTED_SRC_OWNER="deploy-blue-diamond"
+# A structural fingerprint of the real deploy script. Stops an unrelated but
+# syntactically valid shell file from being installed at this path.
+readonly REQUIRED_MARKER='APP_NAME="blue-diamond"'
+
+fail() {
+  echo "install-blue-diamond-deploy-script: $1" >&2
+  exit "${2:-1}"
+}
+
+# Structural validation shared by the install path and the restore path. The
+# restore path needs it because a backup is only useful if it is itself known
+# good -- restoring "whatever happened to be there before" is how a bad script
+# becomes permanent.
+script_is_valid() {
+  local path="$1" first
+
+  [ -f "$path" ] || return 1
+  [ ! -L "$path" ] || return 1
+  [ -s "$path" ] || return 1
+
+  read -r first < "$path" || return 1
+  case "$first" in
+    '#!/usr/bin/env bash'|'#!/bin/bash') : ;;
+    *) return 1 ;;
+  esac
+
+  grep -qF -- "$REQUIRED_MARKER" "$path" || return 1
+  bash -n "$path" >/dev/null 2>&1 || return 1
+
+  return 0
+}
+
+# --- 1. no arguments -------------------------------------------------------
+# Belt and braces: sudoers already restricts this to zero arguments.
+[ "$#" -eq 0 ] || fail "takes no arguments (got $#)" 64
+
+# --- 2. the candidate must be a real, non-symlink, non-empty file ----------
+[ -e "$SRC" ] || fail "candidate not found: $SRC"
+[ ! -L "$SRC" ] || fail "candidate is a symlink; refusing: $SRC"
+[ -f "$SRC" ] || fail "candidate is not a regular file: $SRC"
+[ -s "$SRC" ] || fail "candidate is empty: $SRC"
+
+[ -e "$SUM" ] || fail "checksum sidecar not found: $SUM"
+[ ! -L "$SUM" ] || fail "checksum sidecar is a symlink; refusing: $SUM"
+[ -f "$SUM" ] || fail "checksum sidecar is not a regular file: $SUM"
+
+# --- 3. ownership and permissions -----------------------------------------
+# The candidate must belong to the deploy user (i.e. it arrived through the
+# authenticated CI upload path) and must not be writable by anyone else, so it
+# cannot be swapped between validation and installation by another account.
+src_owner="$(stat -c '%U' "$SRC")"
+[ "$src_owner" = "$EXPECTED_SRC_OWNER" ] \
+  || fail "candidate owned by '$src_owner', expected '$EXPECTED_SRC_OWNER'"
+
+src_mode="$(stat -c '%a' "$SRC")"
+case "$src_mode" in
+  *[2367]) fail "candidate is group- or world-writable (mode $src_mode)" ;;
+esac
+
+# --- 4. checksum ----------------------------------------------------------
+expected_sha="$(tr -d ' \t\n\r' < "$SUM" | cut -c1-64)"
+[ "${#expected_sha}" -eq 64 ] || fail "malformed checksum sidecar"
+case "$expected_sha" in
+  *[!0-9a-f]*) fail "checksum sidecar is not lowercase hex" ;;
+esac
+
+actual_sha="$(sha256sum "$SRC" | awk '{print $1}')"
+[ "$actual_sha" = "$expected_sha" ] \
+  || fail "checksum mismatch: candidate $actual_sha, expected $expected_sha"
+
+# --- 5. content sanity ----------------------------------------------------
+script_is_valid "$SRC" || fail "candidate failed structural validation"
+
+# --- 6. no-op when already current ----------------------------------------
+if [ -f "$DEST" ] && [ "$(sha256sum "$DEST" | awk '{print $1}')" = "$actual_sha" ]; then
+  echo "DEPLOY_SCRIPT_ALREADY_CURRENT sha256=$actual_sha"
+  exit 0
+fi
+
+# --- 7. atomic install, with the previous version kept for rollback -------
+# The backup must represent LAST KNOWN GOOD, not merely "what was here
+# before". If the currently installed script does not itself validate, it is
+# not promoted to the rollback slot -- the existing, older, still-valid backup
+# is kept instead.
+if [ -f "$DEST" ]; then
+  if script_is_valid "$DEST"; then
+    cp -p -- "$DEST" "$BACKUP"
+    chown root:root "$BACKUP"
+    chmod 0750 "$BACKUP"
+    sha256sum "$BACKUP" | awk '{print $1}' > "$BACKUP_SUM"
+    chown root:root "$BACKUP_SUM"
+    chmod 0644 "$BACKUP_SUM"
+  else
+    echo "install-blue-diamond-deploy-script: currently installed script failed validation;" >&2
+    echo "  keeping the existing last-known-good backup instead of overwriting it." >&2
+  fi
+fi
+
+# Staged in the destination directory so the final step is a same-filesystem
+# rename: the deploy script is never observed half-written.
+staged="$(mktemp "${DEST}.new.XXXXXX")"
+cleanup() { rm -f -- "$staged"; }
+trap cleanup EXIT
+
+cat -- "$SRC" > "$staged"
+chown root:root "$staged"
+chmod 0750 "$staged"
+
+mv -f -- "$staged" "$DEST"
+trap - EXIT
+
+# --- 8. verify what actually landed, and roll back if it is wrong ---------
+installed_sha="$(sha256sum "$DEST" | awk '{print $1}')"
+if [ "$installed_sha" != "$actual_sha" ]; then
+  # Restore only from a backup that is provably last known good: it must match
+  # its recorded checksum AND pass the same structural validation applied to
+  # any incoming candidate. Restoring an unverified file would trade one bad
+  # deployment script for another.
+  if [ -f "$BACKUP" ] && [ -f "$BACKUP_SUM" ]; then
+    backup_expected="$(tr -d ' \t\n\r' < "$BACKUP_SUM" | cut -c1-64)"
+    backup_actual="$(sha256sum "$BACKUP" | awk '{print $1}')"
+
+    if [ "$backup_expected" = "$backup_actual" ] && script_is_valid "$BACKUP"; then
+      cp -p -- "$BACKUP" "$DEST"
+      chown root:root "$DEST"
+      chmod 0750 "$DEST"
+      fail "post-install checksum mismatch; last-known-good script restored ($backup_actual)"
+    fi
+
+    fail "post-install checksum mismatch AND the backup failed verification; refusing to restore it. Manual recovery required."
+  fi
+
+  fail "post-install checksum mismatch and no verified backup to restore"
+fi
+
+echo "DEPLOY_SCRIPT_INSTALLED sha256=$installed_sha"

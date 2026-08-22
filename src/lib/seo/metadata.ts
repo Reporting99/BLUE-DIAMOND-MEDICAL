@@ -14,6 +14,7 @@ import { buildSrc } from "@imagekit/javascript";
 import { getRoute } from "@/config/routes";
 import { siteConfig } from "@/config/site";
 import { imagekitConfig, imagekitIsConfigured, imagePresets } from "@/config/imagekit";
+import { isSiteLaunched } from "@/config/launch";
 import type { Locale } from "@/i18n/config";
 
 interface RouteMetadataOverrides {
@@ -69,7 +70,21 @@ export function getRouteMetadata(
         "x-default": enUrl,
       },
     },
-    robots: route.indexing === "index" ? { index: true, follow: true } : { index: false, follow: false },
+    // Pre-launch, NO page is indexable regardless of its route-registry
+    // setting. This is the build-time layer of the guard; the authoritative
+    // request-time layer is the X-Robots-Tag header stamped by src/proxy.ts,
+    // and robots.txt is the third. They are not redundant — robots.txt stops
+    // crawling, while the header and this meta tag stop *indexing* of
+    // anything already fetched or reached from an external link, which
+    // robots.txt alone does not prevent.
+    //
+    // Canonical, hreflang and OG URLs above are deliberately left pointing at
+    // the real launch domain: they are stable, correct, and must not churn at
+    // launch. Nothing here ever emits a temporary or runtime hostname.
+    robots:
+      isSiteLaunched() && route.indexing === "index"
+        ? { index: true, follow: true }
+        : { index: false, follow: false },
     openGraph: {
       title: route.title[locale],
       description: overrides.description[locale],

@@ -1,0 +1,412 @@
+name: Deploy Production
+
+run-name: "Deploy Production — ${{ inputs.release_sha || github.sha }}"
+
+# MANUAL ONLY, DELIBERATELY.
+#
+# There is no `workflow_run` trigger here yet. Automatic deployment after green
+# CI is the intended end state and the sibling project on this host already
+# runs that way, but it is enabled only AFTER a controlled manual release has
+# proven the whole path end to end on this server: artifact packaging, upload,
+# script installation, slot switch, health gating, SHA verification, rollback.
+#
+# When enabling it later, the trigger must deploy `workflow_run.head_sha`, NOT
+# `github.sha`. On a workflow_run event the deploy run's own github.sha is the
+# DEFAULT BRANCH TIP, not the commit CI actually passed on -- a trap that has
+# already produced a mislabelled deploy on this host.
+on:
+  workflow_dispatch:
+    inputs:
+      release_sha:
+        description: "Full 40-character commit SHA to deploy (must be on main and have passed CI)"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  actions: read
+  checks: read
+
+concurrency:
+  group: blue-diamond-production-deployment
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Build and Deploy Production
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    environment: production
+
+    env:
+      NEXT_TELEMETRY_DISABLED: "1"
+      # ImageKit endpoint is build-time (NEXT_PUBLIC_*, inlined into the
+      # bundle). Unset is a supported state: next.config.ts keeps
+      # remotePatterns empty and every image renders through the existing
+      # fallback -- see docs/IMAGEKIT_SETUP.md.
+      NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT: ${{ vars.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT }}
+
+    steps:
+      - name: Validate the requested SHA
+        id: release
+        shell: bash
+        env:
+          REQUESTED_SHA: ${{ inputs.release_sha }}
+        run: |
+          set -euo pipefail
+
+          if [[ ! "$REQUESTED_SHA" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "::error::release_sha must be a lowercase 40-character commit SHA."
+            exit 1
+          fi
+
+          echo "release_sha=$REQUESTED_SHA" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout the requested commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.release.outputs.release_sha }}
+          # Full history: the ancestry check below needs main's history, and a
+          # shallow clone cannot answer "is this commit on main?".
+          fetch-depth: 0
+          persist-credentials: false
+
+      # A SHA that is not on main is a SHA nobody reviewed and merged. Without
+      # this, workflow_dispatch would deploy any commit in the repository,
+      # including one from an abandoned branch or an unmerged PR.
+      - name: Verify the SHA is on main
+        shell: bash
+        env:
+          RELEASE_SHA: ${{ steps.release.outputs.release_sha }}
+        run: |
+          set -euo pipefail
+
+          git fetch --no-tags origin main
+          if ! git merge-base --is-ancestor "$RELEASE_SHA" origin/main; then
+            echo "::error::$RELEASE_SHA is not an ancestor of origin/main. Refusing to deploy."
+            exit 1
+          fi
+          echo "$RELEASE_SHA is on main."
+
+      # CI MUST HAVE PASSED FOR THIS EXACT COMMIT.
+      #
+      # Not "for the branch", not "recently" -- for this SHA. A green branch
+      # with a red commit in its history is exactly the situation where a
+      # manual deploy of the wrong SHA ships an untested build.
+      - name: Verify CI passed for this SHA
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_SHA: ${{ steps.release.outputs.release_sha }}
+        run: |
+          set -euo pipefail
+
+          CONCLUSION="$(
+            gh api \
+              "repos/${GITHUB_REPOSITORY}/actions/workflows/ci.yml/runs?head_sha=${RELEASE_SHA}&status=completed&per_page=100" \
+              --jq '[.workflow_runs[] | select(.head_sha == env.RELEASE_SHA)] | sort_by(.created_at) | last | .conclusion // "none"'
+          )"
+
+          echo "Latest completed CI conclusion for ${RELEASE_SHA}: ${CONCLUSION}"
+
+          if [ "$CONCLUSION" != "success" ]; then
+            echo "::error::CI has not passed for ${RELEASE_SHA} (conclusion: ${CONCLUSION}). Refusing to deploy."
+            exit 1
+          fi
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.19.5"
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Built WITHOUT SITE_LAUNCHED. The indexing gate is read at request time
+      # (src/config/launch.ts), so the artifact carries no indexability of its
+      # own -- launching is a change to the slot's runtime env, never a
+      # property of the release that happens to be promoted.
+      - name: Build production application
+        env:
+          NODE_ENV: production
+        run: npm run build
+
+      - name: Package standalone release
+        id: package
+        shell: bash
+        env:
+          RELEASE_SHA: ${{ steps.release.outputs.release_sha }}
+        run: |
+          set -euo pipefail
+
+          RELEASE_DIR="$RUNNER_TEMP/blue-diamond-release"
+          ARTIFACT_NAME="blue-diamond-${RELEASE_SHA}.tar.gz"
+          ARTIFACT_PATH="$RUNNER_TEMP/${ARTIFACT_NAME}"
+
+          rm -rf "$RELEASE_DIR"
+          rm -f "$ARTIFACT_PATH"
+          mkdir -p "$RELEASE_DIR"
+
+          test -d .next/standalone
+          test -f .next/standalone/server.js
+          test -s .next/BUILD_ID
+          test -d .next/static
+          test -d public
+
+          # -L dereferences symlinks: the server-side script rejects any
+          # archive containing a link, because extracting one as root is a
+          # write primitive outside the release directory.
+          cp -RL --preserve=mode,timestamps .next/standalone/. "$RELEASE_DIR/"
+
+          # `next build --output standalone` does NOT copy these two; they
+          # have to be placed alongside the server explicitly.
+          rm -rf "$RELEASE_DIR/.next/static"
+          mkdir -p "$RELEASE_DIR/.next/static"
+          cp -RL --preserve=mode,timestamps .next/static/. "$RELEASE_DIR/.next/static/"
+
+          rm -rf "$RELEASE_DIR/public"
+          mkdir -p "$RELEASE_DIR/public"
+          cp -RL --preserve=mode,timestamps public/. "$RELEASE_DIR/public/"
+
+          install -m 644 .next/BUILD_ID "$RELEASE_DIR/.next/BUILD_ID"
+
+          # The release identity /api/version reports and the deploy script
+          # verifies against.
+          printf '%s\n' "$RELEASE_SHA" > "$RELEASE_DIR/.release-sha"
+
+          # Runtime secrets stay on the server. A release artifact must never
+          # be able to carry configuration, or a rollback would restore stale
+          # configuration along with old code.
+          rm -f "$RELEASE_DIR/.env" "$RELEASE_DIR/.env.production" "$RELEASE_DIR/.env.local"
+
+          test -f "$RELEASE_DIR/server.js"
+          test -s "$RELEASE_DIR/.next/BUILD_ID"
+          test -d "$RELEASE_DIR/.next/static"
+          test -d "$RELEASE_DIR/public"
+          test -s "$RELEASE_DIR/.release-sha"
+
+          EXTRACTED_SHA="$(tr -d '\r\n' < "$RELEASE_DIR/.release-sha")"
+          if [ "$EXTRACTED_SHA" != "$RELEASE_SHA" ]; then
+            echo "::error::Release SHA verification failed."
+            exit 1
+          fi
+
+          if find "$RELEASE_DIR" \( -type l -o -type b -o -type c -o -type p -o -type s \) -print -quit | grep -q .; then
+            echo "::error::Release contains symbolic links or unsupported file types."
+            exit 1
+          fi
+
+          node --check "$RELEASE_DIR/server.js"
+
+          tar -czf "$ARTIFACT_PATH" -C "$RELEASE_DIR" .
+          gzip -t "$ARTIFACT_PATH"
+
+          ARTIFACT_SIZE="$(stat -c '%s' "$ARTIFACT_PATH")"
+          ARTIFACT_SHA256="$(sha256sum "$ARTIFACT_PATH" | awk '{print $1}')"
+
+          if [ "$ARTIFACT_SIZE" -le 0 ] || [ "$ARTIFACT_SIZE" -gt 2147483648 ]; then
+            echo "::error::Artifact size is invalid or exceeds 2 GiB."
+            exit 1
+          fi
+
+          echo "Artifact: $ARTIFACT_NAME ($ARTIFACT_SIZE bytes, sha256 $ARTIFACT_SHA256)"
+          {
+            echo "artifact_path=$ARTIFACT_PATH"
+            echo "artifact_name=$ARTIFACT_NAME"
+            echo "artifact_sha256=$ARTIFACT_SHA256"
+          } >> "$GITHUB_OUTPUT"
+
+      # Private path to the server, so the deploy key is never presented to a
+      # publicly reachable SSH surface.
+      - name: Connect to Tailscale
+        uses: tailscale/github-action@v3
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+          tags: tag:blue-diamond-deploy
+
+      - name: Configure secure SSH
+        shell: bash
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
+          SSH_KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+        run: |
+          set -euo pipefail
+
+          test -n "$SSH_PRIVATE_KEY" || { echo "::error::DEPLOY_SSH_PRIVATE_KEY is missing."; exit 1; }
+          # Pinned host key rather than ssh-keyscan: keyscan-on-every-run is
+          # trust-on-first-use dressed up as automation, and a flaky network
+          # dependency besides.
+          test -n "$SSH_KNOWN_HOSTS" || { echo "::error::DEPLOY_KNOWN_HOSTS is missing."; exit 1; }
+
+          install -m 700 -d "$HOME/.ssh"
+          printf '%s\n' "$SSH_PRIVATE_KEY" | tr -d '\r' > "$HOME/.ssh/id_ed25519"
+          chmod 600 "$HOME/.ssh/id_ed25519"
+          printf '%s\n' "$SSH_KNOWN_HOSTS" | tr -d '\r' > "$HOME/.ssh/known_hosts"
+          chmod 600 "$HOME/.ssh/known_hosts"
+          ssh-keygen -y -f "$HOME/.ssh/id_ed25519" > /dev/null
+
+          echo "SSH_CONFIGURATION_OK"
+
+      - name: Upload release artifact and deployment script
+        shell: bash
+        env:
+          ARTIFACT_PATH: ${{ steps.package.outputs.artifact_path }}
+          ARTIFACT_NAME: ${{ steps.package.outputs.artifact_name }}
+          ARTIFACT_SHA256: ${{ steps.package.outputs.artifact_sha256 }}
+          DEPLOY_HOST: ${{ vars.DEPLOY_TAILSCALE_HOST }}
+          DEPLOY_PORT: ${{ vars.DEPLOY_PORT }}
+          DEPLOY_USER: ${{ vars.DEPLOY_USER }}
+        run: |
+          set -euo pipefail
+
+          for required in ARTIFACT_PATH ARTIFACT_NAME ARTIFACT_SHA256 DEPLOY_HOST DEPLOY_PORT DEPLOY_USER; do
+            if [ -z "${!required:-}" ]; then
+              echo "::error::$required is missing."
+              exit 1
+            fi
+          done
+
+          UPLOADS="/home/deploy-blue-diamond/uploads"
+          REMOTE_ARTIFACT="${UPLOADS}/${ARTIFACT_NAME}"
+          REMOTE_TEMP="${REMOTE_ARTIFACT}.part-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          REMOTE_SCRIPT="${UPLOADS}/deploy-blue-diamond.candidate"
+          REMOTE_SUM="${REMOTE_SCRIPT}.sha256"
+
+          SSH_OPTIONS=(
+            -i "$HOME/.ssh/id_ed25519" -p "$DEPLOY_PORT"
+            -o BatchMode=yes -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes
+            -o ConnectTimeout=20 -o ServerAliveInterval=15 -o ServerAliveCountMax=8
+          )
+          SCP_OPTIONS=(
+            -i "$HOME/.ssh/id_ed25519" -P "$DEPLOY_PORT"
+            -o BatchMode=yes -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes
+            -o ConnectTimeout=20 -o ServerAliveInterval=15 -o ServerAliveCountMax=8
+          )
+
+          # The deployment script must come from the SAME commit as the
+          # application it deploys, or the reviewed logic and the executed
+          # logic can differ. Validated locally first so a broken script fails
+          # with a clear message before it ever reaches the server.
+          LOCAL_SCRIPT="ops/deploy/deploy-blue-diamond"
+          test -s "$LOCAL_SCRIPT"
+          bash -n "$LOCAL_SCRIPT"
+          SCRIPT_SHA256="$(sha256sum "$LOCAL_SCRIPT" | awk '{print $1}')"
+
+          ssh "${SSH_OPTIONS[@]}" "$DEPLOY_USER@$DEPLOY_HOST" \
+            "rm -f -- '$REMOTE_TEMP' '$REMOTE_ARTIFACT' '$REMOTE_SCRIPT' '$REMOTE_SUM'"
+
+          scp "${SCP_OPTIONS[@]}" "$ARTIFACT_PATH" "$DEPLOY_USER@$DEPLOY_HOST:$REMOTE_TEMP"
+          scp "${SCP_OPTIONS[@]}" "$LOCAL_SCRIPT" "$DEPLOY_USER@$DEPLOY_HOST:$REMOTE_SCRIPT"
+
+          ssh "${SSH_OPTIONS[@]}" "$DEPLOY_USER@$DEPLOY_HOST" "
+            set -euo pipefail
+
+            test -f '$REMOTE_TEMP' && test ! -L '$REMOTE_TEMP' && test -s '$REMOTE_TEMP'
+            test \"\$(sha256sum '$REMOTE_TEMP' | awk '{print \$1}')\" = '$ARTIFACT_SHA256'
+            chmod 600 '$REMOTE_TEMP'
+            mv -f -- '$REMOTE_TEMP' '$REMOTE_ARTIFACT'
+            chmod 600 '$REMOTE_ARTIFACT'
+
+            test -f '$REMOTE_SCRIPT' && test ! -L '$REMOTE_SCRIPT' && test -s '$REMOTE_SCRIPT'
+            test \"\$(sha256sum '$REMOTE_SCRIPT' | awk '{print \$1}')\" = '$SCRIPT_SHA256'
+            chmod 600 '$REMOTE_SCRIPT'
+            printf '%s' '$SCRIPT_SHA256' > '$REMOTE_SUM'
+            chmod 600 '$REMOTE_SUM'
+
+            echo 'UPLOAD_VERIFIED'
+          "
+
+          echo "SCRIPT_SHA256=$SCRIPT_SHA256" >> "$GITHUB_ENV"
+
+      # Runs immediately before the deployment so nothing can execute between
+      # installing the script and using it.
+      - name: Install deployment script from this commit
+        shell: bash
+        env:
+          DEPLOY_HOST: ${{ vars.DEPLOY_TAILSCALE_HOST }}
+          DEPLOY_PORT: ${{ vars.DEPLOY_PORT }}
+          DEPLOY_USER: ${{ vars.DEPLOY_USER }}
+        run: |
+          set -euo pipefail
+
+          OUTPUT="$(
+            ssh -i "$HOME/.ssh/id_ed25519" -p "$DEPLOY_PORT" \
+              -o BatchMode=yes -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes \
+              "$DEPLOY_USER@$DEPLOY_HOST" \
+              "sudo -n /usr/local/sbin/install-blue-diamond-deploy-script"
+          )"
+
+          echo "$OUTPUT"
+
+          # Without this assertion the job could pass while the server still
+          # held an older script.
+          case "$OUTPUT" in
+            *"sha256=$SCRIPT_SHA256"*) echo "DEPLOY_SCRIPT_INSTALL_OK" ;;
+            *)
+              echo "::error::Installed deployment script does not match this commit (expected $SCRIPT_SHA256)."
+              exit 1
+              ;;
+          esac
+
+      - name: Deploy release
+        shell: bash
+        env:
+          RELEASE_SHA: ${{ steps.release.outputs.release_sha }}
+          ARTIFACT_NAME: ${{ steps.package.outputs.artifact_name }}
+          DEPLOY_HOST: ${{ vars.DEPLOY_TAILSCALE_HOST }}
+          DEPLOY_PORT: ${{ vars.DEPLOY_PORT }}
+          DEPLOY_USER: ${{ vars.DEPLOY_USER }}
+        run: |
+          set -euo pipefail
+
+          # Run ONCE. The server-side script owns rollback on failure; a retry
+          # here would re-enter a half-rolled-back state.
+          ssh -i "$HOME/.ssh/id_ed25519" -p "$DEPLOY_PORT" \
+            -o BatchMode=yes -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes \
+            -o ServerAliveInterval=15 -o ServerAliveCountMax=8 \
+            "$DEPLOY_USER@$DEPLOY_HOST" \
+            "sudo -n /usr/local/sbin/deploy-blue-diamond \
+              '/home/deploy-blue-diamond/uploads/${ARTIFACT_NAME}' \
+              '${RELEASE_SHA}'"
+
+      # Independent of the server-side check, from outside the server. The
+      # deploy script already asserted this and rolled back on mismatch; this
+      # catches the case where the script itself is wrong.
+      - name: Verify the serving slot reports this SHA
+        shell: bash
+        env:
+          RELEASE_SHA: ${{ steps.release.outputs.release_sha }}
+          DEPLOY_HOST: ${{ vars.DEPLOY_TAILSCALE_HOST }}
+          DEPLOY_PORT: ${{ vars.DEPLOY_PORT }}
+          DEPLOY_USER: ${{ vars.DEPLOY_USER }}
+        run: |
+          set -euo pipefail
+
+          SERVED="$(
+            ssh -i "$HOME/.ssh/id_ed25519" -p "$DEPLOY_PORT" \
+              -o BatchMode=yes -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes \
+              "$DEPLOY_USER@$DEPLOY_HOST" '
+                set -euo pipefail
+                PORT="$(sed -nE "s/^ACTIVE_PORT=([0-9]+)$/\1/p" /home/blue-diamond/deployments/active-release.env)"
+                curl -sS --max-time 15 --retry 5 --retry-delay 3 --retry-all-errors \
+                  "http://127.0.0.1:${PORT}/api/version"
+              ' | grep -oE '[0-9a-f]{40}' | head -n 1
+          )"
+
+          echo "Expected: $RELEASE_SHA"
+          echo "Served:   ${SERVED:-none}"
+
+          if [ "$SERVED" != "$RELEASE_SHA" ]; then
+            echo "::error::The serving slot does not report the deployed release."
+            exit 1
+          fi
+
+          echo "SERVED_SHA_VERIFICATION_OK"
+
+      - name: Remove SSH material
+        if: always()
+        shell: bash
+        run: rm -f "$HOME/.ssh/id_ed25519" "$HOME/.ssh/known_hosts"

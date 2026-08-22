@@ -1,0 +1,71 @@
+# Template unit: one instance per Blue/Green slot.
+#
+#   systemctl enable --now blue-diamond@blue.service
+#   systemctl enable --now blue-diamond@green.service
+#
+# Both slots are permanent. Neither is a staging or preview environment: they
+# hold two releases of the same production application, and a rollback is a
+# switch between them rather than a rebuild.
+#
+# Install with:
+#   install -m 0644 -o root -g root ops/systemd/blue-diamond@.service \
+#     /etc/systemd/system/blue-diamond@.service && systemctl daemon-reload
+
+[Unit]
+Description=Blue Diamond Medical Next.js %i slot
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+
+User=blue-diamond
+Group=blue-diamond
+
+# `current` is a symlink the deploy script swaps atomically. systemd resolves
+# it at start, so a restart is what moves a slot onto a new release.
+WorkingDirectory=/home/blue-diamond/apps/%i/current
+
+# Per-slot runtime values (PORT, HOSTNAME) only. Application secrets come from
+# the shared env file symlinked into each release as .env, so they exist in
+# exactly one place on disk and never inside a release artifact.
+EnvironmentFile=/home/blue-diamond/shared/%i-runtime.env
+
+# Pinned interpreter, matching package.json's engines field and the CI Node
+# version. A release built against one Node major and run under another is a
+# class of failure that only appears at runtime.
+ExecStart=/opt/nodejs/versions/v20.19.5/bin/node server.js
+
+Restart=always
+RestartSec=5
+
+TimeoutStartSec=90
+TimeoutStopSec=30
+KillSignal=SIGTERM
+
+LimitNOFILE=65535
+# 0027: the runtime user's own files stay unreadable to other tenants on this
+# shared host.
+UMask=0027
+
+NoNewPrivileges=true
+PrivateTmp=true
+PrivateDevices=true
+
+ProtectSystem=full
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+
+RestrictSUIDSGID=true
+RestrictRealtime=true
+LockPersonality=true
+
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=blue-diamond-%i
+
+[Install]
+WantedBy=multi-user.target

@@ -25,6 +25,13 @@ export default defineConfig({
     url: "http://localhost:3000",
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
+    // The suite validates LAUNCHED behaviour — populated sitemap, `Sitemap:`
+    // in robots.txt, indexable pages — so the server runs with the gate open.
+    // Production defaults to the opposite (see src/config/launch.ts): the
+    // flag is absent, so the site is not indexable. The unlaunched branch is
+    // covered by tests/unit/prelaunch-guard.spec.ts, which asserts the gate
+    // directly rather than needing a second server.
+    env: { ...process.env, SITE_LAUNCHED: "true" },
   },
   projects: [
     { name: "chromium-desktop", use: { ...devices["Desktop Chrome"] } },

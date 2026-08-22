@@ -1,0 +1,510 @@
+#!/usr/bin/env bash
+#
+# Blue/Green release orchestrator for the Blue Diamond Medical frontend.
+#
+# Invoked as:
+#   sudo -n /usr/local/sbin/deploy-blue-diamond <artifact.tar.gz> <40-char-sha>
+#
+# Modelled on the proven Dfeelings orchestrator on this host, with three
+# deliberate differences for Blue Diamond's current phase:
+#
+#   1. NO PUBLIC DOMAIN. There is no Nginx vhost and no public hostname yet,
+#      so the traffic switch and the public verification are CONDITIONAL --
+#      they run when the Nginx snippet exists and PUBLIC_BASE is configured,
+#      and are skipped (loudly, in the log) when they do not. The same script
+#      therefore works unchanged through launch; nothing has to be edited on
+#      the day a domain is pointed at it.
+#
+#   2. ACTIVE SLOT IS DERIVED FROM LIVE EVIDENCE, then cross-checked against
+#      the stored state file. Where Nginx exists it is authoritative. Where it
+#      does not, systemd + a loopback health probe are, and a disagreement
+#      with the state file is a hard failure rather than something to
+#      normalize -- a stale state file that gets silently "corrected" is how a
+#      deploy overwrites the slot that is actually serving.
+#
+#   3. NO LEGACY PM2 MIGRATION PATH. This application has never run under PM2,
+#      so the corresponding branch is absent rather than carried dead.
+#
+# Everything else -- artifact validation, atomic release + symlink swap, the
+# ISR prerender-cache permission grant, health gating, /api/version identity
+# verification, automatic rollback, release retention, the deployment lock --
+# is the Dfeelings model.
+set -Eeuo pipefail
+umask 027
+
+APP_NAME="blue-diamond"
+RUNTIME_USER="blue-diamond"
+RUNTIME_GROUP="blue-diamond"
+UPLOAD_ROOT="/home/deploy-blue-diamond/uploads"
+APP_ROOT="/home/blue-diamond/apps"
+SHARED_ENV="/home/blue-diamond/shared/.env.production"
+DEPLOYMENTS_DIR="/home/blue-diamond/deployments"
+DEPLOY_LOG="${DEPLOYMENTS_DIR}/deployments.log"
+ACTIVE_FILE="${DEPLOYMENTS_DIR}/active-release.env"
+NGINX_SNIPPET="/etc/nginx/snippets/blue-diamond-backend.conf"
+NODE_BIN="/opt/nodejs/versions/v20.19.5/bin/node"
+LOCK_FILE="/run/lock/blue-diamond-deploy.lock"
+KEEP_RELEASES=3
+
+BLUE_PORT="3030"
+GREEN_PORT="3031"
+
+# Set once a public hostname exists (e.g. https://bluediamondmedical.ca).
+# While empty the deployment completes without any public verification, and
+# says so in the log rather than silently skipping it.
+PUBLIC_BASE="${BLUE_DIAMOND_PUBLIC_BASE:-}"
+
+usage() {
+  echo "Usage: sudo $0 ${UPLOAD_ROOT}/${APP_NAME}-<40-char-sha>.tar.gz <40-char-sha>" >&2
+  exit 64
+}
+
+log() {
+  printf '%s %s\n' "$(date --iso-8601=seconds)" "$1" | tee -a "$DEPLOY_LOG"
+}
+
+wait_for_http_200() {
+  local url="$1"
+  local attempt code
+
+  # shellcheck disable=SC2034  # loop counter; bounds the wait, never read
+  for attempt in $(seq 1 60); do
+    code="$(curl -sS --max-time 10 -o /dev/null -w '%{http_code}' "$url" 2>/dev/null || true)"
+    [ "$code" = "200" ] && return 0
+    sleep 2
+  done
+
+  echo "Health check failed for $url (last HTTP code: ${code:-none})." >&2
+  return 1
+}
+
+# Asserts CONTENT identity, not merely liveness.
+#
+# HTTP 200 proves some backend answered. It does not prove the proxy is
+# serving the release this run just deployed -- a wiring mistake lets the
+# previous slot keep answering 200 indefinitely while every deploy reports
+# success. /api/version returns the exact .release-sha on disk, so this
+# compares what is served against what was asked for.
+verify_served_sha() {
+  local base="$1" expected_sha="$2"
+  local attempt response served_sha
+
+  for attempt in $(seq 1 30); do
+    response="$(curl -sS --max-time 10 "${base}/api/version" 2>/dev/null || true)"
+    served_sha="$(printf '%s' "$response" | grep -oE '[0-9a-f]{40}' | head -n 1 || true)"
+    [ "$served_sha" = "$expected_sha" ] && return 0
+    sleep 2
+  done
+
+  echo "SHA verification failed at ${base}: expected ${expected_sha}, served ${served_sha:-none}." >&2
+  return 1
+}
+
+[ "$#" -eq 2 ] || usage
+
+ARTIFACT_INPUT="$1"
+RELEASE_ID="$2"
+
+[[ "$RELEASE_ID" =~ ^[0-9a-f]{40}$ ]] || {
+  echo "Release ID must be a lowercase 40-character Git commit SHA." >&2
+  exit 64
+}
+
+for required in "$UPLOAD_ROOT" "$APP_ROOT/blue" "$APP_ROOT/green" "$SHARED_ENV" "$NODE_BIN"; do
+  [ -e "$required" ] || { echo "Missing required path: $required" >&2; exit 1; }
+done
+
+install -d -o "$RUNTIME_USER" -g "$RUNTIME_GROUP" -m 750 "$DEPLOYMENTS_DIR"
+touch "$DEPLOY_LOG"
+chown root:"$RUNTIME_GROUP" "$DEPLOY_LOG"
+chmod 640 "$DEPLOY_LOG"
+
+exec 9>"$LOCK_FILE"
+flock -n 9 || { echo "Another ${APP_NAME} deployment is already running." >&2; exit 75; }
+
+# --- artifact validation ---------------------------------------------------
+#
+# The artifact arrives over an authenticated channel but is still treated as
+# untrusted input: it is extracted as root, so a crafted archive is a root
+# write primitive. Path escapes, symlinks and device nodes are rejected before
+# anything is written.
+
+ARTIFACT="$(realpath -e -- "$ARTIFACT_INPUT")"
+EXPECTED_ARTIFACT="${UPLOAD_ROOT}/${APP_NAME}-${RELEASE_ID}.tar.gz"
+
+[ "$ARTIFACT" = "$EXPECTED_ARTIFACT" ] || {
+  echo "Artifact path must be exactly: $EXPECTED_ARTIFACT" >&2
+  exit 64
+}
+
+[ -f "$ARTIFACT" ] && [ ! -L "$ARTIFACT" ] || {
+  echo "Artifact must be a regular file, not a symbolic link." >&2
+  exit 1
+}
+
+[ "$(stat -c '%U' "$ARTIFACT")" = "deploy-blue-diamond" ] || {
+  echo "Artifact owner must be deploy-blue-diamond." >&2
+  exit 1
+}
+
+if find "$ARTIFACT" -maxdepth 0 -perm /022 -print -quit | grep -q .; then
+  echo "Artifact must not be group-writable or world-writable." >&2
+  exit 1
+fi
+
+ARTIFACT_SIZE="$(stat -c '%s' "$ARTIFACT")"
+[ "$ARTIFACT_SIZE" -gt 0 ] && [ "$ARTIFACT_SIZE" -le 2147483648 ] || {
+  echo "Artifact size is invalid or exceeds 2 GiB." >&2
+  exit 1
+}
+
+gzip -t "$ARTIFACT"
+
+ARCHIVE_LIST="$(mktemp /tmp/blue-diamond-archive-list.XXXXXX)"
+tar -tzf "$ARTIFACT" | sed 's#^\./##' | sed '/^$/d' > "$ARCHIVE_LIST"
+
+if grep -Eq '(^/|(^|/)\.\.(/|$))' "$ARCHIVE_LIST"; then
+  echo "Artifact contains an unsafe path." >&2
+  rm -f "$ARCHIVE_LIST"
+  exit 1
+fi
+
+if ! tar -tvzf "$ARTIFACT" | awk '
+  { type = substr($1, 1, 1) }
+  type != "-" && type != "d" { bad = 1 }
+  END { exit bad }
+'; then
+  echo "Artifact contains links or unsupported file types." >&2
+  rm -f "$ARCHIVE_LIST"
+  exit 1
+fi
+
+for required_entry in server.js .next/BUILD_ID .release-sha; do
+  grep -Fxq "$required_entry" "$ARCHIVE_LIST" || {
+    echo "Artifact is missing required entry: $required_entry" >&2
+    rm -f "$ARCHIVE_LIST"
+    exit 1
+  }
+done
+
+rm -f "$ARCHIVE_LIST"
+
+# --- determine the active slot from live evidence --------------------------
+
+STATE_SLOT=""
+if [ -f "$ACTIVE_FILE" ]; then
+  STATE_SLOT="$(sed -nE 's/^ACTIVE_SLOT=(blue|green)$/\1/p' "$ACTIVE_FILE" | head -n 1)"
+fi
+
+NGINX_MANAGED=0
+if [ -f "$NGINX_SNIPPET" ]; then
+  NGINX_MANAGED=1
+  CURRENT_PORT="$(sed -nE 's|^[[:space:]]*proxy_pass http://127\.0\.0\.1:([0-9]+)/;[[:space:]]*$|\1|p' "$NGINX_SNIPPET")"
+  case "$CURRENT_PORT" in
+    "$BLUE_PORT")  LIVE_SLOT="blue" ;;
+    "$GREEN_PORT") LIVE_SLOT="green" ;;
+    *) echo "Unexpected Nginx backend port: ${CURRENT_PORT:-missing}" >&2; exit 1 ;;
+  esac
+else
+  # No public vhost yet. Derive the serving slot from systemd plus a loopback
+  # probe -- the only live evidence that exists in this phase.
+  LIVE_SLOT=""
+  for candidate in blue green; do
+    if [ "$candidate" = "green" ]; then
+      port="$GREEN_PORT"
+    else
+      port="$BLUE_PORT"
+    fi
+
+    if systemctl is-active --quiet "${APP_NAME}@${candidate}.service" &&
+       curl -sS --max-time 5 -o /dev/null "http://127.0.0.1:${port}/api/version" 2>/dev/null
+    then
+      LIVE_SLOT="$candidate"
+    fi
+  done
+
+  if [ -z "$LIVE_SLOT" ]; then
+    # First deployment: nothing is serving. Blue is the conventional first
+    # slot, so the target below becomes blue.
+    LIVE_SLOT="green"
+    log "BOOTSTRAP no slot is currently serving; treating green as previous so blue receives the first release"
+  fi
+fi
+
+# Cross-check. A stored state file that disagrees with live evidence means an
+# out-of-band change happened; deploying on top of that guess could overwrite
+# the slot that is actually serving. Fail, do not normalize -- the operator
+# decides what the truth is.
+if [ -n "$STATE_SLOT" ] && [ "$STATE_SLOT" != "$LIVE_SLOT" ] && [ "$NGINX_MANAGED" -eq 1 ]; then
+  echo "State file says ACTIVE_SLOT=${STATE_SLOT} but live evidence says ${LIVE_SLOT}." >&2
+  echo "Refusing to deploy until the discrepancy is explained. Nothing was changed." >&2
+  exit 1
+fi
+
+ACTIVE_SLOT="$LIVE_SLOT"
+if [ "$ACTIVE_SLOT" = "blue" ]; then
+  TARGET_SLOT="green"; TARGET_PORT="$GREEN_PORT"; CURRENT_PORT="$BLUE_PORT"
+else
+  TARGET_SLOT="blue";  TARGET_PORT="$BLUE_PORT";  CURRENT_PORT="$GREEN_PORT"
+fi
+
+SLOT_ROOT="${APP_ROOT}/${TARGET_SLOT}"
+RELEASES_DIR="${SLOT_ROOT}/releases"
+RELEASE_DIR="${RELEASES_DIR}/${RELEASE_ID}"
+STAGING_DIR="${RELEASES_DIR}/.staging-${RELEASE_ID}-$$"
+CURRENT_LINK="${SLOT_ROOT}/current"
+TARGET_SERVICE="${APP_NAME}@${TARGET_SLOT}.service"
+
+OLD_LINK_TARGET=""
+OLD_TARGET_WAS_ACTIVE=0
+OLD_TARGET_WAS_ENABLED=0
+CURRENT_CHANGED=0
+TARGET_STARTED=0
+NGINX_CHANGED=0
+RELEASE_CREATED=0
+OLD_NGINX_CONTENT=""
+
+if [ "$NGINX_MANAGED" -eq 1 ]; then
+  OLD_NGINX_CONTENT="$(cat "$NGINX_SNIPPET")"
+fi
+
+if [ -L "$CURRENT_LINK" ]; then
+  OLD_LINK_TARGET="$(readlink "$CURRENT_LINK")"
+fi
+
+if systemctl is-active --quiet "$TARGET_SERVICE"; then
+  OLD_TARGET_WAS_ACTIVE=1
+fi
+
+if systemctl is-enabled --quiet "$TARGET_SERVICE"; then
+  OLD_TARGET_WAS_ENABLED=1
+fi
+
+rollback() {
+  local exit_code="$1"
+  trap - ERR INT TERM
+  set +e
+
+  log "DEPLOY_FAILED sha=${RELEASE_ID} target=${TARGET_SLOT} port=${TARGET_PORT}; starting rollback"
+
+  if [ "$NGINX_CHANGED" -eq 1 ]; then
+    printf '%s\n' "$OLD_NGINX_CONTENT" > "${NGINX_SNIPPET}.rollback"
+    chown root:root "${NGINX_SNIPPET}.rollback"
+    chmod 644 "${NGINX_SNIPPET}.rollback"
+    mv -f "${NGINX_SNIPPET}.rollback" "$NGINX_SNIPPET"
+    nginx -t && systemctl reload nginx
+  fi
+
+  if [ "$TARGET_STARTED" -eq 1 ]; then
+    systemctl stop "$TARGET_SERVICE"
+  fi
+
+  if [ "$OLD_TARGET_WAS_ENABLED" -eq 0 ]; then
+    systemctl disable "$TARGET_SERVICE" >/dev/null 2>&1
+  fi
+
+  if [ "$CURRENT_CHANGED" -eq 1 ]; then
+    rm -f "$CURRENT_LINK"
+    if [ -n "$OLD_LINK_TARGET" ]; then
+      ln -s "$OLD_LINK_TARGET" "$CURRENT_LINK"
+    fi
+  fi
+
+  if [ "$OLD_TARGET_WAS_ACTIVE" -eq 1 ] && [ -n "$OLD_LINK_TARGET" ]; then
+    systemctl start "$TARGET_SERVICE"
+  fi
+
+  rm -rf "$STAGING_DIR"
+
+  if [ "$RELEASE_CREATED" -eq 1 ]; then
+    rm -rf "$RELEASE_DIR"
+  fi
+
+  log "ROLLBACK_FINISHED sha=${RELEASE_ID} restored=${ACTIVE_SLOT}:${CURRENT_PORT}"
+  exit "$exit_code"
+}
+
+trap 'rollback $?' ERR INT TERM
+
+log "DEPLOY_STARTED sha=${RELEASE_ID} active=${ACTIVE_SLOT}:${CURRENT_PORT} target=${TARGET_SLOT}:${TARGET_PORT} nginx_managed=${NGINX_MANAGED}"
+
+install -d -o root -g "$RUNTIME_GROUP" -m 750 "$RELEASES_DIR"
+
+[ ! -e "$RELEASE_DIR" ] || { echo "Release already exists: $RELEASE_DIR" >&2; false; }
+
+install -d -o root -g "$RUNTIME_GROUP" -m 750 "$STAGING_DIR"
+
+tar -xzf "$ARTIFACT" -C "$STAGING_DIR" \
+  --no-same-owner --no-same-permissions --delay-directory-restore
+
+if [ -n "$(find "$STAGING_DIR" -xdev \( -type l -o -type b -o -type c -o -type p -o -type s \) -print -quit)" ]; then
+  echo "Extracted release contains unsupported file types." >&2
+  false
+fi
+
+[ -f "$STAGING_DIR/server.js" ]
+[ -s "$STAGING_DIR/.next/BUILD_ID" ]
+[ -d "$STAGING_DIR/.next/static" ]
+[ -d "$STAGING_DIR/public" ]
+
+EXTRACTED_SHA="$(tr -d '\r\n' < "$STAGING_DIR/.release-sha")"
+[ "$EXTRACTED_SHA" = "$RELEASE_ID" ] || {
+  echo "Artifact SHA does not match requested release." >&2
+  false
+}
+
+"$NODE_BIN" --check "$STAGING_DIR/server.js" >/dev/null
+
+chown -R root:"$RUNTIME_GROUP" "$STAGING_DIR"
+chmod -R u=rwX,g=rX,o= "$STAGING_DIR"
+
+# The fetch cache is written by the runtime user on every revalidation.
+install -d -o "$RUNTIME_USER" -g "$RUNTIME_GROUP" -m 750 "$STAGING_DIR/.next/cache"
+
+# --- ISR prerender cache write access --------------------------------------
+#
+# The chown/chmod above leave the release root:blue-diamond at u=rwX,g=rX,o= --
+# correct for code and static assets, and the .next/cache line already carves
+# out the fetch cache.
+#
+# It is NOT sufficient for the App Router PRERENDER cache. Next.js does not
+# keep revalidated route output in .next/cache; it rewrites the
+# <route>.body / <route>.meta pair in place, next to the prerendered output
+# under .next/server/app. With g=rX on that directory every revalidation of an
+# ISR route fails with:
+#
+#   Failed to update prerender cache for /sitemap.xml
+#   Error: EACCES: permission denied, open '.../.next/server/app/sitemap.xml.body'
+#
+# This is not hypothetical: it was diagnosed in production on this host in
+# August 2026 (209 occurrences across two slots) on the sibling project, where
+# the live symptom was an ISR sitemap frozen at build time -- the refresh could
+# never be persisted, so every request past the first recomputed it and threw
+# the result away.
+#
+# Blue Diamond has no time-based ISR route TODAY (robots.txt and sitemap.xml
+# are both force-dynamic, and no page exports `revalidate`), so on the current
+# build this grant is a no-op. It is included deliberately anyway, because the
+# FeelStack client already issues `fetch(..., { next: { revalidate } })` (see
+# src/lib/feelstack/client.ts): the moment FEELSTACK_CONTENT_MODE is switched
+# from "static" to "hybrid" or "cms", every page resolving through it becomes
+# a revalidating route with a prerender cache to persist, and this failure
+# becomes live. Adding the grant after that switch would mean shipping the bug
+# first and diagnosing it second.
+#
+# Being derived from the build output rather than from a hardcoded route list
+# is what makes that work: it grants nothing today and exactly the right thing
+# once such routes exist.
+#
+# The grant is derived from the build output rather than hardcoded to
+# sitemap.xml, so it keeps working as ISR routes are added or removed, and is
+# narrow in three ways:
+#
+#   * only directories that already contain prerendered output become
+#     group-writable; a directory holding only compiled .js is an SSR route
+#     with no cache to persist and stays read-only;
+#   * only the .body/.meta cache artifacts themselves become group-writable --
+#     compiled route code, .next/static, public/ and server.js all stay g=rX,
+#     so the runtime user still cannot modify the code it runs;
+#   * nothing becomes world-anything; the o= above is preserved throughout.
+#
+# setgid on the granted directories pins new cache files to the runtime group,
+# so a file created by the runtime user stays readable by the slot after any
+# future recursive chown.
+grant_isr_prerender_cache_write() {
+  local app_dir="$STAGING_DIR/.next/server/app"
+  [ -d "$app_dir" ] || return 0
+
+  find "$app_dir" -type f \
+    \( -name '*.body' -o -name '*.meta' -o -name '*.html' -o -name '*.rsc' \) \
+    -printf '%h\0' | sort -zu | xargs -0 -r chmod g+ws
+
+  find "$app_dir" -type f \( -name '*.body' -o -name '*.meta' \) -print0 \
+    | xargs -0 -r chmod g+w
+}
+
+grant_isr_prerender_cache_write
+
+# Secrets live only in the shared file; the release never contains them, so a
+# retained old release cannot resurrect stale configuration.
+ln -s "$SHARED_ENV" "$STAGING_DIR/.env"
+ln -s "$SHARED_ENV" "$STAGING_DIR/.env.production"
+
+mv "$STAGING_DIR" "$RELEASE_DIR"
+RELEASE_CREATED=1
+
+# Same-filesystem rename, so `current` is never observed dangling.
+NEW_LINK="${SLOT_ROOT}/.current-${RELEASE_ID}-$$"
+ln -s "releases/${RELEASE_ID}" "$NEW_LINK"
+mv -Tf "$NEW_LINK" "$CURRENT_LINK"
+CURRENT_CHANGED=1
+
+systemctl enable "$TARGET_SERVICE" >/dev/null
+TARGET_STARTED=1
+systemctl restart "$TARGET_SERVICE"
+
+# Gate on the inactive slot BEFORE any traffic is pointed at it.
+wait_for_http_200 "http://127.0.0.1:${TARGET_PORT}/api/version"
+verify_served_sha "http://127.0.0.1:${TARGET_PORT}" "$RELEASE_ID"
+
+if [ "$NGINX_MANAGED" -eq 1 ]; then
+  printf 'proxy_pass http://127.0.0.1:%s/;\n' "$TARGET_PORT" > "${NGINX_SNIPPET}.new"
+  chown root:root "${NGINX_SNIPPET}.new"
+  chmod 644 "${NGINX_SNIPPET}.new"
+  mv -f "${NGINX_SNIPPET}.new" "$NGINX_SNIPPET"
+  NGINX_CHANGED=1
+
+  nginx -t
+  systemctl reload nginx
+
+  if [ -n "$PUBLIC_BASE" ]; then
+    wait_for_http_200 "${PUBLIC_BASE}/api/version"
+    verify_served_sha "$PUBLIC_BASE" "$RELEASE_ID"
+  else
+    log "PUBLIC_VERIFICATION_SKIPPED sha=${RELEASE_ID} reason=no_public_base_configured"
+  fi
+else
+  log "TRAFFIC_SWITCH_SKIPPED sha=${RELEASE_ID} reason=no_nginx_snippet (pre-domain phase); ${TARGET_SLOT} is now the serving slot on 127.0.0.1:${TARGET_PORT}"
+fi
+
+# Only after the new slot is verified is the previous one stood down. Keeping
+# it running until this point is what makes the rollback above instantaneous.
+if [ "$NGINX_MANAGED" -eq 0 ] && systemctl is-active --quiet "${APP_NAME}@${ACTIVE_SLOT}.service"; then
+  systemctl stop "${APP_NAME}@${ACTIVE_SLOT}.service"
+fi
+
+{
+  echo "ACTIVE_SLOT=${TARGET_SLOT}"
+  echo "ACTIVE_PORT=${TARGET_PORT}"
+  echo "RELEASE_SHA=${RELEASE_ID}"
+  echo "DEPLOYED_AT=$(date --iso-8601=seconds)"
+  echo "NGINX_MANAGED=${NGINX_MANAGED}"
+} > "${ACTIVE_FILE}.tmp"
+
+chown root:"$RUNTIME_GROUP" "${ACTIVE_FILE}.tmp"
+chmod 640 "${ACTIVE_FILE}.tmp"
+mv -f "${ACTIVE_FILE}.tmp" "$ACTIVE_FILE"
+
+trap - ERR INT TERM
+
+# Retention runs only on the success path, so a failed deploy never prunes the
+# history it might need to roll back into.
+mapfile -t RELEASE_PATHS < <(
+  find "$RELEASES_DIR" -mindepth 1 -maxdepth 1 -type d ! -name '.staging-*' \
+    -printf '%T@ %p\n' | sort -nr | cut -d' ' -f2-
+)
+
+if [ "${#RELEASE_PATHS[@]}" -gt "$KEEP_RELEASES" ]; then
+  for ((index=KEEP_RELEASES; index<${#RELEASE_PATHS[@]}; index++)); do
+    [ "${RELEASE_PATHS[$index]}" = "$RELEASE_DIR" ] || rm -rf "${RELEASE_PATHS[$index]}"
+  done
+fi
+
+rm -f "$ARTIFACT"
+
+log "DEPLOY_SUCCEEDED sha=${RELEASE_ID} active=${TARGET_SLOT}:${TARGET_PORT} previous=${ACTIVE_SLOT}:${CURRENT_PORT}"
+
+echo "DEPLOYMENT_SUCCESS"
+echo "ACTIVE_SLOT=${TARGET_SLOT}"
+echo "ACTIVE_PORT=${TARGET_PORT}"
+echo "RELEASE_SHA=${RELEASE_ID}"
