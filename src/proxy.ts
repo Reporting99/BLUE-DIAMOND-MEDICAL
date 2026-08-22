@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { defaultLocale, isLocale } from "@/i18n/config";
-import { legacyRedirects } from "@/lib/seo/legacy-redirects";
-import { routes } from "@/config/routes";
+import { legacyRedirects } from "@/lib/routing";
+import { routes } from "@/lib/routing";
 import { isSiteLaunched, PRE_LAUNCH_ROBOTS_HEADER } from "@/config/launch";
 
 /**

@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { routes } from "@/config/routes";
+import { routes } from "@/lib/routing";
 import { siteConfig } from "@/config/site";
 import { features, type FeatureFlags } from "@/config/features";
 import { isSiteLaunched } from "@/config/launch";

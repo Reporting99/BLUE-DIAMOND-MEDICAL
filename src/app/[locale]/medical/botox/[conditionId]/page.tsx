@@ -2,12 +2,12 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { isLocale, type Locale } from "@/i18n/config";
 import { features } from "@/config/features";
-import { getMedicalBotoxCondition } from "@/content/medical-botox";
-import { MedicalServiceTemplate } from "@/templates/MedicalServiceTemplate";
+import { getMedicalBotoxCondition } from "@/features/medical-services/botox";
+import { MedicalServiceTemplate } from "@/features/medical-services/components/MedicalServiceTemplate";
 import { getRouteMetadata } from "@/lib/seo/metadata";
 
 /**
- * Feature-flagged off — see src/content/medical-botox.ts. No
+ * Feature-flagged off — see src/features/medical-services/botox.ts. No
  * generateStaticParams here: while disabled, nothing pre-renders, and any
  * direct request 404s via notFound() below rather than exposing a
  * duplicate-content page.

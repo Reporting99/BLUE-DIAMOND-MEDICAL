@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { routes } from "../../src/config/routes";
+import { routes } from "../../src/lib/routing";
 import { features } from "../../src/config/features";
 
 /**

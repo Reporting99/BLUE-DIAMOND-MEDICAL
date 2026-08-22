@@ -11,9 +11,9 @@ const PAGE_DESCRIPTION = {
       ar: "سياسات العيادة، ورسوم عدم الحضور، وتجديد الوصفات، والسرّية في عيادة بلو دايموند الطبية.",
     } as const;
 
-import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
-import { PageSchema } from "@/components/seo/PageSchema";
-import { getRoute } from "@/config/routes";
+import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
+import { PageSchema } from "@/components/shared/schema/PageSchema";
+import { getRoute } from "@/lib/routing";
 
 const policies = {
   en: [

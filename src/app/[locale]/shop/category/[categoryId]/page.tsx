@@ -1,10 +1,10 @@
 import { notFound } from "next/navigation";
 import { Container } from "@/components/layout/Container";
 import { SectionTransition } from "@/components/layout/SectionTransition";
-import { ProductCard } from "@/components/commerce/ProductCard";
+import { ProductCard } from "@/features/products/components/ProductCard";
 import { isLocale, type Locale } from "@/i18n/config";
 import { features } from "@/config/features";
-import { availabilityNotice, productCategories, products } from "@/content/products";
+import { availabilityNotice, productCategories, products } from "@/features/products/data";
 
 /** Feature-flagged off (`shopEnabled`) — see src/app/[locale]/shop/page.tsx. */
 export default async function ShopCategoryPage({

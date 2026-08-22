@@ -2,15 +2,15 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { isLocale, type Locale } from "@/i18n/config";
 import { features } from "@/config/features";
-import { getLegalPage } from "@/content/legal-pages";
-import { LegalPageTemplate } from "@/templates/LegalPageTemplate";
+import { getLegalPage } from "@/features/legal/data";
+import { LegalPageTemplate } from "@/features/legal/components/LegalPageTemplate";
 import { getRouteMetadata } from "@/lib/seo/metadata";
 import { resolvePageContent, entityCacheTags } from "@/lib/feelstack/page-resolver";
 import { cacheTags } from "@/lib/feelstack/cache-tags";
 import { cmsLegalPageSchema } from "@/lib/feelstack/schemas";
 
 /**
- * Feature-flagged off (`legalPagesEnabled`) — see src/content/legal-pages.ts.
+ * Feature-flagged off (`legalPagesEnabled`) — see src/features/legal/data.ts.
  * Belt-and-suspenders: even if the flag were flipped on prematurely, a
  * page with an empty `body` still 404s rather than publishing blank legal
  * text (brief §25 forbids empty "Coming soon" legal pages).

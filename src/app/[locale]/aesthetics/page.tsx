@@ -4,13 +4,13 @@ import { ArrowRight, Sparkles, Target, Cpu } from "lucide-react";
 import { Container } from "@/components/layout/Container";
 import { SectionTransition } from "@/components/layout/SectionTransition";
 import { Button } from "@/components/ui/button";
-import { ImageKitImage } from "@/components/media/ImageKitImage";
+import { ImageKitImage } from "@/components/shared/ImageKitImage";
 import { isLocale, type Locale } from "@/i18n/config";
 import { getRouteMetadata } from "@/lib/seo/metadata";
 import { getBookingUrl } from "@/config/booking";
-import { getRoute, href } from "@/config/routes";
-import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
-import { PageSchema } from "@/components/seo/PageSchema";
+import { getRoute, href } from "@/lib/routing";
+import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
+import { PageSchema } from "@/components/shared/schema/PageSchema";
 
 export async function generateMetadata({
   params,

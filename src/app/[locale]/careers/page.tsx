@@ -14,9 +14,9 @@ const PAGE_DESCRIPTION = {
       ar: "انضموا إلى فريق عيادة بلو دايموند الطبية في ويست سبرينغز، كالغاري.",
     } as const;
 
-import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
-import { PageSchema } from "@/components/seo/PageSchema";
-import { getRoute } from "@/config/routes";
+import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
+import { PageSchema } from "@/components/shared/schema/PageSchema";
+import { getRoute } from "@/lib/routing";
 
 export async function generateMetadata({
   params,

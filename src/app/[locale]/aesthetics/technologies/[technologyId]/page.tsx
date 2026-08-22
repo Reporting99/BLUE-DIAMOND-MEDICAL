@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { isLocale, locales, type Locale } from "@/i18n/config";
-import { technologies, getTechnology } from "@/content/technologies";
-import { TechnologyTemplate } from "@/templates/TechnologyTemplate";
+import { technologies, getTechnology } from "@/features/technologies/data";
+import { TechnologyTemplate } from "@/features/technologies/components/TechnologyTemplate";
 import { getRouteMetadata } from "@/lib/seo/metadata";
 import { resolvePageContent, entityCacheTags } from "@/lib/feelstack/page-resolver";
 import { cacheTags } from "@/lib/feelstack/cache-tags";

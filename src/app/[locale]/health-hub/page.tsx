@@ -3,9 +3,9 @@ import { Container } from "@/components/layout/Container";
 import { SectionTransition } from "@/components/layout/SectionTransition";
 import { isLocale, type Locale } from "@/i18n/config";
 import { getRouteMetadata } from "@/lib/seo/metadata";
-import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
-import { PageSchema } from "@/components/seo/PageSchema";
-import { getRoute } from "@/config/routes";
+import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
+import { PageSchema } from "@/components/shared/schema/PageSchema";
+import { getRoute } from "@/lib/routing";
 
 const categories = {
   en: ["Family Health", "Women's Health", "Mental Health", "Medical Aesthetics", "Skin & Hair", "Clinic News"],

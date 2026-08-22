@@ -7,10 +7,10 @@ import { Button } from "@/components/ui/button";
 import { isLocale, type Locale } from "@/i18n/config";
 import { getRouteMetadata } from "@/lib/seo/metadata";
 import { getBookingUrl } from "@/config/booking";
-import { getRoute, href } from "@/config/routes";
-import { medicalServices } from "@/content/medical-services";
-import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
-import { PageSchema } from "@/components/seo/PageSchema";
+import { getRoute, href } from "@/lib/routing";
+import { medicalServices } from "@/features/medical-services/data";
+import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
+import { PageSchema } from "@/components/shared/schema/PageSchema";
 import { siteConfig } from "@/config/site";
 
 /** AHS-insured services with no dedicated page yet — listed plainly, no fabricated detail. */

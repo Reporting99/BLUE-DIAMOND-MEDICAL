@@ -71,7 +71,7 @@ const hasCredentials = Boolean(urlEndpoint && publicKey && privateKey);
 // duplicated here (plain .mjs, no ts-node/tsx in this project) rather than
 // imported. Every destPath below and the generated one further down MUST
 // stay prefixed with it, or a real upload lands at a path the site's
-// manifest (src/content/media/image-manifest.ts) never looks for — found
+// manifest (src/lib/media/image-manifest.ts) never looks for — found
 // as a real drift bug this pass (both were missing the prefix).
 const MEDIA_ROOT = "/blue-diamond";
 

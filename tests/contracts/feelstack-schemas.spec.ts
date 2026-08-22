@@ -13,7 +13,7 @@ import {
   type CmsHealthHubArticle,
   type CmsLegalPage,
 } from "../../src/lib/feelstack/schemas";
-import type { Doctor } from "../../src/types/doctor";
+import type { Doctor } from "../../src/features/doctors";
 import type { MedicalServiceContent } from "../../src/types/medical-service";
 import type { AestheticTreatment, AestheticConcern, Technology } from "../../src/types/aesthetics";
 import type { Product } from "../../src/types/product";

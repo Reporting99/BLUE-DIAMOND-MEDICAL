@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
-import { imageManifest } from "../../src/content/media/image-manifest";
+import { imageManifest } from "../../src/lib/media/image-manifest";
 
 /**
  * Static-analysis checks — brief §39 items 20-21 ("Create a test that
@@ -33,7 +33,7 @@ const sourceFiles = walk(SRC_DIR);
 test("no component imports next/image directly (must go through ImageKitImage)", () => {
   const offenders: string[] = [];
   for (const file of sourceFiles) {
-    if (file.includes("components\\media\\ImageKitImage.tsx") || file.includes("components/media/ImageKitImage.tsx")) continue;
+    if (file.includes("components\\media\\ImageKitImage.tsx") || file.includes("components/shared/ImageKitImage.tsx")) continue;
     const content = readFileSync(file, "utf-8");
     if (/from ["']next\/image["']/.test(content)) {
       offenders.push(file);
@@ -84,7 +84,7 @@ test("every literal ImageKit-style path (path=\"...\" or ogImagePath: \"...\") i
   // Regression guard — found this pass: two separate places (an
   // ImageKitImage `path=` JSX literal and an `ogImagePath:` metadata
   // override) duplicated a raw path string instead of sourcing it from
-  // src/content/media/image-manifest.ts, and both silently drifted out of
+  // src/lib/media/image-manifest.ts, and both silently drifted out of
   // sync with MEDIA_ROOT (src/config/imagekit.ts) when it was introduced.
   // Every literal path/ogImagePath string must start with the media root,
   // matching every entry in image-manifest.ts.

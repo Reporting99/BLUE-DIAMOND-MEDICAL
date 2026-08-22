@@ -4,23 +4,23 @@ import { ArrowRight, MapPin, Phone, Stethoscope, Sparkles, Search, Cpu } from "l
 import { Container } from "@/components/layout/Container";
 import { SectionTransition } from "@/components/layout/SectionTransition";
 import { Button } from "@/components/ui/button";
-import { ImageKitImage } from "@/components/media/ImageKitImage";
-import { DoctorOrganizationSchema } from "@/components/seo/JsonLd";
-import { FaqPageSchema } from "@/components/seo/FaqPageSchema";
-import { ConcernExplorer } from "@/components/aesthetics/ConcernExplorer";
-import { StatsCounters } from "@/components/home/StatsCounters";
+import { ImageKitImage } from "@/components/shared/ImageKitImage";
+import { ClinicSchema } from "@/components/shared/schema/ClinicSchema";
+import { FaqPageSchema } from "@/components/shared/schema/FaqPageSchema";
+import { ConcernExplorer } from "@/features/concerns/components/ConcernExplorer";
+import { StatsCounters } from "@/features/home/components/StatsCounters";
 import { SiteClosingExperience } from "@/components/layout/SiteClosingExperience";
 import { getDictionary, isLocale, type Locale } from "@/i18n/config";
-import { getRoute, href } from "@/config/routes";
+import { getRoute, href } from "@/lib/routing";
 import { getBookingUrl, type BookingChannel } from "@/config/booking";
 import { siteConfig } from "@/config/site";
 import { getOpenStatus, statutoryHolidayNotice } from "@/config/clinic-hours";
-import { doctors } from "@/types/doctor";
-import { technologies } from "@/content/technologies";
-import { treatments } from "@/content/treatments";
-import { concerns } from "@/content/concerns";
-import { medicalServices } from "@/content/medical-services";
-import { products, availabilityNotice } from "@/content/products";
+import { doctors } from "@/features/doctors";
+import { technologies } from "@/features/technologies/data";
+import { treatments } from "@/features/aesthetics/data/treatments";
+import { concerns } from "@/features/concerns/data";
+import { medicalServices } from "@/features/medical-services/data";
+import { products, availabilityNotice } from "@/features/products/data";
 import { formatPrice } from "@/types/pricing";
 import { getRouteMetadata } from "@/lib/seo/metadata";
 import type { AestheticTreatment, Technology } from "@/types/aesthetics";
@@ -80,7 +80,7 @@ const homepageCopy = {
     medicalDepthIntro: "Comprehensive AHS-insured family medicine and walk-in care for patients and families in West Springs.",
     medicalDepthCta: "Explore all medical services",
     // Card title/short text come straight from each service's own
-    // `summary`/`whoItsFor` in src/content/medical-services.ts — never
+    // `summary`/`whoItsFor` in src/features/medical-services/data.ts — never
     // re-typed here — so only the per-card CTA label (descriptive, not a
     // repeated "Learn More") lives in this object.
     medicalCardCtas: {
@@ -276,7 +276,7 @@ const SERVICE_CARD_ORDER = [
 
 // Technologies in the brief's exact required numbered order (01 Potenza, 02
 // Elite iQ, 03 TempSure, 04 Ultra, 05 TempSure Vitalia) — not the order
-// they happen to appear in src/content/technologies.ts.
+// they happen to appear in src/features/technologies/data.ts.
 const TECH_SHOWCASE_ORDER = ["potenza", "elite-iq", "tempsure", "ultra", "tempsure-vitalia"];
 
 // Featured treatments for the homepage's asymmetric showcase — all 8 are
@@ -349,7 +349,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
 
   return (
     <>
-      <DoctorOrganizationSchema locale={locale} />
+      <ClinicSchema locale={locale} />
       <FaqPageSchema faqs={faqSchemaEntries} locale={locale} />
 
       {/* ============ SECTION 1 — UNIFIED PREMIUM HERO ============ */}

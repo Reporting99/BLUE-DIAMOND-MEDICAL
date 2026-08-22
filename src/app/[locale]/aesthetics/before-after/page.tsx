@@ -2,12 +2,12 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Container } from "@/components/layout/Container";
 import { SectionTransition } from "@/components/layout/SectionTransition";
-import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
-import { BeforeAfterGallery } from "@/components/aesthetics/BeforeAfterGallery";
+import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
+import { BeforeAfterGallery } from "@/features/aesthetics/components/BeforeAfterGallery";
 import { isLocale, type Locale } from "@/i18n/config";
-import { getRoute, href } from "@/config/routes";
+import { getRoute, href } from "@/lib/routing";
 import { features } from "@/config/features";
-import { getBeforeAfterPairs } from "@/content/before-after";
+import { getBeforeAfterPairs } from "@/features/aesthetics/data/before-after";
 import { getRouteMetadata } from "@/lib/seo/metadata";
 
 /**

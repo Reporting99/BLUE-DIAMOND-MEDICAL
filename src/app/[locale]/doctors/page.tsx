@@ -2,13 +2,13 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { Container } from "@/components/layout/Container";
 import { SectionTransition } from "@/components/layout/SectionTransition";
-import { ImageKitImage } from "@/components/media/ImageKitImage";
+import { ImageKitImage } from "@/components/shared/ImageKitImage";
 import { isLocale, type Locale } from "@/i18n/config";
-import { getRoute } from "@/config/routes";
-import { doctors } from "@/types/doctor";
+import { getRoute } from "@/lib/routing";
+import { doctors } from "@/features/doctors";
 import { getRouteMetadata } from "@/lib/seo/metadata";
-import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
-import { PageSchema } from "@/components/seo/PageSchema";
+import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
+import { PageSchema } from "@/components/shared/schema/PageSchema";
 import { siteConfig } from "@/config/site";
 
 export async function generateMetadata({

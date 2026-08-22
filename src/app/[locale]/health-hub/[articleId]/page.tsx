@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { isLocale, type Locale } from "@/i18n/config";
-import { healthHubArticles, getHealthHubArticle } from "@/content/health-hub-articles";
-import { HealthHubArticleTemplate } from "@/templates/HealthHubArticleTemplate";
+import { healthHubArticles, getHealthHubArticle } from "@/features/health-hub/data";
+import { HealthHubArticleTemplate } from "@/features/health-hub/components/HealthHubArticleTemplate";
 import { siteConfig } from "@/config/site";
 import { resolvePageContent, entityCacheTags } from "@/lib/feelstack/page-resolver";
 import { cacheTags } from "@/lib/feelstack/cache-tags";
 import { cmsHealthHubArticleSchema } from "@/lib/feelstack/schemas";
 
 /**
- * No articles exist yet (src/content/health-hub-articles.ts is an empty
+ * No articles exist yet (src/features/health-hub/data.ts is an empty
  * array) — generateStaticParams returns nothing, and any slug 404s via
  * notFound() below. Template + type model are fully built (brief §21) so
  * the first approved, medically-reviewed article needs no new code, only

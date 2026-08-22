@@ -17,7 +17,7 @@
 export const features = {
   // SkinMedica brand + product data (all 23 client-approved SKUs, exact
   // names/prices/sizes, full bilingual detail content, FAQs, and sources)
-  // is imported (src/content/products.ts) and validated
+  // is imported (src/features/products/data.ts) and validated
   // (tests/unit/skinmedica-catalogue.spec.ts). Published live per the
   // "COMPLETE SKINMEDICA NAVIGATION AND PRODUCT-DETAIL FLOW" brief's
   // explicit instruction to ship with the approved neutral placeholder

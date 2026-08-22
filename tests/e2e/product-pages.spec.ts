@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { products } from "../../src/content/products";
+import { products } from "../../src/features/products/data";
 
 /**
  * "COMPLETE SKINMEDICA NAVIGATION AND PRODUCT-DETAIL FLOW" — every

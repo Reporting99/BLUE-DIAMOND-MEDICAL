@@ -3,7 +3,7 @@ import { ArrowRight } from "lucide-react";
 import { Logo } from "./Logo";
 import { FacebookGlyph, InstagramGlyph } from "./SocialIcons";
 import { siteConfig } from "@/config/site";
-import { href, getRoute } from "@/config/routes";
+import { href, getRoute } from "@/lib/routing";
 import { getDictionary, type Locale } from "@/i18n/config";
 import { features } from "@/config/features";
 

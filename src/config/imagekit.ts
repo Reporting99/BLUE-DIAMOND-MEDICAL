@@ -12,7 +12,7 @@ import type { Transformation } from "@imagekit/next";
  * below is the public CDN base (not a secret; safe to commit, same as a
  * public key), used unless overridden by the env var. This only changes
  * *where a real image would be requested from* — every asset in
- * `src/content/media/image-manifest.ts` still carries `status: "pending"`
+ * `src/lib/media/image-manifest.ts` still carries `status: "pending"`
  * (docs/MISSING_CONTENT_REPORT.md), and `ImageKitImage` only renders the
  * real CDN path when `status === "approved"`, so nothing currently renders
  * differently: still the FacetTile placeholder everywhere until real

@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { products, getProduct } from "../../src/content/products";
+import { products, getProduct } from "../../src/features/products/data";
 
 /**
  * Automated validation for the "MANDATORY APPROVED SKINMEDICA CATALOGUE"

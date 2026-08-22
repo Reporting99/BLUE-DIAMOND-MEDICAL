@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Container } from "@/components/layout/Container";
 import { SectionTransition } from "@/components/layout/SectionTransition";
-import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
+import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
 import { isLocale, type Locale } from "@/i18n/config";
-import { getRoute, href } from "@/config/routes";
-import { technologies } from "@/content/technologies";
+import { getRoute, href } from "@/lib/routing";
+import { technologies } from "@/features/technologies/data";
 import { getRouteMetadata } from "@/lib/seo/metadata";
 
 /** Single source for this page's description: consumed by both generateMetadata
@@ -15,7 +15,7 @@ const PAGE_DESCRIPTION = {
       ar: "معدات عالمية من Cynosure في بلو دايموند للتجميل الطبي — Elite iQ وPotenza وTempSure وUltra وTempSure Vitalia.",
     } as const;
 
-import { PageSchema } from "@/components/seo/PageSchema";
+import { PageSchema } from "@/components/shared/schema/PageSchema";
 import { siteConfig } from "@/config/site";
 
 export async function generateMetadata({

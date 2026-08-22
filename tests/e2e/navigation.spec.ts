@@ -5,7 +5,7 @@ import { test, expect, type Page, type Locator } from "@playwright/test";
  * component, exact bilingual order, accessible Treatments dropdown,
  * transparent/scrolled header states, RTL mirroring. Source of truth:
  * src/config/navigation.ts, src/components/layout/Header.tsx,
- * src/components/navigation/MobileNav.tsx.
+ * src/components/layout/MobileNav.tsx.
  *
  * Locators are scoped to `header` throughout — the footer (Footer.tsx)
  * independently renders a logo, a "Book Appointment" link, and several

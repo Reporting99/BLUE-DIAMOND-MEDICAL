@@ -86,7 +86,7 @@ const bookingChannelSchema = z.enum([
  * Output type matches `MedicalServiceContent` (src/types/medical-service.ts)
  * field-for-field via `.transform()`, so `resolvePageContent` can share one
  * type parameter between the CMS schema and the local
- * `src/content/medical-services.ts` fallback (page-resolver.ts requires
+ * `src/features/medical-services/data.ts` fallback (page-resolver.ts requires
  * both branches to return the same `T`). `status`/`updatedAt` are
  * CMS-only bookkeeping fields, stripped after validation; `sourceVerified`
  * is synthesized `true` for CMS-sourced entries — content only reaches

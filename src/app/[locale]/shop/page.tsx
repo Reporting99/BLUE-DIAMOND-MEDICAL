@@ -3,14 +3,14 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Container } from "@/components/layout/Container";
 import { SectionTransition } from "@/components/layout/SectionTransition";
-import { ProductCard } from "@/components/commerce/ProductCard";
+import { ProductCard } from "@/features/products/components/ProductCard";
 import { isLocale, type Locale } from "@/i18n/config";
-import { getRoute, href } from "@/config/routes";
+import { getRoute, href } from "@/lib/routing";
 import { features } from "@/config/features";
-import { availabilityNotice, productCategories, productConcerns, products } from "@/content/products";
+import { availabilityNotice, productCategories, productConcerns, products } from "@/features/products/data";
 import { getRouteMetadata } from "@/lib/seo/metadata";
-import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
-import { PageSchema } from "@/components/seo/PageSchema";
+import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
+import { PageSchema } from "@/components/shared/schema/PageSchema";
 import { siteConfig } from "@/config/site";
 
 const copy = {

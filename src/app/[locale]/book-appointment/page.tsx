@@ -13,9 +13,9 @@ const PAGE_DESCRIPTION = {
       ar: "احجزوا مع طبيب أسرتكم، أو زيارة بدون موعد، أو فحص العين، أو استشارة تجميل طبي في عيادة بلو دايموند الطبية.",
     } as const;
 
-import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
-import { PageSchema } from "@/components/seo/PageSchema";
-import { getRoute } from "@/config/routes";
+import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
+import { PageSchema } from "@/components/shared/schema/PageSchema";
+import { getRoute } from "@/lib/routing";
 
 const options: { channel: BookingChannel; description: { en: string; ar: string } }[] = [
   {

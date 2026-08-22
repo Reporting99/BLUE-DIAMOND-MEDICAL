@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Container } from "@/components/layout/Container";
 import { SectionTransition } from "@/components/layout/SectionTransition";
-import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
+import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
 import { isLocale, type Locale } from "@/i18n/config";
-import { getRoute, href } from "@/config/routes";
-import { treatments } from "@/content/treatments";
+import { getRoute, href } from "@/lib/routing";
+import { treatments } from "@/features/aesthetics/data/treatments";
 import { getRouteMetadata } from "@/lib/seo/metadata";
 
 /** Single source for this page's description: consumed by both generateMetadata
@@ -15,7 +15,7 @@ const PAGE_DESCRIPTION = {
       ar: "علاجات تجميل طبي بإشراف طبي في بلو دايموند — الليزر، والترددات الراديوية، والإبر الدقيقة، والبلازما، وغيرها.",
     } as const;
 
-import { PageSchema } from "@/components/seo/PageSchema";
+import { PageSchema } from "@/components/shared/schema/PageSchema";
 import { siteConfig } from "@/config/site";
 
 export async function generateMetadata({

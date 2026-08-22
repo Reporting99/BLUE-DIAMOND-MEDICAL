@@ -4,8 +4,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { Logo } from "./Logo";
-import { LanguageSwitch } from "@/components/navigation/LanguageSwitch";
-import { MobileNav } from "@/components/navigation/MobileNav";
+import { LanguageSwitch } from "@/components/layout/LanguageSwitch";
+import { MobileNav } from "@/components/layout/MobileNav";
 import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
@@ -15,7 +15,7 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
-import { href } from "@/config/routes";
+import { href } from "@/lib/routing";
 import {
   primaryNavHref,
   primaryNavLinks,

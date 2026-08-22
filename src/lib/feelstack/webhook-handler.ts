@@ -5,7 +5,7 @@
 // `src/app/api/feelstack/revalidate/route.ts`, a Next.js Route Handler,
 // which the framework never bundles for the client.
 import { verifyHmacSignature } from "@/lib/security/hmac";
-import { routes } from "@/config/routes";
+import { routes } from "@/lib/routing";
 import { getFeelstackSiteKey } from "./content-mode";
 import { feelstackWebhookBodySchema } from "./schemas";
 import { tagsForEvent } from "./revalidation";

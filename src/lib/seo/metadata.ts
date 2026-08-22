@@ -11,8 +11,7 @@ import type { Metadata } from "next";
 // (the underlying dependency, carries no "use client" boundary) — import
 // it directly for this one server-side usage instead.
 import { buildSrc } from "@imagekit/javascript";
-import { getRoute } from "@/config/routes";
-import { siteConfig } from "@/config/site";
+import { absoluteRouteUrl, getRoute, hreflangAlternates } from "@/lib/routing";
 import { imagekitConfig, imagekitIsConfigured, imagePresets } from "@/config/imagekit";
 import { isSiteLaunched } from "@/config/launch";
 import type { Locale } from "@/i18n/config";
@@ -38,9 +37,10 @@ export function getRouteMetadata(
     throw new Error(`getRouteMetadata: unknown route id "${routeId}"`);
   }
 
-  const enUrl = `${siteConfig.url}/en${route.path.en}`;
-  const arUrl = `${siteConfig.url}/ar${route.path.ar}`;
-  const canonical = locale === "ar" ? arUrl : enUrl;
+  // Canonical and hreflang URLs come from the routing layer so this builder
+  // and the sitemap can never disagree about a page's absolute URL.
+  const canonical = absoluteRouteUrl(route, locale);
+  const languages = hreflangAlternates(route);
 
   // ogImagePath was previously accepted here and silently dropped — every
   // page fell back to Next's default OG image regardless of what callers
@@ -64,11 +64,7 @@ export function getRouteMetadata(
     description: overrides.description[locale],
     alternates: {
       canonical,
-      languages: {
-        "en-CA": enUrl,
-        "ar-CA": arUrl,
-        "x-default": enUrl,
-      },
+      languages,
     },
     // Pre-launch, NO page is indexable regardless of its route-registry
     // setting. This is the build-time layer of the guard; the authoritative

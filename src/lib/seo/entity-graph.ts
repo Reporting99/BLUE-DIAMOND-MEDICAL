@@ -1,8 +1,8 @@
-import { doctors, type Doctor } from "@/types/doctor";
-import { medicalServices } from "@/content/medical-services";
+import { doctors, type Doctor } from "@/features/doctors";
+import { medicalServices } from "@/features/medical-services/data";
 import type { MedicalServiceContent } from "@/types/medical-service";
 import { siteConfig } from "@/config/site";
-import { getRoute } from "@/config/routes";
+import { getRoute } from "@/lib/routing";
 import type { Locale } from "@/i18n/config";
 
 /**
@@ -11,7 +11,7 @@ import type { Locale } from "@/i18n/config";
  * Every edge here is *derived* from relationships that already exist in the
  * approved content data; none is authored in this module. Specifically, the
  * doctor -> service edge is the inverse of `MedicalServiceContent.relatedDoctorIds`
- * (src/content/medical-services.ts), which is itself source-verified against the
+ * (src/features/medical-services/data.ts), which is itself source-verified against the
  * approved content-extraction document. Inverting an existing edge invents no
  * new clinical claim: if the content says "Chronic Disease Management is
  * delivered by Dr. Bakare", then "Dr. Bakare is related to Chronic Disease

@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 import { Container } from "@/components/layout/Container";
 import { SectionTransition } from "@/components/layout/SectionTransition";
-import { ImageKitImage } from "@/components/media/ImageKitImage";
-import { ContactForm } from "@/components/forms/ContactForm";
+import { ImageKitImage } from "@/components/shared/ImageKitImage";
+import { ContactForm } from "@/features/contact/components/ContactForm";
 import { isLocale, type Locale } from "@/i18n/config";
 import { getRouteMetadata } from "@/lib/seo/metadata";
 import { siteConfig } from "@/config/site";
 import { getOpenStatus, statutoryHolidayNotice } from "@/config/clinic-hours";
-import { getProduct } from "@/content/products";
+import { getProduct } from "@/features/products/data";
 
 /** Single source for this page's description: consumed by both generateMetadata
  * and the page's JSON-LD node, so the two can never drift apart (brief §9). */
@@ -16,9 +16,9 @@ const PAGE_DESCRIPTION = {
       ar: "تواصلوا مع عيادة بلو دايموند الطبية في ويست سبرينغز، كالغاري — العنوان والهاتف والفاكس وساعات العمل.",
     } as const;
 
-import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
-import { PageSchema } from "@/components/seo/PageSchema";
-import { getRoute } from "@/config/routes";
+import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
+import { PageSchema } from "@/components/shared/schema/PageSchema";
+import { getRoute } from "@/lib/routing";
 
 export async function generateMetadata({
   params,

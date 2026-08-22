@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { Container } from "@/components/layout/Container";
 import { SectionTransition } from "@/components/layout/SectionTransition";
-import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
-import { ConcernExplorer } from "@/components/aesthetics/ConcernExplorer";
+import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
+import { ConcernExplorer } from "@/features/concerns/components/ConcernExplorer";
 import { isLocale, type Locale } from "@/i18n/config";
-import { getRoute, href } from "@/config/routes";
+import { getRoute, href } from "@/lib/routing";
 import { getRouteMetadata } from "@/lib/seo/metadata";
 
 /** Single source for this page's description: consumed by both generateMetadata
@@ -14,9 +14,9 @@ const PAGE_DESCRIPTION = {
       ar: "تصفّحوا حسب مخاوف البشرة — ندبات حب الشباب، الاحمرار، الجفاف، الخطوط الدقيقة، وغيرها — في بلو دايموند للتجميل الطبي.",
     } as const;
 
-import { PageSchema } from "@/components/seo/PageSchema";
+import { PageSchema } from "@/components/shared/schema/PageSchema";
 import { siteConfig } from "@/config/site";
-import { concerns } from "@/content/concerns";
+import { concerns } from "@/features/concerns/data";
 
 export async function generateMetadata({
   params,
