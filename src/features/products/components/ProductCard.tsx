@@ -3,7 +3,7 @@ import { ImageKitImage } from "@/components/shared/ImageKitImage";
 import { href } from "@/lib/routing";
 import { formatPrice } from "@/types/pricing";
 import { productCategories } from "@/features/products/data";
-import type { Product } from "@/types/product";
+import type { Product } from "@/features/products/types";
 import type { Locale } from "@/i18n/config";
 
 const viewDetailsLabel = { en: "View Product Details", ar: "عرض تفاصيل المنتج" };

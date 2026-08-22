@@ -1,4 +1,4 @@
-import type { Product, ProductBrand, ProductCategory, ProductConcern, ProductSource } from "@/types/product";
+import type { Product, ProductBrand, ProductCategory, ProductConcern, ProductSource } from "@/features/products/types";
 import { MEDIA_ROOT } from "@/config/imagekit";
 
 /**

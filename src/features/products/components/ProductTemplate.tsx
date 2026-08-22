@@ -11,7 +11,7 @@ import { getRoute, href } from "@/lib/routing";
 import { siteConfig } from "@/config/site";
 import { MEDIA_ROOT } from "@/config/imagekit";
 import { availabilityNotice, getProductById, productCategories } from "@/features/products/data";
-import type { Product } from "@/types/product";
+import type { Product } from "@/features/products/types";
 import type { Locale } from "@/i18n/config";
 
 const labels = {

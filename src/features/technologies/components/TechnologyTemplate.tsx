@@ -9,7 +9,8 @@ import { getRoute, href } from "@/lib/routing";
 import { getTreatment } from "@/features/aesthetics/data/treatments";
 import { getConcern } from "@/features/concerns/data";
 import { doctors } from "@/features/doctors";
-import type { Technology, Bilingual } from "@/types/aesthetics";
+import type { Technology } from "@/features/technologies/types";
+import type { Bilingual } from "@/types/common";
 import type { Locale } from "@/i18n/config";
 
 const labels = {

@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { isLocale, locales, type Locale } from "@/i18n/config";
-import { treatments, getTreatment, getGatedTreatment } from "@/features/aesthetics/data/treatments";
-import { AestheticTreatmentTemplate } from "@/features/aesthetics/components/AestheticTreatmentTemplate";
+import { treatments, getTreatment, getGatedTreatment } from "@/features/aesthetics";
+import { AestheticTreatmentTemplate } from "@/features/aesthetics";
 import { getRouteMetadata } from "@/lib/seo/metadata";
 import { features, type FeatureFlags } from "@/config/features";
 import { resolvePageContent, entityCacheTags } from "@/lib/feelstack/page-resolver";

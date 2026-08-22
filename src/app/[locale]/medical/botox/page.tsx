@@ -8,7 +8,7 @@ import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
 import { isLocale, type Locale } from "@/i18n/config";
 import { getRoute, href } from "@/lib/routing";
 import { features } from "@/config/features";
-import { medicalBotoxHub, medicalBotoxConditions } from "@/features/medical-services/botox";
+import { medicalBotoxHub, medicalBotoxConditions } from "@/features/medical-services";
 import { getRouteMetadata } from "@/lib/seo/metadata";
 
 /**

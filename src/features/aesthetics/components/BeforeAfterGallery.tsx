@@ -1,5 +1,5 @@
 import { BeforeAfterSlider } from "./BeforeAfterSlider";
-import type { BeforeAfterPair } from "@/types/before-after";
+import type { BeforeAfterPair } from "@/features/aesthetics/before-after-types";
 import type { Locale } from "@/i18n/config";
 
 const emptyStateCopy = {

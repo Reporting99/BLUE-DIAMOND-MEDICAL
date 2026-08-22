@@ -1,5 +1,5 @@
-import type { Bilingual } from "./medical-service";
-import type { ImageStatus } from "./media";
+import type { Bilingual } from "@/types/common";
+import type { ImageStatus } from "@/types/media";
 
 export interface ProductBrand {
   id: string;

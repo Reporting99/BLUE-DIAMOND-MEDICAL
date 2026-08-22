@@ -1,4 +1,4 @@
-import type { AestheticTreatment } from "@/types/aesthetics";
+import type { AestheticTreatment } from "@/features/aesthetics/types";
 
 /**
  * Every field traces to Blue-Diamond-Medical-Website-Content-Extraction_1.docx

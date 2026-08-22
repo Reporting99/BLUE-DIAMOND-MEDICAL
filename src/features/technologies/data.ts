@@ -1,4 +1,4 @@
-import type { Technology } from "@/types/aesthetics";
+import type { Technology } from "./types";
 
 /** Source: Blue-Diamond-Medical-Website-Content-Extraction_1.docx ("Our Technologies" page). */
 export const technologies: Technology[] = [

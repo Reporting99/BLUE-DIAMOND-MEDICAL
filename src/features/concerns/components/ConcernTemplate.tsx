@@ -12,7 +12,7 @@ import { getTreatment } from "@/features/aesthetics/data/treatments";
 import { getConcern } from "@/features/concerns/data";
 import { getTechnology } from "@/features/technologies/data";
 import { doctors } from "@/features/doctors";
-import type { AestheticConcern } from "@/types/aesthetics";
+import type { AestheticConcern } from "@/features/concerns/types";
 import type { Locale } from "@/i18n/config";
 
 const labels = {

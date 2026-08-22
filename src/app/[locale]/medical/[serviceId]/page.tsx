@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { isLocale, locales, type Locale } from "@/i18n/config";
-import { medicalServices, getMedicalService } from "@/features/medical-services/data";
-import { MedicalServiceTemplate } from "@/features/medical-services/components/MedicalServiceTemplate";
+import { medicalServices, getMedicalService } from "@/features/medical-services";
+import { MedicalServiceTemplate } from "@/features/medical-services";
 import { getRouteMetadata } from "@/lib/seo/metadata";
 import { resolvePageContent } from "@/lib/feelstack/page-resolver";
 import { cmsMedicalServiceSchema } from "@/lib/feelstack/schemas";

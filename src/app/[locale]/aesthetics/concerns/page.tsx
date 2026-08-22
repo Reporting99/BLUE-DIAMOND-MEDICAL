@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Container } from "@/components/layout/Container";
 import { SectionTransition } from "@/components/layout/SectionTransition";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
-import { ConcernExplorer } from "@/features/concerns/components/ConcernExplorer";
+import { ConcernExplorer } from "@/features/concerns";
 import { isLocale, type Locale } from "@/i18n/config";
 import { getRoute, href } from "@/lib/routing";
 import { getRouteMetadata } from "@/lib/seo/metadata";
@@ -16,7 +16,7 @@ const PAGE_DESCRIPTION = {
 
 import { PageSchema } from "@/components/shared/schema/PageSchema";
 import { siteConfig } from "@/config/site";
-import { concerns } from "@/features/concerns/data";
+import { concerns } from "@/features/concerns";
 
 export async function generateMetadata({
   params,

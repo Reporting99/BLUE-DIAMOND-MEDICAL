@@ -1,4 +1,4 @@
-import type { BeforeAfterPair } from "@/types/before-after";
+import type { BeforeAfterPair } from "@/features/aesthetics/before-after-types";
 
 /**
  * No before/after pair is approved yet. The 15 candidate assets found in

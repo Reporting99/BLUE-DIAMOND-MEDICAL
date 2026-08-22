@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { Container } from "@/components/layout/Container";
 import { SectionTransition } from "@/components/layout/SectionTransition";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
-import { ConsultationRequestForm } from "@/features/booking/components/ConsultationRequestForm";
+import { ConsultationRequestForm } from "@/features/booking";
 import { isLocale, type Locale } from "@/i18n/config";
 import { getRoute, href } from "@/lib/routing";
 import { features } from "@/config/features";

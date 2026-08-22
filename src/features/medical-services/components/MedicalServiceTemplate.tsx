@@ -9,7 +9,7 @@ import { FaqPageSchema } from "@/components/shared/schema/FaqPageSchema";
 import { getBookingUrl } from "@/config/booking";
 import { getRoute, href } from "@/lib/routing";
 import { doctors } from "@/features/doctors";
-import type { MedicalServiceContent } from "@/types/medical-service";
+import type { MedicalServiceContent } from "@/features/medical-services/types";
 import type { Locale } from "@/i18n/config";
 
 /**

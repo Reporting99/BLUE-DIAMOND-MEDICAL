@@ -1,4 +1,4 @@
-import type { MedicalServiceContent } from "@/types/medical-service";
+import type { MedicalServiceContent } from "@/features/medical-services/types";
 
 /**
  * Every field traces to Blue-Diamond-Medical-Website-Content-Extraction_1.docx

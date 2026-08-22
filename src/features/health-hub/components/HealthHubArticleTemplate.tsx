@@ -3,7 +3,7 @@ import { SectionTransition } from "@/components/layout/SectionTransition";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
 import { getRoute, href } from "@/lib/routing";
 import { doctors } from "@/features/doctors";
-import type { HealthHubArticle } from "@/types/article";
+import type { HealthHubArticle } from "@/features/health-hub/types";
 import type { Locale } from "@/i18n/config";
 
 const labels = {

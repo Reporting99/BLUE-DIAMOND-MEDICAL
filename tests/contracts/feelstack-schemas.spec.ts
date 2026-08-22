@@ -14,11 +14,13 @@ import {
   type CmsLegalPage,
 } from "../../src/lib/feelstack/schemas";
 import type { Doctor } from "../../src/features/doctors";
-import type { MedicalServiceContent } from "../../src/types/medical-service";
-import type { AestheticTreatment, AestheticConcern, Technology } from "../../src/types/aesthetics";
-import type { Product } from "../../src/types/product";
-import type { HealthHubArticle } from "../../src/types/article";
-import type { LegalPageContent } from "../../src/types/legal";
+import type { MedicalServiceContent } from "../../src/features/medical-services/types";
+import type { AestheticTreatment } from "../../src/features/aesthetics/types";
+import type { AestheticConcern } from "../../src/features/concerns/types";
+import type { Technology } from "../../src/features/technologies/types";
+import type { Product } from "../../src/features/products/types";
+import type { HealthHubArticle } from "../../src/features/health-hub/types";
+import type { LegalPageContent } from "../../src/features/legal/types";
 
 /**
  * FeelStack contract tests — brief §18 "FeelStack contracts": valid page

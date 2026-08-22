@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { isLocale, type Locale } from "@/i18n/config";
-import { healthHubArticles, getHealthHubArticle } from "@/features/health-hub/data";
-import { HealthHubArticleTemplate } from "@/features/health-hub/components/HealthHubArticleTemplate";
+import { healthHubArticles, getHealthHubArticle } from "@/features/health-hub";
+import { HealthHubArticleTemplate } from "@/features/health-hub";
 import { siteConfig } from "@/config/site";
 import { resolvePageContent, entityCacheTags } from "@/lib/feelstack/page-resolver";
 import { cacheTags } from "@/lib/feelstack/cache-tags";

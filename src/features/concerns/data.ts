@@ -1,4 +1,4 @@
-import type { AestheticConcern } from "@/types/aesthetics";
+import type { AestheticConcern } from "./types";
 
 /**
  * Source: Blue-Diamond-Medical-Website-Content-Extraction_1.docx. Several

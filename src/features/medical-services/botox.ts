@@ -1,4 +1,4 @@
-import type { MedicalServiceContent } from "@/types/medical-service";
+import type { MedicalServiceContent } from "@/features/medical-services/types";
 
 /**
  * Brief §14 requires a /medical/botox/ hub plus migraine, bruxism-tmj, and

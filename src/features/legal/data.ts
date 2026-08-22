@@ -1,4 +1,4 @@
-import type { LegalPageContent } from "@/types/legal";
+import type { LegalPageContent } from "@/features/legal/types";
 
 /**
  * Legal page store — brief §25. The legacy site's Terms and Privacy pages

@@ -2,8 +2,8 @@
 
 import { useId, useState } from "react";
 import { ImageKitImage } from "@/components/shared/ImageKitImage";
-import { resultsVaryDisclaimer } from "@/types/before-after";
-import type { BeforeAfterPair } from "@/types/before-after";
+import { resultsVaryDisclaimer } from "@/features/aesthetics/before-after-types";
+import type { BeforeAfterPair } from "@/features/aesthetics/before-after-types";
 import type { Locale } from "@/i18n/config";
 
 const labels = {

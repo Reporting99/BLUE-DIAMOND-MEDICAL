@@ -1,6 +1,6 @@
 import { doctors, type Doctor } from "@/features/doctors";
 import { medicalServices } from "@/features/medical-services/data";
-import type { MedicalServiceContent } from "@/types/medical-service";
+import type { MedicalServiceContent } from "@/features/medical-services/types";
 import { siteConfig } from "@/config/site";
 import { getRoute } from "@/lib/routing";
 import type { Locale } from "@/i18n/config";

@@ -7,8 +7,8 @@ import { Button } from "@/components/ui/button";
 import { ImageKitImage } from "@/components/shared/ImageKitImage";
 import { ClinicSchema } from "@/components/shared/schema/ClinicSchema";
 import { FaqPageSchema } from "@/components/shared/schema/FaqPageSchema";
-import { ConcernExplorer } from "@/features/concerns/components/ConcernExplorer";
-import { StatsCounters } from "@/features/home/components/StatsCounters";
+import { ConcernExplorer } from "@/features/concerns";
+import { StatsCounters } from "@/features/home";
 import { SiteClosingExperience } from "@/components/layout/SiteClosingExperience";
 import { getDictionary, isLocale, type Locale } from "@/i18n/config";
 import { getRoute, href } from "@/lib/routing";
@@ -16,15 +16,16 @@ import { getBookingUrl, type BookingChannel } from "@/config/booking";
 import { siteConfig } from "@/config/site";
 import { getOpenStatus, statutoryHolidayNotice } from "@/config/clinic-hours";
 import { doctors } from "@/features/doctors";
-import { technologies } from "@/features/technologies/data";
-import { treatments } from "@/features/aesthetics/data/treatments";
-import { concerns } from "@/features/concerns/data";
-import { medicalServices } from "@/features/medical-services/data";
-import { products, availabilityNotice } from "@/features/products/data";
+import { technologies } from "@/features/technologies";
+import { treatments } from "@/features/aesthetics";
+import { concerns } from "@/features/concerns";
+import { medicalServices } from "@/features/medical-services";
+import { products, availabilityNotice } from "@/features/products";
 import { formatPrice } from "@/types/pricing";
 import { getRouteMetadata } from "@/lib/seo/metadata";
-import type { AestheticTreatment, Technology } from "@/types/aesthetics";
-import type { Bilingual } from "@/types/medical-service";
+import type { AestheticTreatment } from "@/features/aesthetics/types";
+import type { Technology } from "@/features/technologies/types";
+import type { Bilingual } from "@/features/medical-services/types";
 
 export async function generateMetadata({
   params,

@@ -1,5 +1,5 @@
-import type { Bilingual } from "./medical-service";
-import type { ImageStatus } from "./media";
+import type { Bilingual } from "@/types/common";
+import type { ImageStatus } from "@/types/media";
 
 /**
  * Before/after pair type model — brief Part 2 §15. Every field the brief

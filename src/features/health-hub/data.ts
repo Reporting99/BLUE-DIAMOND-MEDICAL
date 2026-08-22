@@ -1,4 +1,4 @@
-import type { HealthHubArticle } from "@/types/article";
+import type { HealthHubArticle } from "@/features/health-hub/types";
 
 /**
  * Health Hub article store — brief §21. Zero entries: no article copy has

@@ -1,4 +1,4 @@
-import type { Bilingual } from "./medical-service";
+import type { Bilingual } from "@/types/common";
 
 export type HealthHubCategory =
   | "family-health"

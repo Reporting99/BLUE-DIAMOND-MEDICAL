@@ -1,14 +1,7 @@
 import type { BookingChannel } from "@/config/booking";
+import type { Bilingual, FaqEntry } from "@/types/common";
 
-export interface Bilingual {
-  en: string;
-  ar: string;
-}
-
-export interface FaqEntry {
-  question: Bilingual;
-  answer: Bilingual;
-}
+export type { Bilingual, FaqEntry };
 
 export interface MedicalServiceContent {
   id: string;

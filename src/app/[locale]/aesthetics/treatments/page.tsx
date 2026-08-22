@@ -5,7 +5,7 @@ import { SectionTransition } from "@/components/layout/SectionTransition";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
 import { isLocale, type Locale } from "@/i18n/config";
 import { getRoute, href } from "@/lib/routing";
-import { treatments } from "@/features/aesthetics/data/treatments";
+import { treatments } from "@/features/aesthetics";
 import { getRouteMetadata } from "@/lib/seo/metadata";
 
 /** Single source for this page's description: consumed by both generateMetadata

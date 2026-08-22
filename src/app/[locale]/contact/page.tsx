@@ -2,12 +2,12 @@ import type { Metadata } from "next";
 import { Container } from "@/components/layout/Container";
 import { SectionTransition } from "@/components/layout/SectionTransition";
 import { ImageKitImage } from "@/components/shared/ImageKitImage";
-import { ContactForm } from "@/features/contact/components/ContactForm";
+import { ContactForm } from "@/features/contact";
 import { isLocale, type Locale } from "@/i18n/config";
 import { getRouteMetadata } from "@/lib/seo/metadata";
 import { siteConfig } from "@/config/site";
 import { getOpenStatus, statutoryHolidayNotice } from "@/config/clinic-hours";
-import { getProduct } from "@/features/products/data";
+import { getProduct } from "@/features/products";
 
 /** Single source for this page's description: consumed by both generateMetadata
  * and the page's JSON-LD node, so the two can never drift apart (brief §9). */

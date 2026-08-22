@@ -1,6 +1,6 @@
 import { Container } from "@/components/layout/Container";
 import { SectionTransition } from "@/components/layout/SectionTransition";
-import type { LegalPageContent } from "@/types/legal";
+import type { LegalPageContent } from "@/features/legal/types";
 import type { Locale } from "@/i18n/config";
 
 export function LegalPageTemplate({ page, locale }: { page: LegalPageContent; locale: Locale }) {

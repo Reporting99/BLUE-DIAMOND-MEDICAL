@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { isLocale, type Locale } from "@/i18n/config";
 import { features } from "@/config/features";
-import { getMedicalBotoxCondition } from "@/features/medical-services/botox";
-import { MedicalServiceTemplate } from "@/features/medical-services/components/MedicalServiceTemplate";
+import { getMedicalBotoxCondition } from "@/features/medical-services";
+import { MedicalServiceTemplate } from "@/features/medical-services";
 import { getRouteMetadata } from "@/lib/seo/metadata";
 
 /**

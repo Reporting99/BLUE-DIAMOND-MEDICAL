@@ -6,7 +6,7 @@ import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
 import { isLocale, type Locale } from "@/i18n/config";
 import { getRoute, href } from "@/lib/routing";
 import { features } from "@/config/features";
-import { aestheticsPricingGroups } from "@/features/aesthetics/data/pricing";
+import { aestheticsPricingGroups } from "@/features/aesthetics";
 import { formatPrice } from "@/types/pricing";
 import { getRouteMetadata } from "@/lib/seo/metadata";
 
