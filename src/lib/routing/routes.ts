@@ -18,21 +18,7 @@ export function localePath(id: string, locale: Locale): string {
   return route.path[locale];
 }
 
-export function navRoutes(): RouteEntry[] {
-  return routes.filter((r) => r.inNav);
-}
-
 /** Full locale-prefixed href for a route id, e.g. href("contact", "ar") -> "/ar/تواصل-معنا". */
 export function href(id: string, locale: Locale): string {
   return `/${locale}${localePath(id, locale)}`;
-}
-
-/** Routes the sitemap is allowed to list. */
-export function sitemapRoutes(): RouteEntry[] {
-  return routes.filter((r) => r.inSitemap);
-}
-
-/** Routes whose registry entry marks them indexable. */
-export function indexableRoutes(): RouteEntry[] {
-  return routes.filter((r) => r.indexing === "index");
 }

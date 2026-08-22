@@ -5,6 +5,6 @@
  */
 export { routes } from "@/config/routes";
 export type { RouteEntry } from "@/types/route";
-export { getRoute, href, indexableRoutes, localePath, navRoutes, sitemapRoutes } from "./routes";
-export { absoluteRouteUrl, canonicalUrl, hreflangAlternates } from "./canonical";
+export { getRoute, href, localePath } from "./routes";
+export { absoluteRouteUrl, hreflangAlternates } from "./canonical";
 export { legacyRedirects } from "./legacy-redirects";

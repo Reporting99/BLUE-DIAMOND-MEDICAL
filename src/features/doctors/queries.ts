@@ -4,8 +4,3 @@ import type { Doctor } from "./types";
 export function getDoctor(id: string): Doctor | undefined {
   return doctors.find((d) => d.id === id);
 }
-
-/** Doctors who perform Botox/aesthetics — drives medical↔aesthetic cross-links. */
-export function getAestheticsDoctors(): Doctor[] {
-  return doctors.filter((d) => d.practicesAesthetics);
-}

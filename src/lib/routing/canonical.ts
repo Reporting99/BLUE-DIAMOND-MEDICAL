@@ -15,10 +15,6 @@ export function absoluteRouteUrl(route: Pick<RouteEntry, "path">, locale: Locale
   return `${siteConfig.url}/${locale}${route.path[locale]}`;
 }
 
-export function canonicalUrl(route: Pick<RouteEntry, "path">, locale: Locale): string {
-  return absoluteRouteUrl(route, locale);
-}
-
 /** hreflang alternates map for a route, including the x-default pointer. */
 export function hreflangAlternates(route: Pick<RouteEntry, "path">): Record<string, string> {
   const enUrl = absoluteRouteUrl(route, "en");
