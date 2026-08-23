@@ -1,0 +1,98 @@
+{
+  "type": "content_entry",
+  "route": {
+    "id": "6438aef2-38e4-4d61-9697-2943f218d9e1",
+    "path": "/aesthetics/treatments/rf-microneedling",
+    "locale": "en",
+    "requestedLocale": "en",
+    "resolvedLocale": "en",
+    "usedFallback": false,
+    "alternates": [
+      {
+        "locale": "ar",
+        "path": "/aesthetics/treatments/rf-microneedling"
+      },
+      {
+        "locale": "en",
+        "path": "/aesthetics/treatments/rf-microneedling"
+      }
+    ],
+    "sectionId": null,
+    "updatedAt": "2026-08-23T11:02:47.148Z"
+  },
+  "data": {
+    "id": "7a0a7423-0c3f-4123-936b-c716c11e2d66",
+    "contentType": "aesthetic-treatment",
+    "title": "RF Micro-Needling",
+    "fields": {
+      "summary": "The Potenza RF microneedling system adds radiofrequency energy to mechanical microneedling for enhanced skin tightening alongside the benefits of micro-injury stimulation.",
+      "downtime": "Minimal downtime — avoid strenuous exercise and sun exposure for 48 hours; otherwise resume regular activities with good SPF.",
+      "duration": "Typically around 30 minutes. A topical anesthetic is applied and can take up to 45 minutes to become fully effective.",
+      "how_it_works": "RF energy is delivered via small needles deep into the dermis, heating underlying layers to cause tightening and stimulate collagen and elastin production — producing faster, more dramatic results than non-RF micro-needling. Treatments aren't limited to the face and are particularly useful for toning and retracting skin post-weight-loss.",
+      "treatment_id": "rf-microneedling",
+      "comfort_level": "The numbing agent removes most discomfort — patients report feeling the needling but not actual pain. Providers monitor continuously and treatment can be halted at any time.",
+      "technology_ids": [
+        "potenza"
+      ],
+      "result_timeline": "Effects can usually be seen straight away, but one session isn't enough for lasting results.",
+      "source_verified": true,
+      "concerns_treated": [
+        "Skin scarring, including acne scars",
+        "Firmer, more toned skin",
+        "Reduction in dark spots",
+        "Control of large pores",
+        "Reduction in wrinkles"
+      ],
+      "suggested_course": "3- and 5-session packages are recommended for continuous, rejuvenated, firm skin.",
+      "related_doctor_ids": [
+        "mohamed-farhat"
+      ],
+      "related_concern_ids": [
+        "acne-scars",
+        "dry-skin",
+        "fine-lines-wrinkles",
+        "skin-revitalization"
+      ],
+      "safety_contraindications": [
+        "Pregnant or breastfeeding",
+        "Active skin lesions or active acne",
+        "Open wounds in or around the treatment area",
+        "Any active infections",
+        "A pacemaker or other implanted electrical device",
+        "Prior gold thread rejuvenation treatments",
+        "A propensity for keloid formation"
+      ]
+    },
+    "translationGroupId": "302a8f5a-c6d2-4bae-803b-e092b8b58fe0",
+    "publishedAt": "2026-08-23T11:02:47.148Z",
+    "updatedAt": "2026-08-23T11:02:47.148Z"
+  },
+  "seo": {
+    "title": "RF Micro-Needling",
+    "description": "The Potenza RF microneedling system adds radiofrequency energy to mechanical microneedling for enhanced skin tightening alongside the benefits of micro-injury s"
+  },
+  "relations": {
+    "items": [
+      {
+        "id": "a866df10-ef1f-45bd-a295-6f01a3b5f963",
+        "relationKey": "doctors",
+        "targetType": "person_profile",
+        "targetId": "aed7273b-16fe-47a8-8742-9bdfe3ed0489",
+        "sortOrder": 1,
+        "metadata": {
+          "doctorId": "mohamed-farhat"
+        }
+      }
+    ],
+    "faqs": [
+      {
+        "id": "637c6376-33d5-4a7c-a6b4-02a035c76f61",
+        "key": "tr-rf-microneedling-faq-1",
+        "question": "Why RF micro-needling vs. non-RF micro-needling?",
+        "answer": "Potenza delivers focused RF technology to heat the skin, triggering the body's natural response to increase collagen and elastin production, resulting in enhanced skin revitalization."
+      }
+    ],
+    "sections": [],
+    "taxonomies": []
+  }
+}
