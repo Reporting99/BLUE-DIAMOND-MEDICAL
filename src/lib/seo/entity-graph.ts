@@ -1,4 +1,4 @@
-import { doctors, type Doctor } from "@/features/doctors";
+import type { Doctor } from "@/features/doctors";
 import { medicalServices } from "@/features/medical-services/data";
 import type { MedicalServiceContent } from "@/features/medical-services/types";
 import { siteConfig } from "@/config/site";
@@ -38,21 +38,9 @@ export function servicesForDoctor(doctorId: string): MedicalServiceContent[] {
   return medicalServices.filter((service) => service.relatedDoctorIds.includes(doctorId));
 }
 
-/** Doctors named by a service — the forward direction, kept here so both sides read from one module. */
-export function doctorsForService(service: Pick<MedicalServiceContent, "relatedDoctorIds">): Doctor[] {
-  return doctors.filter((doctor) => service.relatedDoctorIds.includes(doctor.id));
-}
-
 /** Absolute, locale-correct URL for a medical-service detail page. */
 export function serviceUrl(service: Pick<MedicalServiceContent, "id">, locale: Locale): string | undefined {
   const route = getRoute(`medical-${service.id}`);
-  if (!route) return undefined;
-  return `${siteConfig.url}/${locale}${route.path[locale]}`;
-}
-
-/** Absolute, locale-correct URL for a doctor profile page. */
-export function doctorUrl(doctor: Pick<Doctor, "id" | "routeId">, locale: Locale): string | undefined {
-  const route = getRoute(doctor.routeId);
   if (!route) return undefined;
   return `${siteConfig.url}/${locale}${route.path[locale]}`;
 }

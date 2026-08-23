@@ -9,5 +9,3 @@ export const consultationRequestSchema = z.object({
   message: z.string().trim().min(10).max(2000),
   companyWebsite: z.string().max(0).optional().or(z.literal("")), // honeypot
 });
-
-export type ConsultationRequestValues = z.infer<typeof consultationRequestSchema>;

@@ -55,25 +55,4 @@ export function feelstackErr<T>(
   return { ok: false, error, ...opts };
 }
 
-/**
- * Content-model entity types this adapter resolves — brief §11 ("BLUE
- * DIAMOND CONTENT MODEL") and §8 (cache-tag registry coverage list). One
- * entry per CMS-manageable entity family; index vs. detail are tracked
- * separately since they invalidate independently.
- */
-export type FeelStackEntityType =
-  | "page"
-  | "navigation"
-  | "footer"
-  | "seo"
-  | "doctor"
-  | "medical-service"
-  | "aesthetic-treatment"
-  | "concern"
-  | "technology"
-  | "product"
-  | "health-hub-article"
-  | "legal-page"
-  | "booking-config";
-
 export type Locale = "en" | "ar";

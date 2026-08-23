@@ -402,4 +402,3 @@ export const feelstackWebhookBodySchema = z.union([
   // reviewable changes", not a breaking change to an in-flight contract.
   z.object({ path: z.string().min(1).max(2048) }),
 ]);
-export type FeelstackWebhookBody = z.infer<typeof feelstackWebhookBodySchema>;

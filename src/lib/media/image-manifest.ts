@@ -239,7 +239,3 @@ export const imageManifest: ImageKitAsset[] = [
     }),
   ),
 ];
-
-export function getManifestEntry(path: string): ImageKitAsset | undefined {
-  return imageManifest.find((asset) => asset.path === path);
-}

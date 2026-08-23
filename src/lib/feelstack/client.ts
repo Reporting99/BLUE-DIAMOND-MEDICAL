@@ -13,13 +13,10 @@
 // for the client regardless of this guard.
 import { z } from "zod";
 import {
-  feelstackResolveResponseSchema,
   feelstackRoutesResponseSchema,
   feelstackApiErrorSchema,
-  type FeelstackResolveResponse,
   type FeelstackRoutesResponse,
 } from "./schemas";
-import { getFallbackContent } from "./fallback";
 import { classifyHttpStatus, classifyThrown, logFeelstackEvent, FeelStackConfigurationError } from "./errors";
 import { feelstackErr, feelstackOk, RETRYABLE_ERROR_CODES, type FeelStackResult } from "./contracts";
 import { getFeelstackApiUrl, getFeelstackSiteKey, isFeelstackConfigured } from "./content-mode";
@@ -36,8 +33,8 @@ import { cacheTags } from "./cache-tags";
  *
  * No FEELSTACK_API_URL is configured for this build yet — every call
  * below resolves through the local fallback content instead of a network
- * request (`resolveContent`/`listRoutes`, kept for the existing static
- * build) or returns a `CONFIGURATION_ERROR`-shaped result
+ * request (`listRoutes`, kept for the existing static build) or returns a
+ * `CONFIGURATION_ERROR`-shaped result
  * (`resolveEntity`, the new hybrid-mode path).
  *
  * This module does NOT import "server-only" — see the note at the top of this
@@ -176,25 +173,6 @@ export async function resolveEntity<T>(
   }
 
   return feelstackOk(parsed.data, result.requestId);
-}
-
-/**
- * Legacy resolver kept for the current static build (brief §17: "small
- * reviewable changes" — this signature predates the FeelStackResult
- * contract and nothing outside this module calls it directly yet). Falls
- * back to local typed content on any failure, matching this build's
- * documented pre-provisioning behavior (docs/DEPLOYMENT.md).
- */
-export async function resolveContent(path: string, locale: "en" | "ar"): Promise<FeelstackResolveResponse | null> {
-  if (!isConfigured()) {
-    return getFallbackContent(path, locale);
-  }
-
-  const result = await resolveEntity(path, locale, feelstackResolveResponseSchema);
-  if (!result.ok || result.data.status !== "published") {
-    return getFallbackContent(path, locale);
-  }
-  return result.data;
 }
 
 /** Lists all published routes FeelStack knows about for a locale. Empty array on any failure. */
