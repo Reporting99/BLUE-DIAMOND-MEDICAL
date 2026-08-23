@@ -26,9 +26,10 @@ header would leak a credential to no purpose.
 
 **Not verified against a live instance.** No live endpoint or admin API
 documentation has been available in any session so far. These shapes are
-carried forward from this repo's own adapter rather than guessed; see
-`DFEELINGS_TO_BLUE_ARCHITECTURE_MAP.md` §0/§2 for why the recovered Dfeelings
-source could not be used to confirm them (it calls a different, older surface).
+carried forward from this repo's own adapter rather than guessed; the
+recovered Dfeelings source could not be used to confirm them, because it calls a
+different, older surface (`docs/ARCHITECTURE.md` §2, "How this differs from
+Dfeelings").
 
 ## 2. Content modes
 
