@@ -16,7 +16,6 @@ import { getRoute, href } from "@/lib/routing";
 import { servicesForDoctor } from "@/lib/seo/entity-graph";
 import { resolvePageContent, entityCacheTags } from "@/lib/feelstack/page-resolver";
 import { cacheTags } from "@/lib/feelstack/cache-tags";
-import { cmsDoctorSchema } from "@/lib/feelstack/schemas";
 
 /**
  * Canonical English-slug route for every doctor, in both locales — the
@@ -42,7 +41,6 @@ async function loadDoctor(id: string, locale: Locale) {
   const resolution = await resolvePageContent({
     path: cmsPath,
     locale,
-    schema: cmsDoctorSchema,
     staticFallback: () => getDoctor(id),
     tags: entityCacheTags({
       detail: cacheTags.doctor,

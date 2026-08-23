@@ -87,6 +87,81 @@ classification already covers the case that matters: an unknown code becomes
 Verified production values, 2026-08-23: contract version `1`, flat envelope,
 six error codes as tabled above.
 
+## 1b. Entity contract — one entry per locale
+
+FeelStack does **not** return a bilingual entity. It stores **one ContentEntry
+per locale**, linked by `translationGroupId`, and `resolve?locale=ar` returns the
+Arabic entry alone. The envelope is:
+
+```
+{ type,
+  route: { id, path, locale, requestedLocale, resolvedLocale, usedFallback,
+           alternates, sectionId, updatedAt },
+  data:  { id, contentType, title, fields, translationGroupId, ... },
+  seo,
+  relations: { items, faqs, sections, taxonomies } }
+```
+
+Note the nesting: relations, FAQs, sections and taxonomies are **inside
+`relations`**, not sibling keys. The entity's own values live under
+`data.fields`.
+
+### The layering
+
+```
+config -> client (transport) -> transport.ts (envelope validation)
+       -> locale-integrity.ts -> adapters.ts (field schema + adapter)
+       -> feature domain model -> page -> SEO/schema
+```
+
+`transport.ts` describes the wire and nothing else. Feature modules never import
+it. An entity joins the CMS path by supplying an `EntityContract` — a
+**single-locale** field schema plus an adapter. Anything modelling `{ en, ar }`
+at that layer is describing a shape the CMS cannot return.
+
+Runtime content is locale-specific: `/en/...` requests `locale=en`, `/ar/...`
+requests `locale=ar`. There is deliberately **no second request** to rebuild a
+two-language object — a template reads `field[locale]` and never the other side.
+`localizedBilingual()` fills the requested locale and leaves the other **empty**,
+so an accidental cross-locale read renders as visibly missing rather than as
+text in the wrong language.
+
+### Cross-locale content is refused
+
+If FeelStack has no route for the requested locale it serves the default-locale
+route and reports `usedFallback: true`. For a bilingual medical site that is a
+hazard, not a convenience: it would show English clinical text to an Arabic
+reader, duplicate content across two URLs, and emit JSON-LD asserting English
+facts under `inLanguage: ar`.
+
+`checkLocaleIntegrity()` therefore requires `usedFallback === false` **and**
+`resolvedLocale === requested` **and** `route.locale === requested` — three
+independent signals, because any one of them being wrong leaks the wrong
+language. A violation is treated as *that locale's content being absent*: in
+hybrid mode the approved static Arabic content is used, otherwise `notFound()`.
+It is never an outage, so one missing translation cannot mass-fail the site, and
+it is never a reason to render the other language.
+
+The guard runs on every read, before anything is adapted. A cross-locale
+response that Next has cached can therefore never be rendered — it is re-checked
+and refused each time.
+
+### Entry slug vs public route
+
+Entry slugs are ASCII-only (`^[a-z0-9]+(?:-[a-z0-9]+)*$`). Blue Diamond's 28
+Arabic public paths (`/الرعاية-الطبية`) cannot be entry slugs and are **not**
+transliterated to fit the validator. Public routing stays frontend-owned via
+`src/config/routes.ts`; the CMS entry slug is an identifier, the route is the
+URL. No existing Blue Diamond URL changes.
+
+### Not yet declared
+
+Per-entity field schemas are **intentionally absent** until the content types
+exist in FeelStack. Field keys are decided when a content type is created, so
+declaring them now would forward-declare a contract again — the exact mistake
+§1a documents. Until an entity has a contract, `resolvePageContent` serves its
+approved static content and never calls the CMS.
+
 ## 2. Content modes
 
 `FEELSTACK_CONTENT_MODE` (`src/lib/feelstack/content-mode.ts`):

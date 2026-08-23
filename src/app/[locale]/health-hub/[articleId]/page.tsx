@@ -6,7 +6,6 @@ import { HealthHubArticleTemplate } from "@/features/health-hub";
 import { siteConfig } from "@/config/site";
 import { resolvePageContent, entityCacheTags } from "@/lib/feelstack/page-resolver";
 import { cacheTags } from "@/lib/feelstack/cache-tags";
-import { cmsHealthHubArticleSchema } from "@/lib/feelstack/schemas";
 
 /**
  * No articles exist yet (src/features/health-hub/data.ts is an empty
@@ -34,7 +33,6 @@ async function loadArticle(id: string, locale: Locale) {
   const resolution = await resolvePageContent({
     path: cmsPath,
     locale,
-    schema: cmsHealthHubArticleSchema,
     staticFallback: () => getHealthHubArticle(id),
     tags: entityCacheTags({
       detail: cacheTags.healthHubArticle,

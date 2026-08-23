@@ -7,7 +7,6 @@ import { ProductTemplate } from "@/features/products";
 import { getRouteMetadata } from "@/lib/seo/metadata";
 import { resolvePageContent, entityCacheTags } from "@/lib/feelstack/page-resolver";
 import { cacheTags } from "@/lib/feelstack/cache-tags";
-import { cmsProductSchema } from "@/lib/feelstack/schemas";
 
 /**
  * Statically generates params for every product/locale pair — 46 pages
@@ -44,7 +43,6 @@ async function loadProduct(id: string, locale: Locale) {
   const resolution = await resolvePageContent({
     path: cmsPath,
     locale,
-    schema: cmsProductSchema,
     staticFallback: () => getProduct(id),
     tags: entityCacheTags({
       detail: cacheTags.product,

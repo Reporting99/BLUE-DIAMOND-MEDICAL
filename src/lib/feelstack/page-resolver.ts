@@ -3,13 +3,14 @@
 // keep the guard, so a hypothetical "use client" import of this file
 // still fails a real Next.js build; this file is only ever imported from
 // Server Component page files in practice.
-import { z } from "zod";
-import { resolveEntity } from "./client";
+import { resolveEnvelope } from "./client";
 import { getFeelstackContentMode, assertFeelstackEnvValid, getFeelstackSiteKey } from "./content-mode";
 import { cacheTags } from "./cache-tags";
 import { OUTAGE_ERROR_CODES } from "./contracts";
 import { FeelStackUnavailableError, logFeelstackEvent } from "./errors";
 import type { Locale } from "./contracts";
+import { checkLocaleIntegrity } from "./locale-integrity";
+import { toAdapterInput, type EntityContract } from "./adapters";
 
 /**
  * Hybrid content-mode resolver — brief's hybrid-migration scope decision.
@@ -25,11 +26,17 @@ import type { Locale } from "./contracts";
  */
 export type ContentResolution<T> = { source: "cms" | "static"; data: T } | { source: "not-found" };
 
-export interface ResolveEntityOptions<T> {
+export interface ResolveEntityOptions<T, F = unknown> {
   /** CMS resolve path, e.g. `/medical/${slug}`. */
   path: string;
   locale: Locale;
-  schema: z.ZodType<T>;
+  /**
+   * The entity's per-locale field schema plus its adapter. Supplying a contract
+   * switches this path on for that entity; without one the resolver serves
+   * static content and never calls the CMS, which is how entities migrate one
+   * at a time instead of all at once.
+   */
+  contract?: EntityContract<F, T>;
   /** Local `src/content/*.ts` lookup — the source of truth in "static" mode and the fallback for not-yet-migrated entities in "hybrid" mode. */
   staticFallback: () => T | undefined;
   /**
@@ -41,11 +48,21 @@ export interface ResolveEntityOptions<T> {
   tags?: readonly string[];
 }
 
-export async function resolvePageContent<T>(options: ResolveEntityOptions<T>): Promise<ContentResolution<T>> {
-  const { path, locale, schema, staticFallback, tags = [] } = options;
+export async function resolvePageContent<T, F = unknown>(
+  options: ResolveEntityOptions<T, F>,
+): Promise<ContentResolution<T>> {
+  const { path, locale, contract, staticFallback, tags = [] } = options;
   const mode = getFeelstackContentMode();
 
   if (mode === "static") {
+    const data = staticFallback();
+    return data ? { source: "static", data } : { source: "not-found" };
+  }
+
+  // An entity with no contract yet is not migrated yet. Serving its approved
+  // static content is correct; guessing its CMS field shape is how this
+  // integration got a forward-declared contract in the first place.
+  if (!contract) {
     const data = staticFallback();
     return data ? { source: "static", data } : { source: "not-found" };
   }
@@ -54,11 +71,48 @@ export async function resolvePageContent<T>(options: ResolveEntityOptions<T>): P
   // deployment misconfiguration, never a silent page 404 (brief §5).
   assertFeelstackEnvValid();
 
-  const result = await resolveEntity(path, locale, schema, tags);
+  const result = await resolveEnvelope(path, locale, tags);
 
   if (result.ok) {
+    const envelope = result.data;
+
+    // Locale integrity BEFORE anything is read out of the payload, so wrong-
+    // language content cannot reach a domain model, a template, metadata or
+    // JSON-LD. A cross-locale fallback means this locale's content is absent —
+    // it is never a reason to render the other language.
+    const integrity = checkLocaleIntegrity(envelope, locale);
+    if (!integrity.ok) {
+      logFeelstackEvent({
+        category: "LOCALE_MISMATCH",
+        locale,
+        path,
+        requestId: result.requestId,
+        upstreamContext: `${integrity.reason}: resolved ${integrity.resolved}`,
+      });
+      if (mode === "hybrid") {
+        const data = staticFallback();
+        if (data) return { source: "static", data };
+      }
+      return { source: "not-found" };
+    }
+
+    const fields = contract.fields.safeParse(envelope.data.fields ?? {});
+    if (!fields.success) {
+      // A contract error is an outage, not an absence: the CMS answered, we
+      // simply cannot trust what it said. Falling back to static here would
+      // hide a broken content model behind content that still looks fine.
+      logFeelstackEvent({
+        category: "INVALID_RESPONSE",
+        locale,
+        path,
+        requestId: result.requestId,
+        upstreamContext: "entity fields failed schema validation",
+      });
+      throw new FeelStackUnavailableError("INVALID_RESPONSE", { requestId: result.requestId });
+    }
+
     logFeelstackEvent({ category: "OK", locale, path, requestId: result.requestId });
-    return { source: "cms", data: result.data };
+    return { source: "cms", data: contract.adapt(toAdapterInput(envelope, locale, fields.data)) };
   }
 
   if (result.error === "NOT_FOUND") {

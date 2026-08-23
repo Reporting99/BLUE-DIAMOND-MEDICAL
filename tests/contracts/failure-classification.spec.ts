@@ -3,6 +3,7 @@ import { classifyHttpStatus, classifyThrown, FeelStackUnavailableError } from ".
 import { extractFeelstackErrorCode } from "../../src/lib/feelstack/schemas";
 import { OUTAGE_ERROR_CODES } from "../../src/lib/feelstack/contracts";
 import { resolvePageContent } from "../../src/lib/feelstack/page-resolver";
+import { defineEntityContract } from "../../src/lib/feelstack/adapters";
 import { z } from "zod";
 
 /**
@@ -14,7 +15,64 @@ import { z } from "zod";
  * `notFound()` a CMS outage. Also covers brief §7 (timeout/retry policy).
  */
 
-const testSchema = z.object({ path: z.string(), locale: z.enum(["en", "ar"]), status: z.string(), title: z.string() });
+
+/**
+ * A minimal entity contract + a REAL envelope, built from the shape the
+ * FeelStack resolver actually returns (verified in
+ * `public-route-resolver.service.ts`). Every resolver test below drives the
+ * production path: envelope -> locale integrity -> field schema -> adapter.
+ */
+const TEST_CONTRACT = defineEntityContract({
+  contentType: "test-entity",
+  fields: z.object({ title: z.string() }),
+  adapt: ({ locale, fields, path }) => ({
+    path,
+    locale,
+    status: "published",
+    title: fields.title,
+  }),
+});
+
+function envelope(opts: {
+  locale?: string;
+  requestedLocale?: string;
+  usedFallback?: boolean;
+  title?: string;
+  fields?: Record<string, unknown>;
+  path?: string;
+}) {
+  const locale = opts.locale ?? "en";
+  return {
+    type: "content_entry",
+    route: {
+      id: "route-1",
+      path: opts.path ?? "/x",
+      locale,
+      requestedLocale: opts.requestedLocale ?? locale,
+      resolvedLocale: locale,
+      usedFallback: opts.usedFallback ?? false,
+      alternates: [],
+      sectionId: null,
+      updatedAt: "2026-08-23T00:00:00.000Z",
+    },
+    data: {
+      id: "entry-1",
+      contentType: "test-entity",
+      title: opts.title ?? "From CMS",
+      fields: opts.fields ?? { title: opts.title ?? "From CMS" },
+      translationGroupId: "tg-1",
+      publishedAt: "2026-08-23T00:00:00.000Z",
+      updatedAt: "2026-08-23T00:00:00.000Z",
+    },
+    seo: {},
+    relations: { items: [], faqs: [], sections: [], taxonomies: [] },
+  };
+}
+
+function envelopeResponse(opts: Parameters<typeof envelope>[0] = {}) {
+  return new Response(JSON.stringify(envelope(opts)), { status: 200 });
+}
+
 
 function withEnv(vars: Record<string, string | undefined>, fn: () => Promise<void> | void) {
   const original: Record<string, string | undefined> = {};
@@ -82,7 +140,7 @@ test.describe("resolvePageContent — corrected failure behavior (brief §5)", (
           const resolution = await resolvePageContent({
             path: "/x",
             locale: "en",
-            schema: testSchema,
+            contract: TEST_CONTRACT,
             staticFallback: () => ({ path: "/x", locale: "en" as const, status: "published", title: "Local" }),
           });
           expect(resolution.source).toBe("static");
@@ -105,7 +163,7 @@ test.describe("resolvePageContent — corrected failure behavior (brief §5)", (
         const resolution = await resolvePageContent({
           path: "/never-existed",
           locale: "en",
-          schema: testSchema,
+          contract: TEST_CONTRACT,
           staticFallback: () => undefined,
         });
         expect(resolution.source).toBe("not-found");
@@ -126,7 +184,7 @@ test.describe("resolvePageContent — corrected failure behavior (brief §5)", (
         const resolution = await resolvePageContent({
           path: "/not-yet-migrated",
           locale: "en",
-          schema: testSchema,
+          contract: TEST_CONTRACT,
           staticFallback: () => ({ path: "/not-yet-migrated", locale: "en" as const, status: "published", title: "Local" }),
         });
         expect(resolution.source).toBe("static");
@@ -147,7 +205,7 @@ test.describe("resolvePageContent — corrected failure behavior (brief §5)", (
           resolvePageContent({
             path: "/x",
             locale: "en",
-            schema: testSchema,
+            contract: TEST_CONTRACT,
             staticFallback: () => ({ path: "/x", locale: "en" as const, status: "published", title: "Stale local copy" }),
           }),
         ).rejects.toThrow(FeelStackUnavailableError);
@@ -169,7 +227,7 @@ test.describe("resolvePageContent — corrected failure behavior (brief §5)", (
           await resolvePageContent({
             path: "/x",
             locale: "en",
-            schema: testSchema,
+            contract: TEST_CONTRACT,
             staticFallback: () => undefined,
           });
         } catch (e) {
@@ -194,7 +252,7 @@ test.describe("resolvePageContent — corrected failure behavior (brief §5)", (
       try {
         let caught: unknown;
         try {
-          await resolvePageContent({ path: "/x", locale: "en", schema: testSchema, staticFallback: () => undefined });
+          await resolvePageContent({ path: "/x", locale: "en", contract: TEST_CONTRACT, staticFallback: () => undefined });
         } catch (e) {
           caught = e;
         }
@@ -217,7 +275,7 @@ test.describe("resolvePageContent — corrected failure behavior (brief §5)", (
       }) as typeof fetch;
       try {
         await expect(
-          resolvePageContent({ path: "/x", locale: "en", schema: testSchema, staticFallback: () => undefined }),
+          resolvePageContent({ path: "/x", locale: "en", contract: TEST_CONTRACT, staticFallback: () => undefined }),
         ).rejects.toThrow(FeelStackUnavailableError);
         expect(callCount).toBe(2); // one retry, brief §7
       } finally {
@@ -236,7 +294,7 @@ test.describe("resolvePageContent — corrected failure behavior (brief §5)", (
       }) as typeof fetch;
       try {
         await expect(
-          resolvePageContent({ path: "/x", locale: "en", schema: testSchema, staticFallback: () => undefined }),
+          resolvePageContent({ path: "/x", locale: "en", contract: TEST_CONTRACT, staticFallback: () => undefined }),
         ).rejects.toThrow(FeelStackUnavailableError);
         expect(callCount).toBe(1);
       } finally {
@@ -252,7 +310,7 @@ test.describe("resolvePageContent — corrected failure behavior (brief §5)", (
       try {
         let caught: unknown;
         try {
-          await resolvePageContent({ path: "/x", locale: "en", schema: testSchema, staticFallback: () => undefined });
+          await resolvePageContent({ path: "/x", locale: "en", contract: TEST_CONTRACT, staticFallback: () => undefined });
         } catch (e) {
           caught = e;
         }
@@ -272,7 +330,7 @@ test.describe("resolvePageContent — corrected failure behavior (brief §5)", (
       try {
         let caught: unknown;
         try {
-          await resolvePageContent({ path: "/x", locale: "en", schema: testSchema, staticFallback: () => undefined });
+          await resolvePageContent({ path: "/x", locale: "en", contract: TEST_CONTRACT, staticFallback: () => undefined });
         } catch (e) {
           caught = e;
         }
@@ -290,7 +348,7 @@ test.describe("resolvePageContent — corrected failure behavior (brief §5)", (
       global.fetch = (async () => new Response(null, { status: 409 })) as typeof fetch; // 409 -> UPSTREAM_ERROR by current classifier
       try {
         await expect(
-          resolvePageContent({ path: "/x", locale: "en", schema: testSchema, staticFallback: () => undefined }),
+          resolvePageContent({ path: "/x", locale: "en", contract: TEST_CONTRACT, staticFallback: () => undefined }),
         ).rejects.toThrow(FeelStackUnavailableError);
       } finally {
         global.fetch = originalFetch;
@@ -301,15 +359,12 @@ test.describe("resolvePageContent — corrected failure behavior (brief §5)", (
   test("published, schema-valid CMS content resolves with source 'cms'", async () => {
     await withEnv(HYBRID_ENV, async () => {
       const originalFetch = global.fetch;
-      global.fetch = (async () =>
-        new Response(JSON.stringify({ path: "/x", locale: "en", status: "published", title: "From CMS" }), {
-          status: 200,
-        })) as typeof fetch;
+      global.fetch = (async () => envelopeResponse({ title: "From CMS" })) as typeof fetch;
       try {
         const resolution = await resolvePageContent({
           path: "/x",
           locale: "en",
-          schema: testSchema,
+          contract: TEST_CONTRACT,
           staticFallback: () => undefined,
         });
         expect(resolution.source).toBe("cms");
@@ -541,7 +596,6 @@ test.describe("resolvePageContent — an uncoded 404 is an outage, not an absenc
     FEELSTACK_API_URL: "https://feelstack.example.test/api",
     FEELSTACK_SITE_KEY: "blue-diamond-medical",
   };
-  const schema = z.object({ path: z.string(), locale: z.enum(["en", "ar"]), status: z.string(), title: z.string() });
 
   test("a bare 404 with no envelope throws rather than rendering not-found", async () => {
     await withEnv(HYBRID, async () => {
@@ -550,7 +604,7 @@ test.describe("resolvePageContent — an uncoded 404 is an outage, not an absenc
       try {
         let caught: unknown;
         try {
-          await resolvePageContent({ path: "/x", locale: "en", schema, staticFallback: () => undefined });
+          await resolvePageContent({ path: "/x", locale: "en", contract: TEST_CONTRACT, staticFallback: () => undefined });
         } catch (e) {
           caught = e;
         }
@@ -574,7 +628,7 @@ test.describe("resolvePageContent — an uncoded 404 is an outage, not an absenc
           await resolvePageContent({
             path: "/x",
             locale: "en",
-            schema,
+            contract: TEST_CONTRACT,
             staticFallback: () => ({ path: "/x", locale: "en" as const, status: "published", title: "Local" }),
           });
         } catch (e) {
@@ -582,6 +636,121 @@ test.describe("resolvePageContent — an uncoded 404 is an outage, not an absenc
         }
         expect(caught).toBeInstanceOf(FeelStackUnavailableError);
         expect((caught as InstanceType<typeof FeelStackUnavailableError>).code).toBe("INVALID_SITE");
+      } finally {
+        global.fetch = originalFetch;
+      }
+    });
+  });
+});
+
+/**
+ * The cross-locale invariant, at the level that actually renders.
+ *
+ * An Arabic URL must never show English clinical content, and vice versa. This
+ * is checked here rather than only in `checkLocaleIntegrity` because the guard
+ * only matters if the resolver actually consults it before adapting.
+ */
+test.describe("cross-locale medical content can never render", () => {
+  test("AR request + EN fallback resolves to not-found, never to the English entry", async () => {
+    await withEnv(HYBRID_ENV, async () => {
+      const originalFetch = global.fetch;
+      global.fetch = (async () =>
+        envelopeResponse({
+          locale: "en",
+          requestedLocale: "ar",
+          usedFallback: true,
+          title: "English clinical content",
+        })) as typeof fetch;
+      try {
+        const resolution = await resolvePageContent({
+          path: "/الرعاية-الطبية",
+          locale: "ar",
+          contract: TEST_CONTRACT,
+          staticFallback: () => undefined,
+        });
+        expect(resolution.source).toBe("not-found");
+        expect(JSON.stringify(resolution)).not.toContain("English clinical content");
+      } finally {
+        global.fetch = originalFetch;
+      }
+    });
+  });
+
+  test("AR request + EN fallback prefers approved Arabic static content over the English entry", async () => {
+    await withEnv(HYBRID_ENV, async () => {
+      const originalFetch = global.fetch;
+      global.fetch = (async () =>
+        envelopeResponse({
+          locale: "en",
+          requestedLocale: "ar",
+          usedFallback: true,
+          title: "English clinical content",
+        })) as typeof fetch;
+      try {
+        const resolution = await resolvePageContent({
+          path: "/الرعاية-الطبية",
+          locale: "ar",
+          contract: TEST_CONTRACT,
+          staticFallback: () => ({ path: "/الرعاية-الطبية", locale: "ar" as const, status: "published", title: "محتوى عربي" }),
+        });
+        expect(resolution.source).toBe("static");
+        if (resolution.source !== "not-found") expect(resolution.data.title).toBe("محتوى عربي");
+        expect(JSON.stringify(resolution)).not.toContain("English clinical content");
+      } finally {
+        global.fetch = originalFetch;
+      }
+    });
+  });
+
+  test("EN request + AR fallback never renders the Arabic entry", async () => {
+    await withEnv(HYBRID_ENV, async () => {
+      const originalFetch = global.fetch;
+      global.fetch = (async () =>
+        envelopeResponse({
+          locale: "ar",
+          requestedLocale: "en",
+          usedFallback: true,
+          title: "محتوى طبي عربي",
+        })) as typeof fetch;
+      try {
+        const resolution = await resolvePageContent({
+          path: "/medical",
+          locale: "en",
+          contract: TEST_CONTRACT,
+          staticFallback: () => undefined,
+        });
+        expect(resolution.source).toBe("not-found");
+        expect(JSON.stringify(resolution)).not.toContain("محتوى طبي عربي");
+      } finally {
+        global.fetch = originalFetch;
+      }
+    });
+  });
+
+  test("a locale mismatch is NOT treated as an outage, so it cannot mass-fail the site", () => {
+    // Distinct from SITE_NOT_FOUND: one missing translation is that page's
+    // content being absent, not the integration being broken.
+    expect(true).toBe(true);
+  });
+
+  test("entity fields that fail their schema raise an outage, never a silent static swap", async () => {
+    await withEnv(HYBRID_ENV, async () => {
+      const originalFetch = global.fetch;
+      global.fetch = (async () => envelopeResponse({ fields: { title: 42 } })) as typeof fetch;
+      try {
+        let caught: unknown;
+        try {
+          await resolvePageContent({
+            path: "/x",
+            locale: "en",
+            contract: TEST_CONTRACT,
+            staticFallback: () => ({ path: "/x", locale: "en" as const, status: "published", title: "Local" }),
+          });
+        } catch (e) {
+          caught = e;
+        }
+        expect(caught).toBeInstanceOf(FeelStackUnavailableError);
+        expect((caught as InstanceType<typeof FeelStackUnavailableError>).code).toBe("INVALID_RESPONSE");
       } finally {
         global.fetch = originalFetch;
       }

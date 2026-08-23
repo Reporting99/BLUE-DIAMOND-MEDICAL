@@ -6,7 +6,6 @@ import { MedicalServiceTemplate } from "@/features/medical-services";
 import { getRouteMetadata } from "@/lib/seo/metadata";
 import { resolvePageContent, entityCacheTags } from "@/lib/feelstack/page-resolver";
 import { cacheTags } from "@/lib/feelstack/cache-tags";
-import { cmsMedicalServiceSchema } from "@/lib/feelstack/schemas";
 
 export function generateStaticParams() {
   return locales.flatMap((locale) => medicalServices.map((service) => ({ locale, serviceId: service.slug })));
@@ -26,7 +25,6 @@ async function loadMedicalService(serviceId: string, locale: Locale) {
   const resolution = await resolvePageContent({
     path: cmsPath,
     locale,
-    schema: cmsMedicalServiceSchema,
     staticFallback: () => getMedicalService(serviceId),
     tags: entityCacheTags({
       detail: cacheTags.medicalService,

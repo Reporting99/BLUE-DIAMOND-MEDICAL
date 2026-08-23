@@ -1,118 +1,230 @@
 import { test, expect } from "@playwright/test";
+import { z } from "zod";
 import {
-  feelstackResolveResponseSchema,
   feelstackRoutesResponseSchema,
-  cmsMedicalServiceSchema,
   feelstackWebhookBodySchema,
-  type CmsDoctor,
-  type CmsMedicalService,
-  type CmsAestheticTreatment,
-  type CmsAestheticConcern,
-  type CmsTechnology,
-  type CmsProduct,
-  type CmsHealthHubArticle,
-  type CmsLegalPage,
 } from "../../src/lib/feelstack/schemas";
-import type { Doctor } from "../../src/features/doctors";
-import type { MedicalServiceContent } from "../../src/features/medical-services/types";
-import type { AestheticTreatment } from "../../src/features/aesthetics/types";
-import type { AestheticConcern } from "../../src/features/concerns/types";
-import type { Technology } from "../../src/features/technologies/types";
-import type { Product } from "../../src/features/products/types";
-import type { HealthHubArticle } from "../../src/features/health-hub/types";
-import type { LegalPageContent } from "../../src/features/legal/types";
+import { feelstackResolveEnvelopeSchema } from "../../src/lib/feelstack/transport";
+import { checkLocaleIntegrity } from "../../src/lib/feelstack/locale-integrity";
+import {
+  defineEntityContract,
+  localizedBilingual,
+  localizedBilingualList,
+  adaptFaqs,
+  relatedIds,
+  toAdapterInput,
+} from "../../src/lib/feelstack/adapters";
 
 /**
- * FeelStack contract tests — brief §18 "FeelStack contracts": valid page
- * response, valid route response, malformed JSON, missing required
- * fields, invalid block type (n/a — no generic block model, see
- * docs/ARCHITECTURE.md), invalid locale.
+ * REAL FeelStack entity contract.
+ *
+ * Every fixture here mirrors the envelope the deployed resolver actually
+ * builds (`public-route-resolver.service.ts`): `{ type, route, data, seo,
+ * relations: { items, faqs, sections, taxonomies } }`, with the entity's own
+ * values under `data.fields` and ONE ENTRY PER LOCALE.
+ *
+ * The previous version of this file tested a flat, bilingual entity shape that
+ * FeelStack has never emitted. It passed continuously while the integration
+ * could not have parsed a single real response. Fixtures are therefore derived
+ * from backend source, never from what this repo finds convenient.
  */
-test.describe("FeelStack schemas", () => {
-  test("accepts a valid resolve response", () => {
-    const parsed = feelstackResolveResponseSchema.safeParse({
-      path: "/medical/eye-screening",
-      locale: "en",
-      status: "published",
-      title: "Eye Screening",
-    });
+
+function envelope(over: {
+  locale?: string;
+  requestedLocale?: string;
+  resolvedLocale?: string;
+  usedFallback?: boolean;
+  fields?: Record<string, unknown>;
+  faqs?: Array<{ id: string; question: string; answer: string }>;
+  relations?: Array<{ id: string; relationKey: string; targetType: string; targetId: string; sortOrder?: number }>;
+  path?: string;
+} = {}) {
+  const locale = over.locale ?? "en";
+  return {
+    type: "content_entry",
+    route: {
+      id: "route-1",
+      path: over.path ?? "/medical/family-medicine",
+      locale,
+      requestedLocale: over.requestedLocale ?? locale,
+      resolvedLocale: over.resolvedLocale ?? locale,
+      usedFallback: over.usedFallback ?? false,
+      alternates: [
+        { locale: "en", path: "/medical/family-medicine" },
+        { locale: "ar", path: "/الرعاية-الطبية/طب-الأسرة" },
+      ],
+      sectionId: null,
+      updatedAt: "2026-08-23T00:00:00.000Z",
+    },
+    data: {
+      id: "entry-1",
+      contentType: "medical-service",
+      title: "Family Medicine",
+      fields: over.fields ?? { summary: "Comprehensive primary care." },
+      translationGroupId: "tg-1",
+      publishedAt: "2026-08-23T00:00:00.000Z",
+      updatedAt: "2026-08-23T00:00:00.000Z",
+    },
+    seo: { title: "Family Medicine" },
+    relations: {
+      items: over.relations ?? [],
+      faqs: over.faqs ?? [],
+      sections: [],
+      taxonomies: [],
+    },
+  };
+}
+
+test.describe("real resolve envelope", () => {
+  test("parses the shape the backend actually returns", () => {
+    const parsed = feelstackResolveEnvelopeSchema.safeParse(envelope());
     expect(parsed.success).toBe(true);
+    if (parsed.success) {
+      expect(parsed.data.data.fields).toEqual({ summary: "Comprehensive primary care." });
+      expect(parsed.data.relations?.faqs).toEqual([]);
+    }
   });
 
-  test("rejects an invalid locale", () => {
-    const parsed = feelstackResolveResponseSchema.safeParse({
-      path: "/medical/eye-screening",
-      locale: "fr",
-      status: "published",
+  test("rejects the old forward-declared flat entity shape", () => {
+    // The shape this integration used to expect. It must NOT validate, or the
+    // regression that started all of this could return unnoticed.
+    const legacyFlat = { path: "/x", locale: "en", status: "published", title: "T" };
+    expect(feelstackResolveEnvelopeSchema.safeParse(legacyFlat).success).toBe(false);
+  });
+
+  test("relations stay nested under `relations`, not as sibling keys", () => {
+    const flatSiblings = { ...envelope(), relations: undefined, faqs: [], sections: [], taxonomies: [] };
+    const parsed = feelstackResolveEnvelopeSchema.safeParse(flatSiblings);
+    // Still valid (relations is optional) but faqs must not be discoverable at
+    // the top level — the adapter reads relations.faqs and would silently see
+    // none if the nesting were ever misread.
+    expect(parsed.success).toBe(true);
+    if (parsed.success) expect(parsed.data.relations).toBeUndefined();
+  });
+
+  test("rejects an envelope with no route metadata", () => {
+    const broken = { ...envelope(), route: undefined };
+    expect(feelstackResolveEnvelopeSchema.safeParse(broken).success).toBe(false);
+  });
+
+  test("malformed data.fields is still structurally valid transport — the field schema is what rejects it", () => {
+    const parsed = feelstackResolveEnvelopeSchema.safeParse(envelope({ fields: { summary: 42 } }));
+    expect(parsed.success).toBe(true);
+    const fieldSchema = z.object({ summary: z.string() });
+    expect(fieldSchema.safeParse(parsed.success ? parsed.data.data.fields : {}).success).toBe(false);
+  });
+});
+
+test.describe("locale integrity", () => {
+  test("EN request resolving EN passes", () => {
+    expect(checkLocaleIntegrity(feelstackResolveEnvelopeSchema.parse(envelope({ locale: "en" })), "en").ok).toBe(true);
+  });
+
+  test("AR request resolving AR passes", () => {
+    expect(checkLocaleIntegrity(feelstackResolveEnvelopeSchema.parse(envelope({ locale: "ar" })), "ar").ok).toBe(true);
+  });
+
+  test("AR request that fell back to EN is REFUSED", () => {
+    const env = feelstackResolveEnvelopeSchema.parse(
+      envelope({ locale: "en", requestedLocale: "ar", resolvedLocale: "en", usedFallback: true }),
+    );
+    const result = checkLocaleIntegrity(env, "ar");
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.reason).toBe("cross-locale-fallback");
+  });
+
+  test("EN request that fell back to AR is REFUSED", () => {
+    const env = feelstackResolveEnvelopeSchema.parse(
+      envelope({ locale: "ar", requestedLocale: "en", resolvedLocale: "ar", usedFallback: true }),
+    );
+    expect(checkLocaleIntegrity(env, "en").ok).toBe(false);
+  });
+
+  test("a mismatched resolvedLocale is refused even when usedFallback is false", () => {
+    // Defence in depth: the flag and the observable facts are checked
+    // independently, because either one being wrong leaks the wrong language.
+    const env = feelstackResolveEnvelopeSchema.parse(
+      envelope({ locale: "en", requestedLocale: "ar", resolvedLocale: "en", usedFallback: false }),
+    );
+    expect(checkLocaleIntegrity(env, "ar").ok).toBe(false);
+  });
+});
+
+test.describe("adapters", () => {
+  test("a bilingual field carries the requested locale and leaves the other EMPTY", () => {
+    // Never the same string in both slots: an accidental cross-locale read must
+    // yield visibly-missing text, never text in the wrong language.
+    expect(localizedBilingual("ar", "طب الأسرة")).toEqual({ en: "", ar: "طب الأسرة" });
+    expect(localizedBilingual("en", "Family Medicine")).toEqual({ en: "Family Medicine", ar: "" });
+    expect(localizedBilingualList("ar", ["أ", "ب"])).toEqual({ en: [], ar: ["أ", "ب"] });
+  });
+
+  test("first-class FAQs adapt into the domain shape for one locale only", () => {
+    const adapted = adaptFaqs("ar", [{ id: "f1", question: "س؟", answer: "ج." }]);
+    expect(adapted[0].question).toEqual({ en: "", ar: "س؟" });
+    expect(adapted[0].answer.en).toBe("");
+  });
+
+  test("relations resolve by real relationKey, in CMS sort order", () => {
+    const relations = [
+      { id: "r2", relationKey: "doctors", targetType: "person_profile", targetId: "d-2", sortOrder: 2 },
+      { id: "r1", relationKey: "doctors", targetType: "person_profile", targetId: "d-1", sortOrder: 1 },
+      { id: "r3", relationKey: "treatments", targetType: "content_entry", targetId: "t-1", sortOrder: 1 },
+    ];
+    expect(relatedIds(relations, "doctors")).toEqual(["d-1", "d-2"]);
+    expect(relatedIds(relations, "treatments")).toEqual(["t-1"]);
+    expect(relatedIds(relations, "nothing")).toEqual([]);
+  });
+
+  test("an entity contract maps fields into a domain model without leaking transport", () => {
+    const contract = defineEntityContract({
+      contentType: "medical-service",
+      fields: z.object({ summary: z.string() }),
+      adapt: ({ locale, fields, faqs, relations, path }) => ({
+        slug: path,
+        summary: localizedBilingual(locale, fields.summary),
+        faqs: adaptFaqs(locale, faqs),
+        relatedDoctorIds: relatedIds(relations, "doctors"),
+      }),
     });
-    expect(parsed.success).toBe(false);
-  });
+    const env = feelstackResolveEnvelopeSchema.parse(
+      envelope({
+        locale: "ar",
+        path: "/الرعاية-الطبية/طب-الأسرة",
+        fields: { summary: "رعاية أولية شاملة." },
+        faqs: [{ id: "f1", question: "س؟", answer: "ج." }],
+        relations: [{ id: "r1", relationKey: "doctors", targetType: "person_profile", targetId: "d-1", sortOrder: 1 }],
+      }),
+    );
+    const fields = contract.fields.parse(env.data.fields);
+    const domain = contract.adapt(toAdapterInput(env, "ar", fields));
 
-  test("rejects a response missing required fields", () => {
-    const parsed = feelstackResolveResponseSchema.safeParse({ locale: "en", status: "published" });
-    expect(parsed.success).toBe(false);
+    expect(domain.summary).toEqual({ en: "", ar: "رعاية أولية شاملة." });
+    expect(domain.relatedDoctorIds).toEqual(["d-1"]);
+    // The Arabic public path survives untouched — it is a ROUTE, not an entry slug.
+    expect(domain.slug).toBe("/الرعاية-الطبية/طب-الأسرة");
+    // No transport keys leak into the domain model.
+    expect(Object.keys(domain)).not.toContain("route");
+    expect(Object.keys(domain)).not.toContain("data");
+    expect(Object.keys(domain)).not.toContain("translationGroupId");
   });
+});
 
-  test("rejects an unexpected status enum value (invalid block/content-status type)", () => {
-    const parsed = feelstackResolveResponseSchema.safeParse({
-      path: "/medical/eye-screening",
-      locale: "en",
-      status: "archived", // not one of draft|published|disabled
-    });
-    expect(parsed.success).toBe(false);
-  });
-
+test.describe("FeelStack schemas", () => {
   test("accepts a valid routes response", () => {
     const parsed = feelstackRoutesResponseSchema.safeParse({
       routes: [{ path: "/medical/eye-screening", status: "published" }],
     });
     expect(parsed.success).toBe(true);
   });
-
   test("rejects malformed JSON shape for routes (not an object)", () => {
     const parsed = feelstackRoutesResponseSchema.safeParse(["not", "an", "object"]);
     expect(parsed.success).toBe(false);
   });
-
-  test("cmsMedicalServiceSchema accepts a valid, complete entity and strips CMS-only fields", () => {
-    const parsed = cmsMedicalServiceSchema.safeParse({
-      id: "eye-screening",
-      slug: "eye-screening",
-      slugAr: "فحص-العين",
-      title: { en: "Eye Screening", ar: "فحص العين" },
-      summary: { en: "Summary", ar: "ملخص" },
-      relatedDoctorIds: ["doctor-farhat"],
-      bookingChannel: "eye-screening",
-      status: "published",
-      updatedAt: "2026-08-01T00:00:00Z",
-    });
-    expect(parsed.success).toBe(true);
-    if (parsed.success) {
-      expect(parsed.data).not.toHaveProperty("status");
-      expect(parsed.data).not.toHaveProperty("updatedAt");
-      expect(parsed.data.sourceVerified).toBe(true);
-    }
-  });
-
-  test("cmsMedicalServiceSchema rejects an invalid bookingChannel", () => {
-    const parsed = cmsMedicalServiceSchema.safeParse({
-      id: "eye-screening",
-      slug: "eye-screening",
-      slugAr: "فحص-العين",
-      title: { en: "Eye Screening", ar: "فحص العين" },
-      summary: { en: "Summary", ar: "ملخص" },
-      relatedDoctorIds: [],
-      bookingChannel: "not-a-real-channel",
-      status: "published",
-    });
-    expect(parsed.success).toBe(false);
-  });
-
   test("webhook body schema accepts the legacy {path} shape", () => {
     const parsed = feelstackWebhookBodySchema.safeParse({ path: "/en/medical/eye-screening" });
     expect(parsed.success).toBe(true);
   });
-
   test("webhook body schema accepts the structured {event, siteKey} shape", () => {
     const parsed = feelstackWebhookBodySchema.safeParse({
       event: "medical-service.updated",
@@ -122,7 +234,6 @@ test.describe("FeelStack schemas", () => {
     });
     expect(parsed.success).toBe(true);
   });
-
   test("webhook body schema rejects an unsupported event name", () => {
     const parsed = feelstackWebhookBodySchema.safeParse({
       event: "totally-made-up-event",
@@ -130,60 +241,8 @@ test.describe("FeelStack schemas", () => {
     });
     expect(parsed.success).toBe(false);
   });
-
   test("webhook body schema rejects an unrecognized shape entirely", () => {
     const parsed = feelstackWebhookBodySchema.safeParse({ foo: "bar" });
     expect(parsed.success).toBe(false);
-  });
-});
-
-/**
- * Compile-time contract: every CMS entity schema must `.transform()` into
- * EXACTLY the local domain type its route falls back to.
- *
- * This is the property `resolvePageContent` depends on — it takes one type
- * parameter `T` shared by the CMS branch and the `src/content/*.ts`
- * `staticFallback`, so if a schema drifts from its domain type, hybrid mode
- * stops type-checking at the call site. Asserting it here names the invariant
- * explicitly instead of leaving it as an incidental consequence, and makes a
- * drift fail in this file (with a clear message) rather than in seven pages.
- *
- * `tsc --noEmit` is the actual assertion; the runtime test body only exists so
- * the file is exercised by the suite. It caught a real defect when written:
- * cmsDoctorSchema used the site-wide bookingChannel enum, which is wider than
- * `Doctor["bookingChannel"]`, and would have let the CMS return "walk-in" for
- * a named physician.
- */
-/**
- * One-directional on purpose: the CMS result must be USABLE AS the domain type.
- * Exact equality would be wrong — several schemas legitimately narrow a field
- * (e.g. `sourceVerified: true` where the domain type says `boolean`, because a
- * record only reaches "published" in FeelStack through the same editorial
- * approval the local content traces to). Narrowing is safe; widening is the
- * bug this guards against.
- */
-type AssertAssignable<Cms, Domain> = [Cms] extends [Domain] ? true : never;
-
-const _doctorMatches: AssertAssignable<CmsDoctor, Doctor> = true;
-const _serviceMatches: AssertAssignable<CmsMedicalService, MedicalServiceContent> = true;
-const _treatmentMatches: AssertAssignable<CmsAestheticTreatment, AestheticTreatment> = true;
-const _concernMatches: AssertAssignable<CmsAestheticConcern, AestheticConcern> = true;
-const _technologyMatches: AssertAssignable<CmsTechnology, Technology> = true;
-const _productMatches: AssertAssignable<CmsProduct, Product> = true;
-const _articleMatches: AssertAssignable<CmsHealthHubArticle, HealthHubArticle> = true;
-const _legalMatches: AssertAssignable<CmsLegalPage, LegalPageContent> = true;
-
-test.describe("CMS schema <-> domain type parity", () => {
-  test("every entity schema transforms into its local domain type", () => {
-    expect([
-      _doctorMatches,
-      _serviceMatches,
-      _treatmentMatches,
-      _concernMatches,
-      _technologyMatches,
-      _productMatches,
-      _articleMatches,
-      _legalMatches,
-    ]).toEqual([true, true, true, true, true, true, true, true]);
   });
 });
