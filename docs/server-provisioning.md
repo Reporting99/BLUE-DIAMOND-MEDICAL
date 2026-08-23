@@ -56,7 +56,7 @@ any other route.
 
 /home/deploy-blue-diamond/uploads/ artifact + deploy-script landing zone
 
-/home/blue-diamond-src/repo        source workspace (already created)
+/home/blue-diamond/htdocs/blue-diamond-medical   canonical source checkout
 ```
 
 Source code never lives inside a release directory, and secrets never live
