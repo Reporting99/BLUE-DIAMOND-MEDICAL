@@ -47,31 +47,60 @@ export class FeelStackUnavailableError extends Error {
   }
 }
 
-/** HTTP status -> FeelStackErrorCode. Structured, not prose-based — brief §6. */
 /**
- * Upstream error codes that must override the HTTP status. Matching is on the
- * envelope's `code` field only — never on message prose, so a reworded upstream
- * message cannot change behaviour.
+ * FeelStack's published public error codes -> our internal classification.
  *
- * SITE_NOT_FOUND is the load-bearing one: FeelStack returns 404 for an unknown
- * siteKey exactly as it does for a missing page. Without this mapping a wrong
- * site key would 404 every page on the site instead of failing loudly, which is
- * the mass-404 outcome the integration contract forbids.
+ * Source of truth is the backend's own append-only enum,
+ * `src/platform/contracts/public-api-errors.ts` (PUBLIC_ERROR_CODES), verified
+ * against the deployed instance. All six are mapped here; the last two entries
+ * are aliases this repo assumed before the contract was confirmed, kept so an
+ * older fixture still classifies correctly.
+ *
+ * CONTENT_NOT_FOUND is the ONLY code that may become a page 404. SITE_NOT_FOUND
+ * is the load-bearing counter-example: FeelStack answers 404 for an unknown
+ * siteKey exactly as it does for a missing page, so classifying on status alone
+ * would 404 every page on the site the moment a wrong key ships.
  */
 const UPSTREAM_CODE_MAP: Record<string, FeelStackErrorCode> = {
-  SITE_NOT_FOUND: "INVALID_SITE",
-  INVALID_SITE: "INVALID_SITE",
-  LOCALE_NOT_SUPPORTED: "LOCALE_MISMATCH",
-  LOCALE_MISMATCH: "LOCALE_MISMATCH",
   CONTENT_NOT_FOUND: "NOT_FOUND",
+  SITE_NOT_FOUND: "INVALID_SITE",
+  LOCALE_NOT_SUPPORTED: "LOCALE_MISMATCH",
+  RATE_LIMITED: "UPSTREAM_ERROR",
+  UPSTREAM_INTERNAL_ERROR: "UPSTREAM_ERROR",
+  INVALID_REQUEST: "INVALID_RESPONSE",
+  // Aliases from this repo's pre-verification guess.
+  INVALID_SITE: "INVALID_SITE",
+  LOCALE_MISMATCH: "LOCALE_MISMATCH",
 };
 
+/**
+ * Classification is CODE-FIRST. The HTTP status is only ever a fallback for a
+ * response that carried no recognisable envelope at all.
+ *
+ * The invariant this function exists to hold:
+ * **only a positively identified content absence may become a 404.**
+ *
+ * That is why an uncoded 404 resolves to UPSTREAM_ERROR rather than NOT_FOUND.
+ * Every genuine absence from FeelStack carries CONTENT_NOT_FOUND, so a 404 with
+ * no code did not come from FeelStack's content layer — it came from a proxy, a
+ * gateway, a wrong base URL, or a rewritten route. Treating that as "the page
+ * does not exist" is precisely how an infrastructure fault becomes a sitewide
+ * de-indexing event. Failing closed costs an error page; failing open costs the
+ * whole site's search presence.
+ *
+ * An unrecognised code fails closed for the same reason: the backend's enum is
+ * append-only, so a code we do not know is a code newer than this build, and
+ * guessing "absent" about it is never safe.
+ */
 export function classifyHttpStatus(status: number, upstreamCode?: string): FeelStackErrorCode {
-  if (upstreamCode && UPSTREAM_CODE_MAP[upstreamCode]) return UPSTREAM_CODE_MAP[upstreamCode];
-  if (status === 404) return "NOT_FOUND";
+  if (upstreamCode) {
+    const mapped = UPSTREAM_CODE_MAP[upstreamCode];
+    if (mapped) return mapped;
+    return "UPSTREAM_ERROR";
+  }
   if (status === 400) return "INVALID_RESPONSE";
   if (status === 401 || status === 403) return "INVALID_SITE";
-  // 429 and every other non-2xx are treated as upstream trouble, never as a
+  // 404, 429 and every other uncoded non-2xx: upstream trouble, never a
   // confirmed absence — an outage must not be indexed as deleted content.
   return "UPSTREAM_ERROR";
 }

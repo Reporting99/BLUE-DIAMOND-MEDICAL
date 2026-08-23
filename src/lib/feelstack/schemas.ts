@@ -44,20 +44,57 @@ export const feelstackRoutesResponseSchema = z.object({
 export type FeelstackRoutesResponse = z.infer<typeof feelstackRoutesResponseSchema>;
 
 /**
- * Structured FeelStack API error envelope, when the API returns one
- * instead of a bare non-2xx status — brief §6 ("Use HTTP status and
- * structured error codes when supplied"). Optional/best-effort: this
- * shape has not been confirmed against a live FeelStack deployment, so
- * the adapter classifies purely on HTTP status when this doesn't parse
- * (see src/lib/feelstack/errors.ts `classifyHttpStatus`) rather than
- * depending on it.
+ * PRODUCTION shape, captured live from
+ * `GET https://feelstack.dfeelings.com/api/public/v1/sites/<key>/resolve`:
+ *
+ *   { "statusCode": 404, "message": "Site not found.",
+ *     "error": "Not Found", "code": "SITE_NOT_FOUND" }
+ *
+ * `code` is TOP-LEVEL and `error` is a STRING (Nest's status text). An earlier
+ * revision of this file assumed `{ error: { code } }` — a shape FeelStack has
+ * never emitted — so the envelope never parsed, no code was ever extracted,
+ * and an unknown siteKey fell through to the bare-404 path. See
+ * docs/FEELSTACK.md §1a.
  */
-export const feelstackApiErrorSchema = z.object({
+export const feelstackApiErrorFlatSchema = z.object({
+  code: z.string(),
+  statusCode: z.number().optional(),
+  message: z.string().optional(),
+});
+
+/**
+ * Legacy/nested shape. Retained only so a consumer or fixture written against
+ * the previously assumed contract still classifies correctly; FeelStack does
+ * not emit it. Never preferred over the flat shape.
+ */
+export const feelstackApiErrorNestedSchema = z.object({
   error: z.object({
     code: z.string().optional(),
     message: z.string().optional(),
   }),
 });
+
+export const feelstackApiErrorSchema = z.union([
+  feelstackApiErrorFlatSchema,
+  feelstackApiErrorNestedSchema,
+]);
+
+/**
+ * Pulls the machine-readable code out of either envelope, flat first.
+ *
+ * Mirrors the extractor in the deployed Dfeelings integration
+ * (`/home/dfeelings/apps/blue/current/.next` — flat `.code`, then
+ * `.error.code`), so the two frontends cannot drift apart in how they read
+ * the same backend. Returns undefined for anything unrecognisable; the caller
+ * must then fail closed rather than assume absence.
+ */
+export function extractFeelstackErrorCode(body: unknown): string | undefined {
+  const flat = feelstackApiErrorFlatSchema.safeParse(body);
+  if (flat.success) return flat.data.code;
+  const nested = feelstackApiErrorNestedSchema.safeParse(body);
+  if (nested.success) return nested.data.error.code;
+  return undefined;
+}
 
 /* ---------------------------------------------------------------------- *
  * Entity content schemas — brief §11. Mirrors the shape of Blue Diamond's

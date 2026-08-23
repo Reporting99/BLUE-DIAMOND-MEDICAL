@@ -24,12 +24,68 @@ Two, both public and unauthenticated:
 No authorization header is sent to either — they are intentionally public, so a
 header would leak a credential to no purpose.
 
-**Not verified against a live instance.** No live endpoint or admin API
-documentation has been available in any session so far. These shapes are
-carried forward from this repo's own adapter rather than guessed; the
-recovered Dfeelings source could not be used to confirm them, because it calls a
-different, older surface (`docs/ARCHITECTURE.md` §2, "How this differs from
-Dfeelings").
+**Verified against the live instance on 2026-08-23.** The endpoints above exist
+on `https://feelstack.dfeelings.com/api` and answer as documented. The live
+surface also carries `config`, `navigation/:slot` and `redirect`, which this
+adapter does not consume yet.
+
+## 1a. Error contract — the real, verified shape
+
+FeelStack's public errors are **flat**. Captured live from
+`GET /public/v1/sites/<unknown-key>/resolve`:
+
+```json
+{ "statusCode": 404, "message": "Site not found.",
+  "error": "Not Found", "code": "SITE_NOT_FOUND" }
+```
+
+`code` is **top-level**; `error` is Nest's status *string*, not an object. An
+earlier revision of this repo assumed `{ error: { code } }` — a shape FeelStack
+has never emitted. The envelope therefore never parsed, no code was ever
+extracted, and an unknown siteKey fell through to the bare-404 path and 404'd
+every page on the site. The legacy nested shape is still accepted so an old
+fixture keeps classifying, but flat is the proven contract and wins whenever
+both appear.
+
+The codes come from the backend's own append-only enum
+(`src/platform/contracts/public-api-errors.ts`, `PUBLIC_ERROR_CODES`):
+
+| FeelStack code | Our classification | Becomes a page 404? |
+|---|---|---|
+| `CONTENT_NOT_FOUND` | `NOT_FOUND` | **yes — the only one** |
+| `SITE_NOT_FOUND` | `INVALID_SITE` | no — loud failure |
+| `LOCALE_NOT_SUPPORTED` | `LOCALE_MISMATCH` | no — loud failure |
+| `RATE_LIMITED` | `UPSTREAM_ERROR` | no — retried, then loud |
+| `UPSTREAM_INTERNAL_ERROR` | `UPSTREAM_ERROR` | no |
+| `INVALID_REQUEST` | `INVALID_RESPONSE` | no |
+| *unrecognised code* | `UPSTREAM_ERROR` | no — fails closed |
+| *no code at all* | `UPSTREAM_ERROR` | no — fails closed |
+
+**Classification is code-first; the HTTP status is only a fallback for a
+response carrying no recognisable envelope.** An uncoded 404 is deliberately
+*not* an absence: every genuine absence carries `CONTENT_NOT_FOUND`, so a 404
+without a code came from a proxy, a gateway or a wrong base URL. The governing
+invariant is that **only a positively identified content absence may become a
+404** — failing closed costs an error page, failing open costs the whole site's
+search presence.
+
+Message prose is never parsed. `tests/contracts/failure-classification.spec.ts`
+holds the same code under six different messages and requires one verdict.
+
+### Contract version
+
+Every public response carries `X-FeelStack-Contract-Version` (currently **`1`**).
+The backend bumps it only on a *breaking* change; additive changes — a new error
+code, a new response field — do not bump it.
+
+This adapter **records the version but does not gate on it**, deliberately.
+Hard-failing on an unexpected value would let a routine backend release take the
+site down, which is a worse failure than the drift it would detect. Fail-closed
+classification already covers the case that matters: an unknown code becomes
+`UPSTREAM_ERROR` rather than a 404, whether or not the version moved.
+
+Verified production values, 2026-08-23: contract version `1`, flat envelope,
+six error codes as tabled above.
 
 ## 2. Content modes
 

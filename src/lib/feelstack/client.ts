@@ -14,7 +14,7 @@
 import { z } from "zod";
 import {
   feelstackRoutesResponseSchema,
-  feelstackApiErrorSchema,
+  extractFeelstackErrorCode,
   type FeelstackRoutesResponse,
 } from "./schemas";
 import { classifyHttpStatus, classifyThrown, logFeelstackEvent, FeelStackConfigurationError } from "./errors";
@@ -102,8 +102,7 @@ async function fetchOnce(url: string, revalidateSeconds: number, tags: readonly 
 async function readErrorCode(response: Response): Promise<string | undefined> {
   try {
     const body: unknown = await response.json();
-    const parsed = feelstackApiErrorSchema.safeParse(body);
-    return parsed.success ? parsed.data.error.code : undefined;
+    return extractFeelstackErrorCode(body);
   } catch {
     return undefined;
   }
@@ -224,4 +223,4 @@ export async function listRoutes(locale: "en" | "ar"): Promise<FeelstackRoutesRe
   return parsed.data.routes.filter((r) => r.status === "published");
 }
 
-export { feelstackApiErrorSchema };
+export { extractFeelstackErrorCode };
