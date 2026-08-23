@@ -1,0 +1,109 @@
+{
+  "type": "content_entry",
+  "route": {
+    "id": "1e02b6a0-a252-4371-abf3-ea7ed2e4ac7c",
+    "path": "/aesthetics/technologies/elite-iq",
+    "locale": "en",
+    "requestedLocale": "en",
+    "resolvedLocale": "en",
+    "usedFallback": false,
+    "alternates": [
+      {
+        "locale": "ar",
+        "path": "/aesthetics/technologies/elite-iq"
+      },
+      {
+        "locale": "en",
+        "path": "/aesthetics/technologies/elite-iq"
+      }
+    ],
+    "sectionId": null,
+    "updatedAt": "2026-08-23T12:02:19.085Z"
+  },
+  "data": {
+    "id": "0b101bea-6875-4510-be4d-69e00939734c",
+    "contentType": "technology",
+    "title": "Elite iQ™",
+    "fields": {
+      "summary": "Cynosure's Elite iQ™ device offers quick, personalized laser hair treatments using the Skintel™ device — the first Health Canada and FDA cleared melanin reader on the market — allowing safe treatment of all skin types and areas.",
+      "safety_note": "The melanin-reading step exists specifically to support safe treatment across a range of skin types; individual suitability is still assessed during a consultation.",
+      "how_it_works": "Before treatment, the Skintel™ device reads your skin's melanin level directly, rather than estimating it from a visual skin-type chart. The Elite iQ™ laser then uses that reading to calibrate its settings to your skin specifically.",
+      "manufacturer": "Cynosure",
+      "technology_id": "elite-iq",
+      "source_verified": true,
+      "what_it_addresses": "Unwanted hair, across a range of skin types and treatment areas, made possible by the melanin-reading calibration step.",
+      "related_doctor_ids": [
+        "mohamed-farhat"
+      ],
+      "appointment_involves": "A Skintel™ reading followed by laser passes over the treatment area. All Elite iQ™ treatments are performed at Citizen Studio, not the West Springs clinic — see the laser hair removal treatment page for the address.",
+      "related_treatment_ids": [
+        "laser-hair-removal"
+      ]
+    },
+    "translationGroupId": "a63c040b-cb50-48e8-b6a7-bc16a08ac2c8",
+    "publishedAt": "2026-08-23T12:02:19.085Z",
+    "updatedAt": "2026-08-23T12:02:19.085Z"
+  },
+  "seo": {
+    "title": "Elite iQ™",
+    "description": "Cynosure's Elite iQ™ device offers quick, personalized laser hair treatments using the Skintel™ device — the first Health Canada and FDA cleared melanin reader "
+  },
+  "relations": {
+    "items": [
+      {
+        "id": "36fe0007-aeb3-42f6-82b6-f4be165ae355",
+        "relationKey": "treatments",
+        "targetType": "content_entry",
+        "targetId": "d3aef8df-feb3-4965-97f9-28527e9e419c",
+        "sortOrder": 1,
+        "metadata": {
+          "treatmentId": "laser-hair-removal"
+        }
+      },
+      {
+        "id": "f0e49249-f9b4-4fda-bc44-101f3080d0e7",
+        "relationKey": "doctors",
+        "targetType": "person_profile",
+        "targetId": "aed7273b-16fe-47a8-8742-9bdfe3ed0489",
+        "sortOrder": 1,
+        "metadata": {
+          "doctorId": "mohamed-farhat"
+        }
+      }
+    ],
+    "faqs": [
+      {
+        "id": "502e9b65-6511-4105-abab-e09ef80a66f2",
+        "key": "te-elite-iq-faq-1",
+        "question": "What makes Elite iQ™ different from a standard laser hair removal device?",
+        "answer": "The Skintel™ melanin reader — it measures your skin's melanin directly rather than relying on a general skin-type estimate, which is what allows the laser settings to be calibrated to you specifically."
+      },
+      {
+        "id": "6a6896e9-f0a3-4ccb-bac0-3a1732b25548",
+        "key": "te-elite-iq-faq-2",
+        "question": "Where are Elite iQ™ treatments performed?",
+        "answer": "At Citizen Studio, a separate location from the West Springs clinic."
+      },
+      {
+        "id": "7102eff2-8866-4515-bfaa-e8ecd3dea5e1",
+        "key": "te-elite-iq-faq-3",
+        "question": "Is Elite iQ™ suitable for every skin type?",
+        "answer": "The Skintel™ calibration step is designed to support treatment across a range of skin types, but individual suitability is confirmed during a consultation."
+      },
+      {
+        "id": "d838e92e-46f5-4952-9619-75c205f646e2",
+        "key": "te-elite-iq-faq-4",
+        "question": "What's the manufacturer of the Elite iQ™ device?",
+        "answer": "Cynosure."
+      },
+      {
+        "id": "36feb78b-2994-4d7c-a380-4f4d9ed7e821",
+        "key": "te-elite-iq-faq-5",
+        "question": "How do I book a consultation for a treatment using this device?",
+        "answer": "Book a consultation through Jane App — see the laser hair removal treatment page for the direct link."
+      }
+    ],
+    "sections": [],
+    "taxonomies": []
+  }
+}

@@ -1,0 +1,109 @@
+{
+  "type": "content_entry",
+  "route": {
+    "id": "e153ecd5-896e-47ec-b689-3dc5bbcc826e",
+    "path": "/aesthetics/technologies/elite-iq",
+    "locale": "ar",
+    "requestedLocale": "ar",
+    "resolvedLocale": "ar",
+    "usedFallback": false,
+    "alternates": [
+      {
+        "locale": "ar",
+        "path": "/aesthetics/technologies/elite-iq"
+      },
+      {
+        "locale": "en",
+        "path": "/aesthetics/technologies/elite-iq"
+      }
+    ],
+    "sectionId": null,
+    "updatedAt": "2026-08-23T12:02:19.155Z"
+  },
+  "data": {
+    "id": "45e55739-b58e-4faa-bf04-e91d3a62cdb5",
+    "contentType": "technology",
+    "title": "إيليت آي كيو™",
+    "fields": {
+      "summary": "يوفر جهاز Elite iQ™ من Cynosure علاجات ليزر مخصصة وسريعة لإزالة الشعر باستخدام جهاز Skintel™ — أول قارئ ميلانين معتمد من هيئة الصحة الكندية وإدارة الغذاء والدواء الأمريكية — مما يتيح علاجًا آمنًا لجميع أنواع البشرة والمناطق.",
+      "safety_note": "توجد خطوة قراءة الميلانين خصيصًا لدعم العلاج الآمن عبر مجموعة من أنواع البشرة؛ ويُقيَّم مدى الملاءمة الفردية دائمًا خلال الاستشارة.",
+      "how_it_works": "قبل العلاج، يقرأ جهاز Skintel™ مستوى الميلانين في بشرتكم مباشرة، بدلًا من تقديره اعتمادًا على مخطط بصري لنوع البشرة. بعد ذلك، يستخدم ليزر Elite iQ™ تلك القراءة لضبط إعداداته خصيصًا لبشرتكم.",
+      "manufacturer": "Cynosure",
+      "technology_id": "elite-iq",
+      "source_verified": true,
+      "what_it_addresses": "الشعر غير المرغوب فيه، عبر مجموعة من أنواع البشرة ومناطق العلاج، بفضل خطوة المعايرة بقراءة الميلانين.",
+      "related_doctor_ids": [
+        "mohamed-farhat"
+      ],
+      "appointment_involves": "قراءة بجهاز Skintel™ تليها جلسات ليزر على منطقة العلاج. تُجرى جميع علاجات Elite iQ™ في Citizen Studio، وليس في عيادة ويست سبرينغز — راجعوا صفحة علاج إزالة الشعر بالليزر للعنوان.",
+      "related_treatment_ids": [
+        "laser-hair-removal"
+      ]
+    },
+    "translationGroupId": "a63c040b-cb50-48e8-b6a7-bc16a08ac2c8",
+    "publishedAt": "2026-08-23T12:02:19.156Z",
+    "updatedAt": "2026-08-23T12:02:19.155Z"
+  },
+  "seo": {
+    "title": "إيليت آي كيو™",
+    "description": "يوفر جهاز Elite iQ™ من Cynosure علاجات ليزر مخصصة وسريعة لإزالة الشعر باستخدام جهاز Skintel™ — أول قارئ ميلانين معتمد من هيئة الصحة الكندية وإدارة الغذاء والدوا"
+  },
+  "relations": {
+    "items": [
+      {
+        "id": "bc1cbe72-8f63-4637-9197-c3f05806abe2",
+        "relationKey": "treatments",
+        "targetType": "content_entry",
+        "targetId": "255d0ce5-da63-4dbe-a99c-d4b29a5729dc",
+        "sortOrder": 1,
+        "metadata": {
+          "treatmentId": "laser-hair-removal"
+        }
+      },
+      {
+        "id": "e0f0cb01-3e75-4501-9da8-756939a33bf0",
+        "relationKey": "doctors",
+        "targetType": "person_profile",
+        "targetId": "1daa9dba-024b-493b-88ec-0c519b2edbbf",
+        "sortOrder": 1,
+        "metadata": {
+          "doctorId": "mohamed-farhat"
+        }
+      }
+    ],
+    "faqs": [
+      {
+        "id": "162375b2-8e6e-49cd-87fd-684cb26b4e5b",
+        "key": "te-elite-iq-faq-1",
+        "question": "ما الذي يميز Elite iQ™ عن جهاز ليزر عادي لإزالة الشعر؟",
+        "answer": "قارئ الميلانين Skintel™ — إذ يقيس ميلانين بشرتكم مباشرة بدلًا من الاعتماد على تقدير عام لنوع البشرة، وهو ما يتيح ضبط إعدادات الليزر خصيصًا لكم."
+      },
+      {
+        "id": "f967d8f4-e2d8-43af-b494-308bec72780e",
+        "key": "te-elite-iq-faq-2",
+        "question": "أين تُجرى علاجات Elite iQ™؟",
+        "answer": "في Citizen Studio، وهو موقع منفصل عن عيادة ويست سبرينغز."
+      },
+      {
+        "id": "c5cf196d-be49-42b2-944d-c9194148ee13",
+        "key": "te-elite-iq-faq-3",
+        "question": "هل Elite iQ™ مناسب لجميع أنواع البشرة؟",
+        "answer": "صُممت خطوة المعايرة بجهاز Skintel™ لدعم العلاج عبر مجموعة من أنواع البشرة، إلا أن الملاءمة الفردية تُؤكَّد خلال الاستشارة."
+      },
+      {
+        "id": "7f7c576a-076a-417b-977b-5b3ddcacd23d",
+        "key": "te-elite-iq-faq-4",
+        "question": "من الشركة المصنّعة لجهاز Elite iQ™؟",
+        "answer": "Cynosure."
+      },
+      {
+        "id": "63ccfcf7-2eaa-48d7-a77f-b7bc461007b6",
+        "key": "te-elite-iq-faq-5",
+        "question": "كيف أحجز استشارة لعلاج يستخدم هذا الجهاز؟",
+        "answer": "احجزوا استشارة عبر تطبيق Jane — راجعوا صفحة علاج إزالة الشعر بالليزر للرابط المباشر."
+      }
+    ],
+    "sections": [],
+    "taxonomies": []
+  }
+}
