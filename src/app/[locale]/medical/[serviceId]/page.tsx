@@ -4,7 +4,8 @@ import { isLocale, locales, type Locale } from "@/i18n/config";
 import { medicalServices, getMedicalService } from "@/features/medical-services";
 import { MedicalServiceTemplate } from "@/features/medical-services";
 import { getRouteMetadata } from "@/lib/seo/metadata";
-import { resolvePageContent } from "@/lib/feelstack/page-resolver";
+import { resolvePageContent, entityCacheTags } from "@/lib/feelstack/page-resolver";
+import { cacheTags } from "@/lib/feelstack/cache-tags";
 import { cmsMedicalServiceSchema } from "@/lib/feelstack/schemas";
 
 export function generateStaticParams() {
@@ -21,11 +22,19 @@ export function generateStaticParams() {
  * this pass.
  */
 async function loadMedicalService(serviceId: string, locale: Locale) {
+  const cmsPath = `/medical/${serviceId}`;
   const resolution = await resolvePageContent({
-    path: `/medical/${serviceId}`,
+    path: cmsPath,
     locale,
     schema: cmsMedicalServiceSchema,
     staticFallback: () => getMedicalService(serviceId),
+    tags: entityCacheTags({
+      detail: cacheTags.medicalService,
+      index: cacheTags.medicalServicesIndex,
+      locale,
+      id: serviceId,
+      path: cmsPath,
+    }),
   });
   return resolution.source === "not-found" ? undefined : resolution.data;
 }

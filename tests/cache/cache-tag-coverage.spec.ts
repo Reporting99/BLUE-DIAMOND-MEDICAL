@@ -1,4 +1,6 @@
 import { test, expect } from "@playwright/test";
+import { readdirSync, readFileSync, statSync } from "node:fs";
+import path from "node:path";
 import { cacheTags, type CacheTagKey } from "../../src/lib/feelstack/cache-tags";
 import { invalidationCoverage, tagsForEvent } from "../../src/lib/feelstack/revalidation";
 
@@ -74,5 +76,40 @@ test.describe("Invalidation matrix — brief §8 specific rules", () => {
     const tags = tagsForEvent("footer.updated", { siteKey: "blue-diamond-medical", locale: "en" });
     expect(tags).not.toContain(cacheTags.sitemap("blue-diamond-medical"));
     expect(tags).not.toContain(cacheTags.routes("blue-diamond-medical"));
+  });
+});
+
+/**
+ * Producer coverage. The rest of this file proves every tag has an
+ * INVALIDATOR; this proves every entity route is a PRODUCER.
+ *
+ * That gap is not theoretical. medical/[serviceId] — the original reference
+ * implementation — called resolvePageContent without `tags` for a long time,
+ * so `medicalService` and `medicalServicesIndex` had a complete invalidation
+ * matrix, a webhook that referenced them, and a passing coverage test, while
+ * no cache entry ever carried them. A publish would have silently no-opped.
+ * Consumer-side coverage alone cannot see this.
+ */
+test.describe("cache tag producers", () => {
+  test("every route that resolves CMS content also attaches cache tags", () => {
+    const appDir = path.join(process.cwd(), "src", "app");
+    const offenders: string[] = [];
+
+    const walk = (dir: string) => {
+      for (const entry of readdirSync(dir)) {
+        const full = path.join(dir, entry);
+        if (statSync(full).isDirectory()) {
+          walk(full);
+        } else if (entry === "page.tsx") {
+          const source = readFileSync(full, "utf8");
+          if (source.includes("resolvePageContent") && !source.includes("entityCacheTags")) {
+            offenders.push(path.relative(appDir, full));
+          }
+        }
+      }
+    };
+    walk(appDir);
+
+    expect(offenders, `these routes resolve CMS content but attach no cache tags: ${offenders.join(", ")}`).toEqual([]);
   });
 });

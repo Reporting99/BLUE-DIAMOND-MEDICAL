@@ -152,6 +152,33 @@ article changes invalidate detail + Health Hub index + sitemap; route changes
 invalidate routes + sitemap + navigation + the affected page; locale-scoped
 events invalidate only that locale; unrelated events cause no global purge.
 
+### Backend event gaps
+
+Two invalidations cannot be performed correctly today, and the cause is on the
+FeelStack side. Recording them rather than faking a frontend workaround, because
+a workaround here would hide a missing backend capability behind code that only
+looks like it works.
+
+**BACKEND_EVENT_GAP — route rename cannot invalidate the OLD path.**
+`route.changed` carries the affected path, so a rename from `/a` to `/b`
+invalidates the page tag for `/b`. Nothing invalidates `/a`, which keeps serving
+from cache until its time-based window expires. Fixing this needs the event to
+carry the previous path (e.g. `previousPath`); `tagsForEvent()` would then
+invalidate both. It cannot be solved frontend-side, because the frontend has no
+way to learn what a path used to be.
+
+**BACKEND_EVENT_GAP — entity deletion has no event.**
+The enum has `page.unpublished`, but no `doctor.deleted`, `product.deleted`,
+`medical-service.deleted`, `concern.deleted`, `technology.deleted`,
+`aesthetic-treatment.deleted` or `legal-page.deleted`. A deleted entity is only
+evicted if the CMS also emits the corresponding `.updated`, which is not a
+contract either side has agreed. Until deletion events exist, a deleted entity
+can survive in cache until its revalidate window expires.
+
+Neither gap risks serving *wrong* content indefinitely — both are bounded by the
+45-second fetch revalidate window — but both mean "publish is instant" is not
+true for those two operations, and the integration should not claim otherwise.
+
 ## 6. Webhook
 
 `POST /api/feelstack/revalidate` — HTTP adapter in
