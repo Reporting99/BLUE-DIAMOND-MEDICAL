@@ -11,7 +11,6 @@
 // (FEELSTACK_REVALIDATE_SECRET) never flows through this file — it's
 // read only in the webhook Route Handler, which Next.js never bundles
 // for the client regardless of this guard.
-import { z } from "zod";
 import {
   feelstackRoutesResponseSchema,
   extractFeelstackErrorCode,
@@ -21,6 +20,7 @@ import { classifyHttpStatus, classifyThrown, logFeelstackEvent, FeelStackConfigu
 import { feelstackErr, feelstackOk, RETRYABLE_ERROR_CODES, type FeelStackResult } from "./contracts";
 import { getFeelstackApiUrl, getFeelstackSiteKey, isFeelstackConfigured } from "./content-mode";
 import { cacheTags } from "./cache-tags";
+import { feelstackResolveEnvelopeSchema, type FeelstackResolveEnvelope } from "./transport";
 
 /**
  * Server-only typed adapter around the FeelStack CMS — brief §4/§7. Every
@@ -172,16 +172,25 @@ async function fetchWithPolicy(
  * unreachable or broken", which callers must NOT treat as NOT_FOUND
  * (brief §5).
  */
-export async function resolveEntity<T>(
+/**
+ * Fetches and validates ONE localized entity, returning the raw transport
+ * envelope. Deliberately stops at the transport boundary: mapping into a domain
+ * model is `./adapters`' job, and locale integrity is `./locale-integrity`'s.
+ *
+ * Splitting those three concerns is the point. The previous revision validated
+ * the response directly with the caller's DOMAIN schema, which is why a shape
+ * mismatch surfaced as "content invalid" instead of "we are parsing the wrong
+ * contract".
+ */
+export async function resolveEnvelope(
   path: string,
   locale: "en" | "ar",
-  schema: z.ZodType<T>,
   /** Cache tags this response should be filed under, from cache-tags.ts. */
   tags: readonly string[] = [],
-): Promise<FeelStackResult<T>> {
+): Promise<FeelStackResult<FeelstackResolveEnvelope>> {
   if (!isConfigured()) {
     throw new FeelStackConfigurationError(
-      "resolveEntity() called without FEELSTACK_API_URL/FEELSTACK_SITE_KEY configured.",
+      "resolveEnvelope() called without FEELSTACK_API_URL/FEELSTACK_SITE_KEY configured.",
     );
   }
 
@@ -190,18 +199,21 @@ export async function resolveEntity<T>(
   const url = `${apiUrl}/public/v1/sites/${siteKey}/resolve?path=${encodeURIComponent(path)}&locale=${locale}`;
 
   const result = await fetchWithPolicy(url, 45, tags);
-  if (!result.ok) return result as FeelStackResult<T>;
+  if (!result.ok) return result as FeelStackResult<FeelstackResolveEnvelope>;
 
-  const parsed = schema.safeParse(result.data);
+  const parsed = feelstackResolveEnvelopeSchema.safeParse(result.data);
   if (!parsed.success) {
     logFeelstackEvent({
       category: "INVALID_RESPONSE",
       locale,
       path,
       requestId: result.requestId,
-      upstreamContext: "Zod validation failed",
+      upstreamContext: "envelope failed schema validation",
     });
-    return feelstackErr("INVALID_RESPONSE", { requestId: result.requestId, message: "Response failed schema validation" });
+    return feelstackErr("INVALID_RESPONSE", {
+      requestId: result.requestId,
+      message: "Resolve envelope failed schema validation",
+    });
   }
 
   return feelstackOk(parsed.data, result.requestId);

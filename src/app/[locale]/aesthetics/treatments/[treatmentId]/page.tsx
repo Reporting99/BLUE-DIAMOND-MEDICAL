@@ -7,7 +7,6 @@ import { getRouteMetadata } from "@/lib/seo/metadata";
 import { features, type FeatureFlags } from "@/config/features";
 import { resolvePageContent, entityCacheTags } from "@/lib/feelstack/page-resolver";
 import { cacheTags } from "@/lib/feelstack/cache-tags";
-import { cmsAestheticTreatmentSchema } from "@/lib/feelstack/schemas";
 
 // Only published treatments are statically pre-rendered. Gated treatments
 // (see src/features/aesthetics/data/treatments.ts) are intentionally excluded here — if
@@ -33,7 +32,6 @@ async function loadTreatment(id: string, locale: Locale) {
   const resolution = await resolvePageContent({
     path: cmsPath,
     locale,
-    schema: cmsAestheticTreatmentSchema,
     staticFallback: () => getTreatment(id),
     tags: entityCacheTags({
       detail: cacheTags.aestheticTreatment,

@@ -7,7 +7,6 @@ import { LegalPageTemplate } from "@/features/legal";
 import { getRouteMetadata } from "@/lib/seo/metadata";
 import { resolvePageContent, entityCacheTags } from "@/lib/feelstack/page-resolver";
 import { cacheTags } from "@/lib/feelstack/cache-tags";
-import { cmsLegalPageSchema } from "@/lib/feelstack/schemas";
 
 /**
  * Feature-flagged off (`legalPagesEnabled`) — see src/features/legal/data.ts.
@@ -40,7 +39,6 @@ async function loadLegalPage(id: string, locale: Locale) {
   const resolution = await resolvePageContent({
     path: cmsPath,
     locale,
-    schema: cmsLegalPageSchema,
     staticFallback: () => getLegalPage(id),
     tags: entityCacheTags({
       detail: cacheTags.legalPage,
