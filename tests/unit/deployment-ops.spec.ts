@@ -166,3 +166,46 @@ test.describe("deploy workflow", () => {
     expect(workflow).not.toContain("pm2 ");
   });
 });
+
+/**
+ * Launch runbook.
+ *
+ * docs/DEPLOYMENT.md previously stated that SITE_LAUNCHED is "read at request
+ * time, not build time, so a release artifact carries no indexability of its
+ * own". That is false for the `<meta robots>` layer, which is baked during
+ * static generation — and believing it means shipping a launch that quietly
+ * does not launch. These assertions keep the corrected runbook in place.
+ */
+test.describe("launch runbook", () => {
+  const deploymentDoc = () => read(path.join(repoRoot, "docs", "DEPLOYMENT.md"));
+
+  test("does not claim the gate is request-time for every layer", () => {
+    expect(deploymentDoc()).not.toContain("a release artifact carries no indexability of its own");
+  });
+
+  test("states that meta robots is build time", () => {
+    const doc = deploymentDoc();
+    expect(doc).toContain("BUILD TIME");
+    expect(doc).toContain("src/lib/seo/metadata.ts");
+  });
+
+  test("requires setting the flag in the build environment and rebuilding", () => {
+    const doc = deploymentDoc();
+    expect(doc).toContain("SITE_LAUNCHED=true` in the build/deploy environment");
+    expect(doc).toContain("Rebuild the application");
+    expect(doc).toMatch(/A runtime-only change is not a launch/);
+  });
+
+  test("lists the post-launch verifications an operator must actually observe", () => {
+    const doc = deploymentDoc();
+    for (const check of ["robots.txt", "sitemap.xml", "X-Robots-Tag", "hreflang"]) {
+      expect(doc, `launch procedure does not mention ${check}`).toContain(check);
+    }
+  });
+
+  test("requires the pre-launch noindex build to stay available for rollback", () => {
+    const doc = deploymentDoc();
+    expect(doc).toContain("### Rollback");
+    expect(doc).toMatch(/pre-launch \(`noindex`\) release must remain deployable/);
+  });
+});

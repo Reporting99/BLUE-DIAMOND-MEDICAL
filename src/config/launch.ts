@@ -21,13 +21,17 @@
  *   - server-only (no NEXT_PUBLIC_ prefix). It gates crawler-facing output,
  *     which is decided server-side; exposing it to the browser would add a
  *     public signal with no purpose.
- *   - read at REQUEST time by robots.txt, sitemap.xml and the proxy, so
- *     launching is a config change plus a restart rather than a rebuild —
- *     and, more importantly, so a build artifact can never carry
- *     indexability baked into it and be promoted to a slot that was not
- *     meant to be public.
+ *   - read at REQUEST time by robots.txt, sitemap.xml and the proxy, so a
+ *     running server always reflects its current configuration and a build
+ *     cannot be promoted into a slot and quietly start advertising itself.
  *
- * See docs/DEPLOYMENT.md for the launch procedure.
+ * It is NOT request-time everywhere. Page `<meta robots>` comes from
+ * src/lib/seo/metadata.ts, which runs during static generation, so that tag is
+ * fixed in the build artifact. Launching therefore requires setting the flag
+ * in the BUILD environment and rebuilding — a config change plus a restart
+ * flips robots.txt, the sitemap and the header, but leaves every page still
+ * carrying `noindex` in its HTML. See docs/DEPLOYMENT.md §3 for the layer
+ * table and the launch procedure.
  */
 
 /**

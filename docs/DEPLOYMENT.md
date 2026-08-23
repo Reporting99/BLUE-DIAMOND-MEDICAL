@@ -121,21 +121,72 @@ is the point: the failure mode is silent, and by the time it is visible a
 crawler has already acted.
 
 Deliberately **not** `NEXT_PUBLIC_` — Next inlines those into the client
-bundle, and a crawler-facing gate belongs on the server. Read at **request
-time**, not build time, so a release artifact carries no indexability of its
-own and no build can be promoted into a slot and quietly become public.
+bundle, and a crawler-facing gate belongs on the server.
 
-| Layer | File | Stops |
-|---|---|---|
-| `robots.txt` | `src/app/robots.ts` | crawling |
-| `X-Robots-Tag` header | `src/proxy.ts` | indexing of anything already fetched |
-| page `<meta robots>` | `src/lib/seo/metadata.ts` | indexing of a rendered page |
+### When each layer is evaluated
+
+Three of the four layers are request-time. **The `<meta robots>` tag is not.**
+Pages are statically generated, so their metadata — including `robots` — is
+rendered into HTML during `npm run build` and is fixed in the artifact from
+that point on. Changing `SITE_LAUNCHED` on a running server cannot alter it.
+
+| Layer | File | Evaluated | Stops |
+|---|---|---|---|
+| `robots.txt` | `src/app/robots.ts` | **request time** | crawling |
+| `sitemap.xml` | `src/app/sitemap.ts` | **request time** | URL discovery |
+| `X-Robots-Tag` header | `src/proxy.ts` | **request time** | indexing of anything already fetched |
+| page `<meta robots>` | `src/lib/seo/metadata.ts` | **BUILD TIME** | indexing of a rendered page |
 
 While unlaunched the sitemap also publishes no URL inventory at all.
+
+This split is safe in both directions, because where two directives disagree
+the more restrictive one applies:
+
+- **Unlaunched build, launched runtime** — `robots.txt` and the sitemap open
+  up, the header stops stamping `noindex`, but every page still carries
+  `<meta name="robots" content="noindex, nofollow">` from the build. The site
+  does **not** become indexable. This is the failure mode that makes a
+  runtime-only flag flip look like a successful launch when it is not.
+- **Launched build, unlaunched runtime** — pages carry `index, follow` in
+  their HTML permanently, and only the `X-Robots-Tag` header holds them back.
+  Nothing in nginx or any fronting proxy may ever strip that header.
+
+Verified by building both ways and serving each artifact under both runtime
+values; do not assume either direction, re-measure if this code changes.
 
 "No DNS exists yet" is not a control: DNS can be pointed in a minute, a server
 can be reached by IP or through a shared host's default vhost, and one inbound
 link is enough for a crawler to try.
+
+### Launching (the only supported procedure)
+
+`SITE_LAUNCHED` must be set in the **build** environment and the application
+rebuilt. A runtime-only change is not a launch.
+
+| # | Step |
+|---|---|
+| A | Set `SITE_LAUNCHED=true` in the build/deploy environment (CI variable — it is read during `npm run build`, alongside `NEXT_PUBLIC_SITE_URL`, which is likewise inlined at build time) |
+| B | Rebuild the application |
+| C | Deploy the new release through the Blue/Green orchestrator |
+| D | Verify `<meta name="robots">` is `index, follow` on a real page |
+| E | Verify `robots.txt` allows crawling and advertises the sitemap |
+| F | Verify `sitemap.xml` contains the full URL inventory |
+| G | Verify `X-Robots-Tag` no longer sends `noindex` |
+| H | Verify canonical and hreflang point at `https://bluediamondmedical.ca` |
+
+D through H are all externally observable — check them against the deployed
+slot, not against a local build.
+
+### Rollback
+
+**The previous pre-launch (`noindex`) release must remain deployable while
+launch verification is in progress.** If any of D-H fails, roll back to it
+rather than attempting a fix forward on a live, indexable site: an artifact
+built with `SITE_LAUNCHED=true` cannot be made non-indexable by changing the
+environment, so the only way back to a `noindex` page is to serve a different
+build. `ops/deploy/deploy-blue-diamond` retains previous releases precisely so
+that artifact is still there (see the release-safety tests in
+`tests/unit/deployment-ops.spec.ts`).
 
 ## 4. Before any real deployment
 
