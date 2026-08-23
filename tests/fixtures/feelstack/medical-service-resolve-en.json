@@ -1,0 +1,112 @@
+{
+  "type": "content_entry",
+  "route": {
+    "id": "a4cdb4c3-c4ab-46d8-8ec1-a02f4804574c",
+    "path": "/medical/after-hours-care",
+    "locale": "en",
+    "requestedLocale": "en",
+    "resolvedLocale": "en",
+    "usedFallback": false,
+    "alternates": [
+      {
+        "locale": "ar",
+        "path": "/medical/after-hours-care"
+      },
+      {
+        "locale": "en",
+        "path": "/medical/after-hours-care"
+      }
+    ],
+    "sectionId": null,
+    "updatedAt": "2026-08-23T10:37:59.532Z"
+  },
+  "data": {
+    "id": "28158c82-399b-458b-9e6d-0699d3fc9172",
+    "contentType": "medical-service",
+    "title": "After-Hours Care",
+    "fields": {
+      "summary": "When the clinic is closed, our patients are referred to a partner Primary Care Network for urgent, non-emergency needs — not left without a path to care.",
+      "service_id": "after-hours-care",
+      "booking_channel": "family-doctor",
+      "source_verified": true,
+      "urgent_care_note": "This referral pathway is for urgent, non-emergency needs only — it is not a substitute for calling 911 in a true emergency.",
+      "external_partners": [
+        {
+          "url": "https://mosaicpcn.ca",
+          "name": "Mosaic Primary Care Network",
+          "note": "For Dr. Hamdi's patients."
+        },
+        {
+          "url": "https://cwcpcn.com",
+          "name": "Calgary West Central Primary Care Network",
+          "note": "For Dr. Farhat's patients."
+        }
+      ],
+      "related_doctor_ids": [
+        "reem-hamdi",
+        "mohamed-farhat"
+      ]
+    },
+    "translationGroupId": "8a5a02ef-5fa9-407b-9aff-d23f08765cbc",
+    "publishedAt": "2026-08-23T10:37:59.532Z",
+    "updatedAt": "2026-08-23T10:39:42.991Z"
+  },
+  "seo": {
+    "title": "After-Hours Care",
+    "description": "When the clinic is closed, our patients are referred to a partner Primary Care Network for urgent, non-emergency needs — not left without a path to care."
+  },
+  "relations": {
+    "items": [
+      {
+        "id": "c78e0c50-16bc-4685-adcf-8516e6f2ed35",
+        "relationKey": "doctors",
+        "targetType": "person_profile",
+        "targetId": "ee9fb76a-2468-478f-b0d5-fd95a33c7b48",
+        "sortOrder": 1,
+        "metadata": {}
+      },
+      {
+        "id": "3695851d-ea99-4525-9724-3726b5cd6624",
+        "relationKey": "doctors",
+        "targetType": "person_profile",
+        "targetId": "aed7273b-16fe-47a8-8742-9bdfe3ed0489",
+        "sortOrder": 2,
+        "metadata": {}
+      }
+    ],
+    "faqs": [
+      {
+        "id": "bff4dbe8-cf39-4e00-97e5-88c2f0071507",
+        "key": "after-hours-care-faq-1",
+        "question": "What counts as an urgent, non-emergency need?",
+        "answer": "Concerns that need attention before your next scheduled appointment but aren't life-threatening — for example a worsening infection or a medication question. A true medical emergency always means 911 or the nearest emergency department, not this pathway."
+      },
+      {
+        "id": "482e5391-9348-4e99-87ca-4c3f15f1dcf6",
+        "key": "after-hours-care-faq-2",
+        "question": "Which Primary Care Network do I contact?",
+        "answer": "It depends on your family doctor: Dr. Hamdi's patients are referred to Mosaic Primary Care Network, and Dr. Farhat's patients to Calgary West Central Primary Care Network."
+      },
+      {
+        "id": "da22ae62-f1b3-4b83-98c8-f63240e2c306",
+        "key": "after-hours-care-faq-3",
+        "question": "Does this apply to every patient at the clinic?",
+        "answer": "The after-hours pathway described here is documented for patients of Dr. Hamdi and Dr. Farhat specifically. If your family doctor is someone else, ask at your next visit which after-hours option applies to you."
+      },
+      {
+        "id": "55dadb74-cca4-4c3e-88c4-ed45c999f2e1",
+        "key": "after-hours-care-faq-4",
+        "question": "Is there a cost for after-hours PCN care?",
+        "answer": "Contact the relevant Primary Care Network directly for their current fee and coverage information — this isn't something our clinic bills for, since the care is delivered by the PCN partner."
+      },
+      {
+        "id": "87438342-1a4c-4174-9527-2cd8dddf175c",
+        "key": "after-hours-care-faq-5",
+        "question": "What if I'm not sure whether it's an emergency?",
+        "answer": "When in doubt, treat it as an emergency and call 911 or go to the nearest emergency department. It's always safer to be assessed by emergency services than to wait."
+      }
+    ],
+    "sections": [],
+    "taxonomies": []
+  }
+}
