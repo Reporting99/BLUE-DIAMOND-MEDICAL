@@ -10,6 +10,11 @@ import sitemap from "../../src/app/sitemap";
  * Runs `run` with SITE_LAUNCHED forced to a given state and always restores
  * the previous value, so one test can never leak its environment into
  * another running in the same worker.
+ *
+ * Passing `undefined` DELETES the variable rather than setting it to the
+ * string "undefined" — that distinction is what makes an "absent variable"
+ * assertion mean anything. Restoration happens in a `finally`, so a failing
+ * expectation inside `run` still leaves the environment as it was found.
  */
 function withLaunchFlag<T>(value: string | undefined, run: () => T): T {
   const previous = process.env.SITE_LAUNCHED;
@@ -38,9 +43,19 @@ function withLaunchFlag<T>(value: string | undefined, run: () => T): T {
  * silent and only visible once a crawler has already acted on it.
  */
 test.describe("SITE_LAUNCHED gate", () => {
+  /**
+   * Every assertion here runs inside `withLaunchFlag`, never against whatever
+   * SITE_LAUNCHED the runner happens to carry. `isSiteLaunched` has a DEFAULT
+   * PARAMETER (`value = process.env.SITE_LAUNCHED`), so any call that does not
+   * pin the environment is really testing the shell the suite was invoked
+   * from, and would flip with it.
+   */
   test("fails closed for every non-exact value", () => {
-    const notLaunched: Array<string | undefined> = [
-      undefined,
+    // Deliberately NOT including `undefined`: passing it explicitly resolves
+    // the default parameter and reads the environment instead of the argument,
+    // which is the opposite of what this test is for. The absent-variable case
+    // has its own test below.
+    const notLaunched = [
       "",
       " ",
       "false",
@@ -54,16 +69,68 @@ test.describe("SITE_LAUNCHED gate", () => {
       "launched",
     ];
 
-    for (const value of notLaunched) {
+    // Pinned to the LAUNCHED value on purpose. If any assertion below ever
+    // stopped reading its argument and fell through to the environment, it
+    // would see "true" and fail loudly — rather than passing for the wrong
+    // reason, which is exactly how this test used to be able to mislead.
+    withLaunchFlag("true", () => {
+      for (const value of notLaunched) {
+        expect(
+          isSiteLaunched(value),
+          `expected NOT launched for ${JSON.stringify(value)}`,
+        ).toBe(false);
+      }
+    });
+  });
+
+  test("fails closed when SITE_LAUNCHED is absent from the environment", () => {
+    // No argument: this is how production calls it (robots.ts, sitemap.ts,
+    // proxy.ts), so the default parameter is the code path under test.
+    withLaunchFlag(undefined, () => {
+      expect(isSiteLaunched()).toBe(false);
+    });
+  });
+
+  test("an ambient SITE_LAUNCHED cannot make the absent-variable case pass falsely", () => {
+    // Regression guard for a real failure mode: the absent-variable assertion
+    // above is only meaningful if it actively neutralises a value that is
+    // present. Run it against a deliberately polluted environment and prove
+    // both halves — that the assertion still fails closed, AND that the
+    // pollution was genuinely there to be neutralised. Without the second
+    // half, the first could pass simply because nothing was ever set.
+    const previous = process.env.SITE_LAUNCHED;
+    process.env.SITE_LAUNCHED = "true";
+    try {
+      withLaunchFlag(undefined, () => {
+        expect(isSiteLaunched()).toBe(false);
+      });
       expect(
-        isSiteLaunched(value),
-        `expected NOT launched for ${JSON.stringify(value)}`,
-      ).toBe(false);
+        isSiteLaunched(),
+        "ambient SITE_LAUNCHED=true was not actually in effect, so the assertion above proved nothing",
+      ).toBe(true);
+    } finally {
+      if (previous === undefined) delete process.env.SITE_LAUNCHED;
+      else process.env.SITE_LAUNCHED = previous;
     }
   });
 
+  test("explicitly passing undefined reads the environment, not the argument", () => {
+    // Encodes the trap so nobody puts `undefined` back into the value list:
+    // under the default parameter, `isSiteLaunched(undefined)` is identical to
+    // `isSiteLaunched()` and therefore tracks the environment.
+    withLaunchFlag("true", () => {
+      expect(isSiteLaunched(undefined)).toBe(true);
+    });
+    withLaunchFlag(undefined, () => {
+      expect(isSiteLaunched(undefined)).toBe(false);
+    });
+  });
+
   test("opens only for the exact string \"true\"", () => {
-    expect(isSiteLaunched("true")).toBe(true);
+    // Pinned unset, so the launched result can only come from the argument.
+    withLaunchFlag(undefined, () => {
+      expect(isSiteLaunched("true")).toBe(true);
+    });
   });
 
   test("is not a NEXT_PUBLIC_ variable, so it never reaches the browser bundle", () => {
