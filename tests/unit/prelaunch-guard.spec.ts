@@ -5,6 +5,7 @@ import { isSiteLaunched, PRE_LAUNCH_ROBOTS_HEADER } from "../../src/config/launc
 // dynamic import() is not transpiled by the Playwright runner.)
 import robots from "../../src/app/robots";
 import sitemap from "../../src/app/sitemap";
+import { getRouteMetadata } from "../../src/lib/seo/metadata";
 
 /**
  * Runs `run` with SITE_LAUNCHED forced to a given state and always restores
@@ -149,6 +150,48 @@ test.describe("SITE_LAUNCHED gate", () => {
     ]) {
       expect(PRE_LAUNCH_ROBOTS_HEADER).toContain(directive);
     }
+  });
+});
+
+/**
+ * The gate is NOT request-time everywhere, and the difference is what makes a
+ * launch silently fail.
+ *
+ * `robots.txt`, `sitemap.xml` and the `X-Robots-Tag` header are evaluated per
+ * request, so flipping SITE_LAUNCHED on a running server changes them
+ * immediately. Page `<meta robots>` is not: it comes from `getRouteMetadata`,
+ * which runs during static generation, so the value is fixed in the build
+ * artifact. An operator who sets SITE_LAUNCHED=true at runtime alone gets an
+ * open robots.txt, a populated sitemap and no noindex header — and every page
+ * still carrying `noindex, nofollow` in its HTML.
+ *
+ * See docs/DEPLOYMENT.md §3 for the layer table and the launch procedure.
+ */
+test.describe("meta robots is decided at generation time, not per request", () => {
+  const overrides = { description: { en: "test", ar: "test" } };
+
+  test("tracks the flag as it stood when the metadata was generated", () => {
+    const generatedUnlaunched = withLaunchFlag(undefined, () =>
+      getRouteMetadata("home", "en", overrides),
+    );
+    const generatedLaunched = withLaunchFlag("true", () =>
+      getRouteMetadata("home", "en", overrides),
+    );
+
+    expect(generatedUnlaunched.robots).toEqual({ index: false, follow: false });
+    expect(generatedLaunched.robots).toEqual({ index: true, follow: true });
+  });
+
+  test("a later flag change cannot alter metadata that was already generated", () => {
+    // This is the whole point: for a statically generated page this object is
+    // rendered into HTML during `npm run build`. Launching therefore requires
+    // setting SITE_LAUNCHED in the BUILD environment and rebuilding — never a
+    // runtime-only change.
+    const baked = withLaunchFlag(undefined, () => getRouteMetadata("home", "en", overrides));
+
+    withLaunchFlag("true", () => {
+      expect(baked.robots).toEqual({ index: false, follow: false });
+    });
   });
 });
 
