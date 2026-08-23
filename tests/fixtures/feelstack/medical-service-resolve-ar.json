@@ -1,0 +1,112 @@
+{
+  "type": "content_entry",
+  "route": {
+    "id": "2a98a868-eb0e-4e3c-9d02-5bdd8057ecc4",
+    "path": "/medical/after-hours-care",
+    "locale": "ar",
+    "requestedLocale": "ar",
+    "resolvedLocale": "ar",
+    "usedFallback": false,
+    "alternates": [
+      {
+        "locale": "ar",
+        "path": "/medical/after-hours-care"
+      },
+      {
+        "locale": "en",
+        "path": "/medical/after-hours-care"
+      }
+    ],
+    "sectionId": null,
+    "updatedAt": "2026-08-23T10:37:59.606Z"
+  },
+  "data": {
+    "id": "c812c29a-829d-4b5a-8f30-b50a32009a23",
+    "contentType": "medical-service",
+    "title": "الرعاية خارج أوقات الدوام",
+    "fields": {
+      "summary": "عند إغلاق العيادة، يُحال مرضانا إلى شبكة رعاية أولية شريكة لتلبية الاحتياجات العاجلة غير الطارئة — دون أن يبقوا دون خيار للرعاية.",
+      "service_id": "after-hours-care",
+      "booking_channel": "family-doctor",
+      "source_verified": true,
+      "urgent_care_note": "مسار الإحالة هذا مخصص للاحتياجات العاجلة غير الطارئة فقط — وهو لا يُغني عن الاتصال بالرقم 911 في حال وجود طارئ حقيقي.",
+      "external_partners": [
+        {
+          "url": "https://mosaicpcn.ca",
+          "name": "Mosaic Primary Care Network",
+          "note": "لمرضى الدكتورة حمدي."
+        },
+        {
+          "url": "https://cwcpcn.com",
+          "name": "Calgary West Central Primary Care Network",
+          "note": "لمرضى الدكتور فرحات."
+        }
+      ],
+      "related_doctor_ids": [
+        "reem-hamdi",
+        "mohamed-farhat"
+      ]
+    },
+    "translationGroupId": "8a5a02ef-5fa9-407b-9aff-d23f08765cbc",
+    "publishedAt": "2026-08-23T10:37:59.606Z",
+    "updatedAt": "2026-08-23T10:39:43.063Z"
+  },
+  "seo": {
+    "title": "الرعاية خارج أوقات الدوام",
+    "description": "عند إغلاق العيادة، يُحال مرضانا إلى شبكة رعاية أولية شريكة لتلبية الاحتياجات العاجلة غير الطارئة — دون أن يبقوا دون خيار للرعاية."
+  },
+  "relations": {
+    "items": [
+      {
+        "id": "ee4f2f3d-ee88-4fd1-88a1-60c36f0ae5f2",
+        "relationKey": "doctors",
+        "targetType": "person_profile",
+        "targetId": "fd4292b2-7f58-44a2-8225-5569f97c07a3",
+        "sortOrder": 1,
+        "metadata": {}
+      },
+      {
+        "id": "65d82587-66cf-4277-9adc-5378bc7752dc",
+        "relationKey": "doctors",
+        "targetType": "person_profile",
+        "targetId": "1daa9dba-024b-493b-88ec-0c519b2edbbf",
+        "sortOrder": 2,
+        "metadata": {}
+      }
+    ],
+    "faqs": [
+      {
+        "id": "9e29963e-0164-41d1-bc6e-0a7bab1597ec",
+        "key": "after-hours-care-faq-1",
+        "question": "ما الذي يُعدّ حاجة عاجلة غير طارئة؟",
+        "answer": "هي حالات تحتاج إلى اهتمام قبل موعدكم القادم لكنها ليست مهددة للحياة — مثل عدوى تتفاقم أو استفسار عن دواء. أما حالة الطوارئ الطبية الحقيقية فتستوجب دائمًا الاتصال بالرقم 911 أو التوجه إلى أقرب قسم طوارئ، لا هذا المسار."
+      },
+      {
+        "id": "007f31d3-7658-42d4-bd2b-e4e1f48463af",
+        "key": "after-hours-care-faq-2",
+        "question": "بأي شبكة رعاية أولية أتواصل؟",
+        "answer": "يعتمد ذلك على طبيب أسرتكم: يُحال مرضى الدكتورة حمدي إلى شبكة Mosaic للرعاية الأولية، بينما يُحال مرضى الدكتور فرحات إلى شبكة Calgary West Central للرعاية الأولية."
+      },
+      {
+        "id": "9ec286e0-9c17-417c-91c2-96d420f2d7ea",
+        "key": "after-hours-care-faq-3",
+        "question": "هل ينطبق هذا على جميع مرضى العيادة؟",
+        "answer": "المسار الموضّح هنا موثّق لمرضى الدكتورة حمدي والدكتور فرحات تحديدًا. إذا كان طبيب أسرتكم غير ذلك، يُرجى الاستفسار في زيارتكم القادمة عن خيار الرعاية خارج أوقات الدوام الخاص بكم."
+      },
+      {
+        "id": "01a6070c-16c0-4dad-b3f7-91ba7118aff2",
+        "key": "after-hours-care-faq-4",
+        "question": "هل هناك تكلفة للرعاية خارج أوقات الدوام عبر شبكة الرعاية الأولية؟",
+        "answer": "يُرجى التواصل مباشرة مع شبكة الرعاية الأولية المعنية للاستفسار عن الرسوم والتغطية الحالية — فعيادتنا لا تُصدر فواتير لهذه الخدمة، إذ تُقدَّم الرعاية من قِبل الشبكة الشريكة."
+      },
+      {
+        "id": "dc5964cc-faa1-4346-ac45-5e64654b0f55",
+        "key": "after-hours-care-faq-5",
+        "question": "ماذا لو لم أكن متأكدًا مما إذا كانت حالتي طارئة؟",
+        "answer": "عند الشك، تعاملوا مع الحالة كطارئة واتصلوا بالرقم 911 أو توجهوا إلى أقرب قسم طوارئ. من الأسلم دائمًا أن يتم تقييمكم من قبل خدمات الطوارئ بدلًا من الانتظار."
+      }
+    ],
+    "sections": [],
+    "taxonomies": []
+  }
+}
