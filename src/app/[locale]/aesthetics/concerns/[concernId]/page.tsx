@@ -6,6 +6,7 @@ import { ConcernTemplate } from "@/features/concerns";
 import { getRouteMetadata } from "@/lib/seo/metadata";
 import { resolvePageContent, entityCacheTags } from "@/lib/feelstack/page-resolver";
 import { cacheTags } from "@/lib/feelstack/cache-tags";
+import { aestheticConcernCmsContract } from "@/features/concerns/cms-contract";
 
 export function generateStaticParams() {
   return locales.flatMap((locale) => concerns.map((c) => ({ locale, concernId: c.slug })));
@@ -26,6 +27,7 @@ async function loadConcern(id: string, locale: Locale) {
   const resolution = await resolvePageContent({
     path: cmsPath,
     locale,
+    contract: aestheticConcernCmsContract,
     staticFallback: () => getConcern(id),
     tags: entityCacheTags({
       detail: cacheTags.concern,

@@ -48,13 +48,46 @@ test.describe("treatment canary — live envelope", () => {
     );
   });
 
-  test("a real doctor relation exists; concerns and technologies are NOT relations", () => {
+  /**
+   * DELIBERATE SEMANTIC CHANGE — concerns migrated in the phase after this one.
+   *
+   * This test previously asserted that NO `concerns` relation existed, which was
+   * correct while concerns lived only in static content: pointing a
+   * ContentRelation at a non-existent entity would have required inventing a
+   * placeholder, and inventing entities to satisfy a foreign key is how
+   * unreviewed medical content gets into a CMS.
+   *
+   * Concerns are now real entries, so the deferred ids were backfilled into real
+   * relation rows. The assertion is inverted rather than deleted, and made
+   * STRONGER: it is no longer enough that relations exist — each one must carry
+   * the stable concern id, and that set must match the typed field exactly.
+   *
+   * Technologies are NOT migrated yet, so their half of the original guard
+   * stands unchanged.
+   */
+  test("concern relations are now REAL and agree with the typed field", () => {
     const env = feelstackResolveEnvelopeSchema.parse(fixture("en"));
     const items = env.relations?.items ?? [];
-    expect(items.length).toBeGreaterThan(0);
-    expect(items.every((r) => r.targetType === "person_profile")).toBe(true);
-    // Deferred families must not have been invented as placeholder entities.
-    expect(items.some((r) => r.relationKey === "concerns")).toBe(false);
+    const fields = entityPayload(env) as { related_concern_ids?: string[] };
+
+    const concernRelations = items.filter((r) => r.relationKey === "concerns");
+    expect(concernRelations.length).toBe(source.relatedConcernIds!.length);
+
+    // Every relation resolves to a real migrated concern entry, not a placeholder.
+    expect(concernRelations.every((r) => r.targetType === "content_entry")).toBe(true);
+
+    // The graph and the typed field must describe the same cross-links, or the
+    // page would render a different set than the CMS believes.
+    const fromGraph = concernRelations.map((r) => (r.metadata as { concernId: string }).concernId).sort();
+    expect(fromGraph).toEqual([...source.relatedConcernIds!].sort());
+    expect([...(fields.related_concern_ids ?? [])].sort()).toEqual(fromGraph);
+  });
+
+  test("doctor relations remain real; technologies remain deferred", () => {
+    const env = feelstackResolveEnvelopeSchema.parse(fixture("en"));
+    const items = env.relations?.items ?? [];
+    expect(items.some((r) => r.relationKey === "doctors" && r.targetType === "person_profile")).toBe(true);
+    // Technologies are still a static-only family — no placeholder may appear.
     expect(items.some((r) => r.relationKey === "technologies")).toBe(false);
   });
 });

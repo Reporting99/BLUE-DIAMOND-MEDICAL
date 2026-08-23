@@ -1,0 +1,104 @@
+{
+  "type": "content_entry",
+  "route": {
+    "id": "79507c43-fb58-4bd9-a75d-54e222b396cb",
+    "path": "/aesthetics/concerns/sun-damage-pigmentation",
+    "locale": "en",
+    "requestedLocale": "en",
+    "resolvedLocale": "en",
+    "usedFallback": false,
+    "alternates": [
+      {
+        "locale": "ar",
+        "path": "/aesthetics/concerns/sun-damage-pigmentation"
+      },
+      {
+        "locale": "en",
+        "path": "/aesthetics/concerns/sun-damage-pigmentation"
+      }
+    ],
+    "sectionId": null,
+    "updatedAt": "2026-08-23T11:24:34.523Z"
+  },
+  "data": {
+    "id": "270a4594-ae4a-4462-bd3c-7f2b7cabf3d9",
+    "contentType": "aesthetic-concern",
+    "title": "Sun Damage & Pigmentation",
+    "fields": {
+      "summary": "Sun spots and liver spots from time in the sun can be easily reduced using our state-of-the-art laser technologies.",
+      "concern_id": "sun-damage-pigmentation",
+      "source_verified": true,
+      "related_doctor_ids": [
+        "mohamed-farhat"
+      ],
+      "corrected_from_source": true,
+      "related_treatment_ids": [
+        "laser-skin-treatments",
+        "ultra"
+      ]
+    },
+    "translationGroupId": "0efe219b-a610-4be5-b585-92d85aab2b76",
+    "publishedAt": "2026-08-23T11:24:34.525Z",
+    "updatedAt": "2026-08-23T11:24:34.523Z"
+  },
+  "seo": {
+    "title": "Sun Damage & Pigmentation",
+    "description": "Sun spots and liver spots from time in the sun can be easily reduced using our state-of-the-art laser technologies."
+  },
+  "relations": {
+    "items": [
+      {
+        "id": "3b2a30d6-f3e5-4d3d-8fe1-77f5e9a86c7c",
+        "relationKey": "treatments",
+        "targetType": "content_entry",
+        "targetId": "05353841-9ffe-43ad-88c7-0856a8c58fcd",
+        "sortOrder": 1,
+        "metadata": {
+          "treatmentId": "laser-skin-treatments"
+        }
+      },
+      {
+        "id": "c954e52f-783b-4705-865b-1c731654608c",
+        "relationKey": "doctors",
+        "targetType": "person_profile",
+        "targetId": "aed7273b-16fe-47a8-8742-9bdfe3ed0489",
+        "sortOrder": 1,
+        "metadata": {
+          "doctorId": "mohamed-farhat"
+        }
+      },
+      {
+        "id": "80c1c909-9583-4876-b0c3-75b1e8ed66bd",
+        "relationKey": "treatments",
+        "targetType": "content_entry",
+        "targetId": "5296f2bb-c454-4c1e-b092-df2482144757",
+        "sortOrder": 2,
+        "metadata": {
+          "treatmentId": "ultra"
+        }
+      }
+    ],
+    "faqs": [
+      {
+        "id": "6c67eea5-b19d-4887-9966-f44af0690b4f",
+        "key": "co-sun-damage-pigmentation-faq-1",
+        "question": "What causes sun spots and pigmentation?",
+        "answer": "Time in the sun, over the years."
+      },
+      {
+        "id": "7bc807c9-35d1-47df-8c43-1a67756c067b",
+        "key": "co-sun-damage-pigmentation-faq-2",
+        "question": "What treatments address sun damage and pigmentation?",
+        "answer": "Laser Skin Treatments and the Ultra laser are the two treatments connected to this concern."
+      },
+      {
+        "id": "d72430f9-ccc5-4986-853c-9b1bcf14bf6e",
+        "key": "co-sun-damage-pigmentation-faq-3",
+        "question": "Is sun damage/pigmentation the same as \"liver spots\"?",
+        "answer": "Liver spots are one common form of this — both are addressed by the same treatment pathway."
+      }
+    ],
+    "sections": [],
+    "taxonomies": []
+  }
+}

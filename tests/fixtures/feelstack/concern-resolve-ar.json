@@ -1,0 +1,104 @@
+{
+  "type": "content_entry",
+  "route": {
+    "id": "c2acafe9-6e75-4fc0-ab8d-86d67a968260",
+    "path": "/aesthetics/concerns/sun-damage-pigmentation",
+    "locale": "ar",
+    "requestedLocale": "ar",
+    "resolvedLocale": "ar",
+    "usedFallback": false,
+    "alternates": [
+      {
+        "locale": "ar",
+        "path": "/aesthetics/concerns/sun-damage-pigmentation"
+      },
+      {
+        "locale": "en",
+        "path": "/aesthetics/concerns/sun-damage-pigmentation"
+      }
+    ],
+    "sectionId": null,
+    "updatedAt": "2026-08-23T11:24:34.598Z"
+  },
+  "data": {
+    "id": "923c0354-c658-452c-bbaa-2b544b539a2b",
+    "contentType": "aesthetic-concern",
+    "title": "تلف الشمس والتصبغ",
+    "fields": {
+      "summary": "يمكن تقليل بقع الشمس والبقع الكبدية الناتجة عن التعرض للشمس بسهولة باستخدام تقنيات الليزر المتطورة لدينا.",
+      "concern_id": "sun-damage-pigmentation",
+      "source_verified": true,
+      "related_doctor_ids": [
+        "mohamed-farhat"
+      ],
+      "corrected_from_source": true,
+      "related_treatment_ids": [
+        "laser-skin-treatments",
+        "ultra"
+      ]
+    },
+    "translationGroupId": "0efe219b-a610-4be5-b585-92d85aab2b76",
+    "publishedAt": "2026-08-23T11:24:34.598Z",
+    "updatedAt": "2026-08-23T11:24:34.598Z"
+  },
+  "seo": {
+    "title": "تلف الشمس والتصبغ",
+    "description": "يمكن تقليل بقع الشمس والبقع الكبدية الناتجة عن التعرض للشمس بسهولة باستخدام تقنيات الليزر المتطورة لدينا."
+  },
+  "relations": {
+    "items": [
+      {
+        "id": "3c885af4-f6c9-44ab-9aac-9d4b027336a1",
+        "relationKey": "treatments",
+        "targetType": "content_entry",
+        "targetId": "c55ca5f8-9b21-447a-be20-c2c8cd2be900",
+        "sortOrder": 1,
+        "metadata": {
+          "treatmentId": "laser-skin-treatments"
+        }
+      },
+      {
+        "id": "197d87a7-5afd-4aad-a9e1-7d18fa1b0a66",
+        "relationKey": "doctors",
+        "targetType": "person_profile",
+        "targetId": "1daa9dba-024b-493b-88ec-0c519b2edbbf",
+        "sortOrder": 1,
+        "metadata": {
+          "doctorId": "mohamed-farhat"
+        }
+      },
+      {
+        "id": "648579d7-2184-4196-9e28-1629e57fabbf",
+        "relationKey": "treatments",
+        "targetType": "content_entry",
+        "targetId": "1d9c9ddc-d16d-4eea-bb40-1ae6e5551633",
+        "sortOrder": 2,
+        "metadata": {
+          "treatmentId": "ultra"
+        }
+      }
+    ],
+    "faqs": [
+      {
+        "id": "4a195742-ea61-44ff-a6bd-d397af36a55a",
+        "key": "co-sun-damage-pigmentation-faq-1",
+        "question": "ما سبب بقع الشمس والتصبغ؟",
+        "answer": "التعرض للشمس على مدى سنوات."
+      },
+      {
+        "id": "c7f76484-f928-43e1-ae2b-31d8d5535f51",
+        "key": "co-sun-damage-pigmentation-faq-2",
+        "question": "ما العلاجات التي تعالج تلف الشمس والتصبغ؟",
+        "answer": "علاجات الليزر للبشرة وليزر الترا هما العلاجان المرتبطان بهذه المخاوف."
+      },
+      {
+        "id": "d894de8d-0eb3-499b-b84f-c6033f62d52e",
+        "key": "co-sun-damage-pigmentation-faq-3",
+        "question": "هل تلف الشمس/التصبغ هو نفسه \"البقع الكبدية\"؟",
+        "answer": "البقع الكبدية هي أحد الأشكال الشائعة لهذا التصبغ — ويُعالج كلاهما بنفس مسار العلاج."
+      }
+    ],
+    "sections": [],
+    "taxonomies": []
+  }
+}

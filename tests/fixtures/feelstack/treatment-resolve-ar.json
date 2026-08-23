@@ -82,6 +82,46 @@
         "metadata": {
           "doctorId": "mohamed-farhat"
         }
+      },
+      {
+        "id": "2cf828fb-ea4e-4db5-80d4-c21b1544f685",
+        "relationKey": "concerns",
+        "targetType": "content_entry",
+        "targetId": "605afcc5-49d1-4d63-92e6-4baf0be437d7",
+        "sortOrder": 1,
+        "metadata": {
+          "concernId": "acne-scars"
+        }
+      },
+      {
+        "id": "494ea177-1441-4914-a143-4e91b4f2671a",
+        "relationKey": "concerns",
+        "targetType": "content_entry",
+        "targetId": "48544e89-544a-4b71-ad3d-7420de57f768",
+        "sortOrder": 2,
+        "metadata": {
+          "concernId": "dry-skin"
+        }
+      },
+      {
+        "id": "63035fe7-2268-4c4b-a095-bee1855beb0e",
+        "relationKey": "concerns",
+        "targetType": "content_entry",
+        "targetId": "5988bb41-12d4-41ab-bce5-6f67e8217d75",
+        "sortOrder": 3,
+        "metadata": {
+          "concernId": "fine-lines-wrinkles"
+        }
+      },
+      {
+        "id": "514d600b-f24a-41b7-922d-3c90e077e2d4",
+        "relationKey": "concerns",
+        "targetType": "content_entry",
+        "targetId": "b7b9444d-f80e-4dc7-b662-0a6418b0ba26",
+        "sortOrder": 4,
+        "metadata": {
+          "concernId": "skin-revitalization"
+        }
       }
     ],
     "faqs": [
