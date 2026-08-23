@@ -9,7 +9,7 @@ behind it.
 **Current state: nothing is live.** `FEELSTACK_API_URL` and
 `FEELSTACK_REVALIDATE_SECRET` are unset, `FEELSTACK_CONTENT_MODE` defaults to
 `static`, and the webhook returns 501 for every request. Every page renders
-from `src/content/*.ts`. The adapter is complete and every entity route is
+from the per-feature data files under `src/features/`. The adapter is complete and every entity route is
 wired; provisioning is what remains.
 
 ---
@@ -37,7 +37,7 @@ Dfeelings").
 
 | Mode | Behaviour |
 |---|---|
-| `static` (default) | Local `src/content/*.ts` only. `resolvePageContent` returns the fallback without any network request. |
+| `static` (default) | Local `src/features/*` data only. `resolvePageContent` returns the fallback without any network request. |
 | `hybrid` | FeelStack first; local content is used **only** when the CMS confirms the entity is absent — never when the CMS is unreachable. |
 | `cms` | FeelStack authoritative, no fallback. |
 

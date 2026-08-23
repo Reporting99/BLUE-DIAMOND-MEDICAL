@@ -83,7 +83,7 @@ const bookingChannelSchema = z.enum([
 ]);
 
 /**
- * Output type matches `MedicalServiceContent` (src/types/medical-service.ts)
+ * Output type matches `MedicalServiceContent` (src/features/medical-services/types.ts)
  * field-for-field via `.transform()`, so `resolvePageContent` can share one
  * type parameter between the CMS schema and the local
  * `src/features/medical-services/data.ts` fallback (page-resolver.ts requires
@@ -175,7 +175,7 @@ export const cmsDoctorSchema = z
       photoDeclined: z.boolean().optional(),
     }),
     // Deliberately narrower than the site-wide bookingChannelSchema: a Doctor
-    // can only be booked through these two channels (src/types/doctor.ts), and
+    // can only be booked through these two channels (src/features/doctors/types.ts), and
     // widening it here would let the CMS hand back e.g. "walk-in" for a named
     // physician. tsc caught exactly this when the schema was first written.
     bookingChannel: z.enum(["family-doctor", "phone-medical-botox"]),

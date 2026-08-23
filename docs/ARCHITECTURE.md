@@ -218,7 +218,7 @@ under `/ar/`. The English path is the canonical physical route; `src/proxy.ts`
 rewrites the pretty Arabic URL onto it. Alternates always point at the address
 a visitor actually sees. Full table: `ROUTING.md`.
 
-Legacy URLs from both old domains 301 via `src/lib/seo/legacy-redirects.ts`
+Legacy URLs from both old domains 301 via `src/lib/routing/legacy-redirects.ts`
 (`ROUTING.md`).
 
 ## 5. SEO
