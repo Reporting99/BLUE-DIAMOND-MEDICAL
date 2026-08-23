@@ -10,7 +10,7 @@
  * can tell a confirmed-absent entity (`NOT_FOUND`) apart from a CMS that is
  * merely unreachable (`TIMEOUT` / `NETWORK_ERROR` / `UPSTREAM_ERROR` /
  * `INVALID_RESPONSE`) — the distinction the recovered Dfeelings source does
- * not make (see docs/DFEELINGS_TO_BLUE_ARCHITECTURE_MAP.md §5).
+ * not make (see docs/ARCHITECTURE.md).
  */
 export type FeelStackErrorCode =
   | "NOT_FOUND"

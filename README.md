@@ -64,8 +64,6 @@ Four more carry the supporting detail:
 | Document | Covers |
 |---|---|
 | `docs/ROUTING.md` | EN/AR route tables, the route registry, routing decisions, legacy redirect map |
-| `docs/CONTENT_MODEL.md` | also holds content provenance, the approval matrix, coverage and translation review |
 | `docs/MEDIA.md` | ImageKit setup, the media manifest, import status and image replacement tracking |
 | `docs/SEO.md` | schema inventory and the search-intent map |
 | `docs/UI_UX_FOUNDATION.md` | design system, tokens, motion rules and visual-continuity record |
-| `docs/DFEELINGS_TO_BLUE_ARCHITECTURE_MAP.md` | what was adopted from the Dfeelings reference, and what was deliberately not |

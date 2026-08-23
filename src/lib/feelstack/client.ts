@@ -29,7 +29,7 @@ import { cacheTags } from "./cache-tags";
  * recovered Dfeelings source uses (`src/lib/api.ts`: one blanket
  * `try { ... } catch { return null/[] }` per call, no status
  * differentiation, no Zod validation, no timeout/retry) and which brief §5
- * explicitly says not to copy. See docs/DFEELINGS_TO_BLUE_ARCHITECTURE_MAP.md.
+ * explicitly says not to copy. See docs/ARCHITECTURE.md.
  *
  * No FEELSTACK_API_URL is configured for this build yet — every call
  * below resolves through the local fallback content instead of a network
