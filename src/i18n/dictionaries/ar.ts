@@ -3,7 +3,7 @@ import type { Dictionary } from "./en";
 /**
  * Draft Arabic translation. Written with care for meaning and register, but
  * — like all Arabic copy in this build — it is AI-drafted and has not yet
- * had native-speaker or medical review. See docs/TRANSLATION_REVIEW_REPORT.md.
+ * had native-speaker or medical review. See docs/CONTENT_MODEL.md.
  * Numerals stay Western/Latin throughout — see docs/UI_UX_FOUNDATION.md §3.4.
  */
 const ar: Dictionary = {

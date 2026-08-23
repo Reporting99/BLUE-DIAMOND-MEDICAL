@@ -2,7 +2,7 @@
 
 Status: **Approved for implementation**. This document is the single source of truth for visual and interaction decisions. Any component that contradicts it should be treated as a bug.
 
-Sources consulted: `BLUE DIAMOND LOGO DOCUMENT[10519].pdf` (Decca Design Inc., official brand doc), `Blue-Diamond-Medical-Website-Content-Extraction_1.docx` (Dfeelings content extraction of the two live sites), and direct instructions in the build brief. See `docs/SOURCE_INVENTORY.md`.
+Sources consulted: `BLUE DIAMOND LOGO DOCUMENT[10519].pdf` (Decca Design Inc., official brand doc), `Blue-Diamond-Medical-Website-Content-Extraction_1.docx` (Dfeelings content extraction of the two live sites), and direct instructions in the build brief. See `docs/CONTENT_MODEL.md`.
 
 ---
 
@@ -10,7 +10,7 @@ Sources consulted: `BLUE DIAMOND LOGO DOCUMENT[10519].pdf` (Decca Design Inc., o
 
 The Blue Diamond Medical mark is a four-facet diamond with a single continuous heartbeat/ECG line running through its vertical axis, available in a 4-tone blue variant and a 4-tone grey variant. It reads as: **precision (facets, geometric construction) + life/vitality (the heartbeat) + calm (cool blue family, no warm/alarm colors)**.
 
-The clinic is one entity, not two. Medical Care and Medical Aesthetics are *practice areas under one physician-led clinic*, not separate brands — the same doctors, the same address family (main clinic + one satellite for Elite iQ™), the same trust signals. Every place the site currently implies two separate businesses (the legacy `bluediamondmedicalaesthetics.ca` site, its own copyright line and separate phone number) is being intentionally unified under `bluediamondmedical.ca` with one navigation, one design system, one voice, and consistent contact info per section (medical vs. aesthetics phone numbers differ in the source data and are kept distinct only where the underlying phone line is genuinely separate — see `docs/CONTENT_APPROVAL_MATRIX.md`).
+The clinic is one entity, not two. Medical Care and Medical Aesthetics are *practice areas under one physician-led clinic*, not separate brands — the same doctors, the same address family (main clinic + one satellite for Elite iQ™), the same trust signals. Every place the site currently implies two separate businesses (the legacy `bluediamondmedicalaesthetics.ca` site, its own copyright line and separate phone number) is being intentionally unified under `bluediamondmedical.ca` with one navigation, one design system, one voice, and consistent contact info per section (medical vs. aesthetics phone numbers differ in the source data and are kept distinct only where the underlying phone line is genuinely separate — see `docs/CONTENT_MODEL.md`).
 
 ### 1.1 Logo Protection Rules
 
@@ -274,7 +274,7 @@ It never becomes a repeated icon beside headings, a large 3D object, a glow/anim
 ## 18. Doctor Image Rules (binding)
 
 - Dr. Saeed: no photo, ever. Abstract facet tile only.
-- Dr. Gwea: abstract facet tile until a real photo is supplied; tracked in `docs/IMAGE_REPLACEMENT_MANIFEST.md` as pending.
+- Dr. Gwea: abstract facet tile until a real photo is supplied; tracked in `docs/MEDIA.md` as pending.
 - Dr. Bakare, Dr. Hamdi: intended to use approved ImageKit photos "temporarily," but no live ImageKit account/asset exists yet in this build — both render the abstract facet tile today, status `pending` in the media manifest, ready to flip to `approved` the moment real assets are uploaded. No stock or generated face is ever substituted.
 - Dr. Farhat, Dr. Omonijo: same `pending` treatment — no approved photography has been supplied.
 - All doctor cards render at identical dimensions whether photographed or tiled, so nothing shifts layout when real photos are added later.
@@ -296,7 +296,7 @@ No mandatory skill was unavailable; none was silently skipped or replaced.
 
 ---
 
-## Open Items Carried to `docs/MISSING_CONTENT_REPORT.md`
+## Open Items Carried to `docs/CONTENT_MODEL.md`
 
 - All doctor photography (all 6 doctors) — pending, using abstract facet tiles.
 - ImageKit account/credentials — not yet provisioned; system built against placeholder env vars, `status: pending` on every media reference.
@@ -305,3 +305,48 @@ No mandatory skill was unavailable; none was silently skipped or replaced.
 - Before/after photography — none supplied; feature-flagged off.
 - Legal pages (Terms, Privacy) — legacy site shows literal "Coming soon" placeholders, which is explicitly not publishable; routes built but excluded from nav/sitemap/indexing until real legal copy is supplied.
 - Product brand approval (SkinMedica) beyond the legacy price list — shop stays feature-flagged off pending explicit client approval per §18 of the master brief.
+
+---
+
+## Visual Continuity Report
+
+Documents the section-transition (seam) system built to remove hard horizontal color lines between page sections, and its current coverage.
+
+### The problem
+
+Stacking sections with flat, differently-tinted backgrounds (white → blue-soft → blue-4 → surface-dark, etc.) directly against each other produces a visible hard edge — a "seam" — at every section boundary. This reads as templated/generated rather than designed.
+
+### The system
+
+`src/components/layout/SectionTransition.tsx` — a reusable, CSS-only seam component:
+
+```tsx
+<SectionTransition from="var(--surface-blue-soft)" to="var(--background)" />
+```
+
+- Renders one `aria-hidden="true"` `<div>` with `height: clamp(3.5rem, 6vw + 2rem, 11.25rem)` and a `linear-gradient(180deg, from, to)` background — nothing else. No JavaScript, no images, no blur/filter effects, so it costs nothing measurable in Lighthouse's `mainthread-work-breakdown`.
+- `margin-block: -1px` (via the `.section-seam` class in `globals.css`) closes any 1px subpixel gap that can appear between adjacent flex/grid sections at fractional zoom levels.
+- Placed between every pair of adjacent sections that have different background tokens; omitted between sections sharing the same background (no seam needed where there's no color change).
+
+### The CTA → footer case (explicit example from the brief)
+
+The final CTA section (`--blue-4`) sits directly above the dark footer (`--surface-dark`). A single 2-stop gradient looked flat and slightly banded there because of how far apart the two hex values are, so this specific seam uses a dedicated 4-stop gradient instead of the generic 2-stop component, matching the brief's own example:
+
+```css
+background: linear-gradient(180deg, var(--blue-4) 0%, var(--blue-4) 35%, #173f55 70%, var(--surface-dark) 100%);
+```
+
+The middle stop (`#173f55`) is a genuine intermediate blue-to-charcoal tone (not a mathematical midpoint of the two endpoints, which would read slightly muddy) — chosen by eye against the rendered page and matching the tone the brief's reference screenshot implied.
+
+### Coverage
+
+| Location | Status |
+|---|---|
+| Homepage (`/`) | **Done** — 13 `SectionTransition` instances between all 14 sections, plus the dedicated CTA→footer 4-stop gradient. |
+| `MedicalServiceTemplate`, `ConcernTemplate`, `TechnologyTemplate`, `LegalPageTemplate`, `ProductTemplate`, `HealthHubArticleTemplate`, `AestheticTreatmentTemplate` (all 7 shared templates — covers all 7 medical-service pages, 8 aesthetic treatments, 9 concerns, 5 technologies, 4 legal pages, product/article pages) | **Done** — each template now renders a `<SectionTransition from="var(--background)" to="var(--surface-dark)" />` immediately before its closing `</article>`, softening the boundary with the dark footer. These templates have a single flat body background (no internal section-color changes), so this one seam is the only one they need. |
+| Hub/static pages (`/medical`, `/aesthetics`, `/botox`, `/doctors`, `/patient-resources`, `/health-hub`, `/about`, `/contact`, `/book-appointment`, shop pages, legal-adjacent pages) and doctor profile pages | **Done** — completed in the remediation pass following this report's earlier version (verified: `grep -l "SectionTransition"` matches every one of these files). |
+| New homepage section this pass (Concern Explorer, between the Aesthetics pathway section and Featured Technology) | **Done** — `var(--surface-blue-soft)` → `var(--background)` (explorer section) → `var(--blue-4)` (featured technology), each transition its own sibling `SectionTransition`, matching the homepage's existing correct pattern (not nested inside a padded container, avoiding the flat-band bug found and fixed earlier in the project). |
+
+### Remaining work
+
+None outstanding from this checklist. Every template and page in the current route tree carries the footer seam; internal multi-background pages (homepage, `/medical`, `/aesthetics`) carry seams between each internal section too.

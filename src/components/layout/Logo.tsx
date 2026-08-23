@@ -8,7 +8,7 @@ import type { Locale } from "@/types/media";
  * numbering and RGB values in BLUE DIAMOND LOGO DOCUMENT[10519].pdf.
  *
  * This is a functional stand-in until Decca Design Inc.'s master vector
- * file (SVG/EPS) is supplied — see docs/IMAGE_REPLACEMENT_MANIFEST.md. It
+ * file (SVG/EPS) is supplied — see docs/MEDIA.md. It
  * must be swapped for the real file before launch and must never be
  * redrawn, recolored, or modified beyond that swap — docs/UI_UX_FOUNDATION.md §1.1.
  */

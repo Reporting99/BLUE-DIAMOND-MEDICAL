@@ -45,18 +45,76 @@ Not a medical clinic reference implementation — `dfeelings.com` is a digital-m
 Per `AGENTS.md`'s own instruction ("read `node_modules/next/dist/docs/` before writing any code... heed deprecation notices"), the actual Next.js 16.3.2 docs in this repo's `node_modules` were read before implementing the webhook and cache-tag work, independent of anything found in Dfeelings:
 
 - `revalidateTag(tag: string)` (single-argument) is **removed/type-error** in this build — `revalidateTag` now requires a second `profile` argument. Per `node_modules/next/dist/docs/01-app/03-api-reference/04-functions/revalidateTag.md`: *"For webhooks or third-party services that need immediate expiration, ... pass `{ expire: 0 }`"* — exactly this webhook's use case, so `revalidateTag(tag, { expire: 0 })` is what `src/app/api/feelstack/revalidate/route.ts` calls. Caught by `tsc --noEmit` during this pass (`TS2554: Expected 2 arguments, but got 1`), not by inspection alone.
-- `error.js`/`error.tsx` file-convention semantics (props, `retry`, no page-level status-code control) were confirmed against `node_modules/next/dist/docs/01-app/01-getting-started/10-error-handling.md` and `.../file-conventions/error.md` before writing `src/app/[locale]/error.tsx` — see `docs/ERROR_HANDLING_REPORT.md` for the specific limitation this surfaced (no App Router API sets a precise non-404 HTTP status from a Server Component).
+- `error.js`/`error.tsx` file-convention semantics (props, `retry`, no page-level status-code control) were confirmed against `node_modules/next/dist/docs/01-app/01-getting-started/10-error-handling.md` and `.../file-conventions/error.md` before writing `src/app/[locale]/error.tsx` — see `docs/FEELSTACK.md` for the specific limitation this surfaced (no App Router API sets a precise non-404 HTTP status from a Server Component).
 
 ## 5. Scope decision: hybrid content-mode migration (this session, explicit user instruction)
 
-Blue Diamond's pre-existing, documented architecture (`docs/DEPLOYMENT_GUIDE.md`, predating this pass) is: all page content lives in typed `src/content/*.ts`, and a FeelStack adapter exists but is inert (no env vars set). Migrating all ~20 dynamic route handlers to CMS resolution in one pass would be the "massive uncontrolled rewrite" brief §17 prohibits and would risk the "no loss of pages/content" guarantee (rule 10).
+Blue Diamond's pre-existing, documented architecture (`docs/DEPLOYMENT.md`, predating this pass) is: all page content lives in typed `src/content/*.ts`, and a FeelStack adapter exists but is inert (no env vars set). Migrating all ~20 dynamic route handlers to CMS resolution in one pass would be the "massive uncontrolled rewrite" brief §17 prohibits and would risk the "no loss of pages/content" guarantee (rule 10).
 
-Resolved scope, confirmed with the user: build the **complete, production-ready adapter** (contracts, schemas, error classification, timeout/retry, cache tags, invalidation matrix, hardened webhook) now, gated behind a new `FEELSTACK_CONTENT_MODE` (`static` default / `hybrid` / `cms`, `src/lib/feelstack/content-mode.ts`), and wire **one representative route** (`medical/[serviceId]`) end-to-end as the proven pattern, rather than touching all routes unreviewed. See `docs/FEELSTACK_MIGRATION_MANIFEST.md` for the entity-by-entity mapping the rest of the routes follow when migrated.
+Resolved scope, confirmed with the user: build the **complete, production-ready adapter** (contracts, schemas, error classification, timeout/retry, cache tags, invalidation matrix, hardened webhook) now, gated behind a new `FEELSTACK_CONTENT_MODE` (`static` default / `hybrid` / `cms`, `src/lib/feelstack/content-mode.ts`), and wire **one representative route** (`medical/[serviceId]`) end-to-end as the proven pattern, rather than touching all routes unreviewed. See `docs/FEELSTACK.md` for the entity-by-entity mapping the rest of the routes follow when migrated.
 
 ## 6. Structure adaptation (brief §3)
 
 The brief's target tree (`app/[locale]/[[...path]]/page.tsx` catch-all, `src/feelstack/*`) was **adapted**, not mechanically imposed, per §3's own instruction ("Adapt this structure to the actual repository instead of mechanically replacing working files"):
 
-- No `[[...path]]` catch-all was introduced — Blue Diamond's explicit per-content-type routes (`medical/[serviceId]`, `aesthetics/concerns/[concernId]`, `shop/[productId]`, etc.) are the approved, SEO-audited route registry (`docs/ROUTE_DECISION_LOG.md`, `docs/FINAL_ROUTE_INVENTORY.md`) and rule 10 requires preserving them as-is.
+- No `[[...path]]` catch-all was introduced — Blue Diamond's explicit per-content-type routes (`medical/[serviceId]`, `aesthetics/concerns/[concernId]`, `shop/[productId]`, etc.) are the approved, SEO-audited route registry (`docs/ROUTING.md`, `docs/ROUTING.md`) and rule 10 requires preserving them as-is.
 - `src/feelstack/*` (brief's suggested path) → kept at the pre-existing `src/lib/feelstack/*` location rather than moved, per §3 "do not create duplicate clients, route resolvers, metadata systems."
 - `app/[locale]/[[...path]]/{loading,error,not-found}.tsx` → adapted to `app/[locale]/error.tsx` (one shared boundary at the locale segment, since there is no catch-all segment to attach it to); `not-found.tsx` already existed at the same level and was left untouched.
+
+---
+
+## 7. Re-inspection against the LIVE Dfeelings production build (2026-08-22, second pass)
+
+The `C:\Users\user\Downloads\dfeelings\` copy §0 relied on is **not available on
+this host**, and is now demonstrably **out of date**. This pass re-derived
+Dfeelings' structure from a better source: the actually-deployed release under
+`/home/dfeelings/apps/blue/current/` on this server (`.next` build manifests
+still carry original `src/...` module paths, and the compiled route handlers can
+be inspected directly). That is production truth, not an unverified copy.
+
+### Correction to §3.3
+
+§3.3 claims Dfeelings has "no webhook / on-demand revalidation". **This is
+wrong for live production.** The deployed build contains
+`src/app/api/feelstack/revalidate/route.ts`, and its compiled output references
+`createHmac`, `timingSafeEqual`, `x-feelstack-signature`, `x-feelstack-timestamp`,
+`x-feelstack-event-id` and `x-feelstack-delivery-id`. Dfeelings' live webhook is
+HMAC-verified with replay metadata — the same design Blue Diamond has. The
+earlier "zero matches" result reflects the stale Downloads copy, not production.
+
+### What the live build actually shows about structure
+
+| Aspect | Dfeelings (live) | Blue Diamond (this branch) |
+|---|---|---|
+| `src/components/` | **flat** — ~27 loose files (`Hero.tsx`, `navbar.tsx`, `footer.tsx`, `services-section.tsx`…) plus `dynamic-loaders/` (38 lazy-import shims) and `events/` | `ui/` + `layout/` + `shared/`, 4/10/9 files |
+| `src/features/` | **does not exist** | 11 domain modules with public entry points |
+| `src/lib/seo`, `lib/schema`, `lib/routing` | **do not exist**; `src/lib/api.ts` holds ad-hoc fetch logic | all three exist as separate layers |
+| Routing | one `[lang]/[...slug]/page.tsx` catch-all + ~40-case `switch` | explicit, SEO-audited per-entity routes |
+| Sitemaps | split: `sitemap.xml`, `sitemap-blog-index/-en/-ar.xml`, `sitemap-feelstack-pages.xml` | single `sitemap.ts` — see below |
+| Other surface | URL shortener, link-in-bio, auth, dashboard | none (not a marketing-agency product) |
+
+### The governing conclusion
+
+**Dfeelings' file architecture is flatter and less layered than Blue Diamond's,
+not more.** The target tree in the alignment brief (features/, lib/schema/,
+lib/routing/, ui/layout/shared) is an idealisation the brief's author wrote —
+it is not a description of Dfeelings. Confirmed with the user, that idealised
+target governs this refactor, so Blue Diamond ends up **deliberately better
+organised than the reference**, which is why this document is the record of
+*divergence* rather than of imitation.
+
+### The one Dfeelings pattern examined and deliberately NOT adopted
+
+**Split sitemaps.** Dfeelings splits by entity type and locale because it has a
+large blog corpus. Blue Diamond publishes **148 sitemap URLs**; Google's limit
+is 50,000 per sitemap. Splitting here would add a sitemap index, four route
+handlers and a drift risk to solve a problem this site does not have — cargo
+-culting the reference's solution rather than its reasoning.
+
+What was adopted instead is the *actual* hreflang gap the comparison surfaced:
+`sitemap.ts` emitted only `en-CA`/`ar-CA` while `getRouteMetadata` also emitted
+`x-default`, so the two hreflang surfaces disagreed — exactly the mismatch
+Search Console reports as an hreflang error. Both now build their alternates
+from one function, `hreflangAlternates()` in `src/lib/routing/canonical.ts`.
+Verified against a running build: URL count unchanged at 148, `x-default`
+annotations 0 → 148.

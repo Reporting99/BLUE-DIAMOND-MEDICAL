@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { isLocale, locales, type Locale } from "@/i18n/config";
-import { medicalServices, getMedicalService } from "@/content/medical-services";
-import { MedicalServiceTemplate } from "@/templates/MedicalServiceTemplate";
+import { medicalServices, getMedicalService } from "@/features/medical-services";
+import { MedicalServiceTemplate } from "@/features/medical-services";
 import { getRouteMetadata } from "@/lib/seo/metadata";
 import { resolvePageContent } from "@/lib/feelstack/page-resolver";
 import { cmsMedicalServiceSchema } from "@/lib/feelstack/schemas";
@@ -13,7 +13,7 @@ export function generateStaticParams() {
 
 /**
  * Reference implementation of the hybrid FeelStack resolution pattern —
- * see docs/FEELSTACK_MIGRATION_MANIFEST.md for how this generalizes to
+ * see docs/FEELSTACK.md for how this generalizes to
  * doctors/products/treatments/concerns/technologies/articles/legal pages.
  * In this build's default `FEELSTACK_CONTENT_MODE=static`,
  * `resolvePageContent` never touches the network — it goes straight to

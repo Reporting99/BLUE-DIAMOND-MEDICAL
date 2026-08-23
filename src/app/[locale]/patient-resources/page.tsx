@@ -4,6 +4,17 @@ import { SectionTransition } from "@/components/layout/SectionTransition";
 import { isLocale, type Locale } from "@/i18n/config";
 import { getRouteMetadata } from "@/lib/seo/metadata";
 
+/** Single source for this page's description: consumed by both generateMetadata
+ * and the page's JSON-LD node, so the two can never drift apart (brief §9). */
+const PAGE_DESCRIPTION = {
+      en: "Clinic policies, no-show fees, prescription refills, and confidentiality at Blue Diamond Medical Clinic.",
+      ar: "سياسات العيادة، ورسوم عدم الحضور، وتجديد الوصفات، والسرّية في عيادة بلو دايموند الطبية.",
+    } as const;
+
+import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
+import { PageSchema } from "@/components/shared/schema";
+import { getRoute } from "@/lib/routing";
+
 const policies = {
   en: [
     {
@@ -50,12 +61,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const safeLocale: Locale = isLocale(locale) ? locale : "en";
-  return getRouteMetadata("patient-resources-hub", safeLocale, {
-    description: {
-      en: "Clinic policies, no-show fees, prescription refills, and confidentiality at Blue Diamond Medical Clinic.",
-      ar: "سياسات العيادة، ورسوم عدم الحضور، وتجديد الوصفات، والسرّية في عيادة بلو دايموند الطبية.",
-    },
-  });
+  return getRouteMetadata("patient-resources-hub", safeLocale, { description: PAGE_DESCRIPTION });
 }
 
 export default async function PatientResourcesPage({ params }: { params: Promise<{ locale: string }> }) {
@@ -63,11 +69,22 @@ export default async function PatientResourcesPage({ params }: { params: Promise
   const locale: Locale = isLocale(rawLocale) ? rawLocale : "en";
   const title = locale === "ar" ? "موارد المرضى" : "Patient Resources";
 
+  const ownRoute = getRoute("patient-resources-hub")!;
+
   return (
     <>
+      <PageSchema
+        locale={locale}
+        type="WebPage"
+        name={title}
+        description={PAGE_DESCRIPTION[locale]}
+        path={ownRoute.path[locale]}
+      />
       <section className="section-y">
       <Container>
-        <h1 className="text-display-1 font-heading lg:text-display-1-lg">{title}</h1>
+        <Breadcrumbs locale={locale} items={[{ label: ownRoute.title[locale] }]} />
+
+        <h1 className="mt-4 text-display-1 font-heading lg:text-display-1-lg">{title}</h1>
         <div className="mt-10 divide-y divide-border border-y border-border">
           {policies[locale].map((policy) => (
             <div key={policy.title} className="grid gap-2 py-6 lg:grid-cols-[280px_1fr] lg:gap-8">

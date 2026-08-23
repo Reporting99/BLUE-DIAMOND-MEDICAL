@@ -3,6 +3,9 @@ import { Container } from "@/components/layout/Container";
 import { SectionTransition } from "@/components/layout/SectionTransition";
 import { isLocale, type Locale } from "@/i18n/config";
 import { getRouteMetadata } from "@/lib/seo/metadata";
+import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
+import { PageSchema } from "@/components/shared/schema";
+import { getRoute } from "@/lib/routing";
 
 const categories = {
   en: ["Family Health", "Women's Health", "Mental Health", "Medical Aesthetics", "Skin & Hair", "Clinic News"],
@@ -32,7 +35,7 @@ export default async function HealthHubPage({ params }: { params: Promise<{ loca
     en: {
       title: "Health Hub",
       intro:
-        "A growing library of plain-language guidance from our clinical team, organized by the topics our patients ask about most. Articles are published only after medical review — see docs/CONTENT_APPROVAL_MATRIX.md.",
+        "A growing library of plain-language guidance from our clinical team, organized by the topics our patients ask about most. Articles are published only after medical review.",
     },
     ar: {
       title: "المركز المعرفي",
@@ -41,11 +44,21 @@ export default async function HealthHubPage({ params }: { params: Promise<{ loca
     },
   }[locale];
 
+  const ownRoute = getRoute("health-hub")!;
+
   return (
     <>
+      <PageSchema
+        locale={locale}
+        name={copy.title}
+        description={copy.intro}
+        path={ownRoute.path[locale]}
+      />
       <section className="section-y">
       <Container>
-        <h1 className="text-display-1 font-heading lg:text-display-1-lg">{copy.title}</h1>
+        <Breadcrumbs locale={locale} items={[{ label: ownRoute.title[locale] }]} />
+
+        <h1 className="mt-4 text-display-1 font-heading lg:text-display-1-lg">{copy.title}</h1>
         <p className="mt-4 max-w-2xl text-body-lg text-text-secondary">{copy.intro}</p>
 
         <ul className="mt-10 flex flex-wrap gap-3">

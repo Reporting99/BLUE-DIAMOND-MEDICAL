@@ -11,9 +11,9 @@ import type { Metadata } from "next";
 // (the underlying dependency, carries no "use client" boundary) — import
 // it directly for this one server-side usage instead.
 import { buildSrc } from "@imagekit/javascript";
-import { getRoute } from "@/config/routes";
-import { siteConfig } from "@/config/site";
+import { absoluteRouteUrl, getRoute, hreflangAlternates } from "@/lib/routing";
 import { imagekitConfig, imagekitIsConfigured, imagePresets } from "@/config/imagekit";
+import { isSiteLaunched } from "@/config/launch";
 import type { Locale } from "@/i18n/config";
 
 interface RouteMetadataOverrides {
@@ -37,16 +37,17 @@ export function getRouteMetadata(
     throw new Error(`getRouteMetadata: unknown route id "${routeId}"`);
   }
 
-  const enUrl = `${siteConfig.url}/en${route.path.en}`;
-  const arUrl = `${siteConfig.url}/ar${route.path.ar}`;
-  const canonical = locale === "ar" ? arUrl : enUrl;
+  // Canonical and hreflang URLs come from the routing layer so this builder
+  // and the sitemap can never disagree about a page's absolute URL.
+  const canonical = absoluteRouteUrl(route, locale);
+  const languages = hreflangAlternates(route);
 
   // ogImagePath was previously accepted here and silently dropped — every
   // page fell back to Next's default OG image regardless of what callers
   // passed. Now it actually resolves through ImageKit's og-image preset
   // (1200x630, matching the standard OG/Twitter card size) when ImageKit
   // is configured; when it isn't (no live account yet — see
-  // docs/IMAGEKIT_IMPORT_REPORT.md), `images` is omitted entirely rather
+  // docs/MEDIA.md), `images` is omitted entirely rather
   // than pointing at a URL that would 404, which is the same honest
   // fallback behavior used everywhere else in the app.
   const ogImage =
@@ -63,13 +64,23 @@ export function getRouteMetadata(
     description: overrides.description[locale],
     alternates: {
       canonical,
-      languages: {
-        "en-CA": enUrl,
-        "ar-CA": arUrl,
-        "x-default": enUrl,
-      },
+      languages,
     },
-    robots: route.indexing === "index" ? { index: true, follow: true } : { index: false, follow: false },
+    // Pre-launch, NO page is indexable regardless of its route-registry
+    // setting. This is the build-time layer of the guard; the authoritative
+    // request-time layer is the X-Robots-Tag header stamped by src/proxy.ts,
+    // and robots.txt is the third. They are not redundant — robots.txt stops
+    // crawling, while the header and this meta tag stop *indexing* of
+    // anything already fetched or reached from an external link, which
+    // robots.txt alone does not prevent.
+    //
+    // Canonical, hreflang and OG URLs above are deliberately left pointing at
+    // the real launch domain: they are stable, correct, and must not churn at
+    // launch. Nothing here ever emits a temporary or runtime hostname.
+    robots:
+      isSiteLaunched() && route.indexing === "index"
+        ? { index: true, follow: true }
+        : { index: false, follow: false },
     openGraph: {
       title: route.title[locale],
       description: overrides.description[locale],

@@ -57,7 +57,7 @@ const hasCredentials = Boolean(urlEndpoint && publicKey && privateKey);
 
 /**
  * Identity-confirmed doctor portraits, verified by visual inspection this
- * pass (see docs/IMAGEKIT_IMPORT_REPORT.md):
+ * pass (see docs/MEDIA.md):
  *  - medical/dr.farhat.jpg — unambiguous, filename + subject match.
  *  - medical/3p0a4127.jpg and its resized duplicate
  *    aesthetics/rs-w_388-h_388-cg_true(.webp/-m.webp) — a visible embroidered
@@ -71,7 +71,7 @@ const hasCredentials = Boolean(urlEndpoint && publicKey && privateKey);
 // duplicated here (plain .mjs, no ts-node/tsx in this project) rather than
 // imported. Every destPath below and the generated one further down MUST
 // stay prefixed with it, or a real upload lands at a path the site's
-// manifest (src/content/media/image-manifest.ts) never looks for — found
+// manifest (src/lib/media/image-manifest.ts) never looks for — found
 // as a real drift bug this pass (both were missing the prefix).
 const MEDIA_ROOT = "/blue-diamond";
 

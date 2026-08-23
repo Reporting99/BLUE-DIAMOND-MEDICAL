@@ -31,7 +31,7 @@ export class FeelStackConfigurationError extends Error {
  * from within a Server Component); the classified code/status is logged
  * server-side before the throw so the real cause is never lost, even
  * though the boundary itself renders as a generic error page. See
- * docs/ERROR_HANDLING_REPORT.md.
+ * docs/FEELSTACK.md.
  */
 export class FeelStackUnavailableError extends Error {
   readonly code: FeelStackErrorCode;

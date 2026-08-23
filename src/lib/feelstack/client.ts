@@ -23,6 +23,7 @@ import { getFallbackContent } from "./fallback";
 import { classifyHttpStatus, classifyThrown, logFeelstackEvent, FeelStackConfigurationError } from "./errors";
 import { feelstackErr, feelstackOk, RETRYABLE_ERROR_CODES, type FeelStackResult } from "./contracts";
 import { getFeelstackApiUrl, getFeelstackSiteKey, isFeelstackConfigured } from "./content-mode";
+import { cacheTags } from "./cache-tags";
 
 /**
  * Server-only typed adapter around the FeelStack CMS — brief §4/§7. Every
@@ -37,9 +38,13 @@ import { getFeelstackApiUrl, getFeelstackSiteKey, isFeelstackConfigured } from "
  * below resolves through the local fallback content instead of a network
  * request (`resolveContent`/`listRoutes`, kept for the existing static
  * build) or returns a `CONFIGURATION_ERROR`-shaped result
- * (`resolveEntity`, the new hybrid-mode path). Imports "server-only" so a
- * client-component import fails the build rather than silently leaking
- * FEELSTACK_* credentials into the browser bundle.
+ * (`resolveEntity`, the new hybrid-mode path).
+ *
+ * This module does NOT import "server-only" — see the note at the top of this
+ * file for why, and why there is no credential for that guard to protect here.
+ * (An earlier version of this comment claimed the opposite; the `server-only`
+ * package was never actually imported anywhere in this repo and has been
+ * removed from package.json.)
  */
 
 const REQUEST_TIMEOUT_MS = 5000;
@@ -61,7 +66,7 @@ interface FetchOutcome {
  * classified error code (brief §7: only retry network failures and
  * 502/503/504, never 400/invalid-site/locale-mismatch).
  */
-async function fetchOnce(url: string, revalidateSeconds: number): Promise<FetchOutcome> {
+async function fetchOnce(url: string, revalidateSeconds: number, tags: readonly string[]): Promise<FetchOutcome> {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
   try {
@@ -71,7 +76,15 @@ async function fetchOnce(url: string, revalidateSeconds: number): Promise<FetchO
       // Draft content must never appear publicly — FeelStack's own API is
       // expected to filter to published content server-side; the adapter
       // additionally checks `status === "published"` as defense in depth.
-      next: { revalidate: revalidateSeconds },
+      //
+      // `tags` is what makes the webhook's revalidateTag() calls actually do
+      // something. Without it every builder in cache-tags.ts is an orphan:
+      // the invalidation matrix and the webhook are both complete, but no
+      // cache entry carries the tag they invalidate, so a publish event
+      // silently no-ops and stale content is served until the time-based
+      // revalidate window expires. Brief §17 ("every tag must have a
+      // PRODUCER") — this is the producer.
+      next: { revalidate: revalidateSeconds, tags: tags.length > 0 ? [...tags] : undefined },
     });
     return { response, requestId: response.headers.get("x-request-id") ?? undefined };
   } finally {
@@ -84,11 +97,15 @@ async function fetchOnce(url: string, revalidateSeconds: number): Promise<FetchO
  * GET at most once, and only for network failures or 502/503/504 — never
  * for 400, invalid site key, or locale mismatch (those are not transient).
  */
-async function fetchWithPolicy(url: string, revalidateSeconds: number): Promise<FeelStackResult<unknown>> {
+async function fetchWithPolicy(
+  url: string,
+  revalidateSeconds: number,
+  tags: readonly string[] = [],
+): Promise<FeelStackResult<unknown>> {
   let attempt = 0;
   while (true) {
     try {
-      const { response, requestId } = await fetchOnce(url, revalidateSeconds);
+      const { response, requestId } = await fetchOnce(url, revalidateSeconds, tags);
       if (response.ok) {
         try {
           const json: unknown = await response.json();
@@ -130,6 +147,8 @@ export async function resolveEntity<T>(
   path: string,
   locale: "en" | "ar",
   schema: z.ZodType<T>,
+  /** Cache tags this response should be filed under, from cache-tags.ts. */
+  tags: readonly string[] = [],
 ): Promise<FeelStackResult<T>> {
   if (!isConfigured()) {
     throw new FeelStackConfigurationError(
@@ -141,7 +160,7 @@ export async function resolveEntity<T>(
   const apiUrl = getFeelstackApiUrl();
   const url = `${apiUrl}/public/v1/sites/${siteKey}/resolve?path=${encodeURIComponent(path)}&locale=${locale}`;
 
-  const result = await fetchWithPolicy(url, 45);
+  const result = await fetchWithPolicy(url, 45, tags);
   if (!result.ok) return result as FeelStackResult<T>;
 
   const parsed = schema.safeParse(result.data);
@@ -164,7 +183,7 @@ export async function resolveEntity<T>(
  * reviewable changes" — this signature predates the FeelStackResult
  * contract and nothing outside this module calls it directly yet). Falls
  * back to local typed content on any failure, matching this build's
- * documented pre-provisioning behavior (docs/DEPLOYMENT_GUIDE.md).
+ * documented pre-provisioning behavior (docs/DEPLOYMENT.md).
  */
 export async function resolveContent(path: string, locale: "en" | "ar"): Promise<FeelstackResolveResponse | null> {
   if (!isConfigured()) {
@@ -186,7 +205,7 @@ export async function listRoutes(locale: "en" | "ar"): Promise<FeelstackRoutesRe
   const apiUrl = getFeelstackApiUrl();
   const url = `${apiUrl}/public/v1/sites/${siteKey}/routes?locale=${locale}`;
 
-  const result = await fetchWithPolicy(url, 45);
+  const result = await fetchWithPolicy(url, 45, [cacheTags.routes(siteKey), cacheTags.sitemap(siteKey)]);
   if (!result.ok) return [];
 
   const parsed = feelstackRoutesResponseSchema.safeParse(result.data);

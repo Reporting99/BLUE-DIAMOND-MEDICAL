@@ -5,7 +5,7 @@
 // `src/app/api/feelstack/revalidate/route.ts`, a Next.js Route Handler,
 // which the framework never bundles for the client.
 import { verifyHmacSignature } from "@/lib/security/hmac";
-import { routes } from "@/config/routes";
+import { routes } from "@/lib/routing";
 import { getFeelstackSiteKey } from "./content-mode";
 import { feelstackWebhookBodySchema } from "./schemas";
 import { tagsForEvent } from "./revalidation";
@@ -34,7 +34,7 @@ const allowedPaths = new Set(routes.flatMap((r) => [`/en${r.path.en}`, `/ar${r.p
  * signatures already processed and rejects a repeat. In-memory only —
  * correct for a single server instance; a multi-instance deployment needs
  * a shared store (Redis/KV) for this to hold across instances, which is a
- * documented limitation (docs/WEBHOOK_SECURITY_REPORT.md), not something
+ * documented limitation (docs/FEELSTACK.md), not something
  * fabricated here without real infrastructure to back it.
  */
 const seenSignatures = new Map<string, number>();

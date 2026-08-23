@@ -1,4 +1,4 @@
-import type { Bilingual } from "./medical-service";
+import type { Bilingual } from "./common";
 
 /** Typed bilingual pricing model — brief §19. Currency is fixed to CAD (Calgary clinic). */
 export interface PricingItem {

@@ -22,7 +22,7 @@ import { Button } from "@/components/ui/button";
  * INVALID_RESPONSE/LOCALE_MISMATCH/INVALID_SITE, HTTP status, request ID)
  * is logged server-side in `page-resolver.ts` before the throw, so it is
  * never lost even though this boundary's own copy stays generic and
- * bilingual — see docs/ERROR_HANDLING_REPORT.md.
+ * bilingual — see docs/FEELSTACK.md.
  */
 export default function LocaleErrorBoundary({
   error,

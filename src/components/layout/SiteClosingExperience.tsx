@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { Container } from "./Container";
 import { Button } from "@/components/ui/button";
-import { getRoute } from "@/config/routes";
+import { getRoute } from "@/lib/routing";
 import { siteConfig } from "@/config/site";
 import { getDictionary, type Locale } from "@/i18n/config";
 

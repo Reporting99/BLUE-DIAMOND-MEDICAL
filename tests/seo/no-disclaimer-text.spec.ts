@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { routes } from "../../src/config/routes";
+import { routes } from "../../src/lib/routing";
 import { features } from "../../src/config/features";
 
 /**
@@ -18,7 +18,7 @@ import { features } from "../../src/config/features";
  * safety guidance preventing someone from submitting an urgent matter
  * through an unmonitored web form). Both are explicitly protected by the
  * brief's own "Do not delete real clinic contact information, service
- * instructions" rule — see docs/CONTENT_SOURCE_REGISTER.md for the
+ * instructions" rule — see docs/CONTENT_MODEL.md for the
  * documented reasoning.
  */
 const publishedRoutes = routes.filter(

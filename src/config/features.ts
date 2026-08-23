@@ -1,6 +1,6 @@
 /**
  * Centralized feature flags — see docs/UI_UX_FOUNDATION.md and
- * docs/MISSING_CONTENT_REPORT.md for why each disabled flag is off.
+ * docs/CONTENT_MODEL.md for why each disabled flag is off.
  *
  * A disabled feature must:
  *  - be hidden from navigation
@@ -17,13 +17,13 @@
 export const features = {
   // SkinMedica brand + product data (all 23 client-approved SKUs, exact
   // names/prices/sizes, full bilingual detail content, FAQs, and sources)
-  // is imported (src/content/products.ts) and validated
+  // is imported (src/features/products/data.ts) and validated
   // (tests/unit/skinmedica-catalogue.spec.ts). Published live per the
   // "COMPLETE SKINMEDICA NAVIGATION AND PRODUCT-DETAIL FLOW" brief's
   // explicit instruction to ship with the approved neutral placeholder
   // until real photography exists, rather than keep the whole catalogue
-  // gated on photography — see docs/IMAGEKIT_IMPORT_REPORT.md and
-  // docs/DATA_APPROVAL_BLOCKERS.md for the still-missing packshots.
+  // gated on photography — see docs/MEDIA.md and
+  // docs/CONTENT_MODEL.md for the still-missing packshots.
   // Controls browsing/detail/enquiry only — cart/checkout stay separately
   // gated below regardless of this flag (brief: "Do not activate...
   // Cart. Checkout.").
@@ -41,7 +41,7 @@ export const features = {
   consultationFormEnabled: false, // no approved consultation-request flow supplied yet
   legalPagesEnabled: false, // legacy Terms/Privacy are literal "Coming soon" placeholders
   // Would duplicate existing published content rather than add unique
-  // detail — see docs/MISSING_CONTENT_REPORT.md and docs/CONTENT_APPROVAL_MATRIX.md.
+  // detail — see docs/CONTENT_MODEL.md and docs/CONTENT_MODEL.md.
   cosmeticBotoxTreatmentPageEnabled: false,
   skinTighteningTreatmentPageEnabled: false,
   medicalBotoxDetailPagesEnabled: false, // migraine / bruxism-tmj / hyperhidrosis sub-pages

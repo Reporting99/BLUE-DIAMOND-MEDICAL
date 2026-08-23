@@ -2,17 +2,17 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Container } from "@/components/layout/Container";
 import { SectionTransition } from "@/components/layout/SectionTransition";
-import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
+import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
 import { isLocale, type Locale } from "@/i18n/config";
-import { getRoute, href } from "@/config/routes";
+import { getRoute, href } from "@/lib/routing";
 import { features } from "@/config/features";
-import { aestheticsPricingGroups } from "@/content/aesthetics-pricing";
+import { aestheticsPricingGroups } from "@/features/aesthetics";
 import { formatPrice } from "@/types/pricing";
 import { getRouteMetadata } from "@/lib/seo/metadata";
 
 /**
  * Feature-flagged off (`aestheticPricingEnabled`) — see
- * src/content/aesthetics-pricing.ts. Fully built: type model, currency
+ * src/features/aesthetics/data/pricing.ts. Fully built: type model, currency
  * formatting, and this page all work correctly the moment approved prices
  * are added to the content file; until then it 404s rather than
  * publishing an empty pricing page.

@@ -8,7 +8,7 @@ import type { FeelstackResolveResponse } from "./types";
  * site is still driven by src/content/*.ts and src/config/routes.ts, not
  * FeelStack. This fallback exists so the adapter itself (client.ts) is
  * exercised and testable ahead of a real CMS connection, per
- * docs/DEPLOYMENT_GUIDE.md.
+ * docs/DEPLOYMENT.md.
  */
 export const feelstackFallbackContent: Record<string, FeelstackResolveResponse> = {};
 

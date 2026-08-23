@@ -1,11 +1,22 @@
 import type { Metadata } from "next";
 import { Container } from "@/components/layout/Container";
 import { SectionTransition } from "@/components/layout/SectionTransition";
-import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
-import { ConcernExplorer } from "@/components/aesthetics/ConcernExplorer";
+import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
+import { ConcernExplorer } from "@/features/concerns";
 import { isLocale, type Locale } from "@/i18n/config";
-import { getRoute, href } from "@/config/routes";
+import { getRoute, href } from "@/lib/routing";
 import { getRouteMetadata } from "@/lib/seo/metadata";
+
+/** Single source for this page's description: consumed by both generateMetadata
+ * and the page's JSON-LD node, so the two can never drift apart (brief §9). */
+const PAGE_DESCRIPTION = {
+      en: "Browse by skin concern — acne scars, redness, dryness, fine lines, and more — at Blue Diamond Medical Aesthetics.",
+      ar: "تصفّحوا حسب مخاوف البشرة — ندبات حب الشباب، الاحمرار، الجفاف، الخطوط الدقيقة، وغيرها — في بلو دايموند للتجميل الطبي.",
+    } as const;
+
+import { PageSchema } from "@/components/shared/schema";
+import { siteConfig } from "@/config/site";
+import { concerns } from "@/features/concerns";
 
 export async function generateMetadata({
   params,
@@ -14,12 +25,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const safeLocale: Locale = isLocale(locale) ? locale : "en";
-  return getRouteMetadata("aesthetics-concerns-hub", safeLocale, {
-    description: {
-      en: "Browse by skin concern — acne scars, redness, dryness, fine lines, and more — at Blue Diamond Medical Aesthetics.",
-      ar: "تصفّحوا حسب مخاوف البشرة — ندبات حب الشباب، الاحمرار، الجفاف، الخطوط الدقيقة، وغيرها — في بلو دايموند للتجميل الطبي.",
-    },
-  });
+  return getRouteMetadata("aesthetics-concerns-hub", safeLocale, { description: PAGE_DESCRIPTION });
 }
 
 export default async function ConcernsHubPage({ params }: { params: Promise<{ locale: string }> }) {
@@ -28,8 +34,22 @@ export default async function ConcernsHubPage({ params }: { params: Promise<{ lo
   const aestheticsRoute = getRoute("aesthetics-hub")!;
   const title = locale === "ar" ? "المخاوف الجمالية" : "Concerns";
 
+  const ownRoute = getRoute("aesthetics-concerns-hub")!;
+  // Same array this page renders, so the structured list cannot diverge.
+  const listItems = concerns.flatMap((entity) => {
+    const r = getRoute(`concern-${entity.id}`);
+    return r ? [{ name: entity.title[locale], url: `${siteConfig.url}/${locale}${r.path[locale]}` }] : [];
+  });
+
   return (
     <>
+      <PageSchema
+        locale={locale}
+        name={title}
+        description={PAGE_DESCRIPTION[locale]}
+        path={ownRoute.path[locale]}
+        items={listItems}
+      />
       <section className="section-y">
         <Container>
           <Breadcrumbs locale={locale} items={[{ label: aestheticsRoute.title[locale], href: href("aesthetics-hub", locale) }, { label: title }]} />

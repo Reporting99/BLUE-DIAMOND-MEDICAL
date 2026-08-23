@@ -7,7 +7,7 @@
  * clinic and "Open today 09:00–17:00" for aesthetics, with no other days
  * broken out. Both are treated here as the daily hours applying every day
  * the clinic is open, which is the most literal reading of the source —
- * flagged in docs/MISSING_CONTENT_REPORT.md as needing a real day-by-day
+ * flagged in docs/CONTENT_MODEL.md as needing a real day-by-day
  * schedule from the client.
  */
 

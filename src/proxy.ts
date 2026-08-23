@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { defaultLocale, isLocale } from "@/i18n/config";
-import { legacyRedirects } from "@/lib/seo/legacy-redirects";
-import { routes } from "@/config/routes";
+import { legacyRedirects } from "@/lib/routing";
+import { routes } from "@/lib/routing";
+import { isSiteLaunched, PRE_LAUNCH_ROBOTS_HEADER } from "@/config/launch";
 
 /**
  * Arabic public URLs use meaningful Arabic slugs (e.g. /ar/الأطباء/...)
@@ -11,11 +12,33 @@ import { routes } from "@/config/routes";
  * pretty Arabic path to its canonical English-slug path internally, on
  * the same "ar" locale, so the browser's address bar keeps the Arabic URL
  * while Next's file-system router resolves it against the English folder
- * tree. See docs/EN_AR_ROUTE_MAPPING.md.
+ * tree. See docs/ROUTING.md.
  */
 const arabicToCanonicalPath = new Map(
   routes.filter((r) => r.path.ar !== r.path.en).map((r) => [r.path.ar, r.path.en]),
 );
+
+/**
+ * Stamps the pre-launch noindex header on every response this proxy returns.
+ *
+ * This is the AUTHORITATIVE layer of the indexing guard, because it is the
+ * only one evaluated per request: page metadata is baked at build time for
+ * statically-generated routes, so a build made while launched would keep
+ * claiming `index` even if the environment later said otherwise. The header
+ * always reflects the running configuration, and where the two disagree the
+ * more restrictive directive is the one that applies.
+ *
+ * Applied to redirects and rewrites as well as pass-throughs, since a 301 to
+ * a page is itself a discoverable hop.
+ *
+ * Costs one env read per request and adds nothing at all once launched.
+ */
+function withIndexingGuard(response: NextResponse): NextResponse {
+  if (!isSiteLaunched()) {
+    response.headers.set("X-Robots-Tag", PRE_LAUNCH_ROBOTS_HEADER);
+  }
+  return response;
+}
 
 /**
  * Next.js 16 renamed the `middleware` convention to `proxy` — see
@@ -49,7 +72,7 @@ export function proxy(request: NextRequest) {
   if (legacyTarget) {
     const url = new URL(legacyTarget, request.url);
     if (search) url.search = search;
-    return NextResponse.redirect(url, 301);
+    return withIndexingGuard(NextResponse.redirect(url, 301));
   }
 
   // 1b. Safety net for the legacy SkinMedica sub-page collection
@@ -63,7 +86,7 @@ export function proxy(request: NextRequest) {
   ) {
     const url = new URL("/en/shop", request.url);
     if (search) url.search = search;
-    return NextResponse.redirect(url, 301);
+    return withIndexingGuard(NextResponse.redirect(url, 301));
   }
 
   // Skip API routes, Next internals, and files with an extension.
@@ -75,7 +98,7 @@ export function proxy(request: NextRequest) {
     pathname === "/llms.txt" ||
     /\.[a-zA-Z0-9]+$/.test(pathname)
   ) {
-    return NextResponse.next();
+    return withIndexingGuard(NextResponse.next());
   }
 
   // 2. Locale prefixing.
@@ -92,10 +115,10 @@ export function proxy(request: NextRequest) {
       if (canonical) {
         const url = new URL(`/ar${canonical}`, request.url);
         if (search) url.search = search;
-        return NextResponse.rewrite(url);
+        return withIndexingGuard(NextResponse.rewrite(url));
       }
     }
-    return NextResponse.next();
+    return withIndexingGuard(NextResponse.next());
   }
 
   // 3. Bare-path locale prefixing. `defaultLocale` is a static constant, not
@@ -105,7 +128,7 @@ export function proxy(request: NextRequest) {
   // temporary one. Required explicitly for "/" -> "/en/" (brief §4).
   const url = new URL(`/${defaultLocale}${pathname}`, request.url);
   if (search) url.search = search;
-  return NextResponse.redirect(url, 301);
+  return withIndexingGuard(NextResponse.redirect(url, 301));
 }
 
 export const config = {

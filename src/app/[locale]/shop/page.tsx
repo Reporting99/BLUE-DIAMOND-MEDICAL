@@ -3,12 +3,15 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Container } from "@/components/layout/Container";
 import { SectionTransition } from "@/components/layout/SectionTransition";
-import { ProductCard } from "@/components/commerce/ProductCard";
+import { ProductCard } from "@/features/products";
 import { isLocale, type Locale } from "@/i18n/config";
-import { getRoute, href } from "@/config/routes";
+import { getRoute, href } from "@/lib/routing";
 import { features } from "@/config/features";
-import { availabilityNotice, productCategories, productConcerns, products } from "@/content/products";
+import { availabilityNotice, productCategories, productConcerns, products } from "@/features/products";
 import { getRouteMetadata } from "@/lib/seo/metadata";
+import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
+import { PageSchema } from "@/components/shared/schema";
+import { siteConfig } from "@/config/site";
 
 const copy = {
   en: {
@@ -49,13 +52,29 @@ export default async function ShopHubPage({ params }: { params: Promise<{ locale
   const { locale: rawLocale } = await params;
   const locale: Locale = isLocale(rawLocale) ? rawLocale : "en";
   const t = copy[locale];
-  const title = getRoute("shop-hub")!.title[locale];
+  const ownRoute = getRoute("shop-hub")!;
+  const title = ownRoute.title[locale];
+  // Same `products` array the catalogue grid below renders, so the structured
+  // list and the visible list cannot diverge.
+  const listItems = products.flatMap((product) => {
+    const route = getRoute(`shop-product-${product.id}`);
+    return route ? [{ name: product.name[locale], url: `${siteConfig.url}/${locale}${route.path[locale]}` }] : [];
+  });
 
   return (
     <>
+      <PageSchema
+        locale={locale}
+        name={title}
+        description={t.intro}
+        path={ownRoute.path[locale]}
+        items={listItems}
+      />
       <section className="section-y">
       <Container>
-        <h1 className="text-display-1 font-heading lg:text-display-1-lg">{title}</h1>
+        <Breadcrumbs locale={locale} items={[{ label: ownRoute.title[locale] }]} />
+
+        <h1 className="mt-4 text-display-1 font-heading lg:text-display-1-lg">{title}</h1>
         <p className="mt-3 max-w-2xl text-body text-text-secondary">{t.intro}</p>
 
         <div className="mt-8 grid gap-8 sm:grid-cols-2">

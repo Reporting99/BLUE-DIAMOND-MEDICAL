@@ -6,6 +6,17 @@ import { isLocale, type Locale } from "@/i18n/config";
 import { getRouteMetadata } from "@/lib/seo/metadata";
 import { getBookingUrl, type BookingChannel } from "@/config/booking";
 
+/** Single source for this page's description: consumed by both generateMetadata
+ * and the page's JSON-LD node, so the two can never drift apart (brief §9). */
+const PAGE_DESCRIPTION = {
+      en: "Book with your family doctor, a walk-in visit, an eye screening, or a medical aesthetics consultation at Blue Diamond Medical Clinic.",
+      ar: "احجزوا مع طبيب أسرتكم، أو زيارة بدون موعد، أو فحص العين، أو استشارة تجميل طبي في عيادة بلو دايموند الطبية.",
+    } as const;
+
+import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
+import { PageSchema } from "@/components/shared/schema";
+import { getRoute } from "@/lib/routing";
+
 const options: { channel: BookingChannel; description: { en: string; ar: string } }[] = [
   {
     channel: "family-doctor",
@@ -44,12 +55,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const safeLocale: Locale = isLocale(locale) ? locale : "en";
-  return getRouteMetadata("book-appointment", safeLocale, {
-    description: {
-      en: "Book with your family doctor, a walk-in visit, an eye screening, or a medical aesthetics consultation at Blue Diamond Medical Clinic.",
-      ar: "احجزوا مع طبيب أسرتكم، أو زيارة بدون موعد، أو فحص العين، أو استشارة تجميل طبي في عيادة بلو دايموند الطبية.",
-    },
-  });
+  return getRouteMetadata("book-appointment", safeLocale, { description: PAGE_DESCRIPTION });
 }
 
 export default async function BookAppointmentPage({ params }: { params: Promise<{ locale: string }> }) {
@@ -62,11 +68,22 @@ export default async function BookAppointmentPage({ params }: { params: Promise<
       : "To book medical Botox (migraine, bruxism, hyperhidrosis), please call us directly.";
   const botoxPhone = getBookingUrl("phone-medical-botox");
 
+  const ownRoute = getRoute("book-appointment")!;
+
   return (
     <>
+      <PageSchema
+        locale={locale}
+        type="WebPage"
+        name={title}
+        description={PAGE_DESCRIPTION[locale]}
+        path={ownRoute.path[locale]}
+      />
       <section className="section-y">
       <Container>
-        <h1 className="text-display-1 font-heading lg:text-display-1-lg">{title}</h1>
+        <Breadcrumbs locale={locale} items={[{ label: ownRoute.title[locale] }]} />
+
+        <h1 className="mt-4 text-display-1 font-heading lg:text-display-1-lg">{title}</h1>
 
         <div className="mt-10 grid gap-6 sm:grid-cols-2">
           {options.map((option) => {

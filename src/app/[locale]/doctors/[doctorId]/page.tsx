@@ -1,23 +1,58 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import { Container } from "@/components/layout/Container";
 import { SectionTransition } from "@/components/layout/SectionTransition";
-import { ImageKitImage } from "@/components/media/ImageKitImage";
+import { ImageKitImage } from "@/components/shared/ImageKitImage";
 import { Button } from "@/components/ui/button";
+import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
+import { PhysicianSchema } from "@/components/shared/schema";
 import { isLocale, locales, type Locale } from "@/i18n/config";
-import { doctors, getDoctor } from "@/types/doctor";
+import { doctors, getDoctor } from "@/features/doctors";
 import { getBookingUrl } from "@/config/booking";
 import { siteConfig } from "@/config/site";
-import { getRoute, href } from "@/config/routes";
+import { getRoute, href } from "@/lib/routing";
+import { servicesForDoctor } from "@/lib/seo/entity-graph";
+import { resolvePageContent, entityCacheTags } from "@/lib/feelstack/page-resolver";
+import { cacheTags } from "@/lib/feelstack/cache-tags";
+import { cmsDoctorSchema } from "@/lib/feelstack/schemas";
 
 /**
  * Canonical English-slug route for every doctor, in both locales — the
  * pretty Arabic URL (e.g. /ar/الأطباء/محمد-فرحات) is rewritten to this
- * physical path by src/proxy.ts. See docs/EN_AR_ROUTE_MAPPING.md.
+ * physical path by src/proxy.ts. See docs/ROUTING.md.
  */
 export function generateStaticParams() {
   return locales.flatMap((locale) => doctors.map((doctor) => ({ locale, doctorId: doctor.id })));
+}
+
+
+/**
+ * Hybrid FeelStack resolution for this entity type, following the reference
+ * pattern in medical/[serviceId]. In the default FEELSTACK_CONTENT_MODE=static
+ * this never touches the network: resolvePageContent goes straight to
+ * staticFallback(), so behaviour is unchanged from before this pass.
+ *
+ * The tags are what let the publish webhook invalidate this entry — see
+ * entityCacheTags() in page-resolver.ts.
+ */
+async function loadDoctor(id: string, locale: Locale) {
+  const cmsPath = `/doctors/${id}`;
+  const resolution = await resolvePageContent({
+    path: cmsPath,
+    locale,
+    schema: cmsDoctorSchema,
+    staticFallback: () => getDoctor(id),
+    tags: entityCacheTags({
+      detail: cacheTags.doctor,
+      index: cacheTags.doctorsIndex,
+      locale,
+      id,
+      path: cmsPath,
+    }),
+  });
+  return resolution.source === "not-found" ? undefined : resolution.data;
 }
 
 export async function generateMetadata({
@@ -27,7 +62,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale: rawLocale, doctorId } = await params;
   const locale: Locale = isLocale(rawLocale) ? rawLocale : "en";
-  const doctor = getDoctor(doctorId);
+  const doctor = await loadDoctor(doctorId, locale);
   if (!doctor) return {};
 
   const route = getRoute(doctor.routeId);
@@ -54,13 +89,25 @@ export default async function DoctorProfilePage({
 }) {
   const { locale: rawLocale, doctorId } = await params;
   const locale: Locale = isLocale(rawLocale) ? rawLocale : "en";
-  const doctor = getDoctor(doctorId);
+  const doctor = await loadDoctor(doctorId, locale);
   if (!doctor) notFound();
 
   const booking = getBookingUrl(doctor.bookingChannel);
+  const ownRoute = getRoute(doctor.routeId);
+  const doctorsHub = getRoute("doctors-index")!;
+  // Only services whose own approved content names this doctor — see
+  // src/lib/seo/entity-graph.ts. Empty for doctors the source never links,
+  // in which case the section is omitted rather than filled.
+  const relatedServices = servicesForDoctor(doctor.id);
+
+  const labels = {
+    en: { relatedServices: "Services this physician provides" },
+    ar: { relatedServices: "الخدمات التي يقدمها هذا الطبيب" },
+  }[locale];
 
   return (
     <>
+      {ownRoute ? <PhysicianSchema doctor={doctor} locale={locale} path={ownRoute.path[locale]} /> : null}
       <article className="section-y">
       <Container className="grid gap-10 lg:grid-cols-[5fr_7fr] lg:items-start">
         <div className="facet-corner aspect-[4/5] overflow-hidden rounded-lg lg:sticky lg:top-24">
@@ -78,7 +125,15 @@ export default async function DoctorProfilePage({
         </div>
 
         <div>
-          <h1 className="text-display-1 font-heading lg:text-display-1-lg">{doctor.name[locale]}</h1>
+          <Breadcrumbs
+            locale={locale}
+            items={[
+              { label: doctorsHub.title[locale], href: href("doctors-index", locale) },
+              { label: doctor.name[locale] },
+            ]}
+          />
+
+          <h1 className="mt-4 text-display-1 font-heading lg:text-display-1-lg">{doctor.name[locale]}</h1>
           <p className="mt-2 text-body-lg text-primary">{doctor.credentials[locale]}</p>
           <p className="mt-6 max-w-2xl text-body-lg text-text-secondary">{doctor.bio[locale]}</p>
 
@@ -92,6 +147,32 @@ export default async function DoctorProfilePage({
               </Button>
             ) : null}
           </div>
+
+          {/* Inverse of MedicalServiceContent.relatedDoctorIds — a real crawlable
+              edge back into the medical-service entity cluster (brief §13), using
+              the same pill-link treatment the service template already uses for
+              its "Related physicians" list so nothing new is introduced visually. */}
+          {relatedServices.length ? (
+            <section className="mt-10">
+              <h2 className="text-h4 font-heading">{labels.relatedServices}</h2>
+              <ul className="mt-3 flex flex-wrap gap-3">
+                {relatedServices.map((service) => {
+                  const route = getRoute(`medical-${service.id}`);
+                  if (!route) return null;
+                  return (
+                    <li key={service.id}>
+                      <Link
+                        href={`/${locale}${route.path[locale]}`}
+                        className="inline-flex items-center gap-1 rounded-full border border-border px-4 py-2 text-sm font-medium hover:border-primary hover:text-primary"
+                      >
+                        {service.title[locale]} <ArrowRight className="size-3.5 rtl:rotate-180" />
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            </section>
+          ) : null}
         </div>
       </Container>
       </article>

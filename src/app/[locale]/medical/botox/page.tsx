@@ -4,15 +4,15 @@ import { ArrowRight } from "lucide-react";
 import { notFound } from "next/navigation";
 import { Container } from "@/components/layout/Container";
 import { SectionTransition } from "@/components/layout/SectionTransition";
-import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
+import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
 import { isLocale, type Locale } from "@/i18n/config";
-import { getRoute, href } from "@/config/routes";
+import { getRoute, href } from "@/lib/routing";
 import { features } from "@/config/features";
-import { medicalBotoxHub, medicalBotoxConditions } from "@/content/medical-botox";
+import { medicalBotoxHub, medicalBotoxConditions } from "@/features/medical-services";
 import { getRouteMetadata } from "@/lib/seo/metadata";
 
 /**
- * Feature-flagged off — see src/content/medical-botox.ts. The page is
+ * Feature-flagged off — see src/features/medical-services/botox.ts. The page is
  * fully implemented so enabling it later is a one-line flag flip, but
  * `notFound()` fires while `medicalBotoxDetailPagesEnabled` is false, so
  * it is not publicly reachable, not indexed, and not in the sitemap/nav.

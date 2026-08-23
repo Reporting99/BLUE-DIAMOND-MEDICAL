@@ -4,11 +4,13 @@ import { ArrowRight, Sparkles, Target, Cpu } from "lucide-react";
 import { Container } from "@/components/layout/Container";
 import { SectionTransition } from "@/components/layout/SectionTransition";
 import { Button } from "@/components/ui/button";
-import { ImageKitImage } from "@/components/media/ImageKitImage";
+import { ImageKitImage } from "@/components/shared/ImageKitImage";
 import { isLocale, type Locale } from "@/i18n/config";
 import { getRouteMetadata } from "@/lib/seo/metadata";
 import { getBookingUrl } from "@/config/booking";
-import { href } from "@/config/routes";
+import { getRoute, href } from "@/lib/routing";
+import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
+import { PageSchema } from "@/components/shared/schema";
 
 export async function generateMetadata({
   params,
@@ -59,12 +61,22 @@ export default async function AestheticsHubPage({ params }: { params: Promise<{ 
     { icon: Cpu, ...copy.byTechnology, href: href("aesthetics-technologies-hub", locale) },
   ];
 
+  const ownRoute = getRoute("aesthetics-hub")!;
+
   return (
     <>
+      <PageSchema
+        locale={locale}
+        name={copy.title}
+        description={copy.intro}
+        path={ownRoute.path[locale]}
+      />
       <section className="section-y">
         <Container className="grid gap-10 lg:grid-cols-[7fr_5fr] lg:items-center">
           <div>
-            <h1 className="text-display-1 font-heading lg:text-display-1-lg">{copy.title}</h1>
+            <Breadcrumbs locale={locale} items={[{ label: ownRoute.title[locale] }]} />
+
+            <h1 className="mt-4 text-display-1 font-heading lg:text-display-1-lg">{copy.title}</h1>
             <p className="mt-4 max-w-xl text-body-lg text-text-secondary">{copy.intro}</p>
             <Button size="lg" className="mt-8" render={<a href={consult.href} target="_blank" rel="noopener noreferrer" />}>
               {consult.label[locale]}

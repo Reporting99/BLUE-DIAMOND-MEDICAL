@@ -5,7 +5,9 @@ import { Container } from "@/components/layout/Container";
 import { SectionTransition } from "@/components/layout/SectionTransition";
 import { isLocale, type Locale } from "@/i18n/config";
 import { getRouteMetadata } from "@/lib/seo/metadata";
-import { href } from "@/config/routes";
+import { getRoute, href } from "@/lib/routing";
+import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
+import { PageSchema } from "@/components/shared/schema";
 
 export async function generateMetadata({
   params,
@@ -49,11 +51,22 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
     },
   }[locale];
 
+  const ownRoute = getRoute("about")!;
+
   return (
     <>
+      <PageSchema
+        locale={locale}
+        type="AboutPage"
+        name={copy.title}
+        description={copy.mission}
+        path={ownRoute.path[locale]}
+      />
       <section className="section-y">
       <Container className="max-w-3xl">
-        <h1 className="text-display-1 font-heading lg:text-display-1-lg">{copy.title}</h1>
+        <Breadcrumbs locale={locale} items={[{ label: ownRoute.title[locale] }]} />
+
+        <h1 className="mt-4 text-display-1 font-heading lg:text-display-1-lg">{copy.title}</h1>
 
         <h2 className="mt-10 text-h3 font-heading">{copy.missionHeading}</h2>
         <p className="mt-3 text-body-lg text-text-secondary">{copy.mission}</p>

@@ -1,8 +1,8 @@
 name: CI
 
-# Validation only — brief §40. This workflow never deploys; it exists to
-# catch regressions before merge. Not yet pushed to a remote (brief: "do
-# not push to a remote repository... unless explicitly instructed").
+# Validation only. This workflow never deploys; it exists to catch regressions
+# before merge. Deployment is a separate, manually-dispatched workflow
+# (deploy-production.yml) — see docs/DEPLOYMENT.md.
 
 on:
   push:
@@ -35,7 +35,7 @@ jobs:
         env:
           # No real secrets in CI — every ImageKit/FeelStack-dependent code
           # path is designed to fail closed to local fallback content when
-          # these are unset, per docs/DEPLOYMENT_GUIDE.md.
+          # these are unset, per docs/DEPLOYMENT.md.
           NEXT_PUBLIC_SITE_URL: https://bluediamondmedical.ca
 
       - name: Install Playwright browsers

@@ -1,5 +1,5 @@
-import { getRoute, href } from "@/config/routes";
-import { treatments, gatedTreatments } from "@/content/treatments";
+import { getRoute, href } from "@/lib/routing";
+import { treatments, gatedTreatments } from "@/features/aesthetics/data/treatments";
 import type { Locale } from "@/i18n/config";
 
 /**
@@ -30,7 +30,7 @@ export interface PrimaryNavLink {
  * every literal requirement of the Services page section (real, public,
  * organized, non-gated, 200) — creating a second, parallel /en/services/
  * hub would itself be the forbidden duplicate route. Documented, not
- * silently guessed — see docs/ROUTE_DECISION_LOG.md.
+ * silently guessed — see docs/ROUTING.md.
  */
 export const primaryNavLinks: PrimaryNavLink[] = [
   { id: "nav-home", labelKey: "home", routeId: "home" },
@@ -55,8 +55,8 @@ export interface TreatmentsMenuItem {
  * Tightening" are on the brief's required list, but each one's only
  * approved source content already lives on an existing live page rather
  * than being unique detail of its own (documented in
- * src/content/treatments.ts `gatedTreatments` and
- * docs/MISSING_CONTENT_REPORT.md: Cosmetic Botox duplicates the Botox hub,
+ * src/features/aesthetics/data/treatments.ts `gatedTreatments` and
+ * docs/CONTENT_MODEL.md: Cosmetic Botox duplicates the Botox hub,
  * Skin Tightening duplicates Radio Frequency/TempSure). Per brief §7's own
  * rule — "never link to a gated page" — and the master brief's standing
  * "do not create duplicate pages for the same intent," both items are

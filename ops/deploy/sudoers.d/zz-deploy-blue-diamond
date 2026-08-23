@@ -1,0 +1,23 @@
+# The CI deploy user's ENTIRE root authority on this host.
+#
+# Two commands, nothing else. Deliberately NOT granted: cp, install, tee, mv,
+# bash, sh, systemctl, nginx, or any wildcard -- each of those would turn "may
+# deploy this application" into "may write any file on the system as root".
+#
+# The trailing "" on the installer line is load-bearing: it restricts that
+# command to being invoked with ZERO arguments, so there is no parameter
+# through which the caller can choose a source file or a destination path.
+# Both are compiled into the installer, which is root-owned and not writable
+# by the deploy user.
+#
+# The deploy script itself does take arguments (artifact path and release
+# SHA), and validates both: the artifact path must match an exact expected
+# name, and the SHA must be 40 lowercase hex characters.
+#
+# Install with:
+#   visudo -cf ops/deploy/sudoers.d/zz-deploy-blue-diamond &&
+#   install -m 0440 -o root -g root ops/deploy/sudoers.d/zz-deploy-blue-diamond \
+#     /etc/sudoers.d/zz-deploy-blue-diamond
+
+deploy-blue-diamond ALL=(root) NOPASSWD: /usr/local/sbin/deploy-blue-diamond
+deploy-blue-diamond ALL=(root) NOPASSWD: /usr/local/sbin/install-blue-diamond-deploy-script ""

@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { legacyRedirects } from "../../src/lib/seo/legacy-redirects";
+import { legacyRedirects } from "../../src/lib/routing/legacy-redirects";
 
 /**
  * One test per row in the legacy redirect table — brief §39 ("The full
@@ -9,7 +9,7 @@ import { legacyRedirects } from "../../src/lib/seo/legacy-redirects";
  * `/terms-and-conditions` and `/privacy-policy` intentionally redirect to
  * their real final canonical routes (`/en/terms`, `/en/privacy-policy`),
  * which themselves 404 while `legalPagesEnabled` is off — documented in
- * src/lib/seo/legacy-redirects.ts. This is deliberate: pointing at the
+ * src/lib/routing/legacy-redirects.ts. This is deliberate: pointing at the
  * correct gated destination is more honest than landing a visitor on an
  * unrelated live page or a fabricated "coming soon" placeholder.
  * `/products` -> `/en/shop` is a real 200 now that `shopEnabled` is true —

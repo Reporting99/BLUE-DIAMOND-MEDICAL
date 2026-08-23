@@ -2,11 +2,14 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { Container } from "@/components/layout/Container";
 import { SectionTransition } from "@/components/layout/SectionTransition";
-import { ImageKitImage } from "@/components/media/ImageKitImage";
+import { ImageKitImage } from "@/components/shared/ImageKitImage";
 import { isLocale, type Locale } from "@/i18n/config";
-import { getRoute } from "@/config/routes";
-import { doctors } from "@/types/doctor";
+import { getRoute } from "@/lib/routing";
+import { doctors } from "@/features/doctors";
 import { getRouteMetadata } from "@/lib/seo/metadata";
+import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
+import { PageSchema } from "@/components/shared/schema";
+import { siteConfig } from "@/config/site";
 
 export async function generateMetadata({
   params,
@@ -32,11 +35,28 @@ export default async function DoctorsIndexPage({ params }: { params: Promise<{ l
       ? "ستة أطباء أسرة يقدّمون رعاية شاملة لعائلتكم، بعضهم يقدّم أيضًا خدمات التجميل الطبي وحقن البوتوكس."
       : "Six family physicians providing comprehensive care for your family — several also deliver medical aesthetics and Botox.";
 
+  const ownRoute = getRoute("doctors-index")!;
+  // Built from the same `doctors` array the grid below maps over, so the
+  // structured list can never drift from the visibly rendered one.
+  const items = doctors.flatMap((doctor) => {
+    const route = getRoute(doctor.routeId);
+    return route ? [{ name: doctor.name[locale], url: `${siteConfig.url}/${locale}${route.path[locale]}` }] : [];
+  });
+
   return (
     <>
+      <PageSchema
+        locale={locale}
+        name={heading}
+        description={intro}
+        path={ownRoute.path[locale]}
+        items={items}
+      />
       <section className="section-y">
       <Container>
-        <h1 className="text-display-1 font-heading lg:text-display-1-lg">{heading}</h1>
+        <Breadcrumbs locale={locale} items={[{ label: ownRoute.title[locale] }]} />
+
+        <h1 className="mt-4 text-display-1 font-heading lg:text-display-1-lg">{heading}</h1>
         <p className="mt-4 max-w-2xl text-body-lg text-text-secondary">{intro}</p>
 
         <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
@@ -62,7 +82,12 @@ export default async function DoctorsIndexPage({ params }: { params: Promise<{ l
                   />
                 </div>
                 <div className="p-4">
-                  <p className="font-heading text-h4">{doctor.name[locale]}</p>
+                  {/* h2, not p: the doctor's name is this card's primary
+                      information, and a listing of six name-only <p> elements
+                      gives a crawler no structural signal that these are the
+                      page's enumerated entities (brief §12). Same classes, so
+                      the rendered appearance is byte-identical. */}
+                  <h2 className="font-heading text-h4">{doctor.name[locale]}</h2>
                   <p className="mt-1 text-sm text-text-secondary">{doctor.credentials[locale]}</p>
                 </div>
               </Link>

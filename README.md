@@ -2,7 +2,7 @@
 
 Bilingual (English/Arabic) Next.js site for Blue Diamond Medical Clinic — family medicine, walk-in care, and physician-led medical aesthetics in West Springs, Calgary. Canonical domain: `bluediamondmedical.ca`.
 
-**Status:** the full route inventory (81 registered routes — 50 live/public, 31 built but feature-flagged off pending real content) plus templates, the ImageKit and FeelStack adapters, and the test suite are complete. See `docs/FINAL_QA_REPORT.md` for exact numbers and `docs/MISSING_CONTENT_REPORT.md` for what's gated and why.
+**Status:** the full route inventory (81 registered routes — 50 live/public, 31 built but feature-flagged off pending real content) plus templates, the ImageKit and FeelStack adapters, and the test suite are complete. See `docs/ROUTING.md` for the full route table and `docs/CONTENT_MODEL.md` for what's gated and why.
 
 ## Quick start
 
@@ -38,7 +38,7 @@ Visit `http://localhost:3000` — it redirects to `/en`. Arabic lives at `/ar`.
 - **Forms**: `src/components/forms/ContactForm.tsx` + `src/app/[locale]/contact/actions.ts` — Zod validation, sanitization, rate limiting, honeypot spam protection, and a delivery adapter that fails closed (no false "sent" confirmations) until a real provider is configured. `ConsultationRequestForm` follows the same pattern, gated off.
 - **FeelStack CMS adapter**: `src/lib/feelstack/` — typed, Zod-validated, timeout+retry client; `POST /api/feelstack/revalidate` is HMAC-verified with a route allowlist. Not active without real credentials.
 - **Commerce adapter**: `src/lib/commerce/adapter.ts` — provider-agnostic interface ready for a real Shopify/Stripe implementation; `NullCommerceAdapter` is the current no-op.
-- **Feature-gated routes**: any route not yet backed by approved content is fully built (registry entry, typed model, template) but calls `notFound()` while its flag in `src/config/features.ts` is off — see `docs/MISSING_CONTENT_REPORT.md`.
+- **Feature-gated routes**: any route not yet backed by approved content is fully built (registry entry, typed model, template) but calls `notFound()` while its flag in `src/config/features.ts` is off — see `docs/CONTENT_MODEL.md`.
 
 ## Testing
 
@@ -50,4 +50,22 @@ npx playwright test tests/accessibility  # axe-core WCAG scan only
 
 ## Documentation
 
-See `docs/` — `UI_UX_FOUNDATION.md`, `SOURCE_INVENTORY.md`, `ROUTE_INVENTORY.md`, `EN_AR_ROUTE_MAPPING.md`, `REDIRECT_MAP.md`, `IMAGE_REPLACEMENT_MANIFEST.md`, `MISSING_CONTENT_REPORT.md`, `CONTENT_APPROVAL_MATRIX.md`, `TRANSLATION_REVIEW_REPORT.md`, `SEO_SCHEMA_SUMMARY.md`, `ACCESSIBILITY_REPORT.md`, `PERFORMANCE_REPORT.md`, `FINAL_QA_REPORT.md`, `DEPLOYMENT_GUIDE.md`, `DNS_LEGACY_DOMAIN_GUIDE.md`.
+Start with these four; everything else is detail they link to.
+
+| Document | Covers |
+|---|---|
+| `docs/ARCHITECTURE.md` | rendering model, routing, server/client split, SEO + GEO/AEO, entity graph, media, testing |
+| `docs/FEELSTACK.md` | CMS contract, content modes, failure semantics, cache tags, webhook, migration steps |
+| `docs/DEPLOYMENT.md` | Blue/Green release model, pre-launch indexing guard, pre-deploy checklist, DNS cutover, CI |
+| `docs/CONTENT_MODEL.md` | entity types, bilingual rules, approval and provenance, feature gating, how to add content |
+
+Four more carry the supporting detail:
+
+| Document | Covers |
+|---|---|
+| `docs/ROUTING.md` | EN/AR route tables, the route registry, routing decisions, legacy redirect map |
+| `docs/CONTENT_MODEL.md` | also holds content provenance, the approval matrix, coverage and translation review |
+| `docs/MEDIA.md` | ImageKit setup, the media manifest, import status and image replacement tracking |
+| `docs/SEO.md` | schema inventory and the search-intent map |
+| `docs/UI_UX_FOUNDATION.md` | design system, tokens, motion rules and visual-continuity record |
+| `docs/DFEELINGS_TO_BLUE_ARCHITECTURE_MAP.md` | what was adopted from the Dfeelings reference, and what was deliberately not |

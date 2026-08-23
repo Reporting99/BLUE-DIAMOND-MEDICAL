@@ -1,22 +1,22 @@
 import type { RouteEntry } from "@/types/route";
-import { medicalServices } from "@/content/medical-services";
-import { medicalBotoxHub, medicalBotoxConditions } from "@/content/medical-botox";
-import { legalPages } from "@/content/legal-pages";
-import { productCategories, productConcerns, products } from "@/content/products";
-import { treatments, gatedTreatments } from "@/content/treatments";
-import { concerns } from "@/content/concerns";
-import { technologies } from "@/content/technologies";
+import { medicalServices } from "@/features/medical-services/data";
+import { medicalBotoxHub, medicalBotoxConditions } from "@/features/medical-services/botox";
+import { legalPages } from "@/features/legal/data";
+import { productCategories, productConcerns, products } from "@/features/products/data";
+import { treatments, gatedTreatments } from "@/features/aesthetics/data/treatments";
+import { concerns } from "@/features/concerns/data";
+import { technologies } from "@/features/technologies/data";
 
 /**
  * Central bilingual route registry. Nav, breadcrumbs, hreflang, canonical
  * tags, and the sitemap all read from this single list — see
- * docs/EN_AR_ROUTE_MAPPING.md and docs/ROUTE_INVENTORY.md.
+ * docs/ROUTING.md and docs/ROUTING.md.
  *
  * This registry currently covers the routes actually implemented in this
  * build pass. Routes described in the master brief but not yet built
  * (individual treatment/concern/service pages, the Botox sub-pages, Health
  * Hub articles, shop, legal pages, etc.) are tracked as "planned" in
- * docs/ROUTE_INVENTORY.md and intentionally absent here — an unregistered
+ * docs/ROUTING.md and intentionally absent here — an unregistered
  * route cannot be linked from nav or the sitemap, which is what keeps the
  * brief's "never link to an empty page" rule enforceable by construction.
  */
@@ -42,7 +42,7 @@ export const routes: RouteEntry[] = [
     inSitemap: true,
     inNav: true,
   },
-  // Generated from src/content/medical-services.ts so slug/title never
+  // Generated from src/features/medical-services/data.ts so slug/title never
   // drift between the content data and the route registry.
   ...medicalServices.map(
     (service): RouteEntry => ({
@@ -56,7 +56,7 @@ export const routes: RouteEntry[] = [
       parentId: "medical-hub",
     }),
   ),
-  // Gated — see src/content/medical-botox.ts for why the whole subtree
+  // Gated — see src/features/medical-services/botox.ts for why the whole subtree
   // stays behind medicalBotoxDetailPagesEnabled.
   {
     id: "medical-botox-hub",
@@ -124,7 +124,7 @@ export const routes: RouteEntry[] = [
     }),
   ),
   // Gated: routes exist, typed content exists, template exists — see
-  // src/content/treatments.ts `gatedTreatments` for why they stay disabled.
+  // src/features/aesthetics/data/treatments.ts `gatedTreatments` for why they stay disabled.
   ...gatedTreatments.map(
     (t): RouteEntry => ({
       id: `treatment-${t.id}`,
@@ -331,7 +331,7 @@ export const routes: RouteEntry[] = [
     inNav: false,
     parentId: "about",
   },
-  // Gated — see src/content/legal-pages.ts.
+  // Gated — see src/features/legal/data.ts.
   ...legalPages.map(
     (p): RouteEntry => ({
       id: `legal-${p.id}`,
@@ -456,22 +456,3 @@ export const routes: RouteEntry[] = [
     inNav: true,
   },
 ];
-
-export function getRoute(id: string): RouteEntry | undefined {
-  return routes.find((r) => r.id === id);
-}
-
-export function localePath(id: string, locale: "en" | "ar"): string {
-  const route = getRoute(id);
-  if (!route) throw new Error(`Unknown route id: ${id}`);
-  return route.path[locale];
-}
-
-export function navRoutes(): RouteEntry[] {
-  return routes.filter((r) => r.inNav);
-}
-
-/** Full locale-prefixed href for a route id, e.g. href("contact", "ar") -> "/ar/تواصل-معنا". */
-export function href(id: string, locale: "en" | "ar"): string {
-  return `/${locale}${localePath(id, locale)}`;
-}

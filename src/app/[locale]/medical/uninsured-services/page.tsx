@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { Container } from "@/components/layout/Container";
 import { SectionTransition } from "@/components/layout/SectionTransition";
-import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
-import { FeeTable } from "@/components/medical/FeeTable";
-import { noShowFees, uninsuredFeeGroups } from "@/content/uninsured-fees";
+import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
+import { FeeTable } from "@/features/medical-services";
+import { noShowFees, uninsuredFeeGroups } from "@/features/medical-services";
 import { isLocale, type Locale } from "@/i18n/config";
-import { getRoute, href } from "@/config/routes";
+import { getRoute, href } from "@/lib/routing";
 import { getRouteMetadata } from "@/lib/seo/metadata";
 
 export async function generateMetadata({

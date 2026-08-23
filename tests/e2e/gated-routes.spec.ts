@@ -3,7 +3,7 @@ import { test, expect } from "@playwright/test";
 /**
  * Every route built but kept behind a disabled feature flag must be
  * genuinely unreachable — 404, not indexed, not linked from nav — while
- * its flag is off. See docs/MISSING_CONTENT_REPORT.md for why each of
+ * its flag is off. See docs/CONTENT_MODEL.md for why each of
  * these has a route/model/template but no public content.
  */
 const gatedPaths = [

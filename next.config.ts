@@ -23,6 +23,15 @@ if (imageKitEndpoint) {
 }
 
 const nextConfig: NextConfig = {
+  // Required by the Blue/Green release model (ops/deploy/deploy-blue-diamond):
+  // the deployable artifact is a self-contained server plus static assets,
+  // started directly by systemd as `node server.js`, with no `npm install` on
+  // the production host. Without this, `npm run build` produces no
+  // .next/standalone and the packaging step in the deploy workflow fails.
+  //
+  // Build-output shape only -- no effect on routing, rendering, or any
+  // application behaviour.
+  output: "standalone",
   images: {
     remotePatterns,
   },
