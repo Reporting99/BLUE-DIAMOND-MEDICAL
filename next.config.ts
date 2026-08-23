@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 // ImageKit is the only permitted remote image host — see
-// docs/UI_UX_FOUNDATION.md §8 and docs/IMAGE_REPLACEMENT_MANIFEST.md.
+// docs/UI_UX_FOUNDATION.md §8 and docs/MEDIA.md § "Image Replacement Manifest".
 // No unrestricted wildcard image policy. When NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT
 // is unset (no ImageKit account provisioned yet), remotePatterns stays empty —
 // every image renders through the FacetTile fallback instead.
@@ -36,14 +36,14 @@ const nextConfig: NextConfig = {
     remotePatterns,
   },
   // Nav-alias redirect only — NOT a legacy-domain migration row (those all
-  // live in src/lib/seo/legacy-redirects.ts / docs/REDIRECT_MAP.md). The
-  // "FINAL MANDATORY NAVIGATION" brief's Services-page example used
+  // live in src/lib/seo/legacy-redirects.ts / docs/ROUTING.md § "Redirect Map").
+  // The "FINAL MANDATORY NAVIGATION" brief's Services-page example used
   // "/en/services/" as an illustrative URL; the real canonical Medical
   // Services hub is the existing, fully-built /en/medical/ (brief §4: "Use
   // the existing canonical route map... do not invent duplicate routes").
   // This alias exists purely so that literal URL still resolves to the
   // real page instead of 404ing, without creating a second indexable page
-  // for the same content — see docs/ROUTE_DECISION_LOG.md.
+  // for the same content — see docs/ROUTING.md § "Route Decision Log".
   async redirects() {
     return [
       { source: "/en/services", destination: "/en/medical", permanent: true },

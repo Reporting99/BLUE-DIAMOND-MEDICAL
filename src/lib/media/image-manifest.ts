@@ -104,7 +104,7 @@ export const imageManifest: ImageKitAsset[] = [
     status: "pending",
   },
   // Doctor portraits — generated from the single source of truth in
-  // src/types/doctor.ts so the two never drift.
+  // src/features/doctors/data.ts so the two never drift.
   ...doctors
     .filter((d) => !d.image.photoDeclined)
     .map(
@@ -239,7 +239,3 @@ export const imageManifest: ImageKitAsset[] = [
     }),
   ),
 ];
-
-export function getManifestEntry(path: string): ImageKitAsset | undefined {
-  return imageManifest.find((asset) => asset.path === path);
-}

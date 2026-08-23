@@ -12,7 +12,7 @@ How to activate real image delivery for this site.
 The approved account/endpoint is known (brief §12): **`https://ik.imagekit.io/oq92dh6zib`**, media root **`/blue-diamond/`** — e.g. `/blue-diamond/home/home-hero-blue-diamond.png`. `src/config/imagekit.ts` already defaults `NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT` to this value and exports `MEDIA_ROOT` for every content file that builds a path, so **no environment variable is required just to point at the right account**. What's still genuinely missing:
 
 - **Public key** and **private key** — real secrets, needed only for the SDK's authenticated upload flow (`scripts/imagekit-import.mjs --upload`). Not yet supplied.
-- **Real photography uploaded into the account** — the endpoint being known doesn't mean any asset exists at it yet. Every path in `src/content/media/image-manifest.ts` is `status: "pending"`, which is what actually keeps every image rendering the FacetTile placeholder (`imagekitIsConfigured` alone isn't sufficient — see `src/components/media/ImageKitImage.tsx`).
+- **Real photography uploaded into the account** — the endpoint being known doesn't mean any asset exists at it yet. Every path in `src/lib/media/image-manifest.ts` is `status: "pending"`, which is what actually keeps every image rendering the FacetTile placeholder (`imagekitIsConfigured` alone isn't sufficient — see `src/components/shared/ImageKitImage.tsx`).
 
 ### 2. Set environment variables (only needed to add the keys, or to override the endpoint)
 
@@ -44,7 +44,7 @@ The script uploads only the assets it classified as "ready to import" — it doe
 
 ### 4. Flip approval status in content files
 
-After a real upload, each content file's `status: "pending"` needs to become `status: "approved"` for the corresponding entry (e.g. in `src/types/doctor.ts` for doctor portraits, `src/content/products.ts` once product photography exists, `src/content/before-after.ts` once real pairs are approved). This is a manual, deliberate step — the site never auto-promotes an asset's status just because a file exists in the account, which is what keeps "pending" a meaningful signal rather than a formality.
+After a real upload, each content file's `status: "pending"` needs to become `status: "approved"` for the corresponding entry (e.g. in `src/features/doctors/data.ts` for doctor portraits, `src/features/products/data.ts` once product photography exists, `src/features/aesthetics/data/before-after.ts` once real pairs are approved). This is a manual, deliberate step — the site never auto-promotes an asset's status just because a file exists in the account, which is what keeps "pending" a meaningful signal rather than a formality.
 
 ### 5. Verify
 
@@ -58,7 +58,7 @@ No live ImageKit account exists in this build environment, so the actual upload 
 
 ## ImageKit Media Manifest
 
-Generated from `src/content/media/image-manifest.ts` (source of truth — regenerate this file by hand whenever it changes). Every path is relative to the approved ImageKit account/media root (brief §12): **`https://ik.imagekit.io/oq92dh6zib`**, root **`/blue-diamond/`**. This is the audit-trail view the brief asks for (path, page, section, alt text EN/AR, dimensions, aspect ratio, focal point, priority, approval status); `docs/MEDIA.md` and `docs/MEDIA.md` carry the deeper planning/evidence layer (which real source-archive file is a candidate for which entry).
+Generated from `src/lib/media/image-manifest.ts` (source of truth — regenerate this file by hand whenever it changes). Every path is relative to the approved ImageKit account/media root (brief §12): **`https://ik.imagekit.io/oq92dh6zib`**, root **`/blue-diamond/`**. This is the audit-trail view the brief asks for (path, page, section, alt text EN/AR, dimensions, aspect ratio, focal point, priority, approval status); `docs/MEDIA.md` and `docs/MEDIA.md` carry the deeper planning/evidence layer (which real source-archive file is a candidate for which entry).
 
 **41 registered assets. 0 approved, 4 identity-confirmed and ready to import, 3 candidate-but-unconfirmed, 1 permanently disabled (photo declined), 33 pending (no source candidate matched yet or awaiting new photography).** Every `ImageKitImage` usage across the site resolves to one of these entries or renders the FacetTile placeholder — `tests/unit/image-usage.spec.ts` enforces there is no third option (no hardcoded local path, no unmapped path).
 
@@ -80,7 +80,7 @@ Focal point: `undefined` on every entry below — real photography doesn't exist
 | `/blue-diamond/medical/services-overview.jpg` | Medical hub | Overview | Physician consultation at Blue Diamond Medical | استشارة طبية في بلو دايموند الطبية | 900×700 | 9:7 | pending |
 | `/blue-diamond/shop/skinmedica-collection.jpg` | Shop hub | Overview | SkinMedica professional skincare collection | مجموعة العناية بالبشرة الطبية سكين ميديكا | 900×700 | 9:7 | pending |
 
-### Doctors (`src/types/doctor.ts` — single source of truth, never duplicated here)
+### Doctors (`src/features/doctors/data.ts` — single source of truth, never duplicated here)
 
 | ImageKit path | Page | Section | EN alt | AR alt | W×H | Aspect | Status |
 |---|---|---|---|---|---|---|---|
@@ -93,7 +93,7 @@ Focal point: `undefined` on every entry below — real photography doesn't exist
 
 Dr. Ahmed Gwea additionally: per brief §12, must use the approved abstract tile until a real approved photo is supplied — matches the "pending" status above exactly (FacetTile renders for anything not `"approved"`).
 
-### Aesthetic treatments (8 live — `src/content/treatments.ts`)
+### Aesthetic treatments (8 live — `src/features/aesthetics/data/treatments.ts`)
 
 | ImageKit path | Page | EN alt | AR alt | W×H | Aspect | Status |
 |---|---|---|---|---|---|---|
@@ -106,7 +106,7 @@ Dr. Ahmed Gwea additionally: per brief §12, must use the approved abstract tile
 | `/blue-diamond/treatments/prp-skin-rejuvenation.jpg` | `/aesthetics/treatments/prp-skin-rejuvenation` | PRP Skin Rejuvenation at Blue Diamond Medical | تجديد البشرة بالبلازما في بلو دايموند الطبية | 900×700 | 9:7 | pending |
 | `/blue-diamond/treatments/tempsure-vitalia.jpg` | `/aesthetics/treatments/tempsure-vitalia` | TempSure Vitalia at Blue Diamond Medical | تمبشور فيتاليا في بلو دايموند الطبية | 900×700 | 9:7 | pending |
 
-### Technologies (5 live — `src/content/technologies.ts`)
+### Technologies (5 live — `src/features/technologies/data.ts`)
 
 | ImageKit path | Page | EN alt | AR alt | W×H | Aspect | Status |
 |---|---|---|---|---|---|---|
@@ -116,7 +116,7 @@ Dr. Ahmed Gwea additionally: per brief §12, must use the approved abstract tile
 | `/blue-diamond/technologies/ultra-device.jpg` | `/aesthetics/technologies/ultra` | Ultra device at Blue Diamond Medical | جهاز Ultra في بلو دايموند الطبية | 800×800 | 1:1 | pending — same, candidate exists |
 | `/blue-diamond/technologies/tempsure-vitalia-device.jpg` | `/aesthetics/technologies/tempsure-vitalia` | TempSure Vitalia device at Blue Diamond Medical | جهاز TempSure Vitalia في بلو دايموند الطبية | 800×800 | 1:1 | pending — not distinctly identified in the source archive |
 
-### Aesthetic concerns (9 live — `src/content/concerns.ts`)
+### Aesthetic concerns (9 live — `src/features/concerns/data.ts`)
 
 | ImageKit path | Page | EN alt | AR alt | W×H | Aspect | Status |
 |---|---|---|---|---|---|---|
@@ -130,7 +130,7 @@ Dr. Ahmed Gwea additionally: per brief §12, must use the approved abstract tile
 | `/blue-diamond/concerns/skin-revitalization.jpg` | `/aesthetics/concerns/skin-revitalization` | Skin Revitalization — Blue Diamond Medical Aesthetics | تجديد البشرة — بلو دايموند للتجميل الطبي | 900×900 | 1:1 | pending |
 | `/blue-diamond/concerns/razor-bumps.jpg` | `/aesthetics/concerns/razor-bumps` | Razor Bumps — Blue Diamond Medical Aesthetics | نتوءات الحلاقة — بلو دايموند للتجميل الطبي | 900×900 | 1:1 | pending |
 
-### Medical services (7 live + uninsured-services — `src/content/medical-services.ts`)
+### Medical services (7 live + uninsured-services — `src/features/medical-services/data.ts`)
 
 | ImageKit path | Page | EN alt | AR alt | W×H | Aspect | Status |
 |---|---|---|---|---|---|---|
@@ -145,13 +145,13 @@ Dr. Ahmed Gwea additionally: per brief §12, must use the approved abstract tile
 
 ### Not yet in this manifest (tracked separately, not a code gap)
 
-- **SkinMedica product photography (23 SKUs)** — each product's `images[]` is generated by `pendingImage()` in `src/content/products.ts`, not this shared manifest (`/blue-diamond/products/skinmedica/<slug>.jpg`, one per product, all `status: "pending"`). Kept in `products.ts` rather than duplicated here since the SkinMedica catalogue is otherwise a fully self-contained content module — see `docs/CONTENT_MODEL.md`.
+- **SkinMedica product photography (23 SKUs)** — each product's `images[]` is generated by `pendingImage()` in `src/features/products/data.ts`, not this shared manifest (`/blue-diamond/products/skinmedica/<slug>.jpg`, one per product, all `status: "pending"`). Kept in `products.ts` rather than duplicated here since the SkinMedica catalogue is otherwise a fully self-contained content module — see `docs/CONTENT_MODEL.md`.
 - **Before/After gallery** — `beforeAfterEnabled: false`, no manifest entries exist because no approved photography exists to reference (brief explicitly forbids fabricating this).
 - **Logo** — recreated as inline SVG (`src/components/layout/Logo.tsx`) from the approved brand PDF's geometry, not an ImageKit raster asset.
 
 ### Verification
 
-`tests/unit/image-usage.spec.ts` — every literal `path="..."` string used by an `ImageKitImage` instance in a `[locale]` page has a matching entry in `src/content/media/image-manifest.ts` (this file's source). Passing as of this pass, `npx playwright test tests/unit/image-usage.spec.ts`.
+`tests/unit/image-usage.spec.ts` — every literal `path="..."` string used by an `ImageKitImage` instance in a `[locale]` page has a matching entry in `src/lib/media/image-manifest.ts` (this file's source). Passing as of this pass, `npx playwright test tests/unit/image-usage.spec.ts`.
 
 ## ImageKit Import Report
 
@@ -209,12 +209,12 @@ Once real credentials are supplied, running `node scripts/imagekit-import.mjs --
 
 | File | → Destination | Doctor | Confirmation basis |
 |---|---|---|---|
-| `medical/dr.farhat.jpg` | `/doctors/farhat.jpg` | Dr. Mohamed Farhat | Filename + clear portrait match; already the exact path `src/types/doctor.ts` expects |
+| `medical/dr.farhat.jpg` | `/doctors/farhat.jpg` | Dr. Mohamed Farhat | Filename + clear portrait match; already the exact path `src/features/doctors/data.ts` expects |
 | `medical/3p0a4127.jpg` | `/doctors/hamdi.jpg` | Dr. Reem Hamdi | Visible embroidered name badge on her white coat reads "Dr. Reem Ham[di]" |
 | `aesthetics/rs-w_388-h_388-cg_true.webp` | (duplicate) | Dr. Reem Hamdi | Same photo, resized copy — same name badge visible |
 | `aesthetics/rs-w_388-h_388-cg_true-m.webp` | (duplicate) | Dr. Reem Hamdi | Same photo, second resized copy |
 
-Both real portraits were opened and visually inspected this pass, not inferred from filename alone. `src/types/doctor.ts` already points `mohamed-farhat` and `reem-hamdi` at exactly these destination paths (`/doctors/farhat.jpg`, `/doctors/hamdi.jpg`) — no code change was needed, only the import itself once credentials exist. Both remain `status: "pending"` (FacetTile placeholder) until that import actually runs.
+Both real portraits were opened and visually inspected this pass, not inferred from filename alone. `src/features/doctors/data.ts` already points `mohamed-farhat` and `reem-hamdi` at exactly these destination paths (`/doctors/farhat.jpg`, `/doctors/hamdi.jpg`) — no code change was needed, only the import itself once credentials exist. Both remain `status: "pending"` (FacetTile placeholder) until that import actually runs.
 
 ### Doctor photos — real people, unconfirmed identity (do not import blind)
 
@@ -226,7 +226,7 @@ Three more genuine, non-stock physician portraits exist in the archive, all from
 | `medical/whatsapp-image-2024-12-30-at-17.06.09.jpeg` | Woman, dark hair, maroon top, arms crossed | Same candidate pool as above — **two different women are pictured for one remaining unassigned female roster slot**, which itself needs a client answer (is one of these Dr. Omonijo, is the other a former team member, or are these two different current staff?) |
 | `medical/blob-7cc2b3d.png` | Man, short black hair, beard, lilac shirt, arms crossed | Dr. Bakare or Dr. Ahmed Gwea (both male, both unassigned) |
 
-**Per the brief's explicit instruction — "never assign a legacy portrait to the wrong doctor" — none of these three files were mapped to a doctor ID.** `src/types/doctor.ts` is unchanged for Dr. Omonijo, Dr. Bakare, and Dr. Gwea; all three keep their placeholder. This needs a direct client answer before any of these three files gets imported and linked.
+**Per the brief's explicit instruction — "never assign a legacy portrait to the wrong doctor" — none of these three files were mapped to a doctor ID.** `src/features/doctors/data.ts` is unchanged for Dr. Omonijo, Dr. Bakare, and Dr. Gwea; all three keep their placeholder. This needs a direct client answer before any of these three files gets imported and linked.
 
 ### Before/After and result-claim imagery — flagged for manual review (15 files)
 
@@ -260,7 +260,7 @@ The remaining 37 assets (technology device photography for Cynosure/Elite iQ/Pot
 
 ## Image Replacement Manifest
 
-The approved ImageKit account/endpoint is now known (`https://ik.imagekit.io/oq92dh6zib`, media root `/blue-diamond/` — brief §12, `src/config/imagekit.ts`), but no real photography has been uploaded to it and no public/private key has been supplied yet. Every image below currently renders the code-generated "Facet Tile" placeholder (`src/components/media/FacetTile.tsx`) instead of a real photo, because each entry's approval `status` is still `"pending"` — see `docs/MEDIA.md`. This file is the planning layer; `docs/MEDIA.md` is the *evidence* layer (real dimensions, source URLs, classification of 70 actual licensed source images found this pass) and `docs/MEDIA.md` is the generated-from-code audit trail — read all three together.
+The approved ImageKit account/endpoint is now known (`https://ik.imagekit.io/oq92dh6zib`, media root `/blue-diamond/` — brief §12, `src/config/imagekit.ts`), but no real photography has been uploaded to it and no public/private key has been supplied yet. Every image below currently renders the code-generated "Facet Tile" placeholder (`src/components/shared/FacetTile.tsx`) instead of a real photo, because each entry's approval `status` is still `"pending"` — see `docs/MEDIA.md`. This file is the planning layer; `docs/MEDIA.md` is the *evidence* layer (real dimensions, source URLs, classification of 70 actual licensed source images found this pass) and `docs/MEDIA.md` is the generated-from-code audit trail — read all three together.
 
 | Page | Section | Subject | ImageKit path (planned) | Aspect ratio | Status | Notes |
 |---|---|---|---|---|---|---|

@@ -18,9 +18,9 @@ Covers traditional SEO, Generative Engine Optimization (GEO — signals that hel
 - **`llms.txt`** — matches what's actually live on the site; no unpublished claims.
 - **Descriptive link text** — the desktop Lighthouse `link-text` audit caught 4 generic "Learn more" links on the homepage this pass; fixed with `sr-only` context spans (). Desktop SEO score: **100**.
 - **Clean URLs** — meaningful Arabic slugs (not `/ar/doctors`), no query-string language switching.
-- **301 redirects** for the legacy domain's known URLs, exact-match, no chains (`src/lib/seo/legacy-redirects.ts`), each covered by `tests/redirects/legacy-redirects.spec.ts`.
+- **301 redirects** for the legacy domain's known URLs, exact-match, no chains (`src/lib/routing/legacy-redirects.ts`), each covered by `tests/redirects/legacy-redirects.spec.ts`.
 
-### JSON-LD (`src/components/seo/JsonLd.tsx`)
+### JSON-LD (`src/components/shared/schema/JsonLd.tsx`)
 
 - `MedicalClinic` + `Physician` graph on the homepage, one consistent clinic `@id`, `inLanguage` set per locale, `address`/`geo` fields for West Springs, Calgary, AB.
 - `BreadcrumbList` — visible trail + matching JSON-LD, live on every medical-service, uninsured-services, aesthetic-treatment, concern, technology, and doctor page.
@@ -42,7 +42,7 @@ Covers traditional SEO, Generative Engine Optimization (GEO — signals that hel
 
 ### Added this remediation pass
 
-- **`MedicalWebPage` schema** — `src/components/seo/MedicalWebPageSchema.tsx`, wired into `MedicalServiceTemplate`, `AestheticTreatmentTemplate`, `ConcernTemplate`, and `TechnologyTemplate`. Deliberately narrow (`name`/`description`/`url`/publisher reference only) — no `MedicalProcedure` claims (cost, risk, preparation, outcome), since the approved source doesn't carry that level of structured clinical detail and inventing it would violate the no-fabrication rule. Verified by `tests/seo/seo-validators.spec.ts`'s "MedicalWebPage structured data" suite (checks the schema's `name` matches the page's own visible `<h1>`).
+- **`MedicalWebPage` schema** — `src/components/shared/schema/MedicalWebPageSchema.tsx`, wired into `MedicalServiceTemplate`, `AestheticTreatmentTemplate`, `ConcernTemplate`, and `TechnologyTemplate`. Deliberately narrow (`name`/`description`/`url`/publisher reference only) — no `MedicalProcedure` claims (cost, risk, preparation, outcome), since the approved source doesn't carry that level of structured clinical detail and inventing it would violate the no-fabrication rule. Verified by `tests/seo/seo-validators.spec.ts`'s "MedicalWebPage structured data" suite (checks the schema's `name` matches the page's own visible `<h1>`).
 - **Doctor and treatment/concern/technology cross-linking** — the Part 1 content audit found zero doctor cross-links from any aesthetics page; now every treatment, concern, and technology entry carries `relatedDoctorIds` (all pointing at Dr. Farhat, the only physician with `practicesAesthetics: true`), rendered as real internal links, strengthening the site's internal-linking signal without inventing any new fact.
 - **Open Graph images** — `getRouteMetadata()`'s `ogImagePath` parameter was previously accepted and silently dropped (a real bug, not just a gap — the type signature implied it worked). Now resolves through ImageKit's `og-image` preset via the official SDK's `buildSrc()` when ImageKit is configured; omits `images` entirely (same honest fallback as everywhere else) when it isn't. Wired into the homepage as a working example; not yet applied to the other 49 live routes — a mechanical follow-up once real hero images exist per page.
 
@@ -113,7 +113,7 @@ Maps real search wording (English and Arabic) to the site's actual indexable rou
 | `/medical/botox/hyperhidrosis` | Botox for hyperhidrosis Calgary | بوتوكس طبي لفرط التعرق |
 | `/botox` (live, covers all 3 today) | medical Botox vs cosmetic Botox; medical Botox insurance Calgary | — |
 
-These three queries are real search intents with real approved content already written (`src/content/medical-botox.ts`) — they're addressed today via `/botox`'s unified content rather than 3 separate pages, per the documented no-duplication rule (`docs/CONTENT_MODEL.md`). No insurance-coverage promise is ever stated as guaranteed — every mention uses the approved qualified phrasing ("a combination of provincial health insurance and either patient private insurance or our compassionate program").
+These three queries are real search intents with real approved content already written (`src/features/medical-services/botox.ts`) — they're addressed today via `/botox`'s unified content rather than 3 separate pages, per the documented no-duplication rule (`docs/CONTENT_MODEL.md`). No insurance-coverage promise is ever stated as guaranteed — every mention uses the approved qualified phrasing ("a combination of provincial health insurance and either patient private insurance or our compassionate program").
 
 ### Cross-cutting notes
 

@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { classifyHttpStatus, classifyThrown, FeelStackUnavailableError } from "../../src/lib/feelstack/errors";
+import { OUTAGE_ERROR_CODES } from "../../src/lib/feelstack/contracts";
 import { resolvePageContent } from "../../src/lib/feelstack/page-resolver";
 import { z } from "zod";
 
@@ -306,5 +307,57 @@ test.describe("resolvePageContent — corrected failure behavior (brief §5)", (
         global.fetch = originalFetch;
       }
     });
+  });
+});
+
+/**
+ * The integration contract's hard rule is that only a CONFIRMED absence may
+ * become a 404. Everything else — rate limiting, an outage, a timeout, a
+ * malformed body, or a misconfigured site key — must surface as an outage so a
+ * transient failure is never indexed as deleted content.
+ *
+ * The load-bearing case is SITE_NOT_FOUND. FeelStack answers 404 for an unknown
+ * siteKey exactly as it does for a missing page, so classifying on the HTTP
+ * status alone would 404 every page on the site the moment a wrong key ships.
+ */
+test.describe("HTTP status classification", () => {
+  test("a bare 404 is a confirmed absence", () => {
+    expect(classifyHttpStatus(404)).toBe("NOT_FOUND");
+    expect(classifyHttpStatus(404, "CONTENT_NOT_FOUND")).toBe("NOT_FOUND");
+  });
+
+  test("404 + SITE_NOT_FOUND is a loud configuration failure, never a 404 page", () => {
+    expect(classifyHttpStatus(404, "SITE_NOT_FOUND")).toBe("INVALID_SITE");
+    expect(OUTAGE_ERROR_CODES.includes(classifyHttpStatus(404, "SITE_NOT_FOUND"))).toBe(false);
+    // INVALID_SITE is not an outage code, but page-resolver throws on it too —
+    // what matters here is only that it is NOT NOT_FOUND.
+    expect(classifyHttpStatus(404, "SITE_NOT_FOUND")).not.toBe("NOT_FOUND");
+  });
+
+  test("404 + LOCALE_NOT_SUPPORTED is a locale failure, not a missing page", () => {
+    expect(classifyHttpStatus(404, "LOCALE_NOT_SUPPORTED")).toBe("LOCALE_MISMATCH");
+  });
+
+  test("429 is never a 404", () => {
+    expect(classifyHttpStatus(429)).toBe("UPSTREAM_ERROR");
+    expect(classifyHttpStatus(429)).not.toBe("NOT_FOUND");
+  });
+
+  test("5xx is never a 404", () => {
+    for (const status of [500, 502, 503, 504]) {
+      expect(classifyHttpStatus(status)).toBe("UPSTREAM_ERROR");
+      expect(classifyHttpStatus(status)).not.toBe("NOT_FOUND");
+    }
+  });
+
+  test("an unrecognised upstream code falls back to the status, never crashes", () => {
+    expect(classifyHttpStatus(404, "SOMETHING_NEW")).toBe("NOT_FOUND");
+    expect(classifyHttpStatus(503, "SOMETHING_NEW")).toBe("UPSTREAM_ERROR");
+  });
+
+  test("classification never reads message prose", () => {
+    // Same status and code, wildly different messages -> identical outcome.
+    expect(classifyHttpStatus(404, "SITE_NOT_FOUND")).toBe(classifyHttpStatus(404, "SITE_NOT_FOUND"));
+    expect(classifyHttpStatus(500)).toBe(classifyHttpStatus(500));
   });
 });

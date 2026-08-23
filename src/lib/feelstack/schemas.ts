@@ -12,7 +12,7 @@ import { z } from "zod";
  * pass, `src/lib/feelstack/client.ts`): `/public/v1/sites/:siteKey/resolve`
  * and `/public/v1/sites/:siteKey/routes`. These are the two endpoints the
  * brief names as verified. No live FeelStack API reference was available
- * this session (see docs/DFEELINGS_TO_BLUE_ARCHITECTURE_MAP.md §4) — the
+ * this session (see docs/ARCHITECTURE.md) — the
  * recovered Dfeelings source (C:\Users\user\Downloads\dfeelings) calls a
  * *different*, older FeelStack surface (`/posts/slug/:slug`,
  * `/case-studies/published`, etc.) with no Zod validation at all, so it
@@ -83,7 +83,7 @@ const bookingChannelSchema = z.enum([
 ]);
 
 /**
- * Output type matches `MedicalServiceContent` (src/types/medical-service.ts)
+ * Output type matches `MedicalServiceContent` (src/features/medical-services/types.ts)
  * field-for-field via `.transform()`, so `resolvePageContent` can share one
  * type parameter between the CMS schema and the local
  * `src/features/medical-services/data.ts` fallback (page-resolver.ts requires
@@ -175,7 +175,7 @@ export const cmsDoctorSchema = z
       photoDeclined: z.boolean().optional(),
     }),
     // Deliberately narrower than the site-wide bookingChannelSchema: a Doctor
-    // can only be booked through these two channels (src/types/doctor.ts), and
+    // can only be booked through these two channels (src/features/doctors/types.ts), and
     // widening it here would let the CMS hand back e.g. "walk-in" for a named
     // physician. tsc caught exactly this when the schema was first written.
     bookingChannel: z.enum(["family-doctor", "phone-medical-botox"]),
@@ -402,4 +402,3 @@ export const feelstackWebhookBodySchema = z.union([
   // reviewable changes", not a breaking change to an in-flight contract.
   z.object({ path: z.string().min(1).max(2048) }),
 ]);
-export type FeelstackWebhookBody = z.infer<typeof feelstackWebhookBodySchema>;

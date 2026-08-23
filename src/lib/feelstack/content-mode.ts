@@ -10,7 +10,7 @@ import { FeelStackConfigurationError } from "./errors";
 
 /**
  * Content-source mode — brief's hybrid-migration instruction (2026-08-22
- * scope decision, see docs/DFEELINGS_TO_BLUE_ARCHITECTURE_MAP.md).
+ * scope decision, see docs/ARCHITECTURE.md).
  *
  *  - "static": ignore FeelStack entirely, `src/content/*.ts` is the only
  *    source. This is the default and matches this build's shipped state

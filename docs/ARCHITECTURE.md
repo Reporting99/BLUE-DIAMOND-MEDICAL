@@ -79,63 +79,49 @@ src/
 6. Server-only modules carry `import "server-only"`. Secrets, FeelStack private
    config and HMAC helpers must never enter a client bundle.
 
-## 1b. Dead-code audit (2026-08-22)
+## 1b. Detecting dead code
 
-Two levels were checked, because passing one says nothing about the other.
+Two levels, because passing one says nothing about the other.
 
 **Module level.** A reachability walk from every `src/app/**` entry point plus
-`src/proxy.ts`: 173 modules, 171 reachable, **0 import cycles**. The two
-unreachable modules (`lib/media/image-manifest.ts`, `lib/security/booking-allowlist.ts`)
-are not dead — they are consumed by CI tests that enforce invariants
-(`tests/unit/image-usage.spec.ts`, `tests/security/booking-allowlist.spec.ts`).
+`src/proxy.ts`. Two modules are unreachable that way and are *not* dead —
+`lib/media/image-manifest.ts` and `lib/security/booking-allowlist.ts` are
+consumed by CI tests that enforce invariants. Filesystem-routed files
+(`page`/`layout`/`route`/`sitemap`/`robots`/`proxy`) are roots, not orphans.
 
-**Export level.** Module reachability does not catch an unused export inside a
-live module, so exports were swept separately. Getting this right took four
-attempts and every failure mode is worth recording, because a naive sweep is
-confidently wrong in both directions:
+**Export level.** Module reachability cannot see an unused export inside a live
+module, so exports need a separate sweep — and a naive sweep is confidently
+wrong in *both* directions. Every one of these produced a plausible, wrong
+answer on this repository:
 
-| Attempt | Bug | Effect |
-|---|---|---|
-| 1 | skipped every line starting with `export` | hid uses inside *exported function signatures* — reported 27, inflated |
-| 2 | counted a symbol's own docstring as a use | hid `resolveContent`, named once in its own doc comment — undercounted |
-| 3 | matched re-export blocks only when `export` began the line | missed **multi-line** `export { … }` blocks, so a forwarded symbol counted as a use — 12, still undercounted |
-| 4 | only enumerated `export <kind> NAME` declarations | never saw symbols declared bare and exported via a **trailing `export { … }` block** — this silently omitted the whole of `components/ui/` — **15, confirmed** |
+| Mistake | Effect |
+|---|---|
+| skipping lines that begin with `export` | hides uses inside exported function signatures — over-reports |
+| counting a symbol's own docstring as a use | hid `resolveContent`, named once in its own comment — under-reports |
+| matching re-export blocks line-by-line | misses **multi-line** `export { … }`, so a forwarded symbol looks used |
+| enumerating only `export <kind> NAME` | never sees symbols declared bare and exported by a trailing `export { … }` — silently omitted all of `components/ui/` |
+| stripping template literals | `fontVariables` consumes the font objects inside backticks; `localePath` and `currency` likewise — false positives |
 
-A fifth trap is one of *criterion*, not implementation: "no use outside the
-declaring file" and "no use anywhere" are different questions. The first flags
+**Working recipe:** strip comments, **keep** template literals, mask multi-line
+`export { … }` blocks as regions, enumerate declarations from *both* forms, and
+confirm every hit by eye.
+
+**One trap is of criterion, not implementation.** "No use outside the declaring
+file" and "no use anywhere" are different questions. The first flags
 `buttonVariants`, `NavigationMenuPositioner` and `navigationMenuTriggerStyle`,
-all three of which are load-bearing *inside* their own file — that is an
-unnecessary `export`, not dead code, and deleting them breaks the build. Only
-the second question identifies deletable code.
+all three load-bearing *inside* their own file — that is an unnecessary
+`export`, not dead code, and deleting them breaks the build. Only the second
+question identifies deletable code.
 
-Two further traps to avoid if this is ever re-run. Stripping template literals produces
-false positives: `fontVariables` consumes `fraunces`/`plexSans`/`plexSansArabic`/
-`plexMono` inside a backtick literal, and `localePath` and `currency` are used
-the same way. Counting comments produces false negatives: `resolveContent` is
-named in its own docstring, which is enough to hide it. **No pass alone is
-trustworthy — confirm every hit by eye.**
+**Two categories that are unreferenced but must not be deleted:**
 
-Five dead exports introduced or relocated by the refactor were removed
-(`navRoutes`, `sitemapRoutes`, `indexableRoutes`, `canonicalUrl`,
-`getAestheticsDoctors`). The remainder are pre-existing and deliberately left
-for the repository owner, split into two kinds:
-
-- **Genuinely unreferenced code** — `isFeatureEnabled`, `SiteConfig`,
-  `getManifestEntry`, `FeelStackEntityType`, `FeelstackWebhookBody`,
-  `ConsultationRequestValues`, `doctorUrl`, `doctorsForService`, and
-  `resolveContent` (a documented legacy shim superseded by the
-  `FeelStackResult` contract).
-- **Generator kit surface, not dead** — `SheetFooter`, `SheetDescription` and
-  `NavigationMenuIndicator` are unused members of shadcn component families
-  that *are* rendered. Removing a member of a generated kit means hand-writing
-  the generator's output when it is next needed; an unused whole file is a
-  different case and `components/ui/separator.tsx` was deleted on that basis.
-- **NEEDS_REVIEW, not dead** — `aestheticsHours` (the real aesthetics
-  schedule), `categoryTaglines` (five bilingual catalogue taglines) and
-  `productBrands` (the SkinMedica brand record). These are *approved, sourced,
-  translated content* that happens to have no current consumer. Deleting
-  sourced facts to satisfy a reachability check is the wrong trade on a medical
-  site; wiring them up or retiring them is a content decision, not a cleanup.
+- *Generator kit surface* — `SheetFooter`, `SheetDescription`,
+  `NavigationMenuIndicator` are unused members of shadcn component families that
+  do render. Removing one means hand-writing the generator's output later. An
+  unused *whole file* is a different case and can go.
+- *Approved content without a consumer* — `aestheticsHours`, `categoryTaglines`,
+  `productBrands` are sourced, translated facts. Deleting them to satisfy a
+  reachability check is a content decision, not cleanup.
 
 ## 2. Rendering model
 
@@ -158,23 +144,50 @@ Where build-time prerendering must be avoided, the absence of
 
 ### How this differs from Dfeelings
 
-Dfeelings was the architectural reference. Blue Diamond follows its principles
-and departs from it in three deliberate places.
+Dfeelings was the stated architectural reference. What the comparison actually
+established is that **Dfeelings' file architecture is flatter and less layered
+than Blue Diamond's, not more** — the `features/` + `lib/schema` + `lib/routing`
+target is an idealisation, not a description of the reference. Blue Diamond is
+deliberately better organised than the thing it was told to align with, so this
+section records *divergence*, not imitation.
 
-| | Dfeelings | Blue Diamond |
+Derived from the deployed release under `/home/dfeelings/apps/*/current`
+(build manifests still carry original `src/...` module paths and the compiled
+route handlers can be read directly) — production truth, not a working copy.
+
+| | Dfeelings (live) | Blue Diamond |
 |---|---|---|
-| Routing | one catch-all `/[lang]/[...slug]` owning every content page | typed entity routes (`/doctors/[doctorId]`, `/medical/[serviceId]`, …) plus the route registry |
-| Rendering | dynamic SSR on every request; `cache-control: private, no-cache, no-store` | statically generated; HTML itself is cached, not only the data |
-| Cache | time-based ISR only (`revalidate: 30`), no webhook | tagged fetch cache + HMAC-verified publish webhook |
+| `src/features/` | does not exist | 11 domain modules with public entry points |
+| `src/lib/schema`, `lib/routing`, `lib/seo` | do not exist; `src/lib/api.ts` holds ad-hoc fetch logic | three separate layers |
+| `src/components/` | flat — loose files plus `dynamic-loaders/` shims | `ui/` + `layout/` + `shared/` |
+| Routing | one `[lang]/[...slug]` catch-all + ~40-case `switch` | typed per-entity routes plus the route registry |
+| Rendering | dynamic SSR every request (`cache-control: private, no-cache, no-store`) | statically generated; the HTML itself is cached, not only the data |
 | Error handling | one `try/catch` per call returning `null`; an outage and a missing page are indistinguishable | typed `FeelStackResult`, eight classified codes, outage never becomes a 404 |
-| Sitemap | flat list, no `lastmod`, no alternates on the main sitemap | per-URL `xhtml:link` alternates for both locales |
-| Schema | `Organization`/`LocalBusiness`, `WebSite`; `Service` + `FAQPage` + `BreadcrumbList` on service pages | the above plus `Physician`, `MedicalWebPage`, `Product`, `CollectionPage`/`ContactPage`/`AboutPage`, breadcrumbs on every non-home page |
+| Sitemaps | split by entity type and locale (`sitemap-blog-en/-ar`, `sitemap-feelstack-pages`) | one `sitemap.ts` — see below |
+| Schema | Organization/LocalBusiness, WebSite; Service + FAQPage + BreadcrumbList on service pages | the above plus Physician, MedicalWebPage, Product, CollectionPage/ContactPage/AboutPage, breadcrumbs on every non-home page |
+
+**Where Dfeelings is equivalent, not behind:** its live webhook *is*
+HMAC-verified. The deployed `api/feelstack/revalidate/route.js` references
+`createHmac`, `timingSafeEqual`, `x-feelstack-signature`, `x-feelstack-timestamp`
+and `x-feelstack-event-id`, and calls `revalidateTag`/`revalidatePath`. An
+earlier revision of this document claimed Dfeelings had no webhook; that was
+read off a stale offline copy and is wrong about production.
 
 Typed routes were kept rather than collapsed into a catch-all because the route
 registry is the approved, SEO-audited URL inventory, and because a typed route
 can prerender and carry an entity-specific schema that a generic resolver
-cannot. A generic FeelStack page resolver still exists for CMS-owned
-informational pages.
+cannot. A generic FeelStack resolver still exists for CMS-owned pages.
+
+**Split sitemaps: examined and deliberately not adopted.** Dfeelings splits by
+entity type and locale because it has a large blog corpus. Blue Diamond
+publishes 148 sitemap URLs against Google's 50,000-per-sitemap limit. Splitting
+would add a sitemap index, four route handlers and a drift risk to solve a
+problem this site does not have — copying the reference's solution instead of
+its reasoning. What the comparison *did* surface was a real defect: `sitemap.ts`
+emitted only `en-CA`/`ar-CA` while `getRouteMetadata` also emitted `x-default`,
+so the two hreflang surfaces disagreed — exactly what Search Console reports as
+an hreflang error. Both now build alternates from one function,
+`hreflangAlternates()` in `src/lib/routing/canonical.ts`.
 
 ## 3. Server / client split
 
@@ -205,7 +218,7 @@ under `/ar/`. The English path is the canonical physical route; `src/proxy.ts`
 rewrites the pretty Arabic URL onto it. Alternates always point at the address
 a visitor actually sees. Full table: `ROUTING.md`.
 
-Legacy URLs from both old domains 301 via `src/lib/seo/legacy-redirects.ts`
+Legacy URLs from both old domains 301 via `src/lib/routing/legacy-redirects.ts`
 (`ROUTING.md`).
 
 ## 5. SEO

@@ -879,7 +879,7 @@ export function getProduct(slug: string): Product | undefined {
 /**
  * Looks up by `id`, not `slug` — needed because `variantOfId` and
  * `detail.relatedProductIds` both point at a product's `id` (per
- * `src/types/product.ts`'s own doc comments), and `id` differs from
+ * `src/features/products/types.ts`'s own doc comments), and `id` differs from
  * `slug` for 5 of the 23 products (e.g. "scar-recovery-gel-small" vs.
  * slug "scar-recovery-gel-with-centelline-small"). Calling `getProduct()`
  * with an id instead of a slug silently returns undefined for those —

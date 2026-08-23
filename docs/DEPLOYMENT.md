@@ -142,11 +142,11 @@ link is enough for a crawler to try.
 1. **Provision ImageKit** — set `NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT`,
    `NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY`, `IMAGEKIT_PRIVATE_KEY`. Upload the
    photography listed in `MEDIA.md`, then flip each
-   asset's `status` to `"approved"` in `src/content/media/image-manifest.ts`.
+   asset's `status` to `"approved"` in `src/lib/media/image-manifest.ts`.
 2. **Provision FeelStack** — see `FEELSTACK.md` §7. The adapter builds and
    typechecks without these set.
 3. **Wire a contact-form delivery provider** — set `CONTACT_DELIVERY_PROVIDER`
-   and implement the branch in `src/lib/forms/contact-delivery.ts`. Until then
+   and implement the branch in `src/lib/forms/delivery.ts`. Until then
    every submission fails closed with a "please call us" fallback, by design —
    it never shows a false success.
 4. **Replace the recreated logo SVG** (`src/components/layout/Logo.tsx`) with

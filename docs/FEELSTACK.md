@@ -9,7 +9,7 @@ behind it.
 **Current state: nothing is live.** `FEELSTACK_API_URL` and
 `FEELSTACK_REVALIDATE_SECRET` are unset, `FEELSTACK_CONTENT_MODE` defaults to
 `static`, and the webhook returns 501 for every request. Every page renders
-from `src/content/*.ts`. The adapter is complete and every entity route is
+from the per-feature data files under `src/features/`. The adapter is complete and every entity route is
 wired; provisioning is what remains.
 
 ---
@@ -26,9 +26,10 @@ header would leak a credential to no purpose.
 
 **Not verified against a live instance.** No live endpoint or admin API
 documentation has been available in any session so far. These shapes are
-carried forward from this repo's own adapter rather than guessed; see
-`DFEELINGS_TO_BLUE_ARCHITECTURE_MAP.md` §0/§2 for why the recovered Dfeelings
-source could not be used to confirm them (it calls a different, older surface).
+carried forward from this repo's own adapter rather than guessed; the
+recovered Dfeelings source could not be used to confirm them, because it calls a
+different, older surface (`docs/ARCHITECTURE.md` §2, "How this differs from
+Dfeelings").
 
 ## 2. Content modes
 
@@ -36,7 +37,7 @@ source could not be used to confirm them (it calls a different, older surface).
 
 | Mode | Behaviour |
 |---|---|
-| `static` (default) | Local `src/content/*.ts` only. `resolvePageContent` returns the fallback without any network request. |
+| `static` (default) | Local `src/features/*` data only. `resolvePageContent` returns the fallback without any network request. |
 | `hybrid` | FeelStack first; local content is used **only** when the CMS confirms the entity is absent — never when the CMS is unreachable. |
 | `cms` | FeelStack authoritative, no fallback. |
 
@@ -151,6 +152,33 @@ Rules that hold: product changes invalidate detail + shop index + sitemap;
 article changes invalidate detail + Health Hub index + sitemap; route changes
 invalidate routes + sitemap + navigation + the affected page; locale-scoped
 events invalidate only that locale; unrelated events cause no global purge.
+
+### Backend event gaps
+
+Two invalidations cannot be performed correctly today, and the cause is on the
+FeelStack side. Recording them rather than faking a frontend workaround, because
+a workaround here would hide a missing backend capability behind code that only
+looks like it works.
+
+**BACKEND_EVENT_GAP — route rename cannot invalidate the OLD path.**
+`route.changed` carries the affected path, so a rename from `/a` to `/b`
+invalidates the page tag for `/b`. Nothing invalidates `/a`, which keeps serving
+from cache until its time-based window expires. Fixing this needs the event to
+carry the previous path (e.g. `previousPath`); `tagsForEvent()` would then
+invalidate both. It cannot be solved frontend-side, because the frontend has no
+way to learn what a path used to be.
+
+**BACKEND_EVENT_GAP — entity deletion has no event.**
+The enum has `page.unpublished`, but no `doctor.deleted`, `product.deleted`,
+`medical-service.deleted`, `concern.deleted`, `technology.deleted`,
+`aesthetic-treatment.deleted` or `legal-page.deleted`. A deleted entity is only
+evicted if the CMS also emits the corresponding `.updated`, which is not a
+contract either side has agreed. Until deletion events exist, a deleted entity
+can survive in cache until its revalidate window expires.
+
+Neither gap risks serving *wrong* content indefinitely — both are bounded by the
+45-second fetch revalidate window — but both mean "publish is instant" is not
+true for those two operations, and the integration should not claim otherwise.
 
 ## 6. Webhook
 

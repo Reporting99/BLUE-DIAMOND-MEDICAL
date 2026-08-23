@@ -67,5 +67,3 @@ export const siteConfig = {
 
   careersEmail: "accountant@bluediamondmedical.ca",
 } as const;
-
-export type SiteConfig = typeof siteConfig;

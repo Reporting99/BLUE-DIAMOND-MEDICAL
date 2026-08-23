@@ -10,7 +10,7 @@
  * can tell a confirmed-absent entity (`NOT_FOUND`) apart from a CMS that is
  * merely unreachable (`TIMEOUT` / `NETWORK_ERROR` / `UPSTREAM_ERROR` /
  * `INVALID_RESPONSE`) — the distinction the recovered Dfeelings source does
- * not make (see docs/DFEELINGS_TO_BLUE_ARCHITECTURE_MAP.md §5).
+ * not make (see docs/ARCHITECTURE.md).
  */
 export type FeelStackErrorCode =
   | "NOT_FOUND"
@@ -54,26 +54,5 @@ export function feelstackErr<T>(
 ): FeelStackResult<T> {
   return { ok: false, error, ...opts };
 }
-
-/**
- * Content-model entity types this adapter resolves — brief §11 ("BLUE
- * DIAMOND CONTENT MODEL") and §8 (cache-tag registry coverage list). One
- * entry per CMS-manageable entity family; index vs. detail are tracked
- * separately since they invalidate independently.
- */
-export type FeelStackEntityType =
-  | "page"
-  | "navigation"
-  | "footer"
-  | "seo"
-  | "doctor"
-  | "medical-service"
-  | "aesthetic-treatment"
-  | "concern"
-  | "technology"
-  | "product"
-  | "health-hub-article"
-  | "legal-page"
-  | "booking-config";
 
 export type Locale = "en" | "ar";
