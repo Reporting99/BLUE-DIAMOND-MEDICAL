@@ -94,6 +94,21 @@ async function fetchOnce(url: string, revalidateSeconds: number, tags: readonly 
  * GET at most once, and only for network failures or 502/503/504 — never
  * for 400, invalid site key, or locale mismatch (those are not transient).
  */
+/**
+ * Pulls the `error.code` out of a FeelStack error envelope, if there is one.
+ * Best-effort by design: a non-JSON or unrecognised body yields `undefined`
+ * and classification falls back to the HTTP status alone.
+ */
+async function readErrorCode(response: Response): Promise<string | undefined> {
+  try {
+    const body: unknown = await response.json();
+    const parsed = feelstackApiErrorSchema.safeParse(body);
+    return parsed.success ? parsed.data.error.code : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 async function fetchWithPolicy(
   url: string,
   revalidateSeconds: number,
@@ -113,13 +128,31 @@ async function fetchWithPolicy(
         }
       }
 
-      const code = classifyHttpStatus(response.status);
-      const retryableStatus = response.status === 502 || response.status === 503 || response.status === 504;
+      // Read the structured error envelope before classifying. A bare HTTP
+      // status is not enough: FeelStack answers 404 both for a genuinely
+      // missing page (CONTENT_NOT_FOUND) and for an unknown siteKey
+      // (SITE_NOT_FOUND). Treating the second as NOT_FOUND would 404 every
+      // page on the site the moment a wrong site key is deployed — the exact
+      // mass-404 failure the contract forbids.
+      //
+      // This matches on the envelope's `code` field, never on human-readable
+      // prose, so a reworded upstream message cannot change behaviour.
+      const upstreamCode = await readErrorCode(response);
+      const code = classifyHttpStatus(response.status, upstreamCode);
+
+      // 429 is retried with the transient statuses: rate limiting is by
+      // definition temporary. It is classified UPSTREAM_ERROR either way, so
+      // an exhausted retry still surfaces as an outage and never as a 404.
+      const retryableStatus =
+        response.status === 429 ||
+        response.status === 502 ||
+        response.status === 503 ||
+        response.status === 504;
       if (retryableStatus && attempt < MAX_RETRIES) {
         attempt += 1;
         continue;
       }
-      logFeelstackEvent({ category: code, httpStatus: response.status, requestId });
+      logFeelstackEvent({ category: code, httpStatus: response.status, requestId, upstreamContext: upstreamCode });
       return feelstackErr(code, { status: response.status, requestId });
     } catch (thrown) {
       const code = classifyThrown(thrown);

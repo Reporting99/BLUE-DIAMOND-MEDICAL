@@ -48,11 +48,31 @@ export class FeelStackUnavailableError extends Error {
 }
 
 /** HTTP status -> FeelStackErrorCode. Structured, not prose-based — brief §6. */
-export function classifyHttpStatus(status: number): FeelStackErrorCode {
+/**
+ * Upstream error codes that must override the HTTP status. Matching is on the
+ * envelope's `code` field only — never on message prose, so a reworded upstream
+ * message cannot change behaviour.
+ *
+ * SITE_NOT_FOUND is the load-bearing one: FeelStack returns 404 for an unknown
+ * siteKey exactly as it does for a missing page. Without this mapping a wrong
+ * site key would 404 every page on the site instead of failing loudly, which is
+ * the mass-404 outcome the integration contract forbids.
+ */
+const UPSTREAM_CODE_MAP: Record<string, FeelStackErrorCode> = {
+  SITE_NOT_FOUND: "INVALID_SITE",
+  INVALID_SITE: "INVALID_SITE",
+  LOCALE_NOT_SUPPORTED: "LOCALE_MISMATCH",
+  LOCALE_MISMATCH: "LOCALE_MISMATCH",
+  CONTENT_NOT_FOUND: "NOT_FOUND",
+};
+
+export function classifyHttpStatus(status: number, upstreamCode?: string): FeelStackErrorCode {
+  if (upstreamCode && UPSTREAM_CODE_MAP[upstreamCode]) return UPSTREAM_CODE_MAP[upstreamCode];
   if (status === 404) return "NOT_FOUND";
   if (status === 400) return "INVALID_RESPONSE";
   if (status === 401 || status === 403) return "INVALID_SITE";
-  if (status >= 500) return "UPSTREAM_ERROR";
+  // 429 and every other non-2xx are treated as upstream trouble, never as a
+  // confirmed absence — an outage must not be indexed as deleted content.
   return "UPSTREAM_ERROR";
 }
 
