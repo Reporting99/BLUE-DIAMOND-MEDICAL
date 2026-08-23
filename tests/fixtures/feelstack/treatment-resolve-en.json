@@ -94,6 +94,16 @@
         }
       },
       {
+        "id": "63444a03-087d-44c4-8caf-44f58720aabc",
+        "relationKey": "technologies",
+        "targetType": "content_entry",
+        "targetId": "40b09658-04d8-45b1-b0e3-4180f5aeb157",
+        "sortOrder": 1,
+        "metadata": {
+          "technologyId": "potenza"
+        }
+      },
+      {
         "id": "7b87e429-ab40-459e-a2f3-2c4695e45f40",
         "relationKey": "concerns",
         "targetType": "content_entry",

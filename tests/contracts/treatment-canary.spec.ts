@@ -83,12 +83,42 @@ test.describe("treatment canary — live envelope", () => {
     expect([...(fields.related_concern_ids ?? [])].sort()).toEqual(fromGraph);
   });
 
-  test("doctor relations remain real; technologies remain deferred", () => {
+  /**
+   * DELIBERATE SEMANTIC CHANGE — technologies migrated in the phase after this
+   * one, closing the last deferred family.
+   *
+   * The previous assertion required that NO `technologies` relation existed,
+   * which was correct while technologies were static-only. They are now real
+   * entries and the deferred ids have been backfilled, so the assertion is
+   * inverted rather than deleted — and, as with concerns, made stronger: each
+   * relation must carry its stable technology id, every target must be a real
+   * entry, and the graph must equal the typed field.
+   *
+   * With this change every relation family on a treatment is real. There are no
+   * deferred relations left anywhere in the migration.
+   */
+  test("technology relations are now REAL and agree with the typed field", () => {
+    const env = feelstackResolveEnvelopeSchema.parse(fixture("en"));
+    const items = env.relations?.items ?? [];
+    const fields = entityPayload(env) as { technology_ids?: string[] };
+
+    const techRelations = items.filter((r) => r.relationKey === "technologies");
+    expect(techRelations.length).toBe(source.technologyIds!.length);
+    expect(techRelations.every((r) => r.targetType === "content_entry")).toBe(true);
+
+    const fromGraph = techRelations.map((r) => (r.metadata as { technologyId: string }).technologyId).sort();
+    expect(fromGraph).toEqual([...source.technologyIds!].sort());
+    expect([...(fields.technology_ids ?? [])].sort()).toEqual(fromGraph);
+  });
+
+  test("doctor relations remain real, and no relation family is deferred any more", () => {
     const env = feelstackResolveEnvelopeSchema.parse(fixture("en"));
     const items = env.relations?.items ?? [];
     expect(items.some((r) => r.relationKey === "doctors" && r.targetType === "person_profile")).toBe(true);
-    // Technologies are still a static-only family — no placeholder may appear.
-    expect(items.some((r) => r.relationKey === "technologies")).toBe(false);
+    // Every relation key present must resolve to a real target — no placeholder
+    // was ever created for a family that had not migrated yet.
+    expect(items.every((r) => ["doctors", "concerns", "technologies"].includes(r.relationKey))).toBe(true);
+    expect(items.every((r) => r.targetId.length > 0 && r.metadata !== null)).toBe(true);
   });
 });
 

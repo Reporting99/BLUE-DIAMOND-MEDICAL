@@ -6,6 +6,7 @@ import { TechnologyTemplate } from "@/features/technologies";
 import { getRouteMetadata } from "@/lib/seo/metadata";
 import { resolvePageContent, entityCacheTags } from "@/lib/feelstack/page-resolver";
 import { cacheTags } from "@/lib/feelstack/cache-tags";
+import { technologyCmsContract } from "@/features/technologies/cms-contract";
 
 export function generateStaticParams() {
   return locales.flatMap((locale) => technologies.map((tech) => ({ locale, technologyId: tech.slug })));
@@ -26,6 +27,7 @@ async function loadTechnology(id: string, locale: Locale) {
   const resolution = await resolvePageContent({
     path: cmsPath,
     locale,
+    contract: technologyCmsContract,
     staticFallback: () => getTechnology(id),
     tags: entityCacheTags({
       detail: cacheTags.technology,
