@@ -54,12 +54,38 @@ export const feelstackEntryDataSchema = z
     id: z.string(),
     contentType: z.string().optional(),
     title: z.string().optional(),
+    /** `content_entry` only — caller-defined fields live here. */
     fields: z.record(z.string(), z.unknown()).optional(),
+    /**
+     * First-class model columns. `person_profile` and `location` expose their
+     * values at the TOP LEVEL of `data` rather than under `fields` — verified
+     * against the live API with the first real doctor record, not assumed.
+     */
+    displayName: z.string().nullable().optional(),
+    professionalTitle: z.string().nullable().optional(),
+    biography: z.string().nullable().optional(),
+    mediaAssetId: z.string().nullable().optional(),
+    metadata: z.record(z.string(), z.unknown()).nullable().optional(),
     translationGroupId: z.string().nullable().optional(),
     publishedAt: z.string().nullable().optional(),
     updatedAt: z.string().optional(),
   })
   .passthrough();
+
+/**
+ * Which part of `data` an entity's field schema should parse.
+ *
+ * `content_entry` nests caller-defined values under `fields`; the first-class
+ * models (`person_profile`, `location`) put their columns at the top level.
+ * Reading the wrong one yields an empty object rather than an error, so the
+ * choice is made here, once, from the envelope's own `type`.
+ */
+export function entityPayload(envelope: { type: string; data: Record<string, unknown> }): Record<string, unknown> {
+  if (envelope.type === "content_entry") {
+    return (envelope.data.fields as Record<string, unknown> | undefined) ?? {};
+  }
+  return envelope.data;
+}
 
 export const feelstackRelationSchema = z.object({
   id: z.string(),

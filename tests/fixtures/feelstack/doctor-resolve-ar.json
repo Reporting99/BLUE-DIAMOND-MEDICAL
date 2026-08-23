@@ -1,0 +1,53 @@
+{
+  "type": "person_profile",
+  "route": {
+    "id": "0ebb6997-c729-46c2-a5f4-86ebb4b55b02",
+    "path": "/doctors/mohamed-farhat",
+    "locale": "ar",
+    "requestedLocale": "ar",
+    "resolvedLocale": "ar",
+    "usedFallback": false,
+    "alternates": [
+      {
+        "locale": "ar",
+        "path": "/doctors/mohamed-farhat"
+      },
+      {
+        "locale": "en",
+        "path": "/doctors/mohamed-farhat"
+      }
+    ],
+    "sectionId": null,
+    "updatedAt": "2026-08-23T10:11:13.602Z"
+  },
+  "data": {
+    "id": "1daa9dba-024b-493b-88ec-0c519b2edbbf",
+    "displayName": "د. محمد فرحات",
+    "professionalTitle": "طبيب أسرة · المؤسس",
+    "biography": "الدكتور محمد فرحات طبيب أسرة بخبرة تتجاوز 28 عامًا. أسّس عيادة بلو دايموند الطبية في ويست سبرينغز عام 2022، ولديه خبرة واسعة في طب الأسرة، والإجراءات الجراحية البسيطة، والخدمات التجميلية بما فيها البوتوكس وعلاج البلازما الغنية بالصفائح الدموية (PRP).",
+    "email": null,
+    "phone": null,
+    "mediaAssetId": null,
+    "metadata": {
+      "routeId": "doctor-farhat",
+      "doctorId": "mohamed-farhat",
+      "imagePath": "/doctors/farhat.jpg",
+      "imageStatus": "pending",
+      "bookingChannel": "family-doctor",
+      "practicesAesthetics": true
+    },
+    "translationGroupId": "30be3cc8-45a8-4de0-bfa7-8037c65ee91c",
+    "publishedAt": "2026-08-23T10:11:13.601Z",
+    "updatedAt": "2026-08-23T10:11:13.602Z"
+  },
+  "seo": {
+    "title": "د. محمد فرحات",
+    "description": "طبيب أسرة · المؤسس — بلو دايموند الطبية، ويست سبرينغز، كالغاري."
+  },
+  "relations": {
+    "items": [],
+    "faqs": [],
+    "sections": [],
+    "taxonomies": []
+  }
+}

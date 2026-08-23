@@ -1,0 +1,53 @@
+{
+  "type": "person_profile",
+  "route": {
+    "id": "fef3a6bc-857c-4d55-a64d-1695d9252589",
+    "path": "/doctors/mohamed-farhat",
+    "locale": "en",
+    "requestedLocale": "en",
+    "resolvedLocale": "en",
+    "usedFallback": false,
+    "alternates": [
+      {
+        "locale": "ar",
+        "path": "/doctors/mohamed-farhat"
+      },
+      {
+        "locale": "en",
+        "path": "/doctors/mohamed-farhat"
+      }
+    ],
+    "sectionId": null,
+    "updatedAt": "2026-08-23T10:08:57.442Z"
+  },
+  "data": {
+    "id": "aed7273b-16fe-47a8-8742-9bdfe3ed0489",
+    "displayName": "Dr. Mohamed Farhat",
+    "professionalTitle": "Family Physician · Founder",
+    "biography": "Dr. Mohamed Farhat is a family physician with more than 28 years of experience. He founded Blue Diamond Medical in West Springs in 2022 and has a wide range of skills across family practice, minor surgical procedures, and cosmetic services, including Botox and PRP therapy.",
+    "email": null,
+    "phone": null,
+    "mediaAssetId": null,
+    "metadata": {
+      "routeId": "doctor-farhat",
+      "doctorId": "mohamed-farhat",
+      "imagePath": "/doctors/farhat.jpg",
+      "imageStatus": "pending",
+      "bookingChannel": "family-doctor",
+      "practicesAesthetics": true
+    },
+    "translationGroupId": "30be3cc8-45a8-4de0-bfa7-8037c65ee91c",
+    "publishedAt": "2026-08-23T10:08:57.441Z",
+    "updatedAt": "2026-08-23T10:10:26.600Z"
+  },
+  "seo": {
+    "title": "Dr. Mohamed Farhat",
+    "description": "Family Physician · Founder at Blue Diamond Medical, West Springs, Calgary."
+  },
+  "relations": {
+    "items": [],
+    "faqs": [],
+    "sections": [],
+    "taxonomies": []
+  }
+}

@@ -11,6 +11,7 @@ import { FeelStackUnavailableError, logFeelstackEvent } from "./errors";
 import type { Locale } from "./contracts";
 import { checkLocaleIntegrity } from "./locale-integrity";
 import { toAdapterInput, type EntityContract } from "./adapters";
+import { entityPayload } from "./transport";
 
 /**
  * Hybrid content-mode resolver — brief's hybrid-migration scope decision.
@@ -96,7 +97,7 @@ export async function resolvePageContent<T, F = unknown>(
       return { source: "not-found" };
     }
 
-    const fields = contract.fields.safeParse(envelope.data.fields ?? {});
+    const fields = contract.fields.safeParse(entityPayload(envelope));
     if (!fields.success) {
       // A contract error is an outage, not an absence: the CMS answered, we
       // simply cannot trust what it said. Falling back to static here would
