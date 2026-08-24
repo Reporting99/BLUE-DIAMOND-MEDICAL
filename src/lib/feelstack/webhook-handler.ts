@@ -120,6 +120,7 @@ export type RevalidationOutcome =
   | "invalid_path"
   | "unsupported_event"
   | "backend_event_gap"
+  | "companion_invalidated"
   | "revalidated";
 
 export interface RevalidationResult {
@@ -283,6 +284,24 @@ export async function processRevalidationRequest(
   const hasCanonicalContext = Boolean(canonicalEntityId) && Boolean(effectivePath);
 
   const disposition = classifyEvent(type, eventData, hasCanonicalContext);
+
+  if (disposition.kind === "companion-invalidated") {
+    // A genuine, understood event that correctly invalidates nothing itself:
+    // the real work arrives on separate companion events. Reported with its
+    // own outcome rather than as a gap, so the response and the logs stop
+    // claiming a backend deficiency that FeelStack #25 fixed — and rather
+    // than as `unsupported_event`, which would wrongly imply Blue Diamond
+    // does not consume this family.
+    logFeelstackEvent({
+      category: "COMPANION_INVALIDATED",
+      upstreamContext: `event=${type}: ${disposition.reason}`,
+    });
+    return {
+      status: 200,
+      outcome: "companion_invalidated",
+      body: { revalidated: false, event: type, eventId, companionInvalidated: disposition.reason },
+    };
+  }
 
   if (disposition.kind === "backend_event_gap") {
     // NOT a silent 200. FeelStack can emit this event but does not transmit

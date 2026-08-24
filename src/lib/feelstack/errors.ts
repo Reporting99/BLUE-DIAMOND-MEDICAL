@@ -120,7 +120,14 @@ export interface StructuredLogContext {
    * but it must be visible (warn level) rather than looking like a
    * successful no-op.
    */
-  category: FeelStackErrorCode | "OK" | "BACKEND_EVENT_GAP";
+  /**
+   * "COMPANION_INVALIDATED" marks a webhook that is understood and correctly
+   * invalidates nothing on its own, because the real invalidation arrives on
+   * separate companion events (content.faq.* since FeelStack #25). Kept
+   * distinct from BACKEND_EVENT_GAP so a closed gap stops being logged as an
+   * open one.
+   */
+  category: FeelStackErrorCode | "OK" | "BACKEND_EVENT_GAP" | "COMPANION_INVALIDATED";
   httpStatus?: number;
   locale?: string;
   path?: string;
