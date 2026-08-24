@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 import { z } from "zod";
 import {
-  feelstackRoutesResponseSchema,
+  feelstackRouteInventoryPageSchema,
   feelstackWebhookEnvelopeSchema,
   feelstackContentEventDataSchema,
 } from "../../src/lib/feelstack/schemas";
@@ -212,14 +212,78 @@ test.describe("adapters", () => {
 });
 
 test.describe("FeelStack schemas", () => {
-  test("accepts a valid routes response", () => {
-    const parsed = feelstackRoutesResponseSchema.safeParse({
-      routes: [{ path: "/medical/eye-screening", status: "published" }],
+  /**
+   * Captured live 2026-08-24 from
+   * GET /api/public/v1/sites/blue-diamond-medical/routes?locale=en
+   * — byte-shape, not a guess.
+   */
+  const LIVE_ROUTE_INVENTORY_PAGE = {
+    items: [
+      {
+        path: "/aesthetics/concerns/acne-scars",
+        locale: "en",
+        type: "content_entry",
+        lastModified: "2026-08-23T11:25:34.635Z",
+        seo: { title: "Acne Scars", description: "Comprehensive care for acne scarring." },
+      },
+    ],
+    page: 1,
+    limit: 100,
+    hasMore: false,
+  };
+
+  test("accepts the route inventory page the deployed API really returns", () => {
+    const parsed = feelstackRouteInventoryPageSchema.safeParse(LIVE_ROUTE_INVENTORY_PAGE);
+    expect(parsed.success).toBe(true);
+  });
+
+  test("accepts a row without the optional seo/lastModified fields", () => {
+    const parsed = feelstackRouteInventoryPageSchema.safeParse({
+      items: [{ path: "/medical/eye-screening", locale: "ar", type: "content_entry" }],
+      page: 2,
+      limit: 200,
+      hasMore: true,
     });
     expect(parsed.success).toBe(true);
   });
+
+  /**
+   * NEGATIVE CONTROL. The forward-declared `{ routes: [{ path, status }] }`
+   * shape was never emitted by FeelStack, so `safeParse` failed on every real
+   * response and `listRoutes()` returned `[]` for its entire life while the
+   * old version of THIS test asserted the wrong shape was valid — which is
+   * precisely why the bug survived. If this test ever goes green again, the
+   * schema has regressed to the fiction.
+   */
+  test("REJECTS the old forward-declared { routes: [{ path, status }] } shape", () => {
+    const parsed = feelstackRouteInventoryPageSchema.safeParse({
+      routes: [{ path: "/medical/eye-screening", status: "published" }],
+    });
+    expect(parsed.success).toBe(false);
+  });
+
+  test("rejects a row carrying a `status` field the API does not send", () => {
+    // Not a hard failure (zod strips unknown keys), but the TYPE must not
+    // expose one: asserting the parsed row has no `status` keeps a consumer
+    // from filtering on a field that will always be undefined.
+    const parsed = feelstackRouteInventoryPageSchema.parse(LIVE_ROUTE_INVENTORY_PAGE);
+    expect(Object.keys(parsed.items[0])).not.toContain("status");
+  });
+
+  test("rejects a page whose pagination fields are missing or malformed", () => {
+    for (const bad of [
+      { items: [], page: 1, limit: 100 },
+      { items: [], page: 0, limit: 100, hasMore: false },
+      { items: [], page: 1, limit: -5, hasMore: false },
+      { items: [], page: "1", limit: 100, hasMore: false },
+      { items: {}, page: 1, limit: 100, hasMore: false },
+    ]) {
+      expect(feelstackRouteInventoryPageSchema.safeParse(bad).success, JSON.stringify(bad)).toBe(false);
+    }
+  });
+
   test("rejects malformed JSON shape for routes (not an object)", () => {
-    const parsed = feelstackRoutesResponseSchema.safeParse(["not", "an", "object"]);
+    const parsed = feelstackRouteInventoryPageSchema.safeParse(["not", "an", "object"]);
     expect(parsed.success).toBe(false);
   });
   test("envelope accepts the canonical FeelStack shape", () => {
