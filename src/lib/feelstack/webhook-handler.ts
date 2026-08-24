@@ -378,6 +378,15 @@ export async function processRevalidationRequest(
     cmsPath,
     previousCmsPath,
     family: resolvedFamily,
+    // Only `site-config` needs the full path set, and only this module can
+    // supply it -- `revalidation.ts` is kept free of registry knowledge. The
+    // keys of `routeByCmsPath` ARE the CMS paths (the map is built from
+    // `r.path.en`), so this is the same registry every other path in this
+    // handler is validated against, not a second source of truth.
+    allCmsPaths:
+      disposition.kind === "site-config"
+        ? Array.from(routeByCmsPath.keys())
+        : undefined,
   });
   tags.forEach((tag) => effects.revalidateTag(tag));
   revalidatedPaths.forEach((publicPath) => effects.revalidatePath(publicPath));
