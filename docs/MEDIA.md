@@ -1,5 +1,71 @@
 # Media Pipeline (ImageKit)
 
+> **2026-08-24 — architecture change.** Media is no longer imported by a
+> workstation script holding an ImageKit private key. The authenticated import
+> now lives in FeelStack, and this repository never sees a private credential at
+> all. See "Import architecture" immediately below; the older
+> `scripts/imagekit-import.mjs` procedure described further down is superseded
+> for the master-pack import and kept only as the record of the legacy-archive
+> pass.
+
+## Import architecture (current)
+
+```text
+approved media pack (temporary, outside the repo)
+        ↓  authenticated, project-scoped admin API
+FeelStack ProjectMediaImportService
+        ↓  deterministic path, useUniqueFileName:false, overwriteFile:false
+ImageKit  /blue-diamond/…
+        ↓  MediaAsset row + EntityMediaAssignment edge
+FeelStack public resolver  (envelope.media)
+        ↓  per-item validation, invalid rows dropped and logged
+src/lib/feelstack/media.ts  →  ImageKitImage
+```
+
+**Where each thing lives, and why.**
+
+| Concern | Owner | Why not the other side |
+|---|---|---|
+| Image binaries | ImageKit | FeelStack stores no binaries; a CMS row is a reference, never a file |
+| Path, dimensions, checksum, role, approval, EN/AR alt, focal point | FeelStack `media_assets` | The frontend must not become a second media database |
+| Which entity shows which asset in which slot | FeelStack `entity_media_assignments` | Placement is editorial, and it changes without a deploy |
+| Delivery URL and transformations | This repo, via `ImageKitImage` + `NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT` | A stored transformation URL freezes a decision that should stay a render-time one |
+
+**Credentials.** This repository needs exactly one media variable:
+
+```env
+NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT=https://ik.imagekit.io/oq92dh6zib
+```
+
+`NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY` is **not required for image delivery** — the
+root layout's `ImageKitProvider` takes only `urlEndpoint`, and
+`imagekitIsConfigured` tests only that. A public key would only be needed if an
+authenticated *browser-upload* flow were added later, which this build does not
+have. `IMAGEKIT_PRIVATE_KEY` must never appear in this repository's environment
+in any form: the only process that holds one is the FeelStack backend, using the
+credential already configured in its own service environment.
+
+**Three properties the deterministic importer guarantees**, each of which the
+old path could not:
+
+1. *The delivered path equals the manifest path.* `useUniqueFileName: false`
+   plus a post-upload assertion that `filePath` came back unchanged. The old
+   `MediaLibraryService.upload()` forced `/projects/{id}/media` with unique
+   renaming, which cannot express `/blue-diamond/…` at all.
+2. *Reuse requires proof.* Same path plus same SHA-256 is reuse; same path plus
+   different bytes is a refusal. `overwriteFile: false` means the provider
+   enforces it too, not just the pre-check.
+3. *A retry converges.* Assignments are keyed on
+   (project, entityType, entityId, slot, sortOrder), so re-running an import
+   updates rows rather than stacking a second hero on a page.
+
+**Doctor rules are structural, not procedural.** The pack contains no doctor
+imagery, so no doctor media record is created at all. Dr. Saeed keeps
+`photoDeclined: true` with an empty path, Dr. Gwea keeps `status: "pending"`,
+and every doctor card renders the code-generated FacetTile. Nothing in the
+import can change that, because there is nothing to import.
+
+
 Consolidated from the per-task documents this project accumulated; every
 fact below is carried over verbatim from the source noted at each section.
 

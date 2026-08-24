@@ -162,6 +162,87 @@ declaring them now would forward-declare a contract again — the exact mistake
 §1a documents. Until an entity has a contract, `resolvePageContent` serves its
 approved static content and never calls the CMS.
 
+## 1c. Media contract — one binary, two languages
+
+Added with the deterministic media import (branch
+`feat/feelstack-media-contract`; FeelStack side
+`feat/project-media-library-and-import`).
+
+The resolve envelope carries a **top-level `media` array**, a sibling of
+`relations`, not a member of it:
+
+```jsonc
+{
+  "type": "content_entry",
+  "route": { ... },
+  "data": { ... },
+  "relations": { "items": [], "faqs": [], "sections": [], "taxonomies": [] },
+  "media": [
+    {
+      "id": "3f7c1a9e-…",
+      "path": "/blue-diamond/treatments/rf-microneedling-hero.png",
+      "width": 1672,
+      "height": 941,
+      "aspectRatio": 1.776833,
+      "alt": { "en": "…", "ar": "…" },
+      "caption": { "en": "…", "ar": "…" },   // optional
+      "role": "hero",
+      "slot": "hero",
+      "approvalStatus": "approved",
+      "focalPoint": { "x": 50, "y": 45 },     // optional
+      "sortOrder": 0,
+      "localeMode": "shared"
+    }
+  ]
+}
+```
+
+**One asset, both locales.** The image binary is never duplicated per language:
+`/en/…` and `/ar/…` resolve to the same `path` and differ only in `alt` and
+`caption`. That is what `localeMode: "shared"` records.
+
+**`path`, not `url`.** FeelStack stores the provider-relative path and the
+frontend composes the delivery URL from `NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT`
+through `ImageKitImage`. No transformation URL is ever stored as a canonical
+path, and no delivery host is baked into content.
+
+**What the backend already filtered out**, so this repo does not re-derive it:
+disabled assignments, assets whose `approvalStatus` is not publishable, assets
+belonging to another project, and assets with no usable dimensions.
+
+**Why `media` is `z.array(z.unknown())` in
+`feelstackResolveEnvelopeSchema`.** Each element is validated separately in
+`src/lib/feelstack/media.ts`. A strict element schema at the envelope level
+would make one malformed asset fail `safeParse` for the whole envelope, and
+`page-resolver.ts` treats an unparseable envelope as an unusable response —
+turning a missing image into a 404. Invalid rows are dropped and logged
+(`INVALID_RESPONSE` with the per-row reason and the request id); the page always
+renders. This is the one place in the resolver where an invalid CMS response
+does not throw, and the asymmetry is deliberate: entity *fields* are the page,
+media only decorates it.
+
+**Vocabulary mapping** (`src/lib/feelstack/media.ts`): CMS `role` maps onto this
+build's `ImageRole`, and `approvalStatus` onto `ImageStatus`. Both fall back
+conservatively — an unrecognised role becomes `hero`, an unrecognised approval
+status becomes `pending`, which renders the FacetTile placeholder. A new CMS
+status can therefore never promote an unreviewed asset onto a medical page.
+
+**Cross-repository fixture.** `tests/fixtures/feelstack/media-contract.fixture.json`
+exists byte-identically here and in FeelStack
+(`headless-cms/src/platform/contracts/media-contract.fixture.json`). Both sides
+pin the same SHA-256 and the same `contractVersion`, so a unilateral edit fails
+that repository's own build. This is the guard the old route-inventory contract
+test lacked — see §1b on the shape that passed for the integration's entire life
+while matching nothing the backend emitted.
+
+**Admin write path (FeelStack side, not used by this app).** Import is
+`POST admin/v1/projects/:projectId/media/import` (multipart, deterministic path),
+`POST …/media/register-existing` (records an ImageKit file that already exists,
+moving no bytes), and `POST …/media/assignments` (attaches an asset to an entity
+slot). All three sit behind `JwtAuthGuard + ProjectGuard + PermissionsGuard`.
+This repo's client stays **read-only**: it has no write methods and must not gain
+any.
+
 ## 2. Content modes
 
 `FEELSTACK_CONTENT_MODE` (`src/lib/feelstack/content-mode.ts`):
