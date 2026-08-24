@@ -11,15 +11,19 @@ import { processRevalidationRequest } from "@/lib/feelstack/webhook-handler";
  * `src/lib/feelstack/webhook-handler.ts`, which is unit-testable without a
  * Next.js server — see tests/security/feelstack-webhook.spec.ts.
  *
- * No FEELSTACK_REVALIDATE_SECRET is configured for this build — the
- * handler exists and is fully wired, but every request 501s until a real
- * secret is provisioned, rather than silently accepting unverified
- * requests. See docs/DEPLOYMENT.md and docs/FEELSTACK.md
- * (the structured `{event, siteKey, locale, entityId, path}` body is a
- * forward-declared, unverified contract — no live FeelStack webhook sender
- * was available this session to confirm its real payload shape; the
- * legacy `{path}`-only body this deployment already shipped is still
- * accepted).
+ * The accepted body is now the CANONICAL FeelStack envelope
+ * `{ id, type, projectId, occurredAt, data }`, derived from the real
+ * sender (`webhook.service.ts::deliver()`). The previous
+ * `{ event, siteKey, ... }` shape was a forward-declared guess that no
+ * genuine delivery could satisfy; it has been removed rather than kept as
+ * a compatibility branch.
+ *
+ * All three of FEELSTACK_REVALIDATE_SECRET, FEELSTACK_PROJECT_ID and
+ * FEELSTACK_SITE_KEY must be set. Any missing one 501s. In particular the
+ * site key is passed explicitly rather than read through
+ * `getFeelstackSiteKey()`, whose "blue-diamond-medical" fallback would
+ * otherwise let a deployment accept events for a tenant nobody configured
+ * — this path is gated only on the secret, not on assertFeelstackEnvValid().
  */
 export async function POST(request: NextRequest) {
   const rawBody = await request.text();
@@ -27,6 +31,8 @@ export async function POST(request: NextRequest) {
   const result = await processRevalidationRequest(
     {
       secret: process.env.FEELSTACK_REVALIDATE_SECRET,
+      projectId: process.env.FEELSTACK_PROJECT_ID,
+      siteKey: process.env.FEELSTACK_SITE_KEY,
       contentType: request.headers.get("content-type"),
       contentLength: Number(request.headers.get("content-length") ?? "0") || null,
       signature: request.headers.get("x-feelstack-signature"),

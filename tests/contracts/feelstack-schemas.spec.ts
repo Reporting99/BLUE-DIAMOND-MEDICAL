@@ -2,7 +2,8 @@ import { test, expect } from "@playwright/test";
 import { z } from "zod";
 import {
   feelstackRoutesResponseSchema,
-  feelstackWebhookBodySchema,
+  feelstackWebhookEnvelopeSchema,
+  feelstackContentEventDataSchema,
 } from "../../src/lib/feelstack/schemas";
 import { feelstackResolveEnvelopeSchema } from "../../src/lib/feelstack/transport";
 import { checkLocaleIntegrity } from "../../src/lib/feelstack/locale-integrity";
@@ -221,28 +222,56 @@ test.describe("FeelStack schemas", () => {
     const parsed = feelstackRoutesResponseSchema.safeParse(["not", "an", "object"]);
     expect(parsed.success).toBe(false);
   });
-  test("webhook body schema accepts the legacy {path} shape", () => {
-    const parsed = feelstackWebhookBodySchema.safeParse({ path: "/en/medical/eye-screening" });
+  test("envelope accepts the canonical FeelStack shape", () => {
+    const parsed = feelstackWebhookEnvelopeSchema.safeParse({
+      id: "3f1c2e64-6b1d-4a7f-9c2e-1b8a5d4e7f00",
+      type: "content.entry.published",
+      projectId: "d1a870a4-a514-4719-bf71-6cff26b18dcb",
+      occurredAt: "2026-08-24T07:00:00.000Z",
+      data: { id: "9b7c1a20-4f3e-4d5a-8b21-0c6e9f2a1d33", contentType: "medical-service" },
+    });
     expect(parsed.success).toBe(true);
   });
-  test("webhook body schema accepts the structured {event, siteKey} shape", () => {
-    const parsed = feelstackWebhookBodySchema.safeParse({
+
+  test("envelope accepts the underscored person_profile type FeelStack really emits", () => {
+    const parsed = feelstackWebhookEnvelopeSchema.safeParse({
+      id: "3f1c2e64-6b1d-4a7f-9c2e-1b8a5d4e7f00",
+      type: "content.person_profile.published",
+      projectId: "d1a870a4-a514-4719-bf71-6cff26b18dcb",
+      occurredAt: "2026-08-24T07:00:00.000Z",
+      data: {},
+    });
+    expect(parsed.success).toBe(true);
+  });
+
+  /**
+   * Negative assertions. The pre-alignment shapes were forward-declared
+   * guesses that no real delivery could satisfy. Keeping them merely
+   * "unused" in a union is how the same defect survived twice before in
+   * this integration, so their removal is asserted explicitly.
+   */
+  test("the old guessed {event, siteKey, ...} body no longer validates", () => {
+    const parsed = feelstackWebhookEnvelopeSchema.safeParse({
       event: "medical-service.updated",
       siteKey: "blue-diamond-medical",
       locale: "en",
       entityId: "eye-screening",
     });
-    expect(parsed.success).toBe(true);
-  });
-  test("webhook body schema rejects an unsupported event name", () => {
-    const parsed = feelstackWebhookBodySchema.safeParse({
-      event: "totally-made-up-event",
-      siteKey: "blue-diamond-medical",
-    });
     expect(parsed.success).toBe(false);
   });
-  test("webhook body schema rejects an unrecognized shape entirely", () => {
-    const parsed = feelstackWebhookBodySchema.safeParse({ foo: "bar" });
+
+  test("the legacy {path}-only body no longer validates", () => {
+    const parsed = feelstackWebhookEnvelopeSchema.safeParse({ path: "/en/medical/eye-screening" });
     expect(parsed.success).toBe(false);
+  });
+
+  test("envelope rejects an unrecognized shape entirely", () => {
+    const parsed = feelstackWebhookEnvelopeSchema.safeParse({ foo: "bar" });
+    expect(parsed.success).toBe(false);
+  });
+
+  test("event data uses FeelStack's archived status, not Blue Diamond's disabled", () => {
+    expect(feelstackContentEventDataSchema.safeParse({ status: "archived" }).success).toBe(true);
+    expect(feelstackContentEventDataSchema.safeParse({ status: "disabled" }).success).toBe(false);
   });
 });
