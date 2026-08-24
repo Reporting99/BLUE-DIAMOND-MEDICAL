@@ -3,7 +3,7 @@ import { hreflangAlternates, routes } from "@/lib/routing";
 import { siteConfig } from "@/config/site";
 import { features, type FeatureFlags } from "@/config/features";
 import { isSiteLaunched } from "@/config/launch";
-import { listRoutes } from "@/lib/feelstack/client";
+import { getSiteConfig, listRoutes } from "@/lib/feelstack/client";
 import { getFeelstackContentMode } from "@/lib/feelstack/content-mode";
 import { locales, type Locale } from "@/i18n/config";
 
@@ -26,6 +26,18 @@ export const dynamic = "force-dynamic";
  */
 async function cmsOnlyEntries(knownPaths: ReadonlySet<string>): Promise<MetadataRoute.Sitemap> {
   if (getFeelstackContentMode() === "static") return [];
+
+  // `sitemap.enabled` is an advisory SITE-level setting the CMS exposes and
+  // nothing server-side acts on, so honouring it is the frontend's job. It
+  // gates only CMS-OWNED rows: the local route registry is Blue Diamond's own
+  // inventory and is not FeelStack's to switch off.
+  //
+  // Fail OPEN — only an explicit `false` suppresses. `sitemap` is
+  // `settings?.sitemap ?? {}` on the backend, so an unconfigured tenant sends
+  // `{}`, and treating that absence as "off" would silently empty the CMS half
+  // of the sitemap for every project that never touched the setting.
+  const config = await getSiteConfig();
+  if (config?.sitemap.enabled === false) return [];
 
   const perLocale = await Promise.all(
     locales.map(async (locale: Locale) => {

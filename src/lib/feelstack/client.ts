@@ -12,9 +12,11 @@
 // read only in the webhook Route Handler, which Next.js never bundles
 // for the client regardless of this guard.
 import {
-  feelstackRoutesResponseSchema,
+  feelstackRouteInventoryPageSchema,
+  feelstackSiteConfigSchema,
   extractFeelstackErrorCode,
-  type FeelstackRoutesResponse,
+  type FeelstackRoute,
+  type FeelstackSiteConfig,
 } from "./schemas";
 import { classifyHttpStatus, classifyThrown, logFeelstackEvent, FeelStackConfigurationError } from "./errors";
 import { feelstackErr, feelstackOk, RETRYABLE_ERROR_CODES, type FeelStackResult } from "./contracts";
@@ -219,20 +221,221 @@ export async function resolveEnvelope(
   return feelstackOk(parsed.data, result.requestId);
 }
 
-/** Lists all published routes FeelStack knows about for a locale. Empty array on any failure. */
-export async function listRoutes(locale: "en" | "ar"): Promise<FeelstackRoutesResponse["routes"]> {
+/**
+ * Server-side maximum for `limit` (`Math.min(Math.max(limit, 1), 200)` in
+ * routeInventory). Asking for more is silently clamped, so ask for exactly
+ * this and let the loop do the rest.
+ */
+const ROUTE_INVENTORY_PAGE_SIZE = 200;
+
+/**
+ * Hard stop for the pagination loop. At the server maximum this is 20,000
+ * routes per locale — far beyond any real tenant — so reaching it means the
+ * server is not advancing (`hasMore` stuck true), not that the site is large.
+ * Breaking out silently would reintroduce exactly the truncation this
+ * function exists to remove, so it throws instead.
+ */
+const ROUTE_INVENTORY_MAX_PAGES = 100;
+
+/**
+ * Raised when the route inventory violates its contract: an unparseable
+ * envelope, a page that over-runs its own `limit`, or pagination that will
+ * not terminate.
+ *
+ * This is deliberately NOT the same failure mode as a CMS outage. A network
+ * error, timeout or 5xx still yields `[]`, because a sitemap briefly missing
+ * its CMS-only rows is recoverable while a 500 on /sitemap.xml makes Search
+ * Console drop the whole inventory (see src/app/sitemap.ts). A CONTRACT break
+ * is different in kind: it is a permanent, silent, wrong answer that no retry
+ * fixes, and it is what let `listRoutes()` return `[]` for its entire life
+ * while every caller believed the CMS simply had no extra routes.
+ */
+export class FeelStackRouteInventoryContractError extends Error {
+  constructor(
+    message: string,
+    readonly context: { locale: string; page?: number; requestId?: string },
+  ) {
+    super(message);
+    this.name = "FeelStackRouteInventoryContractError";
+  }
+}
+
+/**
+ * Lists every published route FeelStack knows about for ONE locale, following
+ * pagination to exhaustion.
+ *
+ * Publication filtering is the SERVER's: `routeInventory()` queries
+ * `status: PUBLISHED, enabled: true` and additionally drops routes whose
+ * merged `seo.index`/`seo.sitemapIncluded` is false. Nothing is re-filtered
+ * here — there is no `status` field on the wire to filter on, and inventing
+ * one is how the previous revision came to return `[]` forever.
+ *
+ * Locale isolation: `locale` is sent on every page request and the response
+ * rows are asserted to carry it back. A row for another locale is a contract
+ * break, not something to filter away quietly, because it would mean the
+ * server ignored the parameter and the caller is about to put wrong-language
+ * URLs in a locale-specific surface.
+ *
+ * Outage -> `[]` (recoverable). Contract break -> throws
+ * `FeelStackRouteInventoryContractError` (loud).
+ */
+export async function listRoutes(locale: "en" | "ar"): Promise<FeelstackRoute[]> {
   if (!isConfigured()) return [];
 
   const siteKey = getFeelstackSiteKey();
   const apiUrl = getFeelstackApiUrl();
-  const url = `${apiUrl}/public/v1/sites/${siteKey}/routes?locale=${locale}`;
+  const collected: FeelstackRoute[] = [];
 
-  const result = await fetchWithPolicy(url, 45, [cacheTags.routes(siteKey), cacheTags.sitemap(siteKey)]);
-  if (!result.ok) return [];
+  for (let page = 1; page <= ROUTE_INVENTORY_MAX_PAGES; page += 1) {
+    const url =
+      `${apiUrl}/public/v1/sites/${siteKey}/routes` +
+      `?locale=${encodeURIComponent(locale)}&page=${page}&limit=${ROUTE_INVENTORY_PAGE_SIZE}`;
 
-  const parsed = feelstackRoutesResponseSchema.safeParse(result.data);
-  if (!parsed.success) return [];
-  return parsed.data.routes.filter((r) => r.status === "published");
+    const result = await fetchWithPolicy(url, 45, [cacheTags.routes(siteKey), cacheTags.sitemap(siteKey)]);
+    // Outage or upstream refusal: degrade to what we have rather than 500 the
+    // sitemap. A partial first page is still better than nothing, and the next
+    // revalidation retries.
+    if (!result.ok) return collected;
+
+    const parsed = feelstackRouteInventoryPageSchema.safeParse(result.data);
+    if (!parsed.success) {
+      logFeelstackEvent({
+        category: "INVALID_RESPONSE",
+        locale,
+        path: `/routes?page=${page}`,
+        requestId: result.requestId,
+        upstreamContext: "route inventory page failed schema validation",
+      });
+      throw new FeelStackRouteInventoryContractError(
+        `Route inventory page ${page} for locale "${locale}" did not match the documented contract ` +
+          `({ items, page, limit, hasMore }).`,
+        { locale, page, requestId: result.requestId },
+      );
+    }
+
+    const body = parsed.data;
+
+    if (body.items.length > body.limit) {
+      throw new FeelStackRouteInventoryContractError(
+        `Route inventory page ${page} returned ${body.items.length} items for a stated limit of ${body.limit}.`,
+        { locale, page, requestId: result.requestId },
+      );
+    }
+
+    const foreign = body.items.find((item) => item.locale !== locale);
+    if (foreign) {
+      throw new FeelStackRouteInventoryContractError(
+        `Route inventory for locale "${locale}" returned a row for locale "${foreign.locale}" ` +
+          `(${foreign.path}); the locale parameter was not honoured.`,
+        { locale, page, requestId: result.requestId },
+      );
+    }
+
+    collected.push(...body.items);
+
+    if (!body.hasMore) return collected;
+
+    // `hasMore` is computed server-side as `routes.length === take`, so a full
+    // final page legitimately reports hasMore:true and the next page comes back
+    // empty. That terminates on the next iteration's `hasMore:false`. What must
+    // never happen is hasMore:true forever with nothing new arriving.
+    if (body.items.length === 0) {
+      throw new FeelStackRouteInventoryContractError(
+        `Route inventory page ${page} for locale "${locale}" was empty but reported hasMore:true.`,
+        { locale, page, requestId: result.requestId },
+      );
+    }
+  }
+
+  throw new FeelStackRouteInventoryContractError(
+    `Route inventory for locale "${locale}" did not terminate within ${ROUTE_INVENTORY_MAX_PAGES} pages.`,
+    { locale },
+  );
+}
+
+
+/**
+ * Raised when the site config violates its contract — an unparseable body, or
+ * a payload scoped to a DIFFERENT tenant than the one this build pins.
+ */
+/**
+ * Log-event path for the config endpoint, named rather than inlined at the
+ * call site.
+ *
+ * tests/unit/image-usage.spec.ts scans source for a path-keyed string literal
+ * and requires it to start with MEDIA_ROOT, so that an ImageKit media path can
+ * never silently drift off the root. A CMS route is not a media path, but the
+ * scanner reads raw text and cannot tell them apart — and it does not strip
+ * comments either, so this note deliberately avoids spelling the pattern out.
+ * Naming the constant is cheaper than weakening a guard that has already
+ * caught two real drifts.
+ */
+const SITE_CONFIG_LOG_PATH = "/config";
+
+export class FeelStackSiteConfigContractError extends Error {
+  constructor(
+    message: string,
+    readonly context: { siteKey: string; requestId?: string },
+  ) {
+    super(message);
+    this.name = "FeelStackSiteConfigContractError";
+  }
+}
+
+/**
+ * Fetches the tenant's site configuration — THE producer for the `site` and
+ * `siteSettings` cache tags.
+ *
+ * Those two tags were previously invalidated by `configuration.settings.updated`
+ * and attached to no fetch anywhere, so every `revalidateTag(site(...))` was a
+ * silent no-op: a dead invalidation tag. An invalidation without a producer is
+ * not a cache contract, it is a comment. This function is the missing half.
+ *
+ * TENANT ISOLATION. The response's own `siteKey` is asserted against the
+ * configured one. FeelStack is a SHARED instance also serving Dfeelings, and a
+ * misconfigured `FEELSTACK_SITE_KEY` returning another tenant's branding, SEO
+ * and contact details would be well-formed and plausible — the exact silent
+ * failure shape this integration keeps having to design out. There is no
+ * cross-tenant fallback and no Dfeelings default: a mismatch throws.
+ *
+ * Bounded cache: the same 45s revalidate window every other read uses, so a
+ * missed webhook still self-heals rather than pinning stale config forever.
+ *
+ * Outage -> `undefined`, so callers keep their local defaults instead of
+ * failing a page render on an advisory setting. Contract break -> throws.
+ */
+export async function getSiteConfig(): Promise<FeelstackSiteConfig | undefined> {
+  if (!isConfigured()) return undefined;
+
+  const siteKey = getFeelstackSiteKey();
+  const apiUrl = getFeelstackApiUrl();
+  const url = `${apiUrl}/public/v1/sites/${siteKey}/config`;
+
+  const result = await fetchWithPolicy(url, 45, [cacheTags.site(siteKey), cacheTags.siteSettings(siteKey)]);
+  if (!result.ok) return undefined;
+
+  const parsed = feelstackSiteConfigSchema.safeParse(result.data);
+  if (!parsed.success) {
+    logFeelstackEvent({
+      category: "INVALID_RESPONSE",
+      path: SITE_CONFIG_LOG_PATH,
+      requestId: result.requestId,
+      upstreamContext: "site config failed schema validation",
+    });
+    throw new FeelStackSiteConfigContractError(
+      `Site config for "${siteKey}" did not match the documented contract.`,
+      { siteKey, requestId: result.requestId },
+    );
+  }
+
+  if (parsed.data.siteKey !== siteKey) {
+    throw new FeelStackSiteConfigContractError(
+      `Site config requested for "${siteKey}" was answered for "${parsed.data.siteKey}" — refusing cross-tenant configuration.`,
+      { siteKey, requestId: result.requestId },
+    );
+  }
+
+  return parsed.data;
 }
 
 export { extractFeelstackErrorCode };

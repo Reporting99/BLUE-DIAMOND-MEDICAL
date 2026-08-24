@@ -251,6 +251,8 @@ export function classifyEvent(
  * look identical to a missing one.
  */
 export const unreachableTags: Partial<Record<CacheTagKey, string>> = {
+  navigation:
+    "Navigation is frontend-owned (src/config/routes.ts); nothing fetches the CMS navigation endpoint, so no cache entry carries this tag.",
   footer: "No FeelStack event or content type maps to footer content.",
   bookingConfig: "Booking configuration is not modelled in FeelStack.",
   healthHubIndex:
@@ -273,7 +275,6 @@ export const invalidationCoverage: Partial<
 > = {
   site: ["configuration.settings.updated"],
   siteSettings: ["configuration.settings.updated"],
-  navigation: ["configuration.navigation.updated"],
   routes: [
     "configuration.settings.updated",
     "content.page.*",
@@ -406,7 +407,17 @@ export function tagsForDisposition(
       break;
 
     case "navigation":
-      for (const l of locales) tags.add(cacheTags.navigation(siteKey, l));
+      // DELIBERATE NO-OP, not an oversight. Blue Diamond's navigation is
+      // frontend-owned (`src/config/routes.ts`); nothing in this app fetches
+      // `/public/v1/sites/:siteKey/navigation/:slot`, so no cache entry is
+      // filed under `cacheTags.navigation` and `revalidateTag` on it could
+      // only ever be a silent no-op.
+      //
+      // Emitting the tag anyway is worse than emitting nothing: it makes the
+      // webhook log a purge that did not happen, which reads as coverage.
+      // When a navigation fetch producer is added, restore the purge here and
+      // move `navigation` out of `unreachableTags` — the contract test in
+      // tests/cache/cache-tag-contract.spec.ts fails until both move together.
       break;
 
     case "page":

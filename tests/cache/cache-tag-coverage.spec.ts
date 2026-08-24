@@ -108,11 +108,19 @@ test.describe("Invalidation matrix — real FeelStack events", () => {
     expect(tags).toContain(cacheTags.routes(SITE));
   });
 
-  test("navigation changes invalidate navigation only, for the given locale", () => {
+  test("a navigation change invalidates NOTHING, because nothing fetches CMS navigation", () => {
+    // Overturned deliberately. This test used to assert
+    // `revalidateTag(cacheTags.navigation(...))`, and it passed — but no fetch
+    // in this app ever filed a cache entry under that tag, so the purge was a
+    // silent no-op that merely LOOKED like coverage. Blue Diamond's navigation
+    // is frontend-owned (src/config/routes.ts).
+    //
+    // Emitting nothing is the truthful behaviour. When a CMS navigation fetch
+    // producer is added, this assertion flips back and `navigation` moves out
+    // of `unreachableTags` — tests/cache/cache-tag-contract.spec.ts fails until
+    // both happen together.
     const tags = tagsFor("configuration.navigation.updated", {}, { locale: "ar" });
-    expect(tags).toContain(cacheTags.navigation(SITE, "ar"));
-    expect(tags).not.toContain(cacheTags.navigation(SITE, "en"));
-    expect(tags).not.toContain(cacheTags.sitemap(SITE));
+    expect(tags).toEqual([]);
   });
 
   test("gapped and unsupported events invalidate nothing — no global purge", () => {

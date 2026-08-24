@@ -23,15 +23,99 @@ import { z } from "zod";
 export const feelstackContentStatusSchema = z.enum(["draft", "published", "disabled"]);
 
 
+/**
+ * ONE PAGE of the route inventory, captured live on 2026-08-24 from
+ * `GET https://feelstack.dfeelings.com/api/public/v1/sites/blue-diamond-medical/routes?locale=en`
+ * and cross-read against the backend source
+ * (`headless-cms/src/platform/services/public-route-resolver.service.ts`,
+ * `routeInventory()`):
+ *
+ *   { "items": [ { "path": "/aesthetics/concerns/acne-scars",
+ *                  "locale": "en",
+ *                  "type": "content_entry",
+ *                  "lastModified": "2026-08-23T11:25:34.635Z",
+ *                  "seo": { "title": ..., "description": ... } } ],
+ *     "page": 1, "limit": 100, "hasMore": false }
+ *
+ * THERE IS NO `status` FIELD, and the envelope key is `items`, not `routes`.
+ * The previous shape (`{ routes: [{ path, status }] }`) was forward-declared,
+ * never live-captured, and matched nothing — so `safeParse` failed on every
+ * call and `listRoutes()` returned `[]` unconditionally. A well-formed,
+ * plausible contract that matches nothing, failing silently.
+ *
+ * `status` must NOT be reintroduced: `routeInventory()` already filters
+ * `status: PUBLISHED, enabled: true` in the query, and additionally drops any
+ * route whose MERGED seo has `index === false || sitemapIncluded === false`.
+ * Publication filtering is a server-side guarantee; re-deriving it here from a
+ * field the API does not send would be inventing a contract.
+ */
 export const feelstackRouteSchema = z.object({
-  path: z.string(),
-  status: feelstackContentStatusSchema,
+  path: z.string().min(1),
+  locale: z.string().min(1),
+  type: z.string().min(1),
+  lastModified: z.string().optional(),
+  /**
+   * The server-MERGED seo object (defaultSeo <- section.seo <- entity.seo).
+   * Passed through unvalidated in shape because it is free-form on the
+   * backend; it is deliberately NOT re-merged on this side — see
+   * docs/CONTENT_MODEL.md. Any route present in `items` has already passed
+   * the server's index/sitemapIncluded filter.
+   */
+  seo: z.record(z.string(), z.unknown()).optional(),
 });
 
-export const feelstackRoutesResponseSchema = z.object({
-  routes: z.array(feelstackRouteSchema),
+export const feelstackRouteInventoryPageSchema = z.object({
+  items: z.array(feelstackRouteSchema),
+  page: z.number().int().positive(),
+  limit: z.number().int().positive(),
+  hasMore: z.boolean(),
 });
-export type FeelstackRoutesResponse = z.infer<typeof feelstackRoutesResponseSchema>;
+export type FeelstackRouteInventoryPage = z.infer<typeof feelstackRouteInventoryPageSchema>;
+export type FeelstackRoute = z.infer<typeof feelstackRouteSchema>;
+
+/**
+ * SITE CONFIG, captured live 2026-08-24 from
+ * `GET /api/public/v1/sites/blue-diamond-medical/config` and cross-read
+ * against `PlatformPublicV1Controller.config()`:
+ *
+ *   { siteKey, siteName, defaultLocale, supportedLocales, defaultSeo,
+ *     socialProfiles, contactInformation, analytics, branding, features,
+ *     sitemap, updatedAt }
+ *
+ * Every object-valued key is `settings?.<key> ?? {}` on the backend, so each
+ * is always present but frequently EMPTY — `defaultSeo` is `{}` for Blue
+ * Diamond today. Empty is a legitimate value, never an error.
+ *
+ * `defaultSeo` is typed as opaque on purpose. It is the OUTERMOST layer of the
+ * server's `mergeSeoMetadata(settings.defaultSeo, section.seo, entity.seo)`,
+ * and that merge — including the `index`/`sitemapIncluded` filtering it drives
+ * — is performed server-side before anything reaches this client. Re-modelling
+ * its keys here would fork the merge into two implementations that drift, which
+ * is exactly what docs/CONTENT_MODEL.md forbids. What this client needs from
+ * `defaultSeo` is that a CHANGE to it invalidates the surfaces that inherit it;
+ * that is the cache contract, not a parsing contract.
+ */
+export const feelstackSiteConfigSchema = z.object({
+  siteKey: z.string().min(1),
+  siteName: z.string().min(1),
+  defaultLocale: z.string().min(1),
+  supportedLocales: z.array(z.string().min(1)).min(1),
+  defaultSeo: z.record(z.string(), z.unknown()),
+  socialProfiles: z.record(z.string(), z.unknown()),
+  contactInformation: z.record(z.string(), z.unknown()),
+  analytics: z.record(z.string(), z.unknown()),
+  branding: z.record(z.string(), z.unknown()),
+  features: z.record(z.string(), z.unknown()),
+  /**
+   * Advisory site-level sitemap settings. `enabled` is the only key this
+   * client reads, and only to SUPPRESS CMS-owned rows — see
+   * `cmsOnlyEntries()` in src/app/sitemap.ts. Nothing server-side consumes
+   * it, so it is a frontend-honoured setting, not a server guarantee.
+   */
+  sitemap: z.object({ enabled: z.boolean().optional() }).catchall(z.unknown()),
+  updatedAt: z.string().min(1),
+});
+export type FeelstackSiteConfig = z.infer<typeof feelstackSiteConfigSchema>;
 
 /**
  * PRODUCTION shape, captured live from
