@@ -39,8 +39,19 @@ export interface EnvelopeOverrides {
   type?: string;
   projectId?: string;
   occurredAt?: string;
+  /**
+   * Canonical entity context, live on the wire since FeelStack PR #22
+   * (6c2c3c97). Explicit `null` is preserved so a test can assert the
+   * "producer recorded none" case; omitting a key uses the default.
+   */
+  entityType?: string | null;
+  entityId?: string | null;
+  locale?: string | null;
+  path?: string | null;
   data?: Record<string, unknown>;
 }
+
+const has = (o: EnvelopeOverrides, k: keyof EnvelopeOverrides) => Object.hasOwn(o, k);
 
 export function envelope(overrides: EnvelopeOverrides = {}): Record<string, unknown> {
   return {
@@ -48,6 +59,21 @@ export function envelope(overrides: EnvelopeOverrides = {}): Record<string, unkn
     type: overrides.type ?? "content.person_profile.published",
     projectId: overrides.projectId ?? BD_PROJECT_ID,
     occurredAt: overrides.occurredAt ?? new Date().toISOString(),
+    entityType: has(overrides, "entityType") ? overrides.entityType : "person_profile",
+    entityId: has(overrides, "entityId")
+      ? overrides.entityId
+      : "9b7c1a20-4f3e-4d5a-8b21-0c6e9f2a1d33",
+    // Derived from `data` when not explicitly overridden, because that is
+    // what the real sender does: recordContentEvent populates the outbox
+    // COLUMNS and the payload from the same entity, so they always agree.
+    // Hard-coding a default here instead would let a fixture silently
+    // contradict its own payload and mask what a test is trying to assert.
+    locale: has(overrides, "locale")
+      ? overrides.locale
+      : ((overrides.data?.locale as string | undefined) ?? "en"),
+    path: has(overrides, "path")
+      ? overrides.path
+      : ((overrides.data?.path as string | undefined) ?? "/doctors/mohamed-farhat"),
     data: overrides.data ?? {
       id: "9b7c1a20-4f3e-4d5a-8b21-0c6e9f2a1d33",
       status: "published",
@@ -55,6 +81,37 @@ export function envelope(overrides: EnvelopeOverrides = {}): Record<string, unkn
       path: "/doctors/mohamed-farhat",
     },
   };
+}
+
+/** A relationship event as FeelStack really emits it since PR #22. */
+export function relationshipEnvelope(overrides: EnvelopeOverrides = {}) {
+  return envelope({
+    type: "content.relationships.updated",
+    entityType: "content_entry",
+    entityId: "1a2b3c4d-0000-4111-8222-333344445555",
+    locale: "en",
+    path: "/medical/eye-screening",
+    // Payload names the relation TARGET only -- never the source.
+    data: {
+      relationKey: "treats",
+      targetType: "content_entry",
+      targetId: "9999aaaa-0000-4111-8222-333344446666",
+    },
+    ...overrides,
+  });
+}
+
+/** A taxonomy event as FeelStack really emits it since PR #22. */
+export function taxonomyEnvelope(overrides: EnvelopeOverrides = {}) {
+  return envelope({
+    type: "content.taxonomy.updated",
+    entityType: "content_entry",
+    entityId: "1a2b3c4d-0000-4111-8222-333344445555",
+    locale: "en",
+    path: "/aesthetics/concerns/acne-scars",
+    data: { termId: "term-7" },
+    ...overrides,
+  });
 }
 
 /** Signs a body exactly as FeelStack does, prefix included. */

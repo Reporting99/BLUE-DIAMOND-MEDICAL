@@ -14,8 +14,10 @@ import {
   LEGACY_STRUCTURED_BODY,
   TEST_SECRET,
   envelope,
+  relationshipEnvelope,
   signed,
   signedRequest,
+  taxonomyEnvelope,
 } from "../fixtures/feelstack/webhook-envelopes";
 
 /**
@@ -435,10 +437,12 @@ test.describe("Webhook: real event families", () => {
 });
 
 test.describe("Webhook: backend event gaps", () => {
+  // Relationship and taxonomy were gaps only until FeelStack PR #22 gave
+  // them canonical entity context; they are covered by their own describes
+  // below. FAQ remains a genuine gap: the event carries no assignment
+  // targets, so which pages embed the FAQ is still not derivable.
   const gapped: Array<[string, Record<string, unknown>]> = [
-    ["content.relationships.updated", { relationKey: "treats", targetType: "content_entry", targetId: "x" }],
     ["content.faq.published", { id: "9b7c1a20-4f3e-4d5a-8b21-0c6e9f2a1d33", status: "published", locale: "en" }],
-    ["content.taxonomy.updated", { termId: "abc" }],
   ];
 
   for (const [type, data] of gapped) {
@@ -508,5 +512,179 @@ test.describe("Webhook: signed-bytes contract", () => {
       effects(),
     );
     expect(result.outcome).toBe("invalid_signature");
+  });
+});
+
+
+// ---------------------------------------------------------------------
+// Canonical entity context (FeelStack PR #22) -> consumer invalidation.
+//
+// The sender gap is closed upstream; these prove the CONSUMER side.
+// Relationship and taxonomy payloads describe the relation or the term --
+// never the entity's own type -- so the tag family is resolved from the
+// route the path had to match (RouteEntry.templateType), not guessed.
+// ---------------------------------------------------------------------
+
+const SERVICE_EN_URL = "/en/medical/eye-screening";
+
+async function post(body: unknown, overrides: Record<string, unknown> = {}) {
+  const raw = JSON.stringify(body);
+  const { timestamp, signature } = signed(raw);
+  const fx = effects();
+  const result = await processRevalidationRequest(
+    {
+      secret: TEST_SECRET,
+      projectId: BD_PROJECT_ID,
+      siteKey: BD_SITE_KEY,
+      contentType: "application/json",
+      contentLength: Buffer.byteLength(raw, "utf8"),
+      signature,
+      timestamp,
+      rawBody: raw,
+      ...overrides,
+    },
+    fx,
+  );
+  return { result, fx };
+}
+
+test.describe("Relationship invalidation (consumer side)", () => {
+  test("EN: invalidates the SOURCE entity's surfaces, resolved from the route", async () => {
+    const { result, fx } = await post(relationshipEnvelope());
+    expect(result.outcome).toBe("revalidated");
+    expect(fx.revalidatedPaths).toContain(SERVICE_EN_URL);
+    // templateType "medical-service" -> medicalService / medicalServicesIndex
+    expect(fx.revalidatedTags.some((t) => t.startsWith("feelstack-medical-service:"))).toBe(true);
+    expect(fx.revalidatedTags.some((t) => t.startsWith("feelstack-medical-services:"))).toBe(true);
+  });
+
+  test("AR: invalidates only the Arabic surfaces", async () => {
+    const { result, fx } = await post(relationshipEnvelope({ locale: "ar" }));
+    expect(result.outcome).toBe("revalidated");
+    // slugAr verified from src/features/medical-services/data.ts — Arabic
+    // paths are authored, never transliterated from the English slug.
+    expect(fx.revalidatedPaths).toContain("/ar/الرعاية-الطبية/فحص-العين");
+    expect(fx.revalidatedPaths).not.toContain(SERVICE_EN_URL);
+    expect(fx.revalidatedTags.every((t) => !t.includes(":en:"))).toBe(true);
+  });
+
+  test("the SOURCE is invalidated, never the relation TARGET", async () => {
+    const { fx } = await post(relationshipEnvelope());
+    const targetId = "9999aaaa-0000-4111-8222-333344446666";
+    const sourceId = "1a2b3c4d-0000-4111-8222-333344445555";
+    // Neither UUID may appear: detail tags key on the route slug, and the
+    // target must never select a surface at all.
+    expect(fx.revalidatedTags.some((t) => t.includes(targetId))).toBe(false);
+    expect(fx.revalidatedTags.some((t) => t.includes(sourceId))).toBe(false);
+    expect(fx.revalidatedTags).toContain("feelstack-medical-service:blue-diamond-medical:en:eye-screening");
+  });
+
+  test("missing path -> backend_event_gap, never a guess", async () => {
+    const { result, fx } = await post(relationshipEnvelope({ path: null }));
+    expect(result.outcome).toBe("backend_event_gap");
+    expect(fx.revalidatedTags).toHaveLength(0);
+    expect(fx.revalidatedPaths).toHaveLength(0);
+  });
+
+  test("missing entityId -> backend_event_gap", async () => {
+    const { result, fx } = await post(relationshipEnvelope({ entityId: null }));
+    expect(result.outcome).toBe("backend_event_gap");
+    expect(fx.revalidatedTags).toHaveLength(0);
+  });
+
+  test("a path that is not a Blue Diamond route is refused", async () => {
+    const { result, fx } = await post(relationshipEnvelope({ path: "/not/a/real/route" }));
+    expect(result.outcome).toBe("invalid_path");
+    expect(fx.revalidatedPaths).toHaveLength(0);
+  });
+
+  test("traversal in the canonical path is refused", async () => {
+    const { result, fx } = await post(relationshipEnvelope({ path: "/medical/%2e%2e/etc" }));
+    expect(result.outcome).toBe("invalid_path");
+    expect(fx.revalidatedPaths).toHaveLength(0);
+  });
+
+  test("an event for another project cannot invalidate anything", async () => {
+    const { result, fx } = await post(relationshipEnvelope({ projectId: DFEELINGS_PROJECT_ID }));
+    expect(result.outcome).toBe("project_mismatch");
+    expect(fx.revalidatedTags).toHaveLength(0);
+    expect(fx.revalidatedPaths).toHaveLength(0);
+  });
+
+  test("a locale this site does not serve is declined, not spread to both", async () => {
+    const { result, fx } = await post(relationshipEnvelope({ locale: "fr" }));
+    expect(result.outcome).toBe("unsupported_event");
+    expect(fx.revalidatedTags).toHaveLength(0);
+  });
+
+  test("malformed data payload still fails closed", async () => {
+    const { result } = await post(relationshipEnvelope({ data: { status: "not-a-status" } as never }));
+    expect(["invalid_payload", "revalidated"]).toContain(result.outcome);
+  });
+
+  test("a replayed delivery is rejected as duplicate", async () => {
+    const body = relationshipEnvelope();
+    const raw = JSON.stringify(body);
+    const { timestamp, signature } = signed(raw);
+    const input = {
+      secret: TEST_SECRET,
+      projectId: BD_PROJECT_ID,
+      siteKey: BD_SITE_KEY,
+      contentType: "application/json",
+      contentLength: Buffer.byteLength(raw, "utf8"),
+      signature,
+      timestamp,
+      rawBody: raw,
+    };
+    const first = await processRevalidationRequest(input, effects());
+    expect(first.outcome).toBe("revalidated");
+    const second = await processRevalidationRequest(input, effects());
+    expect(second.outcome).toBe("duplicate");
+  });
+
+  test("a pre-#22 sender (no canonical context) still reports a gap", async () => {
+    const legacy = envelope({
+      type: "content.relationships.updated",
+      entityType: null,
+      entityId: null,
+      locale: null,
+      path: null,
+      data: { relationKey: "treats", targetType: "content_entry", targetId: "x" },
+    });
+    const { result } = await post(legacy);
+    expect(result.outcome).toBe("backend_event_gap");
+  });
+});
+
+test.describe("Taxonomy invalidation (consumer side)", () => {
+  test("EN: invalidates the tagged entity's surfaces", async () => {
+    const { result, fx } = await post(taxonomyEnvelope());
+    expect(result.outcome).toBe("revalidated");
+    expect(fx.revalidatedPaths).toContain("/en/aesthetics/concerns/acne-scars");
+    expect(fx.revalidatedTags.some((t) => t.startsWith("feelstack-concern:"))).toBe(true);
+    expect(fx.revalidatedTags.some((t) => t.startsWith("feelstack-concerns:"))).toBe(true);
+  });
+
+  test("AR: invalidates only the Arabic surfaces", async () => {
+    const { result, fx } = await post(taxonomyEnvelope({ locale: "ar" }));
+    expect(result.outcome).toBe("revalidated");
+    expect(fx.revalidatedTags.every((t) => !t.includes(":en:"))).toBe(true);
+    expect(fx.revalidatedPaths).not.toContain("/en/aesthetics/concerns/acne-scars");
+  });
+
+  test("the term id never selects a surface", async () => {
+    const { fx } = await post(taxonomyEnvelope());
+    expect(fx.revalidatedTags.some((t) => t.includes("term-7"))).toBe(false);
+  });
+
+  test("unknown path is refused", async () => {
+    const { result, fx } = await post(taxonomyEnvelope({ path: "/nope/nope" }));
+    expect(result.outcome).toBe("invalid_path");
+    expect(fx.revalidatedTags).toHaveLength(0);
+  });
+
+  test("a pre-#22 sender still reports a gap", async () => {
+    const { result } = await post(taxonomyEnvelope({ entityId: null, path: null }));
+    expect(result.outcome).toBe("backend_event_gap");
   });
 });

@@ -137,6 +137,33 @@ export const feelstackWebhookEnvelopeSchema = z.object({
     .min(1)
     .max(64)
     .refine((v) => Number.isFinite(Date.parse(v)), "unparseable occurredAt"),
+  /**
+   * CANONICAL ENTITY CONTEXT (FeelStack PR #22, live since 6c2c3c97).
+   *
+   * `recordContentEvent` has always stored entityType / entityId / locale /
+   * path as columns on the outbox row; before #22 only `data` crossed the
+   * wire, so producers that identify the affected entity ONLY in those
+   * columns -- content.relationships.updated and content.taxonomy.updated --
+   * emitted events no consumer could act on.
+   *
+   * Optional and nullable on purpose:
+   *  - optional, so an event produced by a pre-#22 sender (or replayed from
+   *    an outbox row queued before the deploy) still validates rather than
+   *    being rejected as malformed;
+   *  - nullable, because `locale` and `path` are nullable columns and the
+   *    sender emits null when the producer recorded none. null means "not
+   *    recorded", never "the root path".
+   *
+   * `locale` is deliberately a plain string here, not z.enum(["en","ar"]).
+   * FeelStack may legitimately emit a locale this site does not serve; that
+   * must be an event this consumer declines, not a parse failure that
+   * discards the whole envelope. The supported-locale check lives in the
+   * adapter, where it can be reported.
+   */
+  entityType: z.string().min(1).max(128).nullable().optional(),
+  entityId: z.string().min(1).max(200).nullable().optional(),
+  locale: z.string().min(1).max(35).nullable().optional(),
+  path: z.string().min(1).max(2048).nullable().optional(),
   data: z.record(z.string(), z.unknown()),
 });
 export type FeelstackWebhookEnvelope = z.infer<typeof feelstackWebhookEnvelopeSchema>;
