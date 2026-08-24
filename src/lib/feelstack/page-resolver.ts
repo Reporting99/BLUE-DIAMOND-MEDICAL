@@ -155,5 +155,19 @@ export function entityCacheTags(options: {
 }): string[] {
   const siteKey = getFeelstackSiteKey();
   const { detail, index, locale, id, path } = options;
-  return [detail(siteKey, locale, id), index(siteKey, locale), cacheTags.page(siteKey, locale, path)];
+  return [
+    detail(siteKey, locale, id),
+    index(siteKey, locale),
+    cacheTags.page(siteKey, locale, path),
+    // The resolve envelope carries this surface's MERGED SEO
+    // (`public-route-resolver.service.ts` merges
+    // `settings.defaultSeo -> section.seo -> entity.seo`), so the response is
+    // SEO data as much as it is page data. Filing it under the `seo` tag too
+    // is what makes `revalidateTag(cacheTags.seo(...))` mean anything: before
+    // this, `seo` was produced only on the invalidation side, so every purge
+    // of it was a silent no-op and only the co-located `page` tag did real
+    // work. A site-wide `defaultSeo` edit has no `page`-shaped event to ride
+    // on, so it needed this tag to actually exist.
+    cacheTags.seo(siteKey, locale, path),
+  ];
 }

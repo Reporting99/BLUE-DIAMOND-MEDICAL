@@ -275,12 +275,14 @@ export const invalidationCoverage: Partial<
   siteSettings: ["configuration.settings.updated"],
   navigation: ["configuration.navigation.updated"],
   routes: [
+    "configuration.settings.updated",
     "content.page.*",
     "content.entry.*",
     "content.person.*",
     "content.person_profile.*",
   ],
   sitemap: [
+    "configuration.settings.updated",
     "content.page.*",
     "content.entry.*",
     "content.person.*",
@@ -293,6 +295,7 @@ export const invalidationCoverage: Partial<
     "content.person_profile.*",
   ],
   seo: [
+    "configuration.settings.updated",
     "content.page.*",
     "content.entry.*",
     "content.person.*",
@@ -328,6 +331,17 @@ export interface RevalidationTarget {
    * the path against the registry, so only it can resolve this.
    */
   family?: EntityFamily;
+  /**
+   * Every known CMS path, supplied by the caller for `site-config` only.
+   *
+   * A `defaultSeo` change has no single affected path -- it is the OUTERMOST
+   * layer of the CMS merge, so it reaches every surface that does not
+   * override the key. The affected set is therefore "all routes", which only
+   * the handler can enumerate: this module stays a pure function of the
+   * event, with no knowledge of the route registry (same reason
+   * `family` is passed in rather than resolved here).
+   */
+  allCmsPaths?: readonly string[];
 }
 
 /**
@@ -352,7 +366,7 @@ export function tagsForDisposition(
   disposition: EventDisposition,
   target: RevalidationTarget,
 ): string[] {
-  const { siteKey, locale, cmsPath, previousCmsPath } = target;
+  const { siteKey, locale, cmsPath, previousCmsPath, allCmsPaths } = target;
   const locales: readonly BdLocale[] = locale ? [locale] : ALL_LOCALES;
   const tags = new Set<string>();
 
@@ -367,6 +381,28 @@ export function tagsForDisposition(
     case "site-config":
       tags.add(cacheTags.site(siteKey));
       tags.add(cacheTags.siteSettings(siteKey));
+      // `site_settings.defaultSeo` is the first argument to
+      // `mergeSeoMetadata(defaultSeo, section.seo, entity.seo)`, a shallow
+      // spread-reduce -- so every key a section and entity leave unset is
+      // inherited from it. Two consequences the previous two tags missed:
+      //
+      //   1. SITEMAP MEMBERSHIP. The generator drops a route when the MERGED
+      //      `seo.index` or `seo.sitemapIncluded` is false. Setting
+      //      `defaultSeo.sitemapIncluded = false` empties the sitemap of
+      //      every non-overriding route.
+      //   2. PER-SURFACE SEO. Title, description, canonical and robots
+      //      change on every inheriting page.
+      //
+      // The routes inventory response embeds merged per-item `seo`, so it is
+      // stale too -- hence `routes` alongside `sitemap`.
+      tags.add(cacheTags.sitemap(siteKey));
+      tags.add(cacheTags.routes(siteKey));
+      // Deliberately NOT purged: navigation, footer, bookingConfig, and the
+      // family index/detail tags. None of them derive from `defaultSeo`, and
+      // a site-settings edit is not a reason to refetch the whole catalogue.
+      for (const path of allCmsPaths ?? []) {
+        for (const l of locales) tags.add(cacheTags.seo(siteKey, l, path));
+      }
       break;
 
     case "navigation":
