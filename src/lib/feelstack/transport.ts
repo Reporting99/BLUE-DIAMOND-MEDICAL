@@ -137,13 +137,23 @@ export const feelstackRelationsSchema = z.object({
   taxonomies: z.array(feelstackTaxonomyAssignmentSchema).default([]),
 });
 
-/** `GET /public/v1/sites/:siteKey/resolve` — the whole envelope. */
+/**
+ * `GET /public/v1/sites/:siteKey/resolve` — the whole envelope.
+ *
+ * `media` is deliberately typed as `unknown[]` HERE and validated per item in
+ * `./media`. A strict element schema at this level would make one malformed
+ * asset fail `safeParse` for the entire envelope, and the page resolver treats
+ * an unparseable envelope as an unusable response — turning a missing image
+ * into a 404. Media is decoration; it must never be able to take a page down.
+ * See `parseMediaAssignments`.
+ */
 export const feelstackResolveEnvelopeSchema = z.object({
   type: z.string(),
   route: feelstackRouteMetaSchema,
   data: feelstackEntryDataSchema,
   seo: z.record(z.string(), z.unknown()).nullable().optional(),
   relations: feelstackRelationsSchema.optional(),
+  media: z.array(z.unknown()).optional(),
 });
 
 export type FeelstackResolveEnvelope = z.infer<typeof feelstackResolveEnvelopeSchema>;

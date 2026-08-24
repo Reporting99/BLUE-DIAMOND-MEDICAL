@@ -1,0 +1,62 @@
+{
+  "contractVersion": "media-contract/v1",
+  "description": "One resolve envelope's `media` array, exactly as FeelStack's PublicRouteResolverService.publicMedia emits it. Byte-identical copies of this file live in both repositories; each side's contract spec asserts its own code against it and pins its SHA-256.",
+  "media": [
+    {
+      "id": "3f7c1a9e-0000-4000-8000-000000000001",
+      "path": "/blue-diamond/treatments/rf-microneedling-hero.png",
+      "width": 1672,
+      "height": 941,
+      "aspectRatio": 1.776833,
+      "alt": {
+        "en": "RF Micro-Needling at Blue Diamond Medical",
+        "ar": "الإبر الدقيقة بالترددات الراديوية في بلو دايموند الطبية"
+      },
+      "role": "hero",
+      "slot": "hero",
+      "approvalStatus": "approved",
+      "sortOrder": 0,
+      "localeMode": "shared"
+    },
+    {
+      "id": "3f7c1a9e-0000-4000-8000-000000000002",
+      "path": "/blue-diamond/shop/19_Scar_Recovery_Gel_with_Centelline_Small.jpg",
+      "width": 1074,
+      "height": 1074,
+      "aspectRatio": 1,
+      "alt": {
+        "en": "Scar Recovery Gel with Centelline (Small) — SkinMedica",
+        "ar": "جل علاج الندبات بالسنتيلين (صغير) — سكين ميديكا"
+      },
+      "caption": {
+        "en": "14.2 g",
+        "ar": "14.2 غرام"
+      },
+      "role": "productPrimary",
+      "slot": "productPrimary",
+      "approvalStatus": "approved",
+      "focalPoint": {
+        "x": 50,
+        "y": 45
+      },
+      "sortOrder": 0,
+      "localeMode": "shared"
+    },
+    {
+      "id": "3f7c1a9e-0000-4000-8000-000000000003",
+      "path": "/blue-diamond/shared/open-graph-background.png",
+      "width": 1733,
+      "height": 908,
+      "aspectRatio": 1.90859,
+      "alt": {
+        "en": "",
+        "ar": ""
+      },
+      "role": "ogImage",
+      "slot": "ogImage",
+      "approvalStatus": "approved",
+      "sortOrder": 0,
+      "localeMode": "shared"
+    }
+  ]
+}
