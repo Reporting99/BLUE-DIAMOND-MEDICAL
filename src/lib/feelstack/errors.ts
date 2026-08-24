@@ -114,7 +114,13 @@ export function classifyThrown(error: unknown): FeelStackErrorCode {
 }
 
 export interface StructuredLogContext {
-  category: FeelStackErrorCode | "OK";
+  /**
+   * "BACKEND_EVENT_GAP" marks a webhook FeelStack can emit but does not
+   * transmit enough data to act on. It is not a failure of this request,
+   * but it must be visible (warn level) rather than looking like a
+   * successful no-op.
+   */
+  category: FeelStackErrorCode | "OK" | "BACKEND_EVENT_GAP";
   httpStatus?: number;
   locale?: string;
   path?: string;

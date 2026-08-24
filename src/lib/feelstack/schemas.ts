@@ -87,44 +87,85 @@ export function extractFeelstackErrorCode(body: unknown): string | undefined {
 }
 
 /**
- * Structured webhook event body — brief §9 ("cache-tag correction" +
- * webhook security). Not confirmed against a real FeelStack webhook
- * sender — no webhook exists in the recovered Dfeelings source to derive
- * it from (Dfeelings uses time-based ISR only, `revalidate: 30`, no
- * on-demand invalidation at all). Documented as a contract limitation in
- * docs/FEELSTACK.md. Falls back to the legacy `{ path }`
- * shape this build already shipped, so nothing already deployed breaks.
+ * Canonical FeelStack webhook envelope.
+ *
+ * Derived from the REAL sender — FeelStack
+ * `headless-cms/src/platform/services/webhook.service.ts::deliver()`,
+ * verified at production commit 0e32652c:
+ *
+ *   JSON.stringify({
+ *     id:         event.eventId,     // uuid
+ *     type:       event.eventType,   // e.g. "content.entry.published"
+ *     projectId:  event.projectId,   // uuid -- NOT a siteKey
+ *     occurredAt: event.createdAt,   // Date -> ISO 8601 by JSON.stringify
+ *     data:       event.payload,     // jsonb; shape varies by producer
+ *   })
+ *
+ * WHAT THIS REPLACES, AND WHY IT IS NOT A UNION BRANCH
+ * ---------------------------------------------------
+ * The previous shape was `{ event, siteKey, locale?, entityId?, path? }`
+ * plus a legacy `{ path }` fallback. Its own docblock conceded it was
+ * never confirmed against a real sender, and it was in fact unsatisfiable:
+ * a real delivery has no top-level `event`, `siteKey` or `path`, so every
+ * genuine webhook verified its HMAC and then failed body-schema parsing.
+ *
+ * Both old branches are DELETED rather than retained for compatibility.
+ * Keeping an unsatisfiable shape in a union costs nothing at runtime but
+ * lets the guess quietly remain "supported", which is how the same class
+ * of defect survived twice before in this integration (the error envelope
+ * and the entity envelope). `tests/contracts/feelstack-schemas.spec.ts`
+ * asserts the old shapes NO LONGER validate.
+ *
+ * NOTE ON THE `type` GRAMMAR: underscores are permitted. FeelStack really
+ * does emit `content.person_profile.<status>` today (see
+ * `directory-content.service.ts`, which interpolates the internal
+ * routeType). Dfeelings' receiver forbids underscores and therefore
+ * rejects those events outright; Blue Diamond deliberately does not
+ * inherit that restriction, so doctor events are consumable here both
+ * before and after FeelStack PR #21 renames them to `content.person.*`.
  */
-export const feelstackWebhookEventSchema = z.enum([
-  "page.published",
-  "page.unpublished",
-  "page.updated",
-  "route.changed",
-  "navigation.updated",
-  "footer.updated",
-  "doctor.updated",
-  "medical-service.updated",
-  "aesthetic-treatment.updated",
-  "concern.updated",
-  "technology.updated",
-  "product.updated",
-  "health-hub-article.published",
-  "health-hub-article.updated",
-  "legal-page.updated",
-  "booking-config.updated",
-  "site-settings.updated",
-]);
-export type FeelstackWebhookEvent = z.infer<typeof feelstackWebhookEventSchema>;
+export const feelstackWebhookEnvelopeSchema = z.object({
+  id: z.string().uuid(),
+  type: z
+    .string()
+    .min(1)
+    .max(128)
+    .regex(/^[a-z][a-z0-9_]*(?:\.[a-z][a-z0-9_]*)+$/, "malformed event type"),
+  projectId: z.string().uuid(),
+  occurredAt: z
+    .string()
+    .min(1)
+    .max(64)
+    .refine((v) => Number.isFinite(Date.parse(v)), "unparseable occurredAt"),
+  data: z.record(z.string(), z.unknown()),
+});
+export type FeelstackWebhookEnvelope = z.infer<typeof feelstackWebhookEnvelopeSchema>;
 
-export const feelstackWebhookBodySchema = z.union([
-  z.object({
-    event: feelstackWebhookEventSchema,
-    siteKey: z.string().min(1).max(200),
-    locale: z.enum(["en", "ar"]).optional(),
-    entityId: z.string().min(1).max(200).optional(),
-    path: z.string().min(1).max(2048).optional(),
-  }),
-  // Legacy shape this deployment already ships — brief §17 "small
-  // reviewable changes", not a breaking change to an in-flight contract.
-  z.object({ path: z.string().min(1).max(2048) }),
-]);
+/**
+ * FeelStack's own lifecycle enum (`ContentStatus`): draft | published |
+ * archived. Deliberately NOT `feelstackContentStatusSchema` above, which
+ * is Blue Diamond's route-status enum and uses "disabled" where FeelStack
+ * uses "archived" -- reusing it would silently reject every archive event.
+ */
+export const feelstackEventStatusSchema = z.enum(["draft", "published", "archived"]);
+
+/**
+ * The `data` payload shape emitted by the content producers Blue Diamond
+ * consumes. Every field is optional because `data` is a free-form jsonb
+ * column whose contents differ per producer; the handler asserts what it
+ * actually needs per event family rather than over-constraining here.
+ *
+ * Derived from the real producers:
+ *   directory-content.service.ts  -> { id, status, locale, path }
+ *   structured-content.service.ts -> { id, contentType, status, locale,
+ *                                      path, previousPath? }
+ */
+export const feelstackContentEventDataSchema = z.object({
+  id: z.string().uuid().optional(),
+  contentType: z.string().min(1).max(128).optional(),
+  status: feelstackEventStatusSchema.optional(),
+  locale: z.enum(["en", "ar"]).optional(),
+  path: z.string().min(1).max(2048).nullable().optional(),
+  previousPath: z.string().min(1).max(2048).nullable().optional(),
+});
+export type FeelstackContentEventData = z.infer<typeof feelstackContentEventDataSchema>;

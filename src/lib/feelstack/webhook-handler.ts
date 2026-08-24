@@ -6,9 +6,8 @@
 // which the framework never bundles for the client.
 import { verifyHmacSignature } from "@/lib/security/hmac";
 import { routes } from "@/lib/routing";
-import { getFeelstackSiteKey } from "./content-mode";
-import { feelstackWebhookBodySchema } from "./schemas";
-import { tagsForEvent } from "./revalidation";
+import { feelstackContentEventDataSchema, feelstackWebhookEnvelopeSchema } from "./schemas";
+import { classifyEvent, tagsForDisposition, type BdLocale } from "./revalidation";
 import { logFeelstackEvent } from "./errors";
 
 /**
@@ -25,6 +24,28 @@ export const MAX_WEBHOOK_BODY_BYTES = 64 * 1024;
 const REPLAY_WINDOW_MS = 5 * 60 * 1000; // matches verifyHmacSignature's own freshness window
 
 const allowedPaths = new Set(routes.flatMap((r) => [`/en${r.path.en}`, `/ar${r.path.ar}`]));
+
+/**
+ * CMS path -> route entry.
+ *
+ * FeelStack's `data.path` is the CMS path (e.g. "/doctors/mohamed-farhat"),
+ * which is a DIFFERENT namespace from the public URL ("/en/doctors/..." or
+ * the Arabic "/ar/الأطباء/..."). Passing `data.path` straight to
+ * `isAllowlistedPath` would reject every real event.
+ *
+ * Verified across all six entity families that the CMS path a page
+ * resolves with is exactly that route's English path:
+ *   /medical/{slug}                  <- medicalServices.map(...path.en)
+ *   /aesthetics/treatments/{slug}    <- treatments.map(...)
+ *   /aesthetics/concerns/{slug}      <- concerns.map(...)
+ *   /aesthetics/technologies/{slug}  <- technologies.map(...)
+ *   /shop/{slug}                     <- products.map(...)
+ *   /doctors/{id}                    <- literal entries; doctor.id IS the segment
+ * so `route.path.en` is the correct join key, and resolving through the
+ * registry (rather than string-munging a locale prefix on) is what keeps
+ * the Arabic URL correct — Arabic paths are not transliterations.
+ */
+const routeByCmsPath = new Map(routes.map((r) => [r.path.en, r]));
 
 /**
  * Single-instance replay guard — brief §9 "Replay protection" as a
@@ -56,6 +77,21 @@ export function __resetReplayGuardForTests(): void {
 
 export interface RevalidationRequestInput {
   secret: string | undefined;
+  /**
+   * The FeelStack project UUID this deployment is allowed to accept events
+   * for, and the site key its cache tags are built from. Both are passed
+   * in explicitly rather than read here, so a missing one fails LOUDLY at
+   * 501 instead of silently defaulting.
+   *
+   * This deliberately bypasses `getFeelstackSiteKey()`, which falls back to
+   * "blue-diamond-medical" when FEELSTACK_SITE_KEY is unset. On the read
+   * path that fallback is unreachable (`assertFeelstackEnvValid()` throws
+   * first), but the webhook path is gated only on the secret — so a
+   * deployment with a webhook secret and no site key would have accepted
+   * events for a tenant nobody configured.
+   */
+  projectId: string | undefined;
+  siteKey: string | undefined;
   contentType: string | null;
   contentLength: number | null;
   signature: string | null;
@@ -63,8 +99,27 @@ export interface RevalidationRequestInput {
   rawBody: string;
 }
 
+/** Structured outcome codes. Stable; asserted by tests. */
+export type RevalidationOutcome =
+  | "not_configured"
+  | "invalid_content_type"
+  | "payload_too_large"
+  | "missing_headers"
+  | "invalid_timestamp"
+  | "stale_timestamp"
+  | "invalid_signature"
+  | "duplicate"
+  | "invalid_json"
+  | "invalid_payload"
+  | "project_mismatch"
+  | "invalid_path"
+  | "unsupported_event"
+  | "backend_event_gap"
+  | "revalidated";
+
 export interface RevalidationResult {
   status: number;
+  outcome: RevalidationOutcome;
   body: Record<string, unknown>;
   /** Tags actually invalidated — exposed for tests, not for the HTTP response. */
   revalidatedTags?: string[];
@@ -107,92 +162,185 @@ export async function processRevalidationRequest(
   input: RevalidationRequestInput,
   effects: { revalidateTag: (tag: string) => void; revalidatePath: (path: string) => void },
 ): Promise<RevalidationResult> {
-  const { secret, contentType, contentLength, signature, timestamp, rawBody } = input;
+  const { secret, projectId, siteKey, contentType, contentLength, signature, timestamp, rawBody } = input;
 
-  if (!secret) {
-    return { status: 501, body: { error: "Revalidation is not configured on this deployment." } };
+  // ---- configuration: fail loud, never assume a tenant -------------------
+  if (!secret || !projectId || !siteKey) {
+    return {
+      status: 501,
+      outcome: "not_configured",
+      body: { error: "Revalidation is not configured on this deployment." },
+    };
   }
 
   if (!contentType?.toLowerCase().includes("application/json")) {
-    return { status: 415, body: { error: "Content-Type must be application/json." } };
+    return { status: 415, outcome: "invalid_content_type", body: { error: "Content-Type must be application/json." } };
   }
 
   if (contentLength !== null && Number.isFinite(contentLength) && contentLength > MAX_WEBHOOK_BODY_BYTES) {
-    return { status: 413, body: { error: "Payload too large." } };
+    return { status: 413, outcome: "payload_too_large", body: { error: "Payload too large." } };
   }
-  if (rawBody.length > MAX_WEBHOOK_BODY_BYTES) {
-    return { status: 413, body: { error: "Payload too large." } };
+  if (Buffer.byteLength(rawBody, "utf8") > MAX_WEBHOOK_BODY_BYTES) {
+    return { status: 413, outcome: "payload_too_large", body: { error: "Payload too large." } };
   }
 
   if (!signature || !timestamp) {
-    return { status: 401, body: { error: "Missing signature headers." } };
+    return { status: 401, outcome: "missing_headers", body: { error: "Missing signature headers." } };
   }
 
+  // Distinguish a malformed timestamp from a stale one so operators can tell
+  // "sender is misconfigured" from "delivery was delayed or replayed".
+  // verifyHmacSignature still performs its own freshness check afterwards —
+  // this is an additional discriminator, never a replacement.
+  if (!/^\d{10}$/.test(timestamp)) {
+    return { status: 401, outcome: "invalid_timestamp", body: { error: "Malformed timestamp." } };
+  }
+  if (Math.abs(Date.now() - Number(timestamp) * 1000) > REPLAY_WINDOW_MS) {
+    return { status: 401, outcome: "stale_timestamp", body: { error: "Timestamp outside the accepted window." } };
+  }
+
+  // ---- signature over the RAW bytes, exactly as FeelStack signed them ----
+  // HMAC-SHA256(secret, `${timestamp}.${rawBody}`). rawBody is never
+  // re-serialized before verification; JSON.parse happens only after.
   const isValid = verifyHmacSignature({ payload: rawBody, timestamp, signature, secret });
   if (!isValid) {
     // Never log the payload or signature — brief §9.
     console.warn("[feelstack-revalidate] rejected: invalid or expired signature");
-    return { status: 401, body: { error: "Invalid signature." } };
+    return { status: 401, outcome: "invalid_signature", body: { error: "Invalid signature." } };
   }
 
   if (isReplay(signature)) {
     console.warn("[feelstack-revalidate] rejected: replayed signature");
-    return { status: 401, body: { error: "Request already processed." } };
+    return { status: 401, outcome: "duplicate", body: { error: "Request already processed." } };
   }
 
   let json: unknown;
   try {
     json = JSON.parse(rawBody);
   } catch {
-    return { status: 400, body: { error: "Invalid JSON body." } };
+    return { status: 400, outcome: "invalid_json", body: { error: "Invalid JSON body." } };
   }
 
-  const parsed = feelstackWebhookBodySchema.safeParse(json);
-  if (!parsed.success) {
-    return { status: 400, body: { error: "Unsupported or malformed event body." } };
+  const envelope = feelstackWebhookEnvelopeSchema.safeParse(json);
+  if (!envelope.success) {
+    return { status: 400, outcome: "invalid_payload", body: { error: "Unsupported or malformed event envelope." } };
+  }
+  const { id: eventId, type, projectId: eventProjectId, data } = envelope.data;
+
+  // ---- tenant isolation --------------------------------------------------
+  // A signature proves the sender holds THIS endpoint's secret; it does not
+  // prove the event belongs to this project. FeelStack scopes delivery by
+  // project already, but a misconfigured endpoint row would otherwise let
+  // another tenant's content invalidate Blue Diamond's cache.
+  if (eventProjectId !== projectId) {
+    logFeelstackEvent({ category: "INVALID_SITE", upstreamContext: `project_mismatch event=${type}` });
+    return { status: 403, outcome: "project_mismatch", body: { error: "Event does not belong to this project." } };
   }
 
-  // Legacy shape: { path } only.
-  if (!("event" in parsed.data)) {
-    const normalized = decodeAndNormalizePath(parsed.data.path);
-    if (!normalized || !isAllowlistedPath(normalized)) {
-      return { status: 400, body: { error: "Path is not on the revalidation allowlist." } };
+  const parsedData = feelstackContentEventDataSchema.safeParse(data);
+  if (!parsedData.success) {
+    return { status: 400, outcome: "invalid_payload", body: { error: "Malformed event data." } };
+  }
+  const eventData = parsedData.data;
+
+  const disposition = classifyEvent(type, eventData);
+
+  if (disposition.kind === "backend_event_gap") {
+    // NOT a silent 200. FeelStack can emit this event but does not transmit
+    // enough to identify the affected surface, so acting on it would mean
+    // guessing. Recorded explicitly so the gap is visible in logs and in
+    // the response rather than looking like a successful no-op.
+    logFeelstackEvent({ category: "BACKEND_EVENT_GAP", upstreamContext: `event=${type}: ${disposition.reason}` });
+    return {
+      status: 200,
+      outcome: "backend_event_gap",
+      body: { revalidated: false, event: type, eventId, backendEventGap: disposition.reason },
+    };
+  }
+
+  if (disposition.kind === "unsupported") {
+    logFeelstackEvent({ category: "OK", upstreamContext: `unsupported event=${type}: ${disposition.reason}` });
+    return {
+      status: 200,
+      outcome: "unsupported_event",
+      body: { revalidated: false, event: type, eventId, ignored: disposition.reason },
+    };
+  }
+
+  // ---- locale: taken from the payload, never inferred --------------------
+  // `data.locale` is transmitted by every content producer and is
+  // authoritative. Site-wide events carry none, which correctly means
+  // "both locales".
+  const locale = eventData.locale as BdLocale | undefined;
+
+  // ---- path: CMS path -> registry route -> public URL --------------------
+  let cmsPath: string | undefined;
+  let previousCmsPath: string | undefined;
+  const revalidatedPaths: string[] = [];
+
+  const needsPath = disposition.kind === "page" || disposition.kind === "entity";
+  if (needsPath) {
+    if (!eventData.path) {
+      return {
+        status: 400,
+        outcome: "invalid_payload",
+        body: { error: "Event requires data.path but none was supplied." },
+      };
     }
-    effects.revalidatePath(normalized);
-    logFeelstackEvent({ category: "OK", path: normalized, upstreamContext: "legacy path revalidation" });
-    return { status: 200, body: { revalidated: true, path: normalized }, revalidatedPath: normalized };
-  }
-
-  // Structured shape: { event, siteKey, locale?, entityId?, path? }
-  const { event, siteKey, locale, entityId, path } = parsed.data;
-  const expectedSiteKey = getFeelstackSiteKey();
-  if (siteKey !== expectedSiteKey) {
-    return { status: 400, body: { error: "Unknown site key." } };
-  }
-
-  let normalizedPath: string | undefined;
-  if (path) {
-    const normalized = decodeAndNormalizePath(path);
-    if (!normalized || !isAllowlistedPath(normalized)) {
-      return { status: 400, body: { error: "Path is not on the revalidation allowlist." } };
+    const normalized = decodeAndNormalizePath(eventData.path);
+    if (!normalized || !routeByCmsPath.has(normalized)) {
+      logFeelstackEvent({ category: "INVALID_RESPONSE", upstreamContext: `invalid_path event=${type}` });
+      return { status: 400, outcome: "invalid_path", body: { error: "Path is not a known Blue Diamond route." } };
     }
-    normalizedPath = normalized;
+    cmsPath = normalized;
+
+    if (eventData.previousPath) {
+      const normalizedPrevious = decodeAndNormalizePath(eventData.previousPath);
+      // A previous path that no longer resolves is expected after a rename
+      // and must not fail the whole delivery — the NEW path is what matters.
+      if (normalizedPrevious && routeByCmsPath.has(normalizedPrevious)) {
+        previousCmsPath = normalizedPrevious;
+      }
+    }
+
+    // Public URLs are resolved through the registry, per locale. Only the
+    // event's own locale is revalidated, so an English edit can never
+    // invalidate the Arabic page or vice versa.
+    const localesToRevalidate: BdLocale[] = locale ? [locale] : ["en", "ar"];
+    for (const candidate of [cmsPath, previousCmsPath]) {
+      if (!candidate) continue;
+      const route = routeByCmsPath.get(candidate);
+      if (!route) continue;
+      for (const l of localesToRevalidate) {
+        const publicPath = `/${l}${route.path[l]}`;
+        if (!isAllowlistedPath(publicPath)) continue;
+        if (!revalidatedPaths.includes(publicPath)) revalidatedPaths.push(publicPath);
+      }
+    }
   }
 
-  const tags = tagsForEvent(event, { siteKey, locale, entityId, path: normalizedPath });
+  const tags = tagsForDisposition(disposition, { siteKey, locale, cmsPath, previousCmsPath });
   tags.forEach((tag) => effects.revalidateTag(tag));
-  if (normalizedPath) effects.revalidatePath(normalizedPath);
+  revalidatedPaths.forEach((publicPath) => effects.revalidatePath(publicPath));
 
   logFeelstackEvent({
     category: "OK",
     locale,
-    path: normalizedPath,
-    upstreamContext: `event=${event}, tags=${tags.length}`,
+    path: cmsPath,
+    upstreamContext: `event=${type}, tags=${tags.length}, paths=${revalidatedPaths.length}`,
   });
+
   return {
     status: 200,
-    body: { revalidated: true, event, tags: tags.length, path: normalizedPath ?? null },
+    outcome: "revalidated",
+    body: {
+      revalidated: true,
+      event: type,
+      eventId,
+      tags: tags.length,
+      paths: revalidatedPaths.length,
+    },
     revalidatedTags: tags,
-    revalidatedPath: normalizedPath,
+    revalidatedPath: revalidatedPaths[0],
   };
 }

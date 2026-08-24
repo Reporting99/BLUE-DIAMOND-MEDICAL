@@ -2,80 +2,130 @@ import { test, expect } from "@playwright/test";
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import path from "node:path";
 import { cacheTags, type CacheTagKey } from "../../src/lib/feelstack/cache-tags";
-import { invalidationCoverage, tagsForEvent } from "../../src/lib/feelstack/revalidation";
+import {
+  CONTENT_TYPE_FAMILIES,
+  classifyEvent,
+  invalidationCoverage,
+  tagsForDisposition,
+  unreachableTags,
+} from "../../src/lib/feelstack/revalidation";
 
-/**
- * Cache-tag / invalidation-matrix tests — brief §8 ("Add a test that
- * enumerates all cache-tag builders and proves that each has a matching
- * invalidation rule") and §18 ("Cache behavior" mandatory tests).
- */
+const SITE = "blue-diamond-medical";
+
+/** Resolves an event end-to-end the way the handler does. */
+function tagsFor(type: string, data: Record<string, unknown>, target: Record<string, unknown> = {}) {
+  const disposition = classifyEvent(type, data as never);
+  return tagsForDisposition(disposition, { siteKey: SITE, ...target } as never);
+}
+
 test.describe("Cache-tag registry completeness", () => {
-  test("every cache-tag builder has at least one invalidation rule", () => {
+  /**
+   * Every tag builder must be either reachable from a real FeelStack event
+   * or explicitly declared unreachable WITH a reason. The previous version
+   * of this test required a rule for every key, which the old invented
+   * event vocabulary satisfied trivially — a matrix can be 100% "covered"
+   * by events that are never emitted. Splitting the two states is what
+   * makes the guard mean something.
+   */
+  test("every cache-tag builder is either invalidatable or declared unreachable", () => {
     const keys = Object.keys(cacheTags) as CacheTagKey[];
     expect(keys.length).toBeGreaterThan(0);
     for (const key of keys) {
-      const rules = invalidationCoverage[key];
-      expect(rules, `cacheTags.${key} has no entry in invalidationCoverage`).toBeDefined();
-      expect(rules.length, `cacheTags.${key} has an empty invalidation rule list`).toBeGreaterThan(0);
+      const reachable = invalidationCoverage[key];
+      const unreachable = unreachableTags[key];
+      expect(
+        Boolean(reachable?.length) || Boolean(unreachable),
+        `cacheTags.${key} is neither invalidatable nor declared unreachable`,
+      ).toBe(true);
+      expect(Boolean(reachable?.length) && Boolean(unreachable), `cacheTags.${key} is declared both`).toBe(false);
     }
   });
 
-  test("invalidationCoverage references no cache-tag key that doesn't exist", () => {
-    const validKeys = new Set(Object.keys(cacheTags));
-    for (const key of Object.keys(invalidationCoverage)) {
-      expect(validKeys.has(key)).toBe(true);
+  test("neither map references a cache-tag key that does not exist", () => {
+    const valid = new Set(Object.keys(cacheTags));
+    for (const key of [...Object.keys(invalidationCoverage), ...Object.keys(unreachableTags)]) {
+      expect(valid.has(key), `unknown cache-tag key: ${key}`).toBe(true);
+    }
+  });
+
+  test("every unreachable tag carries a non-empty reason", () => {
+    for (const [key, reason] of Object.entries(unreachableTags)) {
+      expect(typeof reason === "string" && reason.length > 10, `${key} has no usable reason`).toBe(true);
     }
   });
 });
 
-test.describe("Invalidation matrix — brief §8 specific rules", () => {
-  test("page publication invalidates the page (and its SEO tag)", () => {
-    const tags = tagsForEvent("page.published", { siteKey: "blue-diamond-medical", locale: "en", path: "/en/about" });
-    expect(tags).toContain(cacheTags.page("blue-diamond-medical", "en", "/en/about"));
-    expect(tags).toContain(cacheTags.seo("blue-diamond-medical", "en", "/en/about"));
-    expect(tags).toContain(cacheTags.sitemap("blue-diamond-medical"));
+test.describe("Invalidation matrix — real FeelStack events", () => {
+  test("a doctor publish invalidates the doctor, the index, and the sitemap", () => {
+    const tags = tagsFor(
+      "content.person_profile.published",
+      { status: "published", locale: "en", path: "/doctors/mohamed-farhat" },
+      { locale: "en", cmsPath: "/doctors/mohamed-farhat" },
+    );
+    expect(tags).toContain(cacheTags.doctor(SITE, "en", "mohamed-farhat"));
+    expect(tags).toContain(cacheTags.doctorsIndex(SITE, "en"));
+    expect(tags).toContain(cacheTags.sitemap(SITE));
   });
 
-  test("route changes invalidate route inventory, sitemap, and navigation", () => {
-    const tags = tagsForEvent("route.changed", { siteKey: "blue-diamond-medical" });
-    expect(tags).toContain(cacheTags.routes("blue-diamond-medical"));
-    expect(tags).toContain(cacheTags.sitemap("blue-diamond-medical"));
-    expect(tags).toContain(cacheTags.navigation("blue-diamond-medical", "en"));
-    expect(tags).toContain(cacheTags.navigation("blue-diamond-medical", "ar"));
+  test("the detail id comes from the path, never from the FeelStack UUID", () => {
+    const uuid = "9b7c1a20-4f3e-4d5a-8b21-0c6e9f2a1d33";
+    const tags = tagsFor(
+      "content.person_profile.published",
+      { id: uuid, status: "published", locale: "en", path: "/doctors/mohamed-farhat" },
+      { locale: "en", cmsPath: "/doctors/mohamed-farhat" },
+    );
+    expect(tags).toContain(cacheTags.doctor(SITE, "en", "mohamed-farhat"));
+    expect(tags.some((t) => t.includes(uuid))).toBe(false);
   });
 
-  test("product changes invalidate the product detail, shop index, and sitemap", () => {
-    const tags = tagsForEvent("product.updated", {
-      siteKey: "blue-diamond-medical",
-      locale: "en",
-      entityId: "lumivive-system",
-    });
-    expect(tags).toContain(cacheTags.product("blue-diamond-medical", "en", "lumivive-system"));
-    expect(tags).toContain(cacheTags.productsIndex("blue-diamond-medical", "en"));
-    expect(tags).toContain(cacheTags.sitemap("blue-diamond-medical"));
+  test("every migrated content type maps to its own family and no other", () => {
+    for (const [contentType, family] of Object.entries(CONTENT_TYPE_FAMILIES)) {
+      const disposition = classifyEvent("content.entry.published", { contentType } as never);
+      expect(disposition.kind, contentType).toBe("entity");
+      if (disposition.kind !== "entity") continue;
+      expect(disposition.family.detail, contentType).toBe(family.detail);
+    }
   });
 
-  test("article changes invalidate the article, Health Hub index, and sitemap", () => {
-    const tags = tagsForEvent("health-hub-article.published", {
-      siteKey: "blue-diamond-medical",
-      locale: "en",
-      entityId: "some-article",
-    });
-    expect(tags).toContain(cacheTags.healthHubArticle("blue-diamond-medical", "en", "some-article"));
-    expect(tags).toContain(cacheTags.healthHubIndex("blue-diamond-medical", "en"));
-    expect(tags).toContain(cacheTags.sitemap("blue-diamond-medical"));
+  test("invalidation is per-locale — an Arabic event never touches English tags", () => {
+    const tags = tagsFor(
+      "content.person_profile.published",
+      { status: "published", locale: "ar", path: "/doctors/mohamed-farhat" },
+      { locale: "ar", cmsPath: "/doctors/mohamed-farhat" },
+    );
+    expect(tags).toContain(cacheTags.doctor(SITE, "ar", "mohamed-farhat"));
+    expect(tags).not.toContain(cacheTags.doctor(SITE, "en", "mohamed-farhat"));
   });
 
-  test("navigation changes invalidate navigation only for the given locale, not both", () => {
-    const tags = tagsForEvent("navigation.updated", { siteKey: "blue-diamond-medical", locale: "ar" });
-    expect(tags).toContain(cacheTags.navigation("blue-diamond-medical", "ar"));
-    expect(tags).not.toContain(cacheTags.navigation("blue-diamond-medical", "en"));
+  test("a renamed route invalidates both the old and the new path", () => {
+    const tags = tagsFor(
+      "content.entry.updated",
+      { contentType: "medical-service", locale: "en", path: "/medical/eye-screening" },
+      { locale: "en", cmsPath: "/medical/eye-screening", previousCmsPath: "/medical/old-slug" },
+    );
+    expect(tags).toContain(cacheTags.page(SITE, "en", "/medical/eye-screening"));
+    expect(tags).toContain(cacheTags.page(SITE, "en", "/medical/old-slug"));
+    expect(tags).toContain(cacheTags.routes(SITE));
   });
 
-  test("an unrelated event invalidates nothing (no global purge)", () => {
-    const tags = tagsForEvent("footer.updated", { siteKey: "blue-diamond-medical", locale: "en" });
-    expect(tags).not.toContain(cacheTags.sitemap("blue-diamond-medical"));
-    expect(tags).not.toContain(cacheTags.routes("blue-diamond-medical"));
+  test("navigation changes invalidate navigation only, for the given locale", () => {
+    const tags = tagsFor("configuration.navigation.updated", {}, { locale: "ar" });
+    expect(tags).toContain(cacheTags.navigation(SITE, "ar"));
+    expect(tags).not.toContain(cacheTags.navigation(SITE, "en"));
+    expect(tags).not.toContain(cacheTags.sitemap(SITE));
+  });
+
+  test("gapped and unsupported events invalidate nothing — no global purge", () => {
+    for (const type of ["content.relationships.updated", "content.faq.published", "content.taxonomy.updated", "content.casestudy.published"]) {
+      expect(tagsFor(type, {}, { locale: "en" }), type).toEqual([]);
+    }
+  });
+
+  test("the three known backend gaps are classified as gaps, not as unsupported", () => {
+    for (const type of ["content.relationships.updated", "content.faq.published", "content.taxonomy.updated"]) {
+      const disposition = classifyEvent(type, {} as never);
+      expect(disposition.kind, type).toBe("backend_event_gap");
+    }
   });
 });
 
