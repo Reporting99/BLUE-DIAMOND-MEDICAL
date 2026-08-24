@@ -143,6 +143,14 @@ export type EventDisposition =
   | { kind: "page" }
   | { kind: "navigation" }
   | { kind: "site-config" }
+  /**
+   * The event is genuine and understood, and it correctly invalidates
+   * NOTHING on its own, because the real invalidation arrives on separate
+   * companion events. Distinct from `backend_event_gap` (we cannot act, and
+   * the sender is why) and from `unsupported` (we do not care about this
+   * family): here the contract is complete and the right answer is silence.
+   */
+  | { kind: "companion-invalidated"; reason: string }
   | { kind: "backend_event_gap"; reason: string }
   | { kind: "unsupported"; reason: string };
 
@@ -217,11 +225,23 @@ export function classifyEvent(
         };
   }
   if (type.startsWith("content.faq.")) {
+    // Closed by FeelStack #25. A FAQ has no page of its own — it renders
+    // inside the entities it is assigned to — so this event correctly
+    // invalidates nothing by itself. The sender now resolves the FAQ's
+    // CURRENT rows in `faq_assignments` and fans out one
+    // `content.relationships.updated` per affected target, each carrying that
+    // target's canonical entityType/entityId/locale/path. Those arrive as
+    // `source-entity` above and do the real work.
+    //
+    // This is deliberately NOT a `backend_event_gap` any more: treating it as
+    // one would keep reporting a gap that no longer exists. It is also not a
+    // reason to guess — inferring pages from the FAQ id is exactly what the
+    // fan-out exists to make unnecessary.
     return {
-      kind: "backend_event_gap",
+      kind: "companion-invalidated",
       reason:
-        "payload is {id, status, locale} with no path and no assigned targets; " +
-        "which pages embed this FAQ is not derivable from the event.",
+        "a FAQ has no page; its assigned targets are invalidated by the " +
+        "companion content.relationships.updated events FeelStack #25 emits.",
     };
   }
   if (type === "content.taxonomy.updated") {
@@ -461,6 +481,7 @@ export function tagsForDisposition(
       break;
     }
 
+    case "companion-invalidated":
     case "backend_event_gap":
     case "unsupported":
       break;

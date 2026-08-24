@@ -129,11 +129,24 @@ test.describe("Invalidation matrix — real FeelStack events", () => {
     }
   });
 
-  test("the three known backend gaps are classified as gaps, not as unsupported", () => {
-    for (const type of ["content.relationships.updated", "content.faq.published", "content.taxonomy.updated"]) {
+  test("relationship and taxonomy events without canonical context are gaps, not unsupported", () => {
+    // These two are only actionable when the sender puts the affected entity
+    // on the envelope (FeelStack #22). Without it the payload names the
+    // relation TARGET or the TERM, never the entity whose page changed.
+    for (const type of ["content.relationships.updated", "content.taxonomy.updated"]) {
       const disposition = classifyEvent(type, {} as never);
       expect(disposition.kind, type).toBe("backend_event_gap");
     }
+  });
+
+  test("a FAQ event is companion-invalidated, no longer a backend gap", () => {
+    // Closed by FeelStack #25: a FAQ has no page of its own, and the sender
+    // now fans out one content.relationships.updated per currently-assigned
+    // target. Silence here is the CORRECT answer, not a missing capability —
+    // continuing to call it a gap would keep reporting one that is fixed.
+    const disposition = classifyEvent("content.faq.published", {} as never);
+    expect(disposition.kind).toBe("companion-invalidated");
+    expect(tagsFor("content.faq.published", {}, { locale: "en" })).toEqual([]);
   });
 });
 

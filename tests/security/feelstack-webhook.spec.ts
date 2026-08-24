@@ -439,25 +439,33 @@ test.describe("Webhook: real event families", () => {
 test.describe("Webhook: backend event gaps", () => {
   // Relationship and taxonomy were gaps only until FeelStack PR #22 gave
   // them canonical entity context; they are covered by their own describes
-  // below. FAQ remains a genuine gap: the event carries no assignment
-  // targets, so which pages embed the FAQ is still not derivable.
-  const gapped: Array<[string, Record<string, unknown>]> = [
-    ["content.faq.published", { id: "9b7c1a20-4f3e-4d5a-8b21-0c6e9f2a1d33", status: "published", locale: "en" }],
-  ];
+  // below. FAQ was the last one and FeelStack #25 closed it — see the
+  // companion-invalidated test that follows.
 
-  for (const [type, data] of gapped) {
-    test(`${type} returns backend_event_gap, not a silent success`, async () => {
-      __resetReplayGuardForTests();
-      const fx = effects();
-      const result = await processRevalidationRequest(signedRequest({ type, data }), fx);
-      expect(result.status).toBe(200);
-      expect(result.outcome).toBe("backend_event_gap");
-      expect(result.body.revalidated).toBe(false);
-      expect(typeof result.body.backendEventGap).toBe("string");
-      expect(fx.revalidatedTags).toHaveLength(0);
-      expect(fx.revalidatedPaths).toHaveLength(0);
-    });
-  }
+  test("a FAQ event is companion-invalidated, not a backend gap and not unsupported", async () => {
+    // A FAQ has no page of its own. FeelStack #25 resolves its CURRENT rows
+    // in faq_assignments and fans out one content.relationships.updated per
+    // affected target, each carrying that target's canonical
+    // entityType/entityId/locale/path. So this event correctly invalidates
+    // nothing BY ITSELF — silence is the right answer, and reporting it as a
+    // backend gap would keep advertising a deficiency that is fixed.
+    __resetReplayGuardForTests();
+    const fx = effects();
+    const result = await processRevalidationRequest(
+      signedRequest({
+        type: "content.faq.published",
+        data: { id: "9b7c1a20-4f3e-4d5a-8b21-0c6e9f2a1d33", status: "published", locale: "en" },
+      }),
+      fx,
+    );
+    expect(result.status).toBe(200);
+    expect(result.outcome).toBe("companion_invalidated");
+    expect(result.body.revalidated).toBe(false);
+    expect(typeof result.body.companionInvalidated).toBe("string");
+    // Critically: no global purge, and nothing guessed from the FAQ id.
+    expect(fx.revalidatedTags).toHaveLength(0);
+    expect(fx.revalidatedPaths).toHaveLength(0);
+  });
 
   test("an event family Blue Diamond does not consume is ignored deliberately", async () => {
     const result = await processRevalidationRequest(
@@ -686,5 +694,75 @@ test.describe("Taxonomy invalidation (consumer side)", () => {
   test("a pre-#22 sender still reports a gap", async () => {
     const { result } = await post(taxonomyEnvelope({ entityId: null, path: null }));
     expect(result.outcome).toBe("backend_event_gap");
+  });
+});
+
+/**
+ * FAQ fan-out (consumer side).
+ *
+ * FeelStack #25 made a FAQ update and a FAQ unassign each emit one
+ * `content.relationships.updated` per affected target, resolved from the real
+ * `faq_assignments` rows and carrying that target's canonical
+ * entityType/entityId/locale/path.
+ *
+ * The consumer needs no new code for this — that was the point of choosing a
+ * per-target fan-out over one event carrying a target list. These tests prove
+ * the two required end-to-end paths land on the right surfaces and only those.
+ */
+test.describe("FAQ fan-out (consumer side)", () => {
+  function faqTargetEnvelope(overrides: Record<string, unknown> = {}) {
+    return envelope({
+      type: "content.relationships.updated",
+      entityType: "content_entry",
+      entityId: "9b7c1a20-4f3e-4d5a-8b21-0c6e9f2a1d33",
+      locale: "en",
+      path: "/aesthetics/concerns/acne-scars",
+      data: { relation: "faq", faqId: "3f1c2e64-6b1d-4a7f-9c2e-1b8a5d4e7f00" },
+      ...overrides,
+    });
+  }
+
+  test("FAQ UPDATE: the assigned target's surfaces are invalidated", async () => {
+    const { result, fx } = await post(faqTargetEnvelope());
+    expect(result.outcome).toBe("revalidated");
+    expect(fx.revalidatedPaths).toContain("/en/aesthetics/concerns/acne-scars");
+    expect(fx.revalidatedTags.some((t) => t.startsWith("feelstack-concern:"))).toBe(true);
+  });
+
+  test("FAQ UNASSIGN: the formerly assigned target is invalidated", async () => {
+    // Identical envelope apart from `removed: true`. The consumer does not
+    // branch on it — the target still has to be refreshed either way, because
+    // its page must stop rendering the FAQ.
+    const { result, fx } = await post(
+      faqTargetEnvelope({ data: { relation: "faq", faqId: "3f1c2e64-6b1d-4a7f-9c2e-1b8a5d4e7f00", removed: true } }),
+    );
+    expect(result.outcome).toBe("revalidated");
+    expect(fx.revalidatedPaths).toContain("/en/aesthetics/concerns/acne-scars");
+  });
+
+  test("AR fan-out never touches EN surfaces", async () => {
+    const { result, fx } = await post(
+      faqTargetEnvelope({ locale: "ar" }),
+    );
+    expect(result.outcome).toBe("revalidated");
+    expect(fx.revalidatedTags.every((t) => !t.includes(":en:"))).toBe(true);
+    expect(fx.revalidatedPaths).not.toContain("/en/aesthetics/concerns/acne-scars");
+  });
+
+  test("EN fan-out never touches AR surfaces", async () => {
+    const { fx } = await post(faqTargetEnvelope());
+    expect(fx.revalidatedTags.every((t) => !t.includes(":ar:"))).toBe(true);
+  });
+
+  test("the faqId never selects a surface — the FAQ has no page", async () => {
+    const { fx } = await post(faqTargetEnvelope());
+    expect(fx.revalidatedTags.some((t) => t.includes("3f1c2e64"))).toBe(false);
+    expect(fx.revalidatedPaths.some((p) => p.includes("3f1c2e64"))).toBe(false);
+  });
+
+  test("a target path outside the Blue Diamond route registry is refused", async () => {
+    const { result, fx } = await post(faqTargetEnvelope({ path: "/not/a/route" }));
+    expect(result.outcome).toBe("invalid_path");
+    expect(fx.revalidatedTags).toHaveLength(0);
   });
 });
