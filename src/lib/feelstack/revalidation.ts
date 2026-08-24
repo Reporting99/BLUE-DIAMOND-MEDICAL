@@ -44,6 +44,33 @@ import type { TemplateType } from "@/types/route";
 export type BdLocale = "en" | "ar";
 const ALL_LOCALES: readonly BdLocale[] = ["en", "ar"];
 
+/**
+ * This SITE's supported-locale policy, kept as data rather than inline string
+ * comparisons so the webhook contract can be applied uniformly and a future
+ * project can serve a different set without editing the handler.
+ */
+export const SUPPORTED_LOCALES: readonly string[] = ALL_LOCALES;
+
+/**
+ * STRUCTURAL locale validity (BCP-47-shaped), deliberately separate from the
+ * supported-locale policy above. A malformed value is a producer contract
+ * error; a well-formed value this site does not serve is merely declined.
+ * Mirrors the same pattern FeelStack and the Dfeelings receiver apply, so all
+ * three agree on what "a locale" even is.
+ */
+const LOCALE_PATTERN = /^[a-z]{2,3}(?:-[a-z0-9]{2,8})*$/i;
+
+export function isStructurallyValidLocale(value: unknown): value is string {
+  return typeof value === "string" && value.length <= 35 && LOCALE_PATTERN.test(value);
+}
+
+export function isSupportedLocale(value: unknown): value is BdLocale {
+  return (
+    isStructurallyValidLocale(value) &&
+    SUPPORTED_LOCALES.some((entry) => entry.toLowerCase() === value.toLowerCase())
+  );
+}
+
 interface EntityFamily {
   readonly detail: CacheTagKey;
   readonly index: CacheTagKey;

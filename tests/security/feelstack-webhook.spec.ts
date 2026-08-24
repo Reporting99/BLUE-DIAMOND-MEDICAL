@@ -625,6 +625,49 @@ test.describe("Relationship invalidation (consumer side)", () => {
     expect(fx.revalidatedTags).toHaveLength(0);
   });
 
+  // ---- GAP-3: structural validity vs supported-locale policy ------------
+  // Two different failure modes that must not be conflated. A malformed
+  // locale means the producer is broken and has to be seen (400). A
+  // well-formed locale this site does not serve is a normal, expected event
+  // that must be acknowledged (200) so FeelStack neither retries it nor
+  // parks it in the dead-letter queue.
+
+  for (const locale of ["fr", "fr-CA", "de", "pt-BR"]) {
+    test(`valid but unsupported locale "${locale}" is acknowledged, never retried`, async () => {
+      const { result, fx } = await post(relationshipEnvelope({ locale }));
+      expect(result.status).toBe(200);
+      expect(result.outcome).toBe("unsupported_event");
+      expect(fx.revalidatedTags).toHaveLength(0);
+      expect(fx.revalidatedPaths).toHaveLength(0);
+    });
+  }
+
+  for (const locale of ["e", "en_US", "english-language-x", "!!", "e".repeat(40), "en\u0000"]) {
+    test(`malformed locale ${JSON.stringify(locale)} is a 400 contract error`, async () => {
+      const { result, fx } = await post(relationshipEnvelope({ locale }));
+      expect(result.status).toBe(400);
+      expect(result.outcome).toBe("invalid_payload");
+      expect(fx.revalidatedTags).toHaveLength(0);
+      expect(fx.revalidatedPaths).toHaveLength(0);
+    });
+  }
+
+  for (const locale of ["en", "ar"]) {
+    test(`supported locale "${locale}" is still processed normally`, async () => {
+      const { result } = await post(relationshipEnvelope({ locale }));
+      expect(result.status).toBe(200);
+      expect(result.outcome).not.toBe("unsupported_event");
+      expect(result.outcome).not.toBe("invalid_payload");
+    });
+  }
+
+  test("malformed locale STATUS differs from unsupported locale status", async () => {
+    const malformed = await post(relationshipEnvelope({ locale: "en_US" }));
+    const unsupported = await post(relationshipEnvelope({ locale: "fr" }));
+    expect(malformed.result.status).toBe(400);
+    expect(unsupported.result.status).toBe(200);
+  });
+
   test("malformed data payload still fails closed", async () => {
     const { result } = await post(relationshipEnvelope({ data: { status: "not-a-status" } as never }));
     expect(["invalid_payload", "revalidated"]).toContain(result.outcome);

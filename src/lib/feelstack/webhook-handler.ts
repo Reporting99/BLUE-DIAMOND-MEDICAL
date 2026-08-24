@@ -12,6 +12,8 @@ import {
   familyForTemplateType,
   tagsForDisposition,
   type BdLocale,
+  isStructurallyValidLocale,
+  isSupportedLocale,
 } from "./revalidation";
 import { logFeelstackEvent } from "./errors";
 
@@ -264,9 +266,28 @@ export async function processRevalidationRequest(
   const effectivePath = canonicalPath ?? eventData.path ?? undefined;
   const rawLocale = canonicalLocale ?? eventData.locale ?? undefined;
 
-  // A locale this site does not serve is an event to DECLINE and report, not
-  // a parse failure and not an excuse to invalidate both locales.
-  if (rawLocale !== undefined && rawLocale !== "en" && rawLocale !== "ar") {
+  // Two distinct failure modes, deliberately kept apart (GAP-3).
+  //
+  // A MALFORMED locale is a producer contract error: the sender emitted
+  // something that is not a locale at all. That is a 400, so it surfaces as a
+  // real integration fault instead of being silently swallowed as "a language
+  // we don't serve".
+  if (rawLocale !== undefined && !isStructurallyValidLocale(rawLocale)) {
+    logFeelstackEvent({
+      category: "LOCALE_MISMATCH",
+      upstreamContext: `malformed locale event=${type}`,
+    });
+    return {
+      status: 400,
+      outcome: "invalid_payload",
+      body: { error: "Malformed locale." },
+    };
+  }
+
+  // A well-formed locale this site does not serve is an event to DECLINE and
+  // report, not a parse failure and not an excuse to invalidate both locales.
+  // 200 so FeelStack records a successful delivery: no retry, no dead letter.
+  if (rawLocale !== undefined && !isSupportedLocale(rawLocale)) {
     logFeelstackEvent({
       category: "LOCALE_MISMATCH",
       upstreamContext: `unsupported locale event=${type}`,
