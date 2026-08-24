@@ -7,7 +7,12 @@
 import { verifyHmacSignature } from "@/lib/security/hmac";
 import { routes } from "@/lib/routing";
 import { feelstackContentEventDataSchema, feelstackWebhookEnvelopeSchema } from "./schemas";
-import { classifyEvent, tagsForDisposition, type BdLocale } from "./revalidation";
+import {
+  classifyEvent,
+  familyForTemplateType,
+  tagsForDisposition,
+  type BdLocale,
+} from "./revalidation";
 import { logFeelstackEvent } from "./errors";
 
 /**
@@ -225,7 +230,15 @@ export async function processRevalidationRequest(
   if (!envelope.success) {
     return { status: 400, outcome: "invalid_payload", body: { error: "Unsupported or malformed event envelope." } };
   }
-  const { id: eventId, type, projectId: eventProjectId, data } = envelope.data;
+  const {
+    id: eventId,
+    type,
+    projectId: eventProjectId,
+    entityId: canonicalEntityId,
+    locale: canonicalLocale,
+    path: canonicalPath,
+    data,
+  } = envelope.data;
 
   // ---- tenant isolation --------------------------------------------------
   // A signature proves the sender holds THIS endpoint's secret; it does not
@@ -243,7 +256,33 @@ export async function processRevalidationRequest(
   }
   const eventData = parsedData.data;
 
-  const disposition = classifyEvent(type, eventData);
+  // ---- canonical entity context (FeelStack PR #22) ----------------------
+  // Prefer the top-level columns over the payload. For page/entry events the
+  // two agree; for relationships/taxonomy ONLY the columns exist, which is
+  // exactly what #22 fixed. Falling back keeps a pre-#22 sender working.
+  const effectivePath = canonicalPath ?? eventData.path ?? undefined;
+  const rawLocale = canonicalLocale ?? eventData.locale ?? undefined;
+
+  // A locale this site does not serve is an event to DECLINE and report, not
+  // a parse failure and not an excuse to invalidate both locales.
+  if (rawLocale !== undefined && rawLocale !== "en" && rawLocale !== "ar") {
+    logFeelstackEvent({
+      category: "LOCALE_MISMATCH",
+      upstreamContext: `unsupported locale event=${type}`,
+    });
+    return {
+      status: 200,
+      outcome: "unsupported_event",
+      body: { revalidated: false, event: type, eventId, ignored: "locale is not served by this site." },
+    };
+  }
+
+  // `source-entity` events (relationships, taxonomy) are only actionable when
+  // BOTH an entity id and a path arrived. Without them the affected surface
+  // is unknowable and the event must be reported as a gap, never guessed.
+  const hasCanonicalContext = Boolean(canonicalEntityId) && Boolean(effectivePath);
+
+  const disposition = classifyEvent(type, eventData, hasCanonicalContext);
 
   if (disposition.kind === "backend_event_gap") {
     // NOT a silent 200. FeelStack can emit this event but does not transmit
@@ -271,28 +310,42 @@ export async function processRevalidationRequest(
   // `data.locale` is transmitted by every content producer and is
   // authoritative. Site-wide events carry none, which correctly means
   // "both locales".
-  const locale = eventData.locale as BdLocale | undefined;
+  const locale = rawLocale as BdLocale | undefined;
 
   // ---- path: CMS path -> registry route -> public URL --------------------
   let cmsPath: string | undefined;
   let previousCmsPath: string | undefined;
   const revalidatedPaths: string[] = [];
 
-  const needsPath = disposition.kind === "page" || disposition.kind === "entity";
+  let resolvedFamily: ReturnType<typeof familyForTemplateType>;
+
+  const needsPath =
+    disposition.kind === "page" ||
+    disposition.kind === "entity" ||
+    disposition.kind === "source-entity";
   if (needsPath) {
-    if (!eventData.path) {
+    if (!effectivePath) {
       return {
         status: 400,
         outcome: "invalid_payload",
         body: { error: "Event requires data.path but none was supplied." },
       };
     }
-    const normalized = decodeAndNormalizePath(eventData.path);
+    const normalized = decodeAndNormalizePath(effectivePath);
     if (!normalized || !routeByCmsPath.has(normalized)) {
       logFeelstackEvent({ category: "INVALID_RESPONSE", upstreamContext: `invalid_path event=${type}` });
       return { status: 400, outcome: "invalid_path", body: { error: "Path is not a known Blue Diamond route." } };
     }
     cmsPath = normalized;
+
+    // Family for a source-entity event. Relationship and taxonomy payloads
+    // carry no contentType -- `entityType` is the coarse routing type
+    // (`content_entry`), not the family -- so it is resolved from the route
+    // that this path already had to match. Registry lookup, not inference.
+    if (disposition.kind === "source-entity") {
+      const route = routeByCmsPath.get(normalized);
+      resolvedFamily = route ? familyForTemplateType(route.templateType) : undefined;
+    }
 
     if (eventData.previousPath) {
       const normalizedPrevious = decodeAndNormalizePath(eventData.previousPath);
@@ -319,7 +372,13 @@ export async function processRevalidationRequest(
     }
   }
 
-  const tags = tagsForDisposition(disposition, { siteKey, locale, cmsPath, previousCmsPath });
+  const tags = tagsForDisposition(disposition, {
+    siteKey,
+    locale,
+    cmsPath,
+    previousCmsPath,
+    family: resolvedFamily,
+  });
   tags.forEach((tag) => effects.revalidateTag(tag));
   revalidatedPaths.forEach((publicPath) => effects.revalidatePath(publicPath));
 

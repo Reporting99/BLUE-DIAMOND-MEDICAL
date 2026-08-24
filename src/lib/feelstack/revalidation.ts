@@ -1,6 +1,7 @@
 // No `import "server-only"` here deliberately — see cache-tags.ts for why.
 import { cacheTags, type CacheTagKey } from "./cache-tags";
 import type { FeelstackContentEventData } from "./schemas";
+import type { TemplateType } from "@/types/route";
 
 /**
  * Event -> cache-tag matrix, keyed on the REAL FeelStack event vocabulary.
@@ -78,6 +79,44 @@ export const CONTENT_TYPE_FAMILIES: Readonly<Record<string, EntityFamily>> = {
 const PERSON_FAMILY: EntityFamily = { detail: "doctor", index: "doctorsIndex" };
 
 /**
+ * Route `templateType` -> Blue Diamond tag family.
+ *
+ * WHY THIS EXISTS ALONGSIDE CONTENT_TYPE_FAMILIES
+ * -----------------------------------------------
+ * `content.entry.*` carries `data.contentType`, so its family is known from
+ * the payload. `content.relationships.updated` and
+ * `content.taxonomy.updated` do NOT -- their payloads describe the relation
+ * or the term, not the entity's type. All they carry (since FeelStack #22)
+ * is the canonical entityType/entityId/path, and `entityType` is the coarse
+ * routing type (`content_entry`), not the family.
+ *
+ * Rather than guess, the family is resolved from the ROUTE the path already
+ * had to match: every RouteEntry declares a typed `templateType`, and the
+ * path must be in the registry before anything is invalidated. This is a
+ * lookup against Blue Diamond's own source of truth, not an inference.
+ *
+ * Template types absent here (hub, static, homepage, contact, pricing,
+ * booking-hub, medical-botox) are real routes with no per-entity tag family;
+ * they still get page/SEO/sitemap tags, just no detail/index pair. That is
+ * correct, not a gap.
+ */
+export const TEMPLATE_FAMILIES: Partial<Record<TemplateType, EntityFamily>> = {
+  "doctor-profile": PERSON_FAMILY,
+  "medical-service": { detail: "medicalService", index: "medicalServicesIndex" },
+  "aesthetic-treatment": { detail: "aestheticTreatment", index: "aestheticTreatmentsIndex" },
+  concern: { detail: "concern", index: "concernsIndex" },
+  technology: { detail: "technology", index: "technologiesIndex" },
+  product: { detail: "product", index: "productsIndex" },
+  legal: { detail: "legalPage", index: "legalPagesIndex" },
+  article: { detail: "healthHubArticle", index: "healthHubIndex" },
+};
+
+/** Resolves the tag family for a route, or undefined when it has none. */
+export function familyForTemplateType(templateType: TemplateType): EntityFamily | undefined {
+  return TEMPLATE_FAMILIES[templateType];
+}
+
+/**
  * Both spellings are accepted for the duration of the FeelStack PR #21
  * transition. Production emitted `content.person_profile.*` before that
  * merge and `content.person.*` after it; a webhook already queued when the
@@ -94,6 +133,13 @@ const PERSON_EVENT_PREFIXES = [
 
 export type EventDisposition =
   | { kind: "entity"; family: EntityFamily }
+  /**
+   * The affected entity is identified by the CANONICAL top-level fields
+   * (entityType/entityId/locale/path) rather than by the payload. Its tag
+   * family is resolved from the matched route's templateType by the caller,
+   * the only layer that has already validated the path against the registry.
+   */
+  | { kind: "source-entity" }
   | { kind: "page" }
   | { kind: "navigation" }
   | { kind: "site-config" }
@@ -112,6 +158,12 @@ export type EventDisposition =
 export function classifyEvent(
   type: string,
   data: FeelstackContentEventData,
+  /**
+   * True when the envelope carried BOTH a usable entityId and a path. Passed
+   * in rather than read here so classification stays a pure function of the
+   * event, with no knowledge of the route registry.
+   */
+  hasCanonicalContext = false,
 ): EventDisposition {
   if (PERSON_EVENT_PREFIXES.some((prefix) => type.startsWith(prefix))) {
     return { kind: "entity", family: PERSON_FAMILY };
@@ -149,13 +201,20 @@ export function classifyEvent(
   // entity's identity only in those columns emit events no consumer can
   // act on. Verified per producer at 0e32652c.
   if (type === "content.relationships.updated") {
-    return {
-      kind: "backend_event_gap",
-      reason:
-        "payload is {relationKey, targetType, targetId} (or {relation, faqId}); " +
-        "it identifies the relation TARGET, never the source entity whose page " +
-        "changed, and carries no locale or path.",
-    };
+    // Closed by FeelStack #22. The payload still names only the relation
+    // TARGET; the SOURCE entity whose page actually changed now arrives in
+    // the canonical top-level fields. The two must never be conflated --
+    // invalidating the target would refresh the wrong page and leave the
+    // changed one stale.
+    return hasCanonicalContext
+      ? { kind: "source-entity" }
+      : {
+          kind: "backend_event_gap",
+          reason:
+            "no canonical entityId/path on the envelope; the payload names " +
+            "only the relation target, so the source entity is unknowable. " +
+            "Sender predates FeelStack PR #22.",
+        };
   }
   if (type.startsWith("content.faq.")) {
     return {
@@ -166,11 +225,17 @@ export function classifyEvent(
     };
   }
   if (type === "content.taxonomy.updated") {
-    return {
-      kind: "backend_event_gap",
-      reason:
-        "payload is {termId} only; the affected entity is in the untransmitted entityId column.",
-    };
+    // Closed by FeelStack #22: the tagged entity is now on the wire.
+    // `data.termId` names the TERM, never the entity, so it is retained for
+    // logging only and never used to select a surface.
+    return hasCanonicalContext
+      ? { kind: "source-entity" }
+      : {
+          kind: "backend_event_gap",
+          reason:
+            "no canonical entityId/path on the envelope; payload is {termId} " +
+            "only. Sender predates FeelStack PR #22.",
+        };
   }
 
   return {
@@ -257,6 +322,12 @@ export interface RevalidationTarget {
   cmsPath?: string;
   /** `data.previousPath` when a route moved. */
   previousCmsPath?: string;
+  /**
+   * Tag family for a `source-entity` disposition, resolved by the caller
+   * from the matched route's templateType. Only the handler has validated
+   * the path against the registry, so only it can resolve this.
+   */
+  family?: EntityFamily;
 }
 
 /**
@@ -303,7 +374,8 @@ export function tagsForDisposition(
       break;
 
     case "page":
-    case "entity": {
+    case "entity":
+    case "source-entity": {
       if (cmsPath) addPathTags(cmsPath);
       // A moved route leaves its old URL cached; invalidate both sides.
       if (previousCmsPath && previousCmsPath !== cmsPath) {
@@ -313,8 +385,12 @@ export function tagsForDisposition(
       // Publishing or unpublishing adds/removes a sitemap entry either way.
       tags.add(cacheTags.sitemap(siteKey));
 
-      if (disposition.kind === "entity") {
-        const { detail, index } = disposition.family;
+      // `entity` carries its family in the disposition (resolved from
+      // data.contentType). `source-entity` has none in the payload at all, so
+      // the caller resolves it from the route's templateType and passes it in.
+      const family = disposition.kind === "entity" ? disposition.family : target.family;
+      if (family) {
+        const { detail, index } = family;
         for (const l of locales) {
           tags.add(
             (cacheTags[index] as (s: string, l: string) => string)(siteKey, l),
