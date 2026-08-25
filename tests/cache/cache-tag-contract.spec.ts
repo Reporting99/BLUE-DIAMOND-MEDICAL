@@ -9,6 +9,7 @@ import {
   type EventDisposition,
 } from "../../src/lib/feelstack/revalidation";
 import { getSiteConfig, listRoutes } from "../../src/lib/feelstack/client";
+import { resolveFeelstackRedirect } from "../../src/lib/feelstack/redirect-resolver";
 import { entityCacheTags, resolvePageContent } from "../../src/lib/feelstack/page-resolver";
 import { defineEntityContract } from "../../src/lib/feelstack/adapters";
 import { z } from "zod";
@@ -149,6 +150,20 @@ async function collectProducedKeys(): Promise<Set<CacheTagKey>> {
     // Route inventory -> routes, sitemap
     for (const tag of await observeProducedTags(async () => {
       await listRoutes("en").catch(() => undefined);
+    })) {
+      const key = NAMESPACE_TO_KEY.get(namespaceOf(tag));
+      if (key) produced.add(key);
+    }
+
+    // Redirect history -> redirect
+    //
+    // The GAP-4 consumer files a cache entry under this tag on every 404
+    // lookup. It is probed here for the same reason as every other producer:
+    // the tag was previously minted outside the registry and invalidated by
+    // nothing, so a rename stayed invisible for the full TTL no matter how
+    // many webhooks arrived.
+    for (const tag of await observeProducedTags(async () => {
+      await resolveFeelstackRedirect("/en/probe/redirect", "en").catch(() => undefined);
     })) {
       const key = NAMESPACE_TO_KEY.get(namespaceOf(tag));
       if (key) produced.add(key);
