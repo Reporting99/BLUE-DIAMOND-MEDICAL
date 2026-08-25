@@ -546,8 +546,54 @@ fi
 
 # Only after the new slot is verified is the previous one stood down. Keeping
 # it running until this point is what makes the rollback above instantaneous.
+#
+# Node exits 143 on the SIGTERM systemd sends, and this unit has no
+# SuccessExitStatus for it, so a DELIBERATE stop leaves the unit in `failed`.
+# That is a reporting artefact of an intentional action, not a fault: the slot
+# was asked to stop and did. reset-failed clears it so a genuine failure later
+# is still distinguishable from this one.
+#
+# Deliberately narrow. It runs ONLY here, only in the pre-domain path, only
+# after the new slot has already been verified, and only when the stop itself
+# succeeded and left the unit inactive. It is not in the rollback path, where
+# clearing failure state could mask a recovery that did not actually work.
 if [ "$NGINX_MANAGED" -eq 0 ] && systemctl is-active --quiet "${APP_NAME}@${ACTIVE_SLOT}.service"; then
-  systemctl stop "${APP_NAME}@${ACTIVE_SLOT}.service"
+  PREVIOUS_SERVICE="${APP_NAME}@${ACTIVE_SLOT}.service"
+  STAGE="stop-previous-slot"
+
+  systemctl stop "$PREVIOUS_SERVICE"
+
+  # The stop must have actually taken effect before its failure state is
+  # cleared; otherwise this would hide a slot that refused to stop.
+  if systemctl is-active --quiet "$PREVIOUS_SERVICE"; then
+    echo "Previous slot ${ACTIVE_SLOT} is still active after an explicit stop." >&2
+    false
+  fi
+
+  if systemctl is-failed --quiet "$PREVIOUS_SERVICE"; then
+    PREVIOUS_STATUS="$(systemctl show "$PREVIOUS_SERVICE" -p ExecMainStatus --value 2>/dev/null || echo '')"
+    case "$PREVIOUS_STATUS" in
+      143|0)
+        systemctl reset-failed "$PREVIOUS_SERVICE"
+        log "PREVIOUS_SLOT_STOPPED slot=${ACTIVE_SLOT} exit=${PREVIOUS_STATUS} reset-failed=applied (intentional SIGTERM)"
+        ;;
+      *)
+        # Anything other than a clean stop or SIGTERM is a real fault and must
+        # stay visible.
+        echo "Previous slot ${ACTIVE_SLOT} failed with exit ${PREVIOUS_STATUS:-unknown}; not clearing." >&2
+        false
+        ;;
+    esac
+  else
+    log "PREVIOUS_SLOT_STOPPED slot=${ACTIVE_SLOT} state=inactive"
+  fi
+
+  # Required end state: stood down cleanly, not left looking broken.
+  FINAL_STATE="$(systemctl is-active "$PREVIOUS_SERVICE" 2>/dev/null || true)"
+  if [ "$FINAL_STATE" = "failed" ] || systemctl is-failed --quiet "$PREVIOUS_SERVICE"; then
+    echo "Previous slot ${ACTIVE_SLOT} is still marked failed after reset." >&2
+    false
+  fi
 fi
 
 {
