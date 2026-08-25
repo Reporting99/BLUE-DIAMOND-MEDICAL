@@ -41,6 +41,41 @@ function withIndexingGuard(response: NextResponse): NextResponse {
 }
 
 /**
+ * Header carrying the request's own pathname (and query) into the render.
+ *
+ * not-found.tsx receives no params and cannot read the failing URL, but the
+ * FeelStack redirect lookup (GAP-4 ladder rung 4) needs it. Stamping it here
+ * is the only place that reliably knows the ORIGINAL path -- by the time an
+ * Arabic pretty-slug request has been rewritten to its English-slug folder,
+ * the rendered route no longer reflects the URL the visitor asked for.
+ */
+export const REQUEST_PATH_HEADER = "x-bd-request-path";
+export const REQUEST_QUERY_HEADER = "x-bd-request-query";
+
+/**
+ * Request headers with the original path/query added. `headers()` inside a
+ * Server Component reads the REQUEST headers, so the value has to be attached
+ * here rather than only on the response.
+ */
+function requestHeadersWithPath(request: NextRequest): Headers {
+  const headers = new Headers(request.headers);
+  headers.set(REQUEST_PATH_HEADER, request.nextUrl.pathname);
+  if (request.nextUrl.search) {
+    headers.set(REQUEST_QUERY_HEADER, request.nextUrl.search.slice(1));
+  }
+  return headers;
+}
+
+/** Also mirrors them onto the response, for debugging and edge inspection. */
+function withRequestPath(request: NextRequest, response: NextResponse): NextResponse {
+  response.headers.set(REQUEST_PATH_HEADER, request.nextUrl.pathname);
+  if (request.nextUrl.search) {
+    response.headers.set(REQUEST_QUERY_HEADER, request.nextUrl.search.slice(1));
+  }
+  return response;
+}
+
+/**
  * Next.js 16 renamed the `middleware` convention to `proxy` — see
  * node_modules/next/dist/docs/01-app/03-api-reference/03-file-conventions/proxy.md.
  * This file replaces what would previously have been middleware.ts.
@@ -115,10 +150,22 @@ export function proxy(request: NextRequest) {
       if (canonical) {
         const url = new URL(`/ar${canonical}`, request.url);
         if (search) url.search = search;
-        return withIndexingGuard(NextResponse.rewrite(url));
+        return withIndexingGuard(
+          withRequestPath(
+            request,
+            NextResponse.rewrite(url, {
+              request: { headers: requestHeadersWithPath(request) },
+            }),
+          ),
+        );
       }
     }
-    return withIndexingGuard(NextResponse.next());
+    return withIndexingGuard(
+      withRequestPath(
+        request,
+        NextResponse.next({ request: { headers: requestHeadersWithPath(request) } }),
+      ),
+    );
   }
 
   // 3. Bare-path locale prefixing. `defaultLocale` is a static constant, not
