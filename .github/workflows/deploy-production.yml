@@ -287,6 +287,7 @@ jobs:
           esac
 
       - name: Deploy release
+        id: deploy
         shell: bash
         env:
           RELEASE_SHA: ${{ steps.release.outputs.release_sha }}
@@ -299,13 +300,35 @@ jobs:
 
           # Run ONCE. The server-side script owns rollback on failure; a retry
           # here would re-enter a half-rolled-back state.
+          #
+          # The deploy's own stdout is the trusted channel for where it landed.
+          # It is captured to a file rather than piped, so the deploy's real
+          # exit status survives -- a pipeline would report the exit code of
+          # whatever came last instead.
+          DEPLOY_LOG="$RUNNER_TEMP/deploy-stdout.txt"
+
+          set +e
           ssh -i "$HOME/.ssh/id_ed25519" -p "$DEPLOY_PORT" \
             -o BatchMode=yes -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes \
             -o ServerAliveInterval=15 -o ServerAliveCountMax=8 \
             "$DEPLOY_USER@$DEPLOY_HOST" \
             "sudo -n /usr/local/sbin/deploy-blue-diamond \
               '/home/deploy-blue-diamond/uploads/${ARTIFACT_NAME}' \
-              '${RELEASE_SHA}'"
+              '${RELEASE_SHA}'" > "$DEPLOY_LOG" 2>&1
+          DEPLOY_STATUS=$?
+          set -e
+
+          cat "$DEPLOY_LOG"
+
+          if [ "$DEPLOY_STATUS" -ne 0 ]; then
+            echo "::error::Deployment failed (exit ${DEPLOY_STATUS}). The server-side script owns rollback."
+            exit "$DEPLOY_STATUS"
+          fi
+
+          # Strict parse. Each key must appear EXACTLY once: a duplicate means
+          # the script emitted contradictory answers and we must not pick one.
+          scripts/parse-deploy-output.sh "$DEPLOY_LOG" "$RELEASE_SHA" >> "$GITHUB_OUTPUT"
+          echo "DEPLOY_OUTPUT_CONTRACT_OK"
 
       # Independent of the server-side check, from outside the server. The
       # deploy script already asserted this and rolled back on mismatch; this
@@ -320,17 +343,49 @@ jobs:
         run: |
           set -euo pipefail
 
-          SERVED="$(
+          # The port comes from the deploy's own validated stdout, NOT from
+          # /home/blue-diamond/deployments/active-release.env. That file is
+          # deliberately root:blue-diamond 0640 and the deploy user is
+          # deliberately not in the runtime group, so reading it fails with
+          # "Permission denied" -- which is what turned a fully successful
+          # release into a red workflow. The fix is to stop reading it, not to
+          # widen its permissions or the deploy user's group membership.
+          ACTIVE_PORT='${{ steps.deploy.outputs.active_port }}'
+          case "$ACTIVE_PORT" in
+            3030|3031) ;;
+            *) echo "::error::Deploy step did not yield a valid ACTIVE_PORT."; exit 1 ;;
+          esac
+
+          RESULT="$(
             ssh -i "$HOME/.ssh/id_ed25519" -p "$DEPLOY_PORT" \
               -o BatchMode=yes -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes \
-              "$DEPLOY_USER@$DEPLOY_HOST" '
+              "$DEPLOY_USER@$DEPLOY_HOST" "
                 set -euo pipefail
-                PORT="$(sed -nE "s/^ACTIVE_PORT=([0-9]+)$/\1/p" /home/blue-diamond/deployments/active-release.env)"
-                curl -sS --max-time 15 --retry 5 --retry-delay 3 --retry-all-errors \
-                  "http://127.0.0.1:${PORT}/api/version"
-              ' | grep -oE '[0-9a-f]{40}' | head -n 1
+                for path in /api/version /en /ar; do
+                  code=\"\$(curl -sS -o /tmp/bd-verify-body --max-time 15 --retry 5 --retry-delay 3 \
+                    --retry-all-errors -w '%{http_code}' \
+                    \"http://127.0.0.1:${ACTIVE_PORT}\${path}\")\"
+                  echo \"STATUS \${path} \${code}\"
+                  if [ \"\${path}\" = '/api/version' ]; then
+                    echo \"BODY \$(tr -d '\\n' < /tmp/bd-verify-body)\"
+                  fi
+                done
+                rm -f /tmp/bd-verify-body
+              "
           )"
 
+          echo "$RESULT"
+
+          for path in /api/version /en /ar; do
+            line="$(printf '%s\n' "$RESULT" | grep -F "STATUS ${path} " || true)"
+            code="${line##* }"
+            if [ "$code" != "200" ]; then
+              echo "::error::${path} on port ${ACTIVE_PORT} returned ${code:-no response}, expected 200."
+              exit 1
+            fi
+          done
+
+          SERVED="$(printf '%s\n' "$RESULT" | grep -oE '[0-9a-f]{40}' | head -n 1)"
           echo "Expected: $RELEASE_SHA"
           echo "Served:   ${SERVED:-none}"
 
