@@ -320,6 +320,15 @@ export const unreachableTags: Partial<Record<CacheTagKey, string>> = {
 export const invalidationCoverage: Partial<
   Record<CacheTagKey, readonly string[]>
 > = {
+  // A redirect appears precisely when something is renamed or moved, which is
+  // what these events report. Without this entry the redirect cache was an
+  // orphan: written on every 404 lookup, cleared by nothing.
+  redirect: [
+    "content.page.*",
+    "content.entry.*",
+    "content.person.*",
+    "content.person_profile.*",
+  ],
   site: ["configuration.settings.updated"],
   siteSettings: ["configuration.settings.updated"],
   routes: [

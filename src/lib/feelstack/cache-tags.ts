@@ -50,6 +50,21 @@ export const cacheTags = {
   legalPagesIndex: (siteKey: string, locale: string) => `feelstack-legal-pages:${siteKey}:${locale}`,
   legalPage: (siteKey: string, locale: string, id: string) => `feelstack-legal-page:${siteKey}:${locale}:${id}`,
   bookingConfig: (siteKey: string) => `feelstack-booking-config:${siteKey}`,
+  /**
+   * Redirect history for one CMS-side path, scoped to one locale.
+   *
+   * Locale is part of the key because the answer differs per locale for the
+   * same path: an Arabic alias is frequently the live English canonical, so a
+   * shared entry would let an Arabic redirect be served from cache to an
+   * English request.
+   *
+   * This lives in the registry rather than beside the resolver so it is
+   * covered by the invalidation contract. It previously did not, which meant
+   * the tag was attached to the fetch and invalidated by nothing -- a rename
+   * stayed invisible for the full 60s TTL no matter how many webhooks arrived.
+   */
+  redirect: (siteKey: string, locale: string, path: string) =>
+    `feelstack-redirect:${siteKey}:${locale}:${path}`,
 } as const;
 
 export type CacheTagKey = keyof typeof cacheTags;

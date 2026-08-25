@@ -93,13 +93,13 @@ test.describe("redirect resolver: pure helpers", () => {
 test.describe("redirect resolver: resolution", () => {
   test("English old path redirects to the English canonical", async () => {
     stubFetch(async () => jsonResponse({ destination: "/doctors/new", enabled: true }));
-    const result = await resolveFeelstackRedirect("/en/doctors/old");
+    const result = await resolveFeelstackRedirect("/en/doctors/old", "en");
     expect(result).toEqual({ destination: "/en/doctors/new", statusCode: 301 });
   });
 
   test("Arabic old path redirects to the ARABIC canonical, never English", async () => {
     stubFetch(async () => jsonResponse({ destination: "/الأطباء/جديد", enabled: true }));
-    const result = await resolveFeelstackRedirect("/ar/الأطباء/قديم");
+    const result = await resolveFeelstackRedirect("/ar/الأطباء/قديم", "ar");
     expect(result?.destination).toBe("/ar/الأطباء/جديد");
     expect(result?.destination.startsWith("/ar/")).toBe(true);
   });
@@ -110,7 +110,7 @@ test.describe("redirect resolver: resolution", () => {
       requested = String(input);
       return jsonResponse({ destination: "/new", enabled: true });
     });
-    await resolveFeelstackRedirect("/ar/الأطباء/قديم");
+    await resolveFeelstackRedirect("/ar/الأطباء/قديم", "ar");
     expect(requested).toContain("/sites/blue-diamond-medical/redirect");
     expect(requested).toContain(encodeURIComponent("/الأطباء/قديم"));
     expect(requested).not.toContain("/ar/");
@@ -118,23 +118,28 @@ test.describe("redirect resolver: resolution", () => {
 
   test("a self-redirect is refused rather than looping the browser", async () => {
     stubFetch(async () => jsonResponse({ destination: "/doctors/same", enabled: true }));
-    expect(await resolveFeelstackRedirect("/en/doctors/same")).toBeNull();
+    expect(await resolveFeelstackRedirect("/en/doctors/same", "en")).toBeNull();
   });
 
   test("a disabled redirect is ignored", async () => {
     stubFetch(async () => jsonResponse({ destination: "/new", enabled: false }));
-    expect(await resolveFeelstackRedirect("/en/old")).toBeNull();
+    expect(await resolveFeelstackRedirect("/en/old", "en")).toBeNull();
   });
 
-  test("an unprefixed path is not resolved", async () => {
+  test("a pathname whose locale contradicts the caller is refused", async () => {
+    // Redirecting across locales is the one mistake that must never happen, so
+    // a caller confused about its own request gets nothing rather than a guess
+    // at which of the two is right.
     stubFetch(async () => jsonResponse({ destination: "/new", enabled: true }));
-    expect(await resolveFeelstackRedirect("/doctors/old")).toBeNull();
+    expect(await resolveFeelstackRedirect("/ar/قديم", "en")).toBeNull();
+    expect(await resolveFeelstackRedirect("/en/old", "ar")).toBeNull();
   });
 
   test("preserves safe query parameters and drops the rest", async () => {
     stubFetch(async () => jsonResponse({ destination: "/new", enabled: true }));
     const result = await resolveFeelstackRedirect(
       "/en/old",
+      "en",
       new URLSearchParams({ utm_campaign: "spring", session: "secret" }),
     );
     expect(result?.destination).toBe("/en/new?utm_campaign=spring");
@@ -148,7 +153,7 @@ test.describe("redirect resolver: resolution", () => {
       called = true;
       return jsonResponse({ destination: "/new", enabled: true });
     });
-    expect(await resolveFeelstackRedirect("/en/old")).toBeNull();
+    expect(await resolveFeelstackRedirect("/en/old", "en")).toBeNull();
     expect(called).toBe(false);
   });
 
@@ -163,7 +168,7 @@ test.describe("redirect resolver: resolution", () => {
   for (const [label, handler] of failureModes) {
     test(`fails open to a normal 404: ${label}`, async () => {
       stubFetch(handler);
-      expect(await resolveFeelstackRedirect("/en/old")).toBeNull();
+      expect(await resolveFeelstackRedirect("/en/old", "en")).toBeNull();
     });
   }
 
@@ -175,7 +180,7 @@ test.describe("redirect resolver: resolution", () => {
       });
     });
     const startedAt = Date.now();
-    const result = await resolveFeelstackRedirect("/en/old");
+    const result = await resolveFeelstackRedirect("/en/old", "en");
     expect(result).toBeNull();
     expect(Date.now() - startedAt).toBeLessThan(4_000);
   });

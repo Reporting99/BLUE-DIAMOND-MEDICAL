@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+
+import { pathnameFrom, redirectOrNotFound } from "@/lib/feelstack/redirect-or-404";
 import { isLocale, type Locale } from "@/i18n/config";
 import { features } from "@/config/features";
 import { getLegalPage } from "@/features/legal";
@@ -72,12 +74,36 @@ export default async function LegalPage({
 }: {
   params: Promise<{ locale: string; legalPageId: string }>;
 }) {
-  if (!features.legalPagesEnabled) notFound();
-
   const { locale: rawLocale, legalPageId } = await params;
   const locale: Locale = isLocale(rawLocale) ? rawLocale : "en";
-  const page = await loadLegalPage(legalPageId, locale);
-  if (!page || !page.body.en || !page.body.ar) notFound();
+
+  // While legal pages are disabled this route is the de-facto handler for
+  // EVERY single-segment path, because Next matches it before the catch-all.
+  // It therefore has to end the same way the catch-all does, or a page renamed
+  // in the CMS would 404 whenever its path happens to be one segment long --
+  // which is most of them.
+  //
+  // The feature gate is not weakened by this. It exists to stop disabled legal
+  // pages being SERVED, and a redirect serves nothing: no legal content is
+  // loaded, rendered or revealed on this branch. If the destination is itself a
+  // disabled legal page it 404s on arrival, exactly as it would have.
+  const gated = !features.legalPagesEnabled;
+
+  // Content resolution first, always. Only once this misses can a redirect be
+  // the right answer -- otherwise a stale redirect row could shadow a page
+  // that is live right now.
+  const page = gated ? null : await loadLegalPage(legalPageId, locale);
+  if (gated || !page || !page.body.en || !page.body.ar) {
+    // No searchParams here, deliberately. This route is statically
+    // prerenderable, and reading searchParams in a prerendered route throws
+    // DYNAMIC_SERVER_USAGE at request time -- which Next turns into a 500.
+    // Measured, not assumed: adding it made every single-segment 404 on this
+    // site a 500, the same failure that headers() in not-found.tsx once
+    // caused. A rename here therefore drops query parameters rather than
+    // risking that; the catch-all, which is dynamic by construction, keeps
+    // them.
+    return redirectOrNotFound(pathnameFrom(locale, [legalPageId]), locale);
+  }
 
   return <LegalPageTemplate page={page} locale={locale} />;
 }
