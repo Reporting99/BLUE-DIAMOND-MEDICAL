@@ -45,15 +45,23 @@ const englishSlugToArabicPath = new Map(
  *
  * Load-bearing. The rewrite target IS an English-slug path under /ar, which is
  * exactly what englishSlugToArabicPath redirects -- for all 103 localized
- * routes, not some edge case. Without this marker the rewrite re-enters the
- * proxy, gets redirected back to the Arabic URL, rewrites again, and every
- * Arabic pretty URL dies with ERR_TOO_MANY_REDIRECTS.
+ * routes, not some edge case. Without a marker the rewrite re-enters the proxy,
+ * gets redirected back to the Arabic URL, rewrites again, and every Arabic
+ * pretty URL dies with ERR_TOO_MANY_REDIRECTS.
+ *
+ * The VALUE is a per-process nonce, not a constant. A constant marker is
+ * client-controllable: anyone sending `x-bd-arabic-rewrite: 1` against
+ * /ar/doctors was served 200 instead of the 301, resurrecting exactly the
+ * duplicate Arabic URL this redirect exists to remove. The nonce is generated
+ * at module load, never appears in any response, and is unguessable, so only
+ * a rewrite this process itself issued can satisfy the check.
  *
  * It is set on the REQUEST headers of the rewrite only. No Server Component
  * reads it, so it cannot flip a statically prerendered route to dynamic the
  * way a headers() call in not-found.tsx did.
  */
 const ARABIC_REWRITE_MARKER = "x-bd-arabic-rewrite";
+const ARABIC_REWRITE_NONCE = crypto.randomUUID();
 
 /**
  * Stamps the pre-launch noindex header on every response this proxy returns.
@@ -155,7 +163,7 @@ export function proxy(request: NextRequest) {
       // exactly such a path -- redirecting it would bounce straight back and
       // loop.
       const alreadyRewritten =
-        request.headers.get(ARABIC_REWRITE_MARKER) === "1";
+        request.headers.get(ARABIC_REWRITE_MARKER) === ARABIC_REWRITE_NONCE;
       const approvedArabic = alreadyRewritten
         ? undefined
         : englishSlugToArabicPath.get(withoutLocale);
@@ -170,7 +178,7 @@ export function proxy(request: NextRequest) {
         const url = new URL(`/ar${canonical}`, request.url);
         if (search) url.search = search;
         const headers = new Headers(request.headers);
-        headers.set(ARABIC_REWRITE_MARKER, "1");
+        headers.set(ARABIC_REWRITE_MARKER, ARABIC_REWRITE_NONCE);
         return withIndexingGuard(
           NextResponse.rewrite(url, { request: { headers } }),
         );
