@@ -148,12 +148,19 @@ jobs:
 
       # Private path to the server, so the deploy key is never presented to a
       # publicly reachable SSH surface.
+      # Matches the Dfeelings deploy workflow exactly, which is the verified
+      # reference architecture on this server: the same action at the same
+      # major version, and the same `ping` pre-check so a tailnet that has not
+      # come up yet fails HERE, with a clear message, rather than several steps
+      # later as an opaque SSH timeout. The tag stays Blue Diamond's own so the
+      # two projects remain separately authorized in the tailnet ACL.
       - name: Connect to Tailscale
-        uses: tailscale/github-action@v3
+        uses: tailscale/github-action@v4
         with:
           oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
           oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
           tags: tag:blue-diamond-deploy
+          ping: ${{ vars.DEPLOY_TAILSCALE_HOST }}
 
       - name: Configure secure SSH
         shell: bash
