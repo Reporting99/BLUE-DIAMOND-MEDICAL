@@ -44,8 +44,11 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
 
+      # Uses the wrapper rather than `npx playwright test` directly so the
+      # real exit code survives any log shortening -- see
+      # scripts/run-playwright.sh for the failure this prevents.
       - name: Run Playwright tests
-        run: npx playwright test
+        run: npm run test:e2e
         env:
           CI: true
 

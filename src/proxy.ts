@@ -40,6 +40,22 @@ const englishSlugToArabicPath = new Map(
 );
 
 /**
+ * Marks a request that this proxy has already rewritten from a pretty Arabic
+ * URL onto its English-slug folder.
+ *
+ * Load-bearing. The rewrite target IS an English-slug path under /ar, which is
+ * exactly what englishSlugToArabicPath redirects -- for all 103 localized
+ * routes, not some edge case. Without this marker the rewrite re-enters the
+ * proxy, gets redirected back to the Arabic URL, rewrites again, and every
+ * Arabic pretty URL dies with ERR_TOO_MANY_REDIRECTS.
+ *
+ * It is set on the REQUEST headers of the rewrite only. No Server Component
+ * reads it, so it cannot flip a statically prerendered route to dynamic the
+ * way a headers() call in not-found.tsx did.
+ */
+const ARABIC_REWRITE_MARKER = "x-bd-arabic-rewrite";
+
+/**
  * Stamps the pre-launch noindex header on every response this proxy returns.
  *
  * This is the AUTHORITATIVE layer of the indexing guard, because it is the
@@ -134,10 +150,15 @@ export function proxy(request: NextRequest) {
       const withoutLocale = decodedPathname.slice(3) || "/";
 
       // An English-slug path under /ar is a duplicate of the approved Arabic
-      // URL. One permanent hop to the canonical, never a chain: the target is
-      // an Arabic path, which is a key of arabicToCanonicalPath and therefore
-      // never itself a key here.
-      const approvedArabic = englishSlugToArabicPath.get(withoutLocale);
+      // URL, so it gets one permanent hop to the canonical. Skipped when this
+      // request is our own rewrite of a pretty Arabic URL, which lands on
+      // exactly such a path -- redirecting it would bounce straight back and
+      // loop.
+      const alreadyRewritten =
+        request.headers.get(ARABIC_REWRITE_MARKER) === "1";
+      const approvedArabic = alreadyRewritten
+        ? undefined
+        : englishSlugToArabicPath.get(withoutLocale);
       if (approvedArabic) {
         const url = new URL(`/ar${approvedArabic}`, request.url);
         if (search) url.search = search;
@@ -148,7 +169,11 @@ export function proxy(request: NextRequest) {
       if (canonical) {
         const url = new URL(`/ar${canonical}`, request.url);
         if (search) url.search = search;
-        return withIndexingGuard(NextResponse.rewrite(url));
+        const headers = new Headers(request.headers);
+        headers.set(ARABIC_REWRITE_MARKER, "1");
+        return withIndexingGuard(
+          NextResponse.rewrite(url, { request: { headers } }),
+        );
       }
     }
     return withIndexingGuard(NextResponse.next());
