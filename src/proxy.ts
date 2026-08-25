@@ -19,6 +19,51 @@ const arabicToCanonicalPath = new Map(
 );
 
 /**
+ * The reverse map: an ENGLISH-slug path to the approved Arabic path.
+ *
+ * Under /ar these English-slug paths are duplicates -- the same page reachable
+ * at two Arabic URLs, one of them Latin. That is GAP-2 seen from the frontend,
+ * and it is why /ar/aesthetics/concerns/acne-scars and
+ * /ar/التجميل-الطبي/المخاوف-الجمالية/ندبات-حب-الشباب both answered 200.
+ *
+ * Redirecting them here rather than from the not-found boundary matters:
+ * not-found.tsx cannot see the request URL without headers(), and reading a
+ * dynamic API there flips statically prerendered routes from static to dynamic
+ * at runtime, which this Next version turns into a 500. The proxy already
+ * knows the URL, already runs per request, costs no dynamic rendering, and can
+ * return a real 301 rather than a 308.
+ *
+ * Scoped to /ar only. The English canonical is untouched.
+ */
+const englishSlugToArabicPath = new Map(
+  routes.filter((r) => r.path.ar !== r.path.en).map((r) => [r.path.en, r.path.ar]),
+);
+
+/**
+ * Marks a request that this proxy has already rewritten from a pretty Arabic
+ * URL onto its English-slug folder.
+ *
+ * Load-bearing. The rewrite target IS an English-slug path under /ar, which is
+ * exactly what englishSlugToArabicPath redirects -- for all 103 localized
+ * routes, not some edge case. Without a marker the rewrite re-enters the proxy,
+ * gets redirected back to the Arabic URL, rewrites again, and every Arabic
+ * pretty URL dies with ERR_TOO_MANY_REDIRECTS.
+ *
+ * The VALUE is a per-process nonce, not a constant. A constant marker is
+ * client-controllable: anyone sending `x-bd-arabic-rewrite: 1` against
+ * /ar/doctors was served 200 instead of the 301, resurrecting exactly the
+ * duplicate Arabic URL this redirect exists to remove. The nonce is generated
+ * at module load, never appears in any response, and is unguessable, so only
+ * a rewrite this process itself issued can satisfy the check.
+ *
+ * It is set on the REQUEST headers of the rewrite only. No Server Component
+ * reads it, so it cannot flip a statically prerendered route to dynamic the
+ * way a headers() call in not-found.tsx did.
+ */
+const ARABIC_REWRITE_MARKER = "x-bd-arabic-rewrite";
+const ARABIC_REWRITE_NONCE = crypto.randomUUID();
+
+/**
  * Stamps the pre-launch noindex header on every response this proxy returns.
  *
  * This is the AUTHORITATIVE layer of the indexing guard, because it is the
@@ -36,41 +81,6 @@ const arabicToCanonicalPath = new Map(
 function withIndexingGuard(response: NextResponse): NextResponse {
   if (!isSiteLaunched()) {
     response.headers.set("X-Robots-Tag", PRE_LAUNCH_ROBOTS_HEADER);
-  }
-  return response;
-}
-
-/**
- * Header carrying the request's own pathname (and query) into the render.
- *
- * not-found.tsx receives no params and cannot read the failing URL, but the
- * FeelStack redirect lookup (GAP-4 ladder rung 4) needs it. Stamping it here
- * is the only place that reliably knows the ORIGINAL path -- by the time an
- * Arabic pretty-slug request has been rewritten to its English-slug folder,
- * the rendered route no longer reflects the URL the visitor asked for.
- */
-export const REQUEST_PATH_HEADER = "x-bd-request-path";
-export const REQUEST_QUERY_HEADER = "x-bd-request-query";
-
-/**
- * Request headers with the original path/query added. `headers()` inside a
- * Server Component reads the REQUEST headers, so the value has to be attached
- * here rather than only on the response.
- */
-function requestHeadersWithPath(request: NextRequest): Headers {
-  const headers = new Headers(request.headers);
-  headers.set(REQUEST_PATH_HEADER, request.nextUrl.pathname);
-  if (request.nextUrl.search) {
-    headers.set(REQUEST_QUERY_HEADER, request.nextUrl.search.slice(1));
-  }
-  return headers;
-}
-
-/** Also mirrors them onto the response, for debugging and edge inspection. */
-function withRequestPath(request: NextRequest, response: NextResponse): NextResponse {
-  response.headers.set(REQUEST_PATH_HEADER, request.nextUrl.pathname);
-  if (request.nextUrl.search) {
-    response.headers.set(REQUEST_QUERY_HEADER, request.nextUrl.search.slice(1));
   }
   return response;
 }
@@ -146,26 +156,35 @@ export function proxy(request: NextRequest) {
       // Arabic text as written in src/config/routes.ts — reuse the
       // decoded pathname computed above.
       const withoutLocale = decodedPathname.slice(3) || "/";
+
+      // An English-slug path under /ar is a duplicate of the approved Arabic
+      // URL, so it gets one permanent hop to the canonical. Skipped when this
+      // request is our own rewrite of a pretty Arabic URL, which lands on
+      // exactly such a path -- redirecting it would bounce straight back and
+      // loop.
+      const alreadyRewritten =
+        request.headers.get(ARABIC_REWRITE_MARKER) === ARABIC_REWRITE_NONCE;
+      const approvedArabic = alreadyRewritten
+        ? undefined
+        : englishSlugToArabicPath.get(withoutLocale);
+      if (approvedArabic) {
+        const url = new URL(`/ar${approvedArabic}`, request.url);
+        if (search) url.search = search;
+        return withIndexingGuard(NextResponse.redirect(url, 301));
+      }
+
       const canonical = arabicToCanonicalPath.get(withoutLocale);
       if (canonical) {
         const url = new URL(`/ar${canonical}`, request.url);
         if (search) url.search = search;
+        const headers = new Headers(request.headers);
+        headers.set(ARABIC_REWRITE_MARKER, ARABIC_REWRITE_NONCE);
         return withIndexingGuard(
-          withRequestPath(
-            request,
-            NextResponse.rewrite(url, {
-              request: { headers: requestHeadersWithPath(request) },
-            }),
-          ),
+          NextResponse.rewrite(url, { request: { headers } }),
         );
       }
     }
-    return withIndexingGuard(
-      withRequestPath(
-        request,
-        NextResponse.next({ request: { headers: requestHeadersWithPath(request) } }),
-      ),
-    );
+    return withIndexingGuard(NextResponse.next());
   }
 
   // 3. Bare-path locale prefixing. `defaultLocale` is a static constant, not
