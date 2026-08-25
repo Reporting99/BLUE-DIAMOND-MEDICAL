@@ -12,6 +12,13 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Playwright's own generated output. Both are gitignored, so they can
+    // never be committed, but `eslint .` still walks them whenever a run has
+    // left them behind -- 257 errors from minified trace-viewer bundles that
+    // are not this repository's code. CI only escapes it because lint happens
+    // to run before Playwright.
+    "playwright-report/**",
+    "test-results/**",
   ]),
 ]);
 

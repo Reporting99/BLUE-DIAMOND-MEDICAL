@@ -70,8 +70,19 @@ test.describe("release safety", () => {
 
   test("installs an ERR/INT/TERM trap that rolls back", () => {
     const source = read(deployScript);
-    expect(source).toContain("trap 'rollback $?' ERR INT TERM");
+    // The trap now forwards the failing line and stage alongside the exit
+    // code, so a failure names where it happened instead of only that it did.
+    // Asserted by shape rather than by one literal string, so enriching the
+    // diagnostics again does not require editing this test -- while still
+    // proving a rollback trap is installed for all three signals.
+    expect(source).toMatch(/trap 'rollback \$\?[^']*' ERR INT TERM/);
     expect(source).toContain("ROLLBACK_FINISHED");
+  });
+
+  test("the rollback trap reports exit code, line and stage", () => {
+    const source = read(deployScript);
+    expect(source).toMatch(/trap 'rollback \$\? "\$LINENO" "\$STAGE"' ERR INT TERM/);
+    expect(source).toMatch(/exit=\$\{exit_code\} line=\$\{failed_line\} stage=\$\{failed_stage\}/);
   });
 
   test("retains previous releases so a rollback has something to return to", () => {
