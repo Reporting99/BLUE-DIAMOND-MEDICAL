@@ -19,6 +19,27 @@ const arabicToCanonicalPath = new Map(
 );
 
 /**
+ * The reverse map: an ENGLISH-slug path to the approved Arabic path.
+ *
+ * Under /ar these English-slug paths are duplicates -- the same page reachable
+ * at two Arabic URLs, one of them Latin. That is GAP-2 seen from the frontend,
+ * and it is why /ar/aesthetics/concerns/acne-scars and
+ * /ar/التجميل-الطبي/المخاوف-الجمالية/ندبات-حب-الشباب both answered 200.
+ *
+ * Redirecting them here rather than from the not-found boundary matters:
+ * not-found.tsx cannot see the request URL without headers(), and reading a
+ * dynamic API there flips statically prerendered routes from static to dynamic
+ * at runtime, which this Next version turns into a 500. The proxy already
+ * knows the URL, already runs per request, costs no dynamic rendering, and can
+ * return a real 301 rather than a 308.
+ *
+ * Scoped to /ar only. The English canonical is untouched.
+ */
+const englishSlugToArabicPath = new Map(
+  routes.filter((r) => r.path.ar !== r.path.en).map((r) => [r.path.en, r.path.ar]),
+);
+
+/**
  * Stamps the pre-launch noindex header on every response this proxy returns.
  *
  * This is the AUTHORITATIVE layer of the indexing guard, because it is the
@@ -36,41 +57,6 @@ const arabicToCanonicalPath = new Map(
 function withIndexingGuard(response: NextResponse): NextResponse {
   if (!isSiteLaunched()) {
     response.headers.set("X-Robots-Tag", PRE_LAUNCH_ROBOTS_HEADER);
-  }
-  return response;
-}
-
-/**
- * Header carrying the request's own pathname (and query) into the render.
- *
- * not-found.tsx receives no params and cannot read the failing URL, but the
- * FeelStack redirect lookup (GAP-4 ladder rung 4) needs it. Stamping it here
- * is the only place that reliably knows the ORIGINAL path -- by the time an
- * Arabic pretty-slug request has been rewritten to its English-slug folder,
- * the rendered route no longer reflects the URL the visitor asked for.
- */
-export const REQUEST_PATH_HEADER = "x-bd-request-path";
-export const REQUEST_QUERY_HEADER = "x-bd-request-query";
-
-/**
- * Request headers with the original path/query added. `headers()` inside a
- * Server Component reads the REQUEST headers, so the value has to be attached
- * here rather than only on the response.
- */
-function requestHeadersWithPath(request: NextRequest): Headers {
-  const headers = new Headers(request.headers);
-  headers.set(REQUEST_PATH_HEADER, request.nextUrl.pathname);
-  if (request.nextUrl.search) {
-    headers.set(REQUEST_QUERY_HEADER, request.nextUrl.search.slice(1));
-  }
-  return headers;
-}
-
-/** Also mirrors them onto the response, for debugging and edge inspection. */
-function withRequestPath(request: NextRequest, response: NextResponse): NextResponse {
-  response.headers.set(REQUEST_PATH_HEADER, request.nextUrl.pathname);
-  if (request.nextUrl.search) {
-    response.headers.set(REQUEST_QUERY_HEADER, request.nextUrl.search.slice(1));
   }
   return response;
 }
@@ -146,26 +132,26 @@ export function proxy(request: NextRequest) {
       // Arabic text as written in src/config/routes.ts — reuse the
       // decoded pathname computed above.
       const withoutLocale = decodedPathname.slice(3) || "/";
+
+      // An English-slug path under /ar is a duplicate of the approved Arabic
+      // URL. One permanent hop to the canonical, never a chain: the target is
+      // an Arabic path, which is a key of arabicToCanonicalPath and therefore
+      // never itself a key here.
+      const approvedArabic = englishSlugToArabicPath.get(withoutLocale);
+      if (approvedArabic) {
+        const url = new URL(`/ar${approvedArabic}`, request.url);
+        if (search) url.search = search;
+        return withIndexingGuard(NextResponse.redirect(url, 301));
+      }
+
       const canonical = arabicToCanonicalPath.get(withoutLocale);
       if (canonical) {
         const url = new URL(`/ar${canonical}`, request.url);
         if (search) url.search = search;
-        return withIndexingGuard(
-          withRequestPath(
-            request,
-            NextResponse.rewrite(url, {
-              request: { headers: requestHeadersWithPath(request) },
-            }),
-          ),
-        );
+        return withIndexingGuard(NextResponse.rewrite(url));
       }
     }
-    return withIndexingGuard(
-      withRequestPath(
-        request,
-        NextResponse.next({ request: { headers: requestHeadersWithPath(request) } }),
-      ),
-    );
+    return withIndexingGuard(NextResponse.next());
   }
 
   // 3. Bare-path locale prefixing. `defaultLocale` is a static constant, not
