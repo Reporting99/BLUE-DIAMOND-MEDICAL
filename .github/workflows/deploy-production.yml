@@ -138,85 +138,13 @@ jobs:
         shell: bash
         env:
           RELEASE_SHA: ${{ steps.release.outputs.release_sha }}
-        run: |
-          set -euo pipefail
+        # The packaging logic lives in scripts/package-standalone.sh so it can
+        # be run and tested before pushing. Inline, it could only ever be
+        # validated by a failed production deployment -- which is exactly how a
+        # repository/workflow mismatch (asserting a public/ directory this app
+        # does not have) reached Deploy Production.
+        run: scripts/package-standalone.sh "$RELEASE_SHA" "$RUNNER_TEMP"
 
-          RELEASE_DIR="$RUNNER_TEMP/blue-diamond-release"
-          ARTIFACT_NAME="blue-diamond-${RELEASE_SHA}.tar.gz"
-          ARTIFACT_PATH="$RUNNER_TEMP/${ARTIFACT_NAME}"
-
-          rm -rf "$RELEASE_DIR"
-          rm -f "$ARTIFACT_PATH"
-          mkdir -p "$RELEASE_DIR"
-
-          test -d .next/standalone
-          test -f .next/standalone/server.js
-          test -s .next/BUILD_ID
-          test -d .next/static
-          test -d public
-
-          # -L dereferences symlinks: the server-side script rejects any
-          # archive containing a link, because extracting one as root is a
-          # write primitive outside the release directory.
-          cp -RL --preserve=mode,timestamps .next/standalone/. "$RELEASE_DIR/"
-
-          # `next build --output standalone` does NOT copy these two; they
-          # have to be placed alongside the server explicitly.
-          rm -rf "$RELEASE_DIR/.next/static"
-          mkdir -p "$RELEASE_DIR/.next/static"
-          cp -RL --preserve=mode,timestamps .next/static/. "$RELEASE_DIR/.next/static/"
-
-          rm -rf "$RELEASE_DIR/public"
-          mkdir -p "$RELEASE_DIR/public"
-          cp -RL --preserve=mode,timestamps public/. "$RELEASE_DIR/public/"
-
-          install -m 644 .next/BUILD_ID "$RELEASE_DIR/.next/BUILD_ID"
-
-          # The release identity /api/version reports and the deploy script
-          # verifies against.
-          printf '%s\n' "$RELEASE_SHA" > "$RELEASE_DIR/.release-sha"
-
-          # Runtime secrets stay on the server. A release artifact must never
-          # be able to carry configuration, or a rollback would restore stale
-          # configuration along with old code.
-          rm -f "$RELEASE_DIR/.env" "$RELEASE_DIR/.env.production" "$RELEASE_DIR/.env.local"
-
-          test -f "$RELEASE_DIR/server.js"
-          test -s "$RELEASE_DIR/.next/BUILD_ID"
-          test -d "$RELEASE_DIR/.next/static"
-          test -d "$RELEASE_DIR/public"
-          test -s "$RELEASE_DIR/.release-sha"
-
-          EXTRACTED_SHA="$(tr -d '\r\n' < "$RELEASE_DIR/.release-sha")"
-          if [ "$EXTRACTED_SHA" != "$RELEASE_SHA" ]; then
-            echo "::error::Release SHA verification failed."
-            exit 1
-          fi
-
-          if find "$RELEASE_DIR" \( -type l -o -type b -o -type c -o -type p -o -type s \) -print -quit | grep -q .; then
-            echo "::error::Release contains symbolic links or unsupported file types."
-            exit 1
-          fi
-
-          node --check "$RELEASE_DIR/server.js"
-
-          tar -czf "$ARTIFACT_PATH" -C "$RELEASE_DIR" .
-          gzip -t "$ARTIFACT_PATH"
-
-          ARTIFACT_SIZE="$(stat -c '%s' "$ARTIFACT_PATH")"
-          ARTIFACT_SHA256="$(sha256sum "$ARTIFACT_PATH" | awk '{print $1}')"
-
-          if [ "$ARTIFACT_SIZE" -le 0 ] || [ "$ARTIFACT_SIZE" -gt 2147483648 ]; then
-            echo "::error::Artifact size is invalid or exceeds 2 GiB."
-            exit 1
-          fi
-
-          echo "Artifact: $ARTIFACT_NAME ($ARTIFACT_SIZE bytes, sha256 $ARTIFACT_SHA256)"
-          {
-            echo "artifact_path=$ARTIFACT_PATH"
-            echo "artifact_name=$ARTIFACT_NAME"
-            echo "artifact_sha256=$ARTIFACT_SHA256"
-          } >> "$GITHUB_OUTPUT"
 
       # Private path to the server, so the deploy key is never presented to a
       # publicly reachable SSH surface.
