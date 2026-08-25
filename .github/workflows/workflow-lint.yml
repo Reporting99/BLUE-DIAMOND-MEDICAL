@@ -1,0 +1,54 @@
+name: Workflow Lint
+
+# Validates the workflow definitions themselves. Added because a deployment
+# workflow is the one place where a mistake is only discovered by a failed
+# production deployment: the packaging step asserted a directory this app does
+# not have, and nothing checked the workflow before it ran for real.
+#
+# actionlint also runs shellcheck over every `run:` block, which is where that
+# class of bug lives.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/**"
+      - "scripts/**"
+  pull_request:
+    paths:
+      - ".github/workflows/**"
+      - "scripts/**"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  actionlint:
+    name: actionlint + shellcheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run actionlint
+        uses: raven-actions/actionlint@v2
+        with:
+          fail-on-error: true
+
+      - name: Shellcheck repository scripts
+        shell: bash
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          scripts=(scripts/*.sh)
+          if [ ${#scripts[@]} -eq 0 ]; then
+            echo "No shell scripts to check."
+            exit 0
+          fi
+          # bash -n first: a syntax error should be reported as such rather
+          # than as a wall of shellcheck output.
+          for f in "${scripts[@]}"; do
+            echo "bash -n $f"
+            bash -n "$f"
+          done
+          shellcheck --severity=warning "${scripts[@]}"

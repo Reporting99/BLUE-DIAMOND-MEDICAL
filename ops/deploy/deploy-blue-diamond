@@ -208,7 +208,17 @@ if [ -f "$NGINX_SNIPPET" ]; then
 else
   # No public vhost yet. Derive the serving slot from systemd plus a loopback
   # probe -- the only live evidence that exists in this phase.
-  LIVE_SLOT=""
+  #
+  # Both slots are routinely healthy here, because nothing routes between them
+  # yet. The previous version of this loop assigned LIVE_SLOT on every healthy
+  # candidate, so the LAST one examined silently won: with blue and green both
+  # up it always chose green, contradicting ACTIVE_SLOT=blue in the state file
+  # and targeting the slot that was actually serving. "Last one wins" is not
+  # evidence, so the healthy slots are now collected and adjudicated
+  # explicitly.
+  HEALTHY_SLOTS=""
+  BLUE_SERVED_SHA=""
+  GREEN_SERVED_SHA=""
   for candidate in blue green; do
     if [ "$candidate" = "green" ]; then
       port="$GREEN_PORT"
@@ -216,19 +226,55 @@ else
       port="$BLUE_PORT"
     fi
 
-    if systemctl is-active --quiet "${APP_NAME}@${candidate}.service" &&
-       curl -sS --max-time 5 -o /dev/null "http://127.0.0.1:${port}/api/version" 2>/dev/null
-    then
-      LIVE_SLOT="$candidate"
+    if systemctl is-active --quiet "${APP_NAME}@${candidate}.service"; then
+      served="$(curl -sS --max-time 5 "http://127.0.0.1:${port}/api/version" 2>/dev/null \
+                | sed -nE 's/.*"sha"[[:space:]]*:[[:space:]]*"([0-9a-f]{40})".*/\1/p')"
+      if [ -n "$served" ]; then
+        HEALTHY_SLOTS="${HEALTHY_SLOTS}${candidate} "
+        if [ "$candidate" = "blue" ]; then
+          BLUE_SERVED_SHA="$served"
+        else
+          GREEN_SERVED_SHA="$served"
+        fi
+      fi
     fi
   done
 
-  if [ -z "$LIVE_SLOT" ]; then
-    # First deployment: nothing is serving. Blue is the conventional first
-    # slot, so the target below becomes blue.
-    LIVE_SLOT="green"
-    log "BOOTSTRAP no slot is currently serving; treating green as previous so blue receives the first release"
-  fi
+  HEALTHY_COUNT="$(printf '%s' "$HEALTHY_SLOTS" | wc -w | tr -d ' ')"
+
+  case "$HEALTHY_COUNT" in
+    0)
+      # First deployment: nothing is serving. Blue is the conventional first
+      # slot, so the target below becomes blue.
+      LIVE_SLOT="green"
+      log "BOOTSTRAP no slot is currently serving; treating green as previous so blue receives the first release"
+      ;;
+    1)
+      # Unambiguous: exactly one slot is serving, so that is the active one
+      # regardless of what any state file claims.
+      LIVE_SLOT="$(printf '%s' "$HEALTHY_SLOTS" | awk '{print $1}')"
+      log "ACTIVE_SLOT_RESOLVED slot=${LIVE_SLOT} basis=sole-healthy-slot"
+      ;;
+    *)
+      # Both healthy. Live evidence alone cannot say which one is authoritative,
+      # so the stored state decides -- but only when it is valid AND the two
+      # slots agree on what they serve. Anything else is a real ambiguity and
+      # must stop the deployment rather than be guessed at.
+      if [ "$BLUE_SERVED_SHA" != "$GREEN_SERVED_SHA" ]; then
+        echo "Both slots are healthy but serve different releases:" >&2
+        echo "  blue=${BLUE_SERVED_SHA} green=${GREEN_SERVED_SHA}" >&2
+        echo "Refusing to guess which is authoritative. Nothing was changed." >&2
+        exit 1
+      fi
+      if [ -z "$STATE_SLOT" ]; then
+        echo "Both slots are healthy and serve ${BLUE_SERVED_SHA}, but ${ACTIVE_FILE}" >&2
+        echo "has no valid ACTIVE_SLOT to break the tie. Nothing was changed." >&2
+        exit 1
+      fi
+      LIVE_SLOT="$STATE_SLOT"
+      log "ACTIVE_SLOT_RESOLVED slot=${LIVE_SLOT} basis=state-file both-healthy sha=${BLUE_SERVED_SHA}"
+      ;;
+  esac
 fi
 
 # Cross-check. A stored state file that disagrees with live evidence means an
@@ -282,10 +328,18 @@ fi
 
 rollback() {
   local exit_code="$1"
+  local failed_line="${2:-unknown}"
+  local failed_stage="${3:-unknown}"
   trap - ERR INT TERM
   set +e
 
-  log "DEPLOY_FAILED sha=${RELEASE_ID} target=${TARGET_SLOT} port=${TARGET_PORT}; starting rollback"
+  # Enough to identify WHERE it broke without echoing anything sensitive.
+  # Release b30046d2 failed with only "DEPLOY_FAILED ...; starting rollback",
+  # which named neither the line nor the stage, so the cause had to be found by
+  # re-deriving it by hand. The stage label and line number are static strings
+  # from this script; no environment value, SSH material, token or credential
+  # is ever recorded.
+  log "DEPLOY_FAILED sha=${RELEASE_ID} target=${TARGET_SLOT} port=${TARGET_PORT} exit=${exit_code} line=${failed_line} stage=${failed_stage}; starting rollback"
 
   if [ "$NGINX_CHANGED" -eq 1 ]; then
     printf '%s\n' "$OLD_NGINX_CONTENT" > "${NGINX_SNIPPET}.rollback"
@@ -324,16 +378,21 @@ rollback() {
   exit "$exit_code"
 }
 
-trap 'rollback $?' ERR INT TERM
+# STAGE is updated as the deployment advances so a failure names the phase it
+# occurred in rather than only a line number.
+STAGE="init"
+trap 'rollback $? "$LINENO" "$STAGE"' ERR INT TERM
 
 log "DEPLOY_STARTED sha=${RELEASE_ID} active=${ACTIVE_SLOT}:${CURRENT_PORT} target=${TARGET_SLOT}:${TARGET_PORT} nginx_managed=${NGINX_MANAGED}"
 
+STAGE="prepare-release-dir"
 install -d -o root -g "$RUNTIME_GROUP" -m 750 "$RELEASES_DIR"
 
 [ ! -e "$RELEASE_DIR" ] || { echo "Release already exists: $RELEASE_DIR" >&2; false; }
 
 install -d -o root -g "$RUNTIME_GROUP" -m 750 "$STAGING_DIR"
 
+STAGE="extract-artifact"
 tar -xzf "$ARTIFACT" -C "$STAGING_DIR" \
   --no-same-owner --no-same-permissions --delay-directory-restore
 
@@ -342,10 +401,27 @@ if [ -n "$(find "$STAGING_DIR" -xdev \( -type l -o -type b -o -type c -o -type p
   false
 fi
 
+STAGE="verify-artifact-contents"
 [ -f "$STAGING_DIR/server.js" ]
 [ -s "$STAGING_DIR/.next/BUILD_ID" ]
 [ -d "$STAGING_DIR/.next/static" ]
-[ -d "$STAGING_DIR/public" ]
+
+# public/ is OPTIONAL, matching scripts/package-standalone.sh, which only
+# packages one when the source tree has one. This app has none: its single
+# static asset is src/app/favicon.ico, served through the App Router file
+# convention. Asserting it unconditionally is what failed release
+# b30046d2 -- tar extracted cleanly and every other check passed, then this
+# line tripped `set -e` and rolled the deployment back.
+#
+# When the artifact DOES carry a public/, it is still verified. An empty one is
+# never fabricated: a directory that exists but holds nothing would make a
+# genuinely broken artifact look valid.
+if tar -tzf "$ARTIFACT" | grep -q '^\./public/'; then
+  [ -d "$STAGING_DIR/public" ] || {
+    echo "Artifact declares public/ but it is missing after extraction." >&2
+    false
+  }
+fi
 
 EXTRACTED_SHA="$(tr -d '\r\n' < "$STAGING_DIR/.release-sha")"
 [ "$EXTRACTED_SHA" = "$RELEASE_ID" ] || {
@@ -353,6 +429,7 @@ EXTRACTED_SHA="$(tr -d '\r\n' < "$STAGING_DIR/.release-sha")"
   false
 }
 
+STAGE="verify-server-syntax"
 "$NODE_BIN" --check "$STAGING_DIR/server.js" >/dev/null
 
 chown -R root:"$RUNTIME_GROUP" "$STAGING_DIR"
