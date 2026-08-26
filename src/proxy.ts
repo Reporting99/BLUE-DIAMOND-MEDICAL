@@ -96,8 +96,54 @@ function withIndexingGuard(response: NextResponse): NextResponse {
  *  2. `/ -> /en/` and bare-path locale prefixing, so every route in the app
  *     lives under /en/... or /ar/....
  */
+/**
+ * True when the request path cannot be safely handed to the router.
+ *
+ * Two shapes, both of which produced a 500 on the deployed artifact before
+ * this guard (verified 2026-08-26 against the green slot):
+ *
+ *   /en/%%%%    invalid percent-encoding. Never reached application code and
+ *               logged nothing -- it fails inside Next's own request
+ *               handling, which is why no route or error boundary could
+ *               catch it.
+ *   /en/a%00b   decodes to a NUL byte. Rendering SUCCEEDS and then the
+ *               prerender cache write throws ERR_INVALID_ARG_VALUE, because
+ *               the path becomes a filename:
+ *                 "…/.next/server/app/en/a\x00b.segments"
+ *               That one IS in the journal, and a 500 issued after a
+ *               successful render is the clearest sign the URL should never
+ *               have been routed at all.
+ *
+ * Both are malformed URIs, not missing pages, so this is a 400. Checked on
+ * the RAW pathname before anything else looks at it, because every later step
+ * -- legacy lookup, locale detection, routing -- assumes a decodable string.
+ *
+ * Dfeelings carries the same guard in its own proxy.ts; this is the earliest
+ * layer either app can inspect the raw URI from, and the only ingress Blue
+ * Diamond has at all.
+ */
+function isUnroutablePath(pathname: string): boolean {
+  let decoded: string;
+  try {
+    decoded = decodeURI(pathname);
+  } catch {
+    return true;
+  }
+  // decodeURI happily produces control characters from valid escapes; %00 in
+  // particular is well-formed encoding of a byte that cannot appear in a
+  // path. Check after decoding, since that is the form the router uses.
+  return /[\u0000-\u001F\u007F]/.test(decoded);
+}
+
 export function proxy(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
+
+  // Refuse before anything else looks at the path. Returning here means no
+  // legacy lookup, no route match, no render and no prerender-cache write,
+  // which is what makes the 500 impossible rather than merely unlikely.
+  if (isUnroutablePath(pathname)) {
+    return withIndexingGuard(new NextResponse(null, { status: 400 }));
+  }
   // pathname stays percent-encoded for non-ASCII segments (confirmed
   // against Next.js 16.3 at runtime — see the Arabic-slug note below).
   // Several legacy SkinMedica sub-pages contain a literal "®" in their
