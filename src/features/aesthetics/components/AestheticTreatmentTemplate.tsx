@@ -5,6 +5,7 @@ import { Container } from "@/components/layout/Container";
 import { SectionTransition } from "@/components/layout/SectionTransition";
 import { Button } from "@/components/ui/button";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
+import { ImageKitImage } from "@/components/shared/ImageKitImage";
 import { MedicalWebPageSchema } from "@/components/shared/schema";
 import { FaqPageSchema } from "@/components/shared/schema";
 import { getBookingUrl } from "@/config/booking";
@@ -113,6 +114,26 @@ export function AestheticTreatmentTemplate({
 
         <h1 className="mt-4 text-display-1 font-heading lg:text-display-1-lg">{treatment.title[locale]}</h1>
         <p className="mt-4 text-body-lg text-text-secondary">{treatment.summary[locale]}</p>
+
+        {/* Lead image, present only when this entity has a real FeelStack
+            media assignment. ImageKitImage still decides, from the asset's own
+            status, whether real bytes or the FacetTile placeholder appear. */}
+        {treatment.image ? (
+          <ImageKitImage
+            path={treatment.image.path}
+            preset="treatment"
+            role={treatment.image.role}
+            status={treatment.image.status}
+            alt={treatment.image.alt}
+            caption={treatment.image.caption}
+            locale={locale}
+            width={treatment.image.width}
+            height={treatment.image.height}
+            sizes="(min-width: 768px) 48rem, 100vw"
+            className="mt-8 aspect-video rounded-lg"
+          />
+        ) : null}
+
 
         {treatment.serviceLocationNote ? (
           <div className="mt-4 flex items-start gap-2.5 rounded-md border border-border bg-surface px-4 py-3 text-sm text-text-secondary">

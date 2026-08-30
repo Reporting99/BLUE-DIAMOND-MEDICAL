@@ -1,7 +1,12 @@
 import type { Bilingual, FaqEntry } from "@/types/common";
+import type { ImageKitAsset } from "@/types/media";
 
 export interface AestheticConcern {
   id: string;
+  /** Lead image from this concern's FeelStack media assignment, if any. */
+  image?: ImageKitAsset;
+  /** Additional assigned imagery, in CMS order. Empty when none is assigned. */
+  gallery?: ImageKitAsset[];
   slug: string;
   slugAr: string;
   title: Bilingual;

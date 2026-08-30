@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { defineEntityContract, localizedBilingual, localizedBilingualList } from "@/lib/feelstack/adapters";
+import { resolveSlotGallery } from "@/lib/feelstack/media-slots";
 import type { ImageStatus } from "@/types/media";
 import type { Product, ProductDetail, ProductFaq } from "./types";
 
@@ -75,7 +76,25 @@ export type ProductFields = z.infer<typeof productFieldsSchema>;
 export const productCmsContract = defineEntityContract<ProductFields, Product>({
   contentType: "product",
   fields: productFieldsSchema,
-  adapt: ({ locale, title, fields: f, faqs, path }) => {
+  adapt: ({ locale, title, fields: f, faqs, path, media }) => {
+    /**
+     * Gallery for this product: every `productPrimary`/`productGallery`
+     * assignment in CMS order, or the typed `images` field when there is no
+     * assignment at all. Falling back wholesale (rather than merging) keeps a
+     * product from showing both its real photograph and the placeholder record
+     * that stood in for it.
+     */
+    const resolveProductImages = () => {
+      const assigned = resolveSlotGallery(media, ["productPrimary", "productGallery"]);
+      if (assigned.length) {
+        return assigned.map((m) => ({ path: m.path, status: m.status, alt: m.alt }));
+      }
+      return f.images.map((i) => ({
+        path: i.path,
+        status: i.status as ImageStatus,
+        alt: localizedBilingual(locale, i.alt),
+      }));
+    };
     const detail: ProductDetail = {
       overview: localizedBilingual(locale, f.overview),
       whatItIs: localizedBilingual(locale, f.what_it_is),
@@ -107,11 +126,12 @@ export const productCmsContract = defineEntityContract<ProductFields, Product>({
       concernIds: f.concern_ids ?? [],
       detail,
       priceCents: f.price_cents,
-      images: f.images.map((i) => ({
-        path: i.path,
-        status: i.status as ImageStatus,
-        alt: localizedBilingual(locale, i.alt),
-      })),
+      // Real media assignments come first, in CMS sort order, and the typed
+      // `images` field is what remains for products the import has not reached.
+      // A product with an assignment must not also render its stale hardcoded
+      // path, so the assignment REPLACES the field rather than prepending to
+      // it -- two images of the same product in one gallery is a content bug.
+      images: resolveProductImages(),
       approvalStatus: f.approval_status,
       // Verbatim source flag. Nothing downstream turns this into an Offer or a
       // schema.org availability value.

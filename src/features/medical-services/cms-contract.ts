@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { defineEntityContract, localizedBilingual, localizedBilingualList, adaptFaqs } from "@/lib/feelstack/adapters";
+import { resolveSlotImage } from "@/lib/feelstack/media-slots";
 import type { BookingChannel } from "@/config/booking";
 import type { MedicalServiceContent } from "./types";
 
@@ -60,7 +61,7 @@ export type MedicalServiceFields = z.infer<typeof medicalServiceFieldsSchema>;
 export const medicalServiceCmsContract = defineEntityContract<MedicalServiceFields, MedicalServiceContent>({
   contentType: "medical-service",
   fields: medicalServiceFieldsSchema,
-  adapt: ({ locale, title, fields, faqs, path }) => {
+  adapt: ({ locale, title, fields, faqs, path, media }) => {
     const f = fields;
     const service: MedicalServiceContent = {
       id: f.service_id,
@@ -90,6 +91,13 @@ export const medicalServiceCmsContract = defineEntityContract<MedicalServiceFiel
     }
     // First-class FAQs, already locale-filtered by the backend.
     if (faqs.length) service.faqs = adaptFaqs(locale, faqs);
+    // Lead image from the real media assignment. `hero` is the intended
+    // placement; `card` is accepted because FeelStack withholds assignments
+    // whose asset is not publishable, so a service can arrive with only the
+    // card image approved. No static fallback: a service with no assignment
+    // renders no image, exactly as it does today.
+    const image = resolveSlotImage({ media, slot: ["hero", "card"] });
+    if (image) service.image = image;
     return service;
   },
 });

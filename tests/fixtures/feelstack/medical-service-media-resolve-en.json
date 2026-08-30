@@ -1,0 +1,119 @@
+{
+    "type": "content_entry",
+    "status": "published",
+    "route": {
+        "id": "947e592f-0bc1-4d15-ba99-b5d571604b85",
+        "path": "/medical/eye-screening",
+        "locale": "en",
+        "requestedLocale": "en",
+        "resolvedLocale": "en",
+        "usedFallback": false,
+        "alternates": [
+            {
+                "locale": "ar",
+                "path": "/\u0627\u0644\u0631\u0639\u0627\u064a\u0629-\u0627\u0644\u0637\u0628\u064a\u0629/\u0641\u062d\u0635-\u0627\u0644\u0639\u064a\u0646"
+            },
+            {
+                "locale": "en",
+                "path": "/medical/eye-screening"
+            }
+        ],
+        "sectionId": null,
+        "updatedAt": "2026-08-23T10:41:58.961Z"
+    },
+    "data": {
+        "id": "be085cb6-ded9-4274-84a5-43e5d663f1ca",
+        "contentType": "medical-service",
+        "title": "Eye Disease Screening",
+        "fields": {
+            "summary": "A collaboration with Euclid Telehealth offering AHS-covered eye disease screening at our clinic \u2014 in keeping with our belief that prevention is better than cure.",
+            "service_id": "eye-screening",
+            "who_its_for": "All patients, especially diabetics and those with a family history of eye disease.",
+            "contact_note": "Euclid Telehealth patient support: patientsupport@euclidtelehealth.org or 1-800-511-5661.",
+            "whats_included": [
+                "A non-invasive, 20-minute eye disease screening",
+                "Euclid Telehealth on-site once a month",
+                "Early detection, prevention, and treatment guidance for vision loss"
+            ],
+            "booking_channel": "eye-screening",
+            "source_verified": true,
+            "how_appointments_work": "Based on your doctor's recommendation, Euclid Telehealth will contact you directly to schedule your screening."
+        },
+        "translationGroupId": "b135160c-f5ed-4828-af1a-a12a8efc74f7",
+        "publishedAt": "2026-08-23T10:41:58.961Z",
+        "updatedAt": "2026-08-30T04:29:21.321Z"
+    },
+    "seo": {
+        "title": "Eye Disease Screening",
+        "description": "A collaboration with Euclid Telehealth offering AHS-covered eye disease screening at our clinic \u2014 in keeping with our belief that prevention is better than cure"
+    },
+    "relations": {
+        "items": [],
+        "faqs": [
+            {
+                "id": "5bd554c5-1fa0-46db-86e8-d97011242123",
+                "key": "eye-screening-faq-1",
+                "question": "Is the eye disease screening covered by Alberta Health?",
+                "answer": "Yes \u2014 this screening is AHS-covered, provided through our collaboration with Euclid Telehealth."
+            },
+            {
+                "id": "ae139aec-37f0-47fc-9417-4d71dfb44594",
+                "key": "eye-screening-faq-2",
+                "question": "How do I get a screening appointment?",
+                "answer": "Your family doctor refers you based on clinical need; Euclid Telehealth then contacts you directly to schedule the visit, which takes place on-site at our clinic once a month."
+            },
+            {
+                "id": "a3c2185b-2ed4-41d7-9b11-0bfc4b02fa3b",
+                "key": "eye-screening-faq-3",
+                "question": "What does the screening involve?",
+                "answer": "It's a non-invasive screening that takes about 20 minutes, aimed at early detection of eye disease before symptoms appear."
+            },
+            {
+                "id": "0063501f-571d-437e-9861-dd5c7382476a",
+                "key": "eye-screening-faq-4",
+                "question": "Who should consider this screening?",
+                "answer": "It's available to all patients, and particularly relevant for people with diabetes or a family history of eye disease, since both are recognized risk factors for vision loss."
+            },
+            {
+                "id": "d9307986-fef1-4f78-910f-a61eae0bf0ee",
+                "key": "eye-screening-faq-5",
+                "question": "What happens if the screening finds something?",
+                "answer": "Euclid Telehealth provides guidance on next steps, which may include further testing or a referral, depending on what's found."
+            },
+            {
+                "id": "3d604bfe-ffe4-46e7-ac40-acd2f5caa7ca",
+                "key": "eye-screening-faq-6",
+                "question": "Who can I contact with questions about my screening?",
+                "answer": "Euclid Telehealth's patient support team handles screening-specific questions directly \u2014 see their contact details above."
+            }
+        ],
+        "sections": [],
+        "taxonomies": []
+    },
+    "media": [
+        {
+            "id": "55245148-b123-465e-b177-bba06d351b1e",
+            "path": "/blue-diamond/medical/eye-screening-hero.png",
+            "width": 1672,
+            "height": 941,
+            "aspectRatio": 1.776833,
+            "alt": {
+                "ar": "\u0641\u062d\u0635 \u0627\u0644\u0639\u064a\u0648\u0646 \u0641\u064a \u0628\u0644\u0648 \u062f\u0627\u064a\u0645\u0648\u0646\u062f \u0627\u0644\u0637\u0628\u064a\u0629",
+                "en": "Eye Screening at Blue Diamond Medical"
+            },
+            "caption": {
+                "ar": "\u0641\u062d\u0635 \u0634\u0627\u0645\u0644 \u0644\u0644\u0639\u064a\u0648\u0646 \u0641\u064a \u0628\u0644\u0648 \u062f\u0627\u064a\u0645\u0648\u0646\u062f \u0627\u0644\u0637\u0628\u064a\u0629.",
+                "en": "Comprehensive eye screening at Blue Diamond Medical."
+            },
+            "role": "card",
+            "slot": "card",
+            "approvalStatus": "approved",
+            "focalPoint": {
+                "x": 50,
+                "y": 40
+            },
+            "sortOrder": 0,
+            "localeMode": "shared"
+        }
+    ]
+}

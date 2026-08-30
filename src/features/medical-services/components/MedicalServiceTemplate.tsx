@@ -4,6 +4,7 @@ import { Container } from "@/components/layout/Container";
 import { SectionTransition } from "@/components/layout/SectionTransition";
 import { Button } from "@/components/ui/button";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
+import { ImageKitImage } from "@/components/shared/ImageKitImage";
 import { MedicalWebPageSchema } from "@/components/shared/schema";
 import { FaqPageSchema } from "@/components/shared/schema";
 import { getBookingUrl } from "@/config/booking";
@@ -69,6 +70,26 @@ export function MedicalServiceTemplate({
 
         <h1 className="mt-4 text-display-1 font-heading lg:text-display-1-lg">{service.title[locale]}</h1>
         <p className="mt-4 text-body-lg text-text-secondary">{service.summary[locale]}</p>
+
+        {/* Lead image, present only when this service has a real FeelStack
+            media assignment. Rendered through the single ImageKitImage entry
+            point, which still decides on the asset's own status whether real
+            bytes or the FacetTile placeholder appear. */}
+        {service.image ? (
+          <ImageKitImage
+            path={service.image.path}
+            preset="service"
+            role={service.image.role}
+            status={service.image.status}
+            alt={service.image.alt}
+            caption={service.image.caption}
+            locale={locale}
+            width={service.image.width}
+            height={service.image.height}
+            sizes="(min-width: 768px) 48rem, 100vw"
+            className="mt-8 aspect-video rounded-lg"
+          />
+        ) : null}
 
         {service.urgentCareNote ? (
           <div className="mt-6 flex items-start gap-3 rounded-md border border-destructive/30 bg-destructive-surface px-4 py-3 text-sm text-destructive">

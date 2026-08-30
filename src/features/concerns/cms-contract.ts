@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { defineEntityContract, localizedBilingual, adaptFaqs } from "@/lib/feelstack/adapters";
+import { resolveSlotImage, resolveSlotGallery } from "@/lib/feelstack/media-slots";
 import type { AestheticConcern } from "./types";
 
 /**
@@ -37,7 +38,7 @@ export type ConcernFields = z.infer<typeof concernFieldsSchema>;
 export const aestheticConcernCmsContract = defineEntityContract<ConcernFields, AestheticConcern>({
   contentType: "aesthetic-concern",
   fields: concernFieldsSchema,
-  adapt: ({ locale, title, fields: f, faqs, path }) => {
+  adapt: ({ locale, title, fields: f, faqs, path, media }) => {
     const concern: AestheticConcern = {
       id: f.concern_id,
       slug: path.replace(/^\/aesthetics\/concerns\//, ""),
@@ -58,6 +59,13 @@ export const aestheticConcernCmsContract = defineEntityContract<ConcernFields, A
     if (f.related_doctor_ids) concern.relatedDoctorIds = f.related_doctor_ids;
     if (f.corrected_from_source) concern.correctedFromSource = true;
     if (faqs.length) concern.faqs = adaptFaqs(locale, faqs);
+    // Imagery from this concern's real media assignments. `hero` is the lead;
+    // remaining `gallery` rows follow in CMS order. Nothing is synthesised —
+    // a concern with no assignment keeps rendering no imagery.
+    const lead = resolveSlotImage({ media, slot: ["hero", "gallery"] });
+    if (lead) concern.image = lead;
+    const gallery = resolveSlotGallery(media, ["gallery"]).filter((m) => m.id !== lead?.id);
+    if (gallery.length) concern.gallery = gallery;
     return concern;
   },
 });
