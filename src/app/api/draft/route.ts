@@ -41,7 +41,15 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: checked.error }, { status: checked.status });
   }
 
-  const routes = await previewRoutes(checked.locale);
+  // ALWAYS the English route list, whatever locale was requested.
+  //
+  // A preview link carries the English slug, and slug resolution matches
+  // against English paths. Fetching the requested locale's routes instead --
+  // as this did -- left the English filter with an empty set, so every non-EN
+  // record 404'd in production while the tests passed against a fixture that
+  // happened to hold both locales in one array. The localized path is then
+  // taken from `route.alternates` below, never built from the English slug.
+  const routes = await previewRoutes("en");
   if (routes.length === 0) {
     return NextResponse.json(
       { error: "Preview routes are unavailable." },
