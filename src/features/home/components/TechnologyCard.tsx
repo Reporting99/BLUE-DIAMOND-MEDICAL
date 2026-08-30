@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { ImageKitImage } from "@/components/shared/ImageKitImage";
+import { FacetTile } from "@/components/shared/FacetTile";
 import { getRoute } from "@/lib/routing";
 import { treatments } from "@/features/aesthetics/data/treatments";
 import type { Technology } from "@/features/technologies/types";
@@ -39,17 +39,7 @@ function TechnologyCard({
       className={`group flex flex-col gap-4 rounded-lg border border-white/10 bg-white/5 p-6 text-white transition-colors hover:border-white/30 ${size === "large" ? "lg:flex-row lg:items-center lg:gap-8" : ""} ${className}`}
     >
       <div className={`relative aspect-square overflow-hidden rounded-md bg-white/5 ${size === "large" ? "w-full lg:w-64 lg:shrink-0" : size === "small" ? "w-16 shrink-0" : "w-full"}`}>
-        <ImageKitImage
-          path={technology.id === "potenza" ? "/technologies/potenza-device.jpg" : `/technologies/${technology.id}-device.jpg`}
-          preset="technology"
-          role="technology"
-          status="pending"
-          alt={{ en: `${technology.title.en} device at Blue Diamond Medical`, ar: `جهاز ${technology.title.ar} في بلو دايموند الطبية` }}
-          locale={locale}
-          width={size === "large" ? 500 : 200}
-          height={size === "large" ? 500 : 200}
-          className="h-full w-full"
-        />
+        <FacetTile role="technology" alt={({ en: `${technology.title.en} device at Blue Diamond Medical`, ar: `جهاز ${technology.title.ar} في بلو دايموند الطبية` })[locale]} className="h-full w-full" />
       </div>
       <div className={size === "small" ? "flex flex-1 items-center justify-between gap-3" : ""}>
         <div>

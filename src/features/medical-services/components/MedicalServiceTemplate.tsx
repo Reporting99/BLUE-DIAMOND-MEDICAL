@@ -5,6 +5,7 @@ import { SectionTransition } from "@/components/layout/SectionTransition";
 import { Button } from "@/components/ui/button";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
 import { ImageKitImage } from "@/components/shared/ImageKitImage";
+import { cmsAlt } from "@/lib/feelstack/media-slots";
 import { MedicalWebPageSchema } from "@/components/shared/schema";
 import { FaqPageSchema } from "@/components/shared/schema";
 import { getBookingUrl } from "@/config/booking";
@@ -81,7 +82,15 @@ export function MedicalServiceTemplate({
             preset="service"
             role={service.image.role}
             status={service.image.status}
-            alt={service.image.alt}
+            // CMS alt wins. When the imported asset carries none, fall back to
+            // the entity's own title — factual and derived from the record this
+            // image is assigned to, never a guess about the photograph.
+            alt={
+              cmsAlt(service.image) ?? {
+                en: service.title.en || service.id,
+                ar: service.title.ar || service.id,
+              }
+            }
             caption={service.image.caption}
             locale={locale}
             width={service.image.width}

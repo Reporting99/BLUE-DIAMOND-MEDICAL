@@ -6,6 +6,7 @@ import { SectionTransition } from "@/components/layout/SectionTransition";
 import { Button } from "@/components/ui/button";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
 import { ImageKitImage } from "@/components/shared/ImageKitImage";
+import { cmsAlt } from "@/lib/feelstack/media-slots";
 import { MedicalWebPageSchema } from "@/components/shared/schema";
 import { FaqPageSchema } from "@/components/shared/schema";
 import { getBookingUrl } from "@/config/booking";
@@ -124,7 +125,12 @@ export function AestheticTreatmentTemplate({
             preset="treatment"
             role={treatment.image.role}
             status={treatment.image.status}
-            alt={treatment.image.alt}
+            alt={
+              cmsAlt(treatment.image) ?? {
+                en: treatment.title.en || treatment.id,
+                ar: treatment.title.ar || treatment.id,
+              }
+            }
             caption={treatment.image.caption}
             locale={locale}
             width={treatment.image.width}

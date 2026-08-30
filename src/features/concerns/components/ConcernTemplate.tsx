@@ -5,6 +5,7 @@ import { SectionTransition } from "@/components/layout/SectionTransition";
 import { Button } from "@/components/ui/button";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
 import { ImageKitImage } from "@/components/shared/ImageKitImage";
+import { cmsAlt } from "@/lib/feelstack/media-slots";
 import { MedicalWebPageSchema } from "@/components/shared/schema";
 import { FaqPageSchema } from "@/components/shared/schema";
 import { getBookingUrl } from "@/config/booking";
@@ -97,7 +98,12 @@ export function ConcernTemplate({ concern, locale }: { concern: AestheticConcern
             preset="concern"
             role={concern.image.role}
             status={concern.image.status}
-            alt={concern.image.alt}
+            alt={
+              cmsAlt(concern.image) ?? {
+                en: concern.title.en || concern.id,
+                ar: concern.title.ar || concern.id,
+              }
+            }
             caption={concern.image.caption}
             locale={locale}
             width={concern.image.width}

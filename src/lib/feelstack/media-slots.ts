@@ -169,6 +169,26 @@ export function resolveSlotGallery(
   return media.filter((item) => slots.includes(item.slot));
 }
 
+/**
+ * Alt text for a resolved asset, or `undefined` when the CMS has none.
+ *
+ * An imported asset can arrive with `alt: {en: "", ar: ""}` — the media library
+ * records alt text separately from the binary, and an import that never had a
+ * source alt column leaves both sides empty. Rendering that as `<img alt="">`
+ * is a WCAG 1.1.1 failure on meaningful imagery, so a caller that has a factual
+ * entity-derived alternative must be able to detect the gap and supply it.
+ *
+ * This does NOT invent alt text. It reports whether the CMS supplied any, and
+ * the caller decides — the only permitted substitute is a description derived
+ * from the entity the asset is assigned to (a doctor's name, a service title),
+ * never a guess about what the photograph depicts.
+ */
+export function cmsAlt(asset: { alt?: { en: string; ar: string } } | undefined) {
+  const alt = asset?.alt;
+  if (!alt) return undefined;
+  return alt.en.trim() || alt.ar.trim() ? alt : undefined;
+}
+
 /** First assignment matching any of `slot`, in the order given. */
 function firstAssigned(
   media: readonly ResolvedMedia[],

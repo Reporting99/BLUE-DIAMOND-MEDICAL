@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { ImageKitImage } from "@/components/shared/ImageKitImage";
+import { FacetTile } from "@/components/shared/FacetTile";
 import { getRoute } from "@/lib/routing";
 import type { Bilingual } from "@/types/common";
 import type { Locale } from "@/i18n/config";
@@ -25,7 +25,6 @@ function ServiceCard({
   long,
   ctaLabel,
   routeId,
-  imageId,
   locale,
   delay,
   className = "",
@@ -49,17 +48,7 @@ function ServiceCard({
       className={`group relative isolate flex flex-col overflow-hidden rounded-lg border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 lg:aspect-[4/5] lg:border-0 ${className}`}
     >
       <div className="relative aspect-[4/3] overflow-hidden lg:absolute lg:inset-0 lg:aspect-auto">
-        <ImageKitImage
-          path={`/medical/${imageId}.jpg`}
-          preset="service"
-          role="service"
-          status="pending"
-          alt={{ en: `${title.en} at Blue Diamond Medical`, ar: `${title.ar} في بلو دايموند الطبية` }}
-          locale={locale}
-          width={600}
-          height={450}
-          className="h-full w-full transition-opacity duration-[380ms] lg:group-hover:opacity-0 lg:group-focus-within:opacity-0"
-        />
+        <FacetTile role="service" alt={({ en: `${title.en} at Blue Diamond Medical`, ar: `${title.ar} في بلو دايموند الطبية` })[locale]} className="h-full w-full transition-opacity duration-[380ms] lg:group-hover:opacity-0 lg:group-focus-within:opacity-0" />
       </div>
 
       <div className="relative flex flex-1 flex-col gap-1.5 p-5 lg:absolute lg:inset-0 lg:z-10 lg:justify-end lg:text-white lg:transition-opacity lg:duration-[380ms] lg:group-hover:opacity-0 lg:group-focus-within:opacity-0">

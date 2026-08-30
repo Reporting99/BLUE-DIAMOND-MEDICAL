@@ -1,0 +1,781 @@
+{
+ "projectId": "d1a870a4-a514-4719-bf71-6cff26b18dcb",
+ "generatedAt": "2026-08-30T21:00:00Z",
+ "blockedBy": "Local execution policy denied the outbound write. No CMS mutation was attempted.",
+ "expectedAfter": {
+  "approved": 4,
+  "pending": 34,
+  "total": 38
+ },
+ "operationCount": 36,
+ "operations": [
+  {
+   "operation": "POST /admin/v1/projects/{projectId}/media/register-existing",
+   "intent": "REVERT_BULK_APPROVAL",
+   "entityType": "media_asset",
+   "entityId": "acffea33-7624-47b1-92bc-99eb06f2dedd",
+   "externalId": "/blue-diamond/shared/legacy/c9dc18b80a88-AMP_4265_Social_TempSure-Vitalia-2021-Winter-A.jpg",
+   "locale": "shared",
+   "route": null,
+   "translationGroupId": null,
+   "slot": null,
+   "assetId": "acffea33-7624-47b1-92bc-99eb06f2dedd",
+   "assetPath": "/blue-diamond/shared/legacy/c9dc18b80a88-AMP_4265_Social_TempSure-Vitalia-2021-Winter-A.jpg",
+   "body": {
+    "path": "/blue-diamond/shared/legacy/c9dc18b80a88-AMP_4265_Social_TempSure-Vitalia-2021-Winter-A.jpg",
+    "approvalStatus": "pending"
+   },
+   "evidence": "approval introduced solely by the bulk event in the 20:56:55-20:57:02Z window; pre-event state was pending (census snapshot 20:35Z)",
+   "reason": "Manufacturer advertisement with a burnt-in promotional claim. Publishing it adopts the claim. The device treats an intimate indication — the slogan is not appropriate clinic-author",
+   "idempotencyKey": "206a9861f68f74e710da54f52ef6a1cb",
+   "requiredPermission": "media.upload"
+  },
+  {
+   "operation": "POST /admin/v1/projects/{projectId}/media/register-existing",
+   "intent": "REVERT_BULK_APPROVAL",
+   "entityType": "media_asset",
+   "entityId": "dcdeb867-b751-4654-b79e-0948945079ad",
+   "externalId": "/blue-diamond/shared/legacy/85de6a3890f3-2193658276.jpg",
+   "locale": "shared",
+   "route": null,
+   "translationGroupId": null,
+   "slot": null,
+   "assetId": "dcdeb867-b751-4654-b79e-0948945079ad",
+   "assetPath": "/blue-diamond/shared/legacy/85de6a3890f3-2193658276.jpg",
+   "body": {
+    "path": "/blue-diamond/shared/legacy/85de6a3890f3-2193658276.jpg",
+    "approvalStatus": "pending"
+   },
+   "evidence": "approval introduced solely by the bulk event in the 20:56:55-20:57:02Z window; pre-event state was pending (census snapshot 20:35Z)",
+   "reason": "Generic stock portrait with no depicted connection to the Ultra treatment. Confirm or replace.",
+   "idempotencyKey": "d42948125602bcfea10b13cc5cbb853a",
+   "requiredPermission": "media.upload"
+  },
+  {
+   "operation": "POST /admin/v1/projects/{projectId}/media/register-existing",
+   "intent": "REVERT_BULK_APPROVAL",
+   "entityType": "media_asset",
+   "entityId": "c325c32d-2b42-4fa2-9c2a-6610aff78b38",
+   "externalId": "/blue-diamond/shared/legacy/032e5ff1a72f-marketing_materials_BA-Elite-C-Nanni-Pigment-P.jpg",
+   "locale": "shared",
+   "route": null,
+   "translationGroupId": null,
+   "slot": null,
+   "assetId": "c325c32d-2b42-4fa2-9c2a-6610aff78b38",
+   "assetPath": "/blue-diamond/shared/legacy/032e5ff1a72f-marketing_materials_BA-Elite-C-Nanni-Pigment-P.jpg",
+   "body": {
+    "path": "/blue-diamond/shared/legacy/032e5ff1a72f-marketing_materials_BA-Elite-C-Nanni-Pigment-P.jpg",
+    "approvalStatus": "pending"
+   },
+   "evidence": "approval introduced solely by the bulk event in the 20:56:55-20:57:02Z window; pre-event state was pending (census snapshot 20:35Z)",
+   "reason": "Third-party clinic's patient photo; before/after composite. Publishing implies Blue Diamond's own results. No consent, no licence.",
+   "idempotencyKey": "c6048293465e0a89a354b96f508be86c",
+   "requiredPermission": "media.upload"
+  },
+  {
+   "operation": "POST /admin/v1/projects/{projectId}/media/register-existing",
+   "intent": "REVERT_BULK_APPROVAL",
+   "entityType": "media_asset",
+   "entityId": "1d5fcd03-8e1c-475e-8f35-20610cff2c4e",
+   "externalId": "/blue-diamond/shared/legacy/4401e594af45-marketing_materials_BA-Elite-C-Arroyo-Pigment-.jpg",
+   "locale": "shared",
+   "route": null,
+   "translationGroupId": null,
+   "slot": null,
+   "assetId": "1d5fcd03-8e1c-475e-8f35-20610cff2c4e",
+   "assetPath": "/blue-diamond/shared/legacy/4401e594af45-marketing_materials_BA-Elite-C-Arroyo-Pigment-.jpg",
+   "body": {
+    "path": "/blue-diamond/shared/legacy/4401e594af45-marketing_materials_BA-Elite-C-Arroyo-Pigment-.jpg",
+    "approvalStatus": "pending"
+   },
+   "evidence": "approval introduced solely by the bulk event in the 20:56:55-20:57:02Z window; pre-event state was pending (census snapshot 20:35Z)",
+   "reason": "Third-party clinic's patient; before/after composite.",
+   "idempotencyKey": "650f8063a5d15a947a00ae4a2326e8a8",
+   "requiredPermission": "media.upload"
+  },
+  {
+   "operation": "POST /admin/v1/projects/{projectId}/media/register-existing",
+   "intent": "REVERT_BULK_APPROVAL",
+   "entityType": "media_asset",
+   "entityId": "be44dd9f-7299-46de-92f6-4c247b8cda53",
+   "externalId": "/blue-diamond/shared/legacy/32a08f5eef7e-marketing_materials_BA-Elite-C-Arroyo-LegVeins.jpg",
+   "locale": "shared",
+   "route": null,
+   "translationGroupId": null,
+   "slot": null,
+   "assetId": "be44dd9f-7299-46de-92f6-4c247b8cda53",
+   "assetPath": "/blue-diamond/shared/legacy/32a08f5eef7e-marketing_materials_BA-Elite-C-Arroyo-LegVeins.jpg",
+   "body": {
+    "path": "/blue-diamond/shared/legacy/32a08f5eef7e-marketing_materials_BA-Elite-C-Arroyo-LegVeins.jpg",
+    "approvalStatus": "pending"
+   },
+   "evidence": "approval introduced solely by the bulk event in the 20:56:55-20:57:02Z window; pre-event state was pending (census snapshot 20:35Z)",
+   "reason": "Third-party clinic's patient; before/after composite implying a 5-treatment outcome.",
+   "idempotencyKey": "704d37e1b94d395224005c8aeb421366",
+   "requiredPermission": "media.upload"
+  },
+  {
+   "operation": "POST /admin/v1/projects/{projectId}/media/register-existing",
+   "intent": "REVERT_BULK_APPROVAL",
+   "entityType": "media_asset",
+   "entityId": "ecc26d6b-1476-4c23-bf56-f4da696b6752",
+   "externalId": "/blue-diamond/shared/legacy/b4ae0ca49cbd-Artboard-30-80-ece906b.jpg",
+   "locale": "shared",
+   "route": null,
+   "translationGroupId": null,
+   "slot": null,
+   "assetId": "ecc26d6b-1476-4c23-bf56-f4da696b6752",
+   "assetPath": "/blue-diamond/shared/legacy/b4ae0ca49cbd-Artboard-30-80-ece906b.jpg",
+   "body": {
+    "path": "/blue-diamond/shared/legacy/b4ae0ca49cbd-Artboard-30-80-ece906b.jpg",
+    "approvalStatus": "pending"
+   },
+   "evidence": "approval introduced solely by the bulk event in the 20:56:55-20:57:02Z window; pre-event state was pending (census snapshot 20:35Z)",
+   "reason": "Before/after composite. Unknown patient, no consent evidence.",
+   "idempotencyKey": "86078643dfed8cacc9ae6247881c447f",
+   "requiredPermission": "media.upload"
+  },
+  {
+   "operation": "POST /admin/v1/projects/{projectId}/media/register-existing",
+   "intent": "REVERT_BULK_APPROVAL",
+   "entityType": "media_asset",
+   "entityId": "fd1a2264-03d4-4f46-a0d4-c100a2336c83",
+   "externalId": "/blue-diamond/shared/legacy/b9d162361abd-blob-0f3264e.jpg",
+   "locale": "shared",
+   "route": null,
+   "translationGroupId": null,
+   "slot": null,
+   "assetId": "fd1a2264-03d4-4f46-a0d4-c100a2336c83",
+   "assetPath": "/blue-diamond/shared/legacy/b9d162361abd-blob-0f3264e.jpg",
+   "body": {
+    "path": "/blue-diamond/shared/legacy/b9d162361abd-blob-0f3264e.jpg",
+    "approvalStatus": "pending"
+   },
+   "evidence": "approval introduced solely by the bulk event in the 20:56:55-20:57:02Z window; pre-event state was pending (census snapshot 20:35Z)",
+   "reason": "Before/after composite of an IDENTIFIABLE PATIENT with only partial redaction. Highest privacy risk in the batch.",
+   "idempotencyKey": "4280e829beb67f7548f07ea381204ec7",
+   "requiredPermission": "media.upload"
+  },
+  {
+   "operation": "POST /admin/v1/projects/{projectId}/media/register-existing",
+   "intent": "RETAIN_APPROVAL_AND_SET_ALT",
+   "entityType": "media_asset",
+   "entityId": "fa9f759a-b668-4196-a0ab-7613300afe68",
+   "externalId": "/blue-diamond/shared/legacy/b285b18977bb-CynoSure_3260_22881-edit-fusion-1-1-.jpg",
+   "locale": "shared",
+   "route": null,
+   "translationGroupId": null,
+   "slot": null,
+   "assetId": "fa9f759a-b668-4196-a0ab-7613300afe68",
+   "assetPath": "/blue-diamond/shared/legacy/b285b18977bb-CynoSure_3260_22881-edit-fusion-1-1-.jpg",
+   "body": {
+    "path": "/blue-diamond/shared/legacy/b285b18977bb-CynoSure_3260_22881-edit-fusion-1-1-.jpg",
+    "approvalStatus": "approved",
+    "alt": {
+     "en": "Clinician holding a micro-needling handpiece beside a patient",
+     "ar": "اختصاصية تمسك بجهاز الوخز الدقيق بجانب مريضة"
+    }
+   },
+   "evidence": "content-reviewed APPROVE; alt text is factual and describes only what is visible",
+   "reason": "Manufacturer stock: no claims text, no before/after, no identifiable patient distress. Licence unverified — see the standing caveat.",
+   "idempotencyKey": "21edccfbf34295e4fdebbd769f305860",
+   "requiredPermission": "media.upload"
+  },
+  {
+   "operation": "POST /admin/v1/projects/{projectId}/media/register-existing",
+   "intent": "REVERT_BULK_APPROVAL",
+   "entityType": "media_asset",
+   "entityId": "a3a36d66-d2d6-48b2-8aa1-6ce42a7f022f",
+   "externalId": "/blue-diamond/shared/legacy/0552cfcc2ee8-Potenza-BA9-1--e554e12.jpg",
+   "locale": "shared",
+   "route": null,
+   "translationGroupId": null,
+   "slot": null,
+   "assetId": "a3a36d66-d2d6-48b2-8aa1-6ce42a7f022f",
+   "assetPath": "/blue-diamond/shared/legacy/0552cfcc2ee8-Potenza-BA9-1--e554e12.jpg",
+   "body": {
+    "path": "/blue-diamond/shared/legacy/0552cfcc2ee8-Potenza-BA9-1--e554e12.jpg",
+    "approvalStatus": "pending"
+   },
+   "evidence": "approval introduced solely by the bulk event in the 20:56:55-20:57:02Z window; pre-event state was pending (census snapshot 20:35Z)",
+   "reason": "Third-party clinic's patient. ALSO A CONTENT MISMATCH: image shows facial acne, not razor bumps/pseudofolliculitis.",
+   "idempotencyKey": "2cca08900b8124cd4e3939ef1b28b5fe",
+   "requiredPermission": "media.upload"
+  },
+  {
+   "operation": "POST /admin/v1/projects/{projectId}/media/register-existing",
+   "intent": "REVERT_BULK_APPROVAL",
+   "entityType": "media_asset",
+   "entityId": "69cf6270-2bb4-4758-b6a6-ad91155b9abb",
+   "externalId": "/blue-diamond/shared/legacy/b9caaf08bff8-TempSure.jpg",
+   "locale": "shared",
+   "route": null,
+   "translationGroupId": null,
+   "slot": null,
+   "assetId": "69cf6270-2bb4-4758-b6a6-ad91155b9abb",
+   "assetPath": "/blue-diamond/shared/legacy/b9caaf08bff8-TempSure.jpg",
+   "body": {
+    "path": "/blue-diamond/shared/legacy/b9caaf08bff8-TempSure.jpg",
+    "approvalStatus": "pending"
+   },
+   "evidence": "approval introduced solely by the bulk event in the 20:56:55-20:57:02Z window; pre-event state was pending (census snapshot 20:35Z)",
+   "reason": "Filename references the device but the image shows only a model. Match is thematic — confirm or replace with equipment photography.",
+   "idempotencyKey": "7667c79b0850c70e04e695347d579c06",
+   "requiredPermission": "media.upload"
+  },
+  {
+   "operation": "POST /admin/v1/projects/{projectId}/media/register-existing",
+   "intent": "REVERT_BULK_APPROVAL",
+   "entityType": "media_asset",
+   "entityId": "8bcc294a-d7b4-4afe-9543-919d1eaef90b",
+   "externalId": "/blue-diamond/shared/legacy/1f77e327caf9-2195655978.jpg",
+   "locale": "shared",
+   "route": null,
+   "translationGroupId": null,
+   "slot": null,
+   "assetId": "8bcc294a-d7b4-4afe-9543-919d1eaef90b",
+   "assetPath": "/blue-diamond/shared/legacy/1f77e327caf9-2195655978.jpg",
+   "body": {
+    "path": "/blue-diamond/shared/legacy/1f77e327caf9-2195655978.jpg",
+    "approvalStatus": "pending"
+   },
+   "evidence": "approval introduced solely by the bulk event in the 20:56:55-20:57:02Z window; pre-event state was pending (census snapshot 20:35Z)",
+   "reason": "Generic stock; licence unverified. Do not caption as hair loss — that would assert a diagnosis.",
+   "idempotencyKey": "a7c953d1871b8e4b41ffa2feab058733",
+   "requiredPermission": "media.upload"
+  },
+  {
+   "operation": "POST /admin/v1/projects/{projectId}/media/register-existing",
+   "intent": "REVERT_BULK_APPROVAL",
+   "entityType": "media_asset",
+   "entityId": "98de1b72-421d-4285-88cc-ebda5eca6ee4",
+   "externalId": "/blue-diamond/shared/legacy/c8c1c334d638-blob-3ecd52a.png",
+   "locale": "shared",
+   "route": null,
+   "translationGroupId": null,
+   "slot": null,
+   "assetId": "98de1b72-421d-4285-88cc-ebda5eca6ee4",
+   "assetPath": "/blue-diamond/shared/legacy/c8c1c334d638-blob-3ecd52a.png",
+   "body": {
+    "path": "/blue-diamond/shared/legacy/c8c1c334d638-blob-3ecd52a.png",
+    "approvalStatus": "pending"
+   },
+   "evidence": "approval introduced solely by the bulk event in the 20:56:55-20:57:02Z window; pre-event state was pending (census snapshot 20:35Z)",
+   "reason": "THIRD-PARTY TRADEMARK. Only publish where the clinic factually states it operates Cynosure equipment, and only with permission.",
+   "idempotencyKey": "0dfe77d56d28dc95f6271842659e6a92",
+   "requiredPermission": "media.upload"
+  },
+  {
+   "operation": "POST /admin/v1/projects/{projectId}/media/register-existing",
+   "intent": "REVERT_BULK_APPROVAL",
+   "entityType": "media_asset",
+   "entityId": "3239cc3e-0885-4f54-87f6-b12b23191b85",
+   "externalId": "/blue-diamond/shared/legacy/74eee19ab829-rs-w_388-h_388-cg_true.jpg",
+   "locale": "shared",
+   "route": null,
+   "translationGroupId": null,
+   "slot": null,
+   "assetId": "3239cc3e-0885-4f54-87f6-b12b23191b85",
+   "assetPath": "/blue-diamond/shared/legacy/74eee19ab829-rs-w_388-h_388-cg_true.jpg",
+   "body": {
+    "path": "/blue-diamond/shared/legacy/74eee19ab829-rs-w_388-h_388-cg_true.jpg",
+    "approvalStatus": "pending"
+   },
+   "evidence": "approval introduced solely by the bulk event in the 20:56:55-20:57:02Z window; pre-event state was pending (census snapshot 20:35Z)",
+   "reason": "Clinic's own staff photograph, identity self-evident from the image. No assignment exists — see the gaps report.",
+   "idempotencyKey": "9aac5edac1366c44c1f5c943c656ce93",
+   "requiredPermission": "media.upload"
+  },
+  {
+   "operation": "POST /admin/v1/projects/{projectId}/media/register-existing",
+   "intent": "REVERT_BULK_APPROVAL",
+   "entityType": "media_asset",
+   "entityId": "5dafe49a-98e8-4356-aefd-af64f102f2b0",
+   "externalId": "/blue-diamond/shared/legacy/9afdb22eae69-blob-69cf67a.png",
+   "locale": "shared",
+   "route": null,
+   "translationGroupId": null,
+   "slot": null,
+   "assetId": "5dafe49a-98e8-4356-aefd-af64f102f2b0",
+   "assetPath": "/blue-diamond/shared/legacy/9afdb22eae69-blob-69cf67a.png",
+   "body": {
+    "path": "/blue-diamond/shared/legacy/9afdb22eae69-blob-69cf67a.png",
+    "approvalStatus": "pending"
+   },
+   "evidence": "approval introduced solely by the bulk event in the 20:56:55-20:57:02Z window; pre-event state was pending (census snapshot 20:35Z)",
+   "reason": "Empty asset — almost certainly a scrape artefact. Nothing to describe, so no alt text can be written. Candidate for deletion.",
+   "idempotencyKey": "ce6172ba09af99382e7dce4ff8918c87",
+   "requiredPermission": "media.upload"
+  },
+  {
+   "operation": "POST /admin/v1/projects/{projectId}/media/register-existing",
+   "intent": "REVERT_BULK_APPROVAL",
+   "entityType": "media_asset",
+   "entityId": "0b8aab1b-f8da-4ab1-96bf-0588c82d7676",
+   "externalId": "/blue-diamond/shared/legacy/5fc56004407b-rs-w_388-h_388-cg_true-m.jpg",
+   "locale": "shared",
+   "route": null,
+   "translationGroupId": null,
+   "slot": null,
+   "assetId": "0b8aab1b-f8da-4ab1-96bf-0588c82d7676",
+   "assetPath": "/blue-diamond/shared/legacy/5fc56004407b-rs-w_388-h_388-cg_true-m.jpg",
+   "body": {
+    "path": "/blue-diamond/shared/legacy/5fc56004407b-rs-w_388-h_388-cg_true-m.jpg",
+    "approvalStatus": "pending"
+   },
+   "evidence": "approval introduced solely by the bulk event in the 20:56:55-20:57:02Z window; pre-event state was pending (census snapshot 20:35Z)",
+   "reason": "Duplicate crop of an already-assigned portrait. Prefer the larger original (view 03); do not assign both to the same slot.",
+   "idempotencyKey": "d950a28e5bbc87cbbfd750e040831bb3",
+   "requiredPermission": "media.upload"
+  },
+  {
+   "operation": "POST /admin/v1/projects/{projectId}/media/register-existing",
+   "intent": "REVERT_BULK_APPROVAL",
+   "entityType": "media_asset",
+   "entityId": "97aecb9f-d90b-4cba-8e82-cc7abafbc49d",
+   "externalId": "/blue-diamond/shared/legacy/a9428b86f341-PRD-1408-Ultra-Skin-Solutions-BNAs-Format-AMPS.jpg",
+   "locale": "shared",
+   "route": null,
+   "translationGroupId": null,
+   "slot": null,
+   "assetId": "97aecb9f-d90b-4cba-8e82-cc7abafbc49d",
+   "assetPath": "/blue-diamond/shared/legacy/a9428b86f341-PRD-1408-Ultra-Skin-Solutions-BNAs-Format-AMPS.jpg",
+   "body": {
+    "path": "/blue-diamond/shared/legacy/a9428b86f341-PRD-1408-Ultra-Skin-Solutions-BNAs-Format-AMPS.jpg",
+    "approvalStatus": "pending"
+   },
+   "evidence": "approval introduced solely by the bulk event in the 20:56:55-20:57:02Z window; pre-event state was pending (census snapshot 20:35Z)",
+   "reason": "Third-party clinic's patient inside a manufacturer before/after advertisement.",
+   "idempotencyKey": "ec0c42503b43d7e6cafb897bcfc5aff6",
+   "requiredPermission": "media.upload"
+  },
+  {
+   "operation": "POST /admin/v1/projects/{projectId}/media/register-existing",
+   "intent": "REVERT_BULK_APPROVAL",
+   "entityType": "media_asset",
+   "entityId": "cc43caa5-5aeb-4435-abf0-b71f090b3210",
+   "externalId": "/blue-diamond/shared/legacy/34ef04b9084d-loose-skin.jpg",
+   "locale": "shared",
+   "route": null,
+   "translationGroupId": null,
+   "slot": null,
+   "assetId": "cc43caa5-5aeb-4435-abf0-b71f090b3210",
+   "assetPath": "/blue-diamond/shared/legacy/34ef04b9084d-loose-skin.jpg",
+   "body": {
+    "path": "/blue-diamond/shared/legacy/34ef04b9084d-loose-skin.jpg",
+    "approvalStatus": "pending"
+   },
+   "evidence": "approval introduced solely by the bulk event in the 20:56:55-20:57:02Z window; pre-event state was pending (census snapshot 20:35Z)",
+   "reason": "Before/after composite with burnt-in labels. Unknown patient, no consent evidence, no attribution.",
+   "idempotencyKey": "d4be708fe598d5a93cfab821e7cbf69e",
+   "requiredPermission": "media.upload"
+  },
+  {
+   "operation": "POST /admin/v1/projects/{projectId}/media/register-existing",
+   "intent": "REVERT_BULK_APPROVAL",
+   "entityType": "media_asset",
+   "entityId": "0533fd83-bfa1-43b4-86ed-4f8f43d21309",
+   "externalId": "/blue-diamond/shared/legacy/497e5e99856f-Laser.jpg",
+   "locale": "shared",
+   "route": null,
+   "translationGroupId": null,
+   "slot": null,
+   "assetId": "0533fd83-bfa1-43b4-86ed-4f8f43d21309",
+   "assetPath": "/blue-diamond/shared/legacy/497e5e99856f-Laser.jpg",
+   "body": {
+    "path": "/blue-diamond/shared/legacy/497e5e99856f-Laser.jpg",
+    "approvalStatus": "pending"
+   },
+   "evidence": "approval introduced solely by the bulk event in the 20:56:55-20:57:02Z window; pre-event state was pending (census snapshot 20:35Z)",
+   "reason": "Generic model portrait with no visible connection to laser skin treatment. Match is thematic only — confirm this is the intended hero or replace.",
+   "idempotencyKey": "5decfc9fd7afb96c94fe4d010bac243a",
+   "requiredPermission": "media.upload"
+  },
+  {
+   "operation": "POST /admin/v1/projects/{projectId}/media/register-existing",
+   "intent": "REVERT_BULK_APPROVAL",
+   "entityType": "media_asset",
+   "entityId": "82fece0b-24db-4ed3-b0df-d9accf40d93e",
+   "externalId": "/blue-diamond/shared/legacy/668422217736-blob-7fba277.png",
+   "locale": "shared",
+   "route": null,
+   "translationGroupId": null,
+   "slot": null,
+   "assetId": "82fece0b-24db-4ed3-b0df-d9accf40d93e",
+   "assetPath": "/blue-diamond/shared/legacy/668422217736-blob-7fba277.png",
+   "body": {
+    "path": "/blue-diamond/shared/legacy/668422217736-blob-7fba277.png",
+    "approvalStatus": "pending"
+   },
+   "evidence": "approval introduced solely by the bulk event in the 20:56:55-20:57:02Z window; pre-event state was pending (census snapshot 20:35Z)",
+   "reason": "Generic fashion/stock image; nothing in it depicts hair removal. Confirm intent or replace with an equipment or clinic photograph.",
+   "idempotencyKey": "dd045d99dac6eaa3397890beb7fe0c91",
+   "requiredPermission": "media.upload"
+  },
+  {
+   "operation": "POST /admin/v1/projects/{projectId}/media/register-existing",
+   "intent": "REVERT_BULK_APPROVAL",
+   "entityType": "media_asset",
+   "entityId": "c32c3e2d-b595-49b3-b796-00f65566a743",
+   "externalId": "/blue-diamond/shared/legacy/449d1f7553e2-blob-557c03e.jpg",
+   "locale": "shared",
+   "route": null,
+   "translationGroupId": null,
+   "slot": null,
+   "assetId": "c32c3e2d-b595-49b3-b796-00f65566a743",
+   "assetPath": "/blue-diamond/shared/legacy/449d1f7553e2-blob-557c03e.jpg",
+   "body": {
+    "path": "/blue-diamond/shared/legacy/449d1f7553e2-blob-557c03e.jpg",
+    "approvalStatus": "pending"
+   },
+   "evidence": "approval introduced solely by the bulk event in the 20:56:55-20:57:02Z window; pre-event state was pending (census snapshot 20:35Z)",
+   "reason": "Before/after composite. Unknown patient, no consent evidence.",
+   "idempotencyKey": "d2facea4f78d3b577a7df197dcb40b3c",
+   "requiredPermission": "media.upload"
+  },
+  {
+   "operation": "POST /admin/v1/projects/{projectId}/media/register-existing",
+   "intent": "REVERT_BULK_APPROVAL",
+   "entityType": "media_asset",
+   "entityId": "b96eaa7f-b44a-4a8b-8689-b98b0dd0123b",
+   "externalId": "/blue-diamond/shared/legacy/f9ed951bc99f-blob-37f774f.jpg",
+   "locale": "shared",
+   "route": null,
+   "translationGroupId": null,
+   "slot": null,
+   "assetId": "b96eaa7f-b44a-4a8b-8689-b98b0dd0123b",
+   "assetPath": "/blue-diamond/shared/legacy/f9ed951bc99f-blob-37f774f.jpg",
+   "body": {
+    "path": "/blue-diamond/shared/legacy/f9ed951bc99f-blob-37f774f.jpg",
+    "approvalStatus": "pending"
+   },
+   "evidence": "approval introduced solely by the bulk event in the 20:56:55-20:57:02Z window; pre-event state was pending (census snapshot 20:35Z)",
+   "reason": "Before/after composite of a partly-identifiable patient. ALSO A CONTENT MISMATCH: the image shows acne/redness, not dry skin.",
+   "idempotencyKey": "e8b5502953becb4716eda118884878f9",
+   "requiredPermission": "media.upload"
+  },
+  {
+   "operation": "POST /admin/v1/projects/{projectId}/media/register-existing",
+   "intent": "REVERT_BULK_APPROVAL",
+   "entityType": "media_asset",
+   "entityId": "96665966-76a5-4736-ba48-0820bfb74420",
+   "externalId": "/blue-diamond/shared/legacy/3c02744d3973-blob-51390b6.jpg",
+   "locale": "shared",
+   "route": null,
+   "translationGroupId": null,
+   "slot": null,
+   "assetId": "96665966-76a5-4736-ba48-0820bfb74420",
+   "assetPath": "/blue-diamond/shared/legacy/3c02744d3973-blob-51390b6.jpg",
+   "body": {
+    "path": "/blue-diamond/shared/legacy/3c02744d3973-blob-51390b6.jpg",
+    "approvalStatus": "pending"
+   },
+   "evidence": "approval introduced solely by the bulk event in the 20:56:55-20:57:02Z window; pre-event state was pending (census snapshot 20:35Z)",
+   "reason": "Third-party clinic's patient; before/after composite. Same subject as view 02.",
+   "idempotencyKey": "c162b55f449aab742e3f60fa4fd173c2",
+   "requiredPermission": "media.upload"
+  },
+  {
+   "operation": "POST /admin/v1/projects/{projectId}/media/register-existing",
+   "intent": "REVERT_BULK_APPROVAL",
+   "entityType": "media_asset",
+   "entityId": "f4c73a19-a2bf-43ae-9d90-4e1311d89c59",
+   "externalId": "/blue-diamond/shared/legacy/f93e1ce7d2a1-blob-d49e23c.jpg",
+   "locale": "shared",
+   "route": null,
+   "translationGroupId": null,
+   "slot": null,
+   "assetId": "f4c73a19-a2bf-43ae-9d90-4e1311d89c59",
+   "assetPath": "/blue-diamond/shared/legacy/f93e1ce7d2a1-blob-d49e23c.jpg",
+   "body": {
+    "path": "/blue-diamond/shared/legacy/f93e1ce7d2a1-blob-d49e23c.jpg",
+    "approvalStatus": "pending"
+   },
+   "evidence": "approval introduced solely by the bulk event in the 20:56:55-20:57:02Z window; pre-event state was pending (census snapshot 20:35Z)",
+   "reason": "Before/after composite of an identifiable patient with no redaction and no consent evidence.",
+   "idempotencyKey": "42c02636d952e602668265cb8c72d725",
+   "requiredPermission": "media.upload"
+  },
+  {
+   "operation": "POST /admin/v1/projects/{projectId}/media/register-existing",
+   "intent": "REVERT_BULK_APPROVAL",
+   "entityType": "media_asset",
+   "entityId": "68fc0024-1adc-4227-90dd-314c7c654c54",
+   "externalId": "/blue-diamond/shared/legacy/942071178e88-blob-3a0205c.jpg",
+   "locale": "shared",
+   "route": null,
+   "translationGroupId": null,
+   "slot": null,
+   "assetId": "68fc0024-1adc-4227-90dd-314c7c654c54",
+   "assetPath": "/blue-diamond/shared/legacy/942071178e88-blob-3a0205c.jpg",
+   "body": {
+    "path": "/blue-diamond/shared/legacy/942071178e88-blob-3a0205c.jpg",
+    "approvalStatus": "pending"
+   },
+   "evidence": "approval introduced solely by the bulk event in the 20:56:55-20:57:02Z window; pre-event state was pending (census snapshot 20:35Z)",
+   "reason": "THIRD-PARTY TRADEMARK. Only publish with the PCN's permission and only where the partnership is factually described.",
+   "idempotencyKey": "d7f4f2246489105f91a0cfc07edaa50d",
+   "requiredPermission": "media.upload"
+  },
+  {
+   "operation": "POST /admin/v1/projects/{projectId}/media/register-existing",
+   "intent": "REVERT_BULK_APPROVAL",
+   "entityType": "media_asset",
+   "entityId": "c46684ca-6195-438c-9351-3e3fc1d5d67f",
+   "externalId": "/blue-diamond/shared/legacy/ba25b0e06455-blob-7cc2b3d.png",
+   "locale": "shared",
+   "route": null,
+   "translationGroupId": null,
+   "slot": null,
+   "assetId": "c46684ca-6195-438c-9351-3e3fc1d5d67f",
+   "assetPath": "/blue-diamond/shared/legacy/ba25b0e06455-blob-7cc2b3d.png",
+   "body": {
+    "path": "/blue-diamond/shared/legacy/ba25b0e06455-blob-7cc2b3d.png",
+    "approvalStatus": "pending"
+   },
+   "evidence": "approval introduced solely by the bulk event in the 20:56:55-20:57:02Z window; pre-event state was pending (census snapshot 20:35Z)",
+   "reason": "IDENTITY NOT CONFIRMED. Must be positively identified against the roster before any assignment.",
+   "idempotencyKey": "f37c91004d795f733fd36c8003e7227a",
+   "requiredPermission": "media.upload"
+  },
+  {
+   "operation": "POST /admin/v1/projects/{projectId}/media/register-existing",
+   "intent": "REVERT_BULK_APPROVAL",
+   "entityType": "media_asset",
+   "entityId": "b3cc6605-72c4-4ede-8a45-f9f3ca300154",
+   "externalId": "/blue-diamond/shared/legacy/5e943a11fef2-WhatsApp-Image-2024-12-30-at-17.06.09.jpg",
+   "locale": "shared",
+   "route": null,
+   "translationGroupId": null,
+   "slot": null,
+   "assetId": "b3cc6605-72c4-4ede-8a45-f9f3ca300154",
+   "assetPath": "/blue-diamond/shared/legacy/5e943a11fef2-WhatsApp-Image-2024-12-30-at-17.06.09.jpg",
+   "body": {
+    "path": "/blue-diamond/shared/legacy/5e943a11fef2-WhatsApp-Image-2024-12-30-at-17.06.09.jpg",
+    "approvalStatus": "pending"
+   },
+   "evidence": "approval introduced solely by the bulk event in the 20:56:55-20:57:02Z window; pre-event state was pending (census snapshot 20:35Z)",
+   "reason": "IDENTITY NOT CONFIRMED. Must be positively identified against the roster before any assignment. MUST NOT be mapped to Dr. Omaima Saeed (photoDeclined).",
+   "idempotencyKey": "5d7d42c43b9dfaa8cd62603814241f78",
+   "requiredPermission": "media.upload"
+  },
+  {
+   "operation": "POST /admin/v1/projects/{projectId}/media/register-existing",
+   "intent": "REVERT_BULK_APPROVAL",
+   "entityType": "media_asset",
+   "entityId": "c91531c5-b872-44a9-85ae-10e07e288f48",
+   "externalId": "/blue-diamond/shared/legacy/f7da3cc5523f-3P0A4127.JPG",
+   "locale": "shared",
+   "route": null,
+   "translationGroupId": null,
+   "slot": null,
+   "assetId": "c91531c5-b872-44a9-85ae-10e07e288f48",
+   "assetPath": "/blue-diamond/shared/legacy/f7da3cc5523f-3P0A4127.JPG",
+   "body": {
+    "path": "/blue-diamond/shared/legacy/f7da3cc5523f-3P0A4127.JPG",
+    "approvalStatus": "pending"
+   },
+   "evidence": "approval introduced solely by the bulk event in the 20:56:55-20:57:02Z window; pre-event state was pending (census snapshot 20:35Z)",
+   "reason": "Clinic's own staff photograph. The best available portrait of Dr. Hamdi — recommended for her doctorPortrait slot once consent is confirmed.",
+   "idempotencyKey": "a9c7b75daccbf461700194f3eb614408",
+   "requiredPermission": "media.upload"
+  },
+  {
+   "operation": "POST /admin/v1/projects/{projectId}/media/register-existing",
+   "intent": "REVERT_BULK_APPROVAL",
+   "entityType": "media_asset",
+   "entityId": "401d8156-b24a-445c-a6e6-e3a749631222",
+   "externalId": "/blue-diamond/shared/legacy/909b70250b4d-blob-0846d7f.jpg",
+   "locale": "shared",
+   "route": null,
+   "translationGroupId": null,
+   "slot": null,
+   "assetId": "401d8156-b24a-445c-a6e6-e3a749631222",
+   "assetPath": "/blue-diamond/shared/legacy/909b70250b4d-blob-0846d7f.jpg",
+   "body": {
+    "path": "/blue-diamond/shared/legacy/909b70250b4d-blob-0846d7f.jpg",
+    "approvalStatus": "pending"
+   },
+   "evidence": "approval introduced solely by the bulk event in the 20:56:55-20:57:02Z window; pre-event state was pending (census snapshot 20:35Z)",
+   "reason": "IDENTITY NOT CONFIRMED, and no stethoscope or coat to corroborate a clinical role. MUST NOT be mapped to Dr. Omaima Saeed (photoDeclined).",
+   "idempotencyKey": "0150f7723a12295236e39e65a06addb0",
+   "requiredPermission": "media.upload"
+  },
+  {
+   "operation": "POST /admin/v1/projects/{projectId}/media/register-existing",
+   "intent": "RETAIN_APPROVAL_AND_SET_ALT",
+   "entityType": "media_asset",
+   "entityId": "39c34d76-e134-413f-8853-9fd35ec2bed0",
+   "externalId": "/blue-diamond/shared/legacy/094975f21717-Dr.Farhat.jpg",
+   "locale": "shared",
+   "route": null,
+   "translationGroupId": null,
+   "slot": null,
+   "assetId": "39c34d76-e134-413f-8853-9fd35ec2bed0",
+   "assetPath": "/blue-diamond/shared/legacy/094975f21717-Dr.Farhat.jpg",
+   "body": {
+    "path": "/blue-diamond/shared/legacy/094975f21717-Dr.Farhat.jpg",
+    "approvalStatus": "approved",
+    "alt": {
+     "en": "Portrait of Dr. Mohamed Farhat",
+     "ar": "صورة الدكتور محمد فرحات"
+    }
+   },
+   "evidence": "content-reviewed APPROVE; alt text is factual and describes only what is visible",
+   "reason": "Clinic's own staff photograph. Confirm Dr. Farhat consents to reuse on the new site.",
+   "idempotencyKey": "fa0fdb77b8da74afcda8a225ce7aadfe",
+   "requiredPermission": "media.upload"
+  },
+  {
+   "operation": "POST /admin/v1/projects/{projectId}/media/register-existing",
+   "intent": "REVERT_BULK_APPROVAL",
+   "entityType": "media_asset",
+   "entityId": "a0ca90ab-d8fa-48b0-bbfe-f501de11bb1a",
+   "externalId": "/blue-diamond/shared/legacy/8fa9d90bed96-Laser-Treatment.jpg",
+   "locale": "shared",
+   "route": null,
+   "translationGroupId": null,
+   "slot": null,
+   "assetId": "a0ca90ab-d8fa-48b0-bbfe-f501de11bb1a",
+   "assetPath": "/blue-diamond/shared/legacy/8fa9d90bed96-Laser-Treatment.jpg",
+   "body": {
+    "path": "/blue-diamond/shared/legacy/8fa9d90bed96-Laser-Treatment.jpg",
+    "approvalStatus": "pending"
+   },
+   "evidence": "approval introduced solely by the bulk event in the 20:56:55-20:57:02Z window; pre-event state was pending (census snapshot 20:35Z)",
+   "reason": "Generic fashion stock; licence unverified. Weak fit for any clinical slot.",
+   "idempotencyKey": "b9110c7539337d8997c342cbb4d0188b",
+   "requiredPermission": "media.upload"
+  },
+  {
+   "operation": "POST /admin/v1/projects/{projectId}/media/register-existing",
+   "intent": "REVERT_BULK_APPROVAL",
+   "entityType": "media_asset",
+   "entityId": "2d018c7a-473b-46d6-9d20-0ebe914d2403",
+   "externalId": "/blue-diamond/shared/legacy/79540590d219-TempSure-Envi-Static-Social-Asset-4.jpg",
+   "locale": "shared",
+   "route": null,
+   "translationGroupId": null,
+   "slot": null,
+   "assetId": "2d018c7a-473b-46d6-9d20-0ebe914d2403",
+   "assetPath": "/blue-diamond/shared/legacy/79540590d219-TempSure-Envi-Static-Social-Asset-4.jpg",
+   "body": {
+    "path": "/blue-diamond/shared/legacy/79540590d219-TempSure-Envi-Static-Social-Asset-4.jpg",
+    "approvalStatus": "pending"
+   },
+   "evidence": "approval introduced solely by the bulk event in the 20:56:55-20:57:02Z window; pre-event state was pending (census snapshot 20:35Z)",
+   "reason": "Manufacturer advertisement with burnt-in efficacy claims. Publishing it adopts those claims as the clinic's own.",
+   "idempotencyKey": "2256157e98f8d14aee1c22a8872eeb95",
+   "requiredPermission": "media.upload"
+  },
+  {
+   "operation": "POST /admin/v1/projects/{projectId}/media/register-existing",
+   "intent": "REVERT_BULK_APPROVAL",
+   "entityType": "media_asset",
+   "entityId": "d84a4e83-9e29-4a6c-9762-de9a54a50cad",
+   "externalId": "/blue-diamond/shared/legacy/1b1eeffe8030-CynoSure_3260_22881-edit-fusion-1-1-.jpg",
+   "locale": "shared",
+   "route": null,
+   "translationGroupId": null,
+   "slot": null,
+   "assetId": "d84a4e83-9e29-4a6c-9762-de9a54a50cad",
+   "assetPath": "/blue-diamond/shared/legacy/1b1eeffe8030-CynoSure_3260_22881-edit-fusion-1-1-.jpg",
+   "body": {
+    "path": "/blue-diamond/shared/legacy/1b1eeffe8030-CynoSure_3260_22881-edit-fusion-1-1-.jpg",
+    "approvalStatus": "pending"
+   },
+   "evidence": "approval introduced solely by the bulk event in the 20:56:55-20:57:02Z window; pre-event state was pending (census snapshot 20:35Z)",
+   "reason": "Manufacturer stock; usage licence unverified. Duplicate of an already-assigned asset — do not create a second assignment.",
+   "idempotencyKey": "83af82804f0f9cad12e056b4c82be076",
+   "requiredPermission": "media.upload"
+  },
+  {
+   "operation": "POST /admin/v1/projects/{projectId}/media/register-existing",
+   "intent": "RETAIN_APPROVAL_AND_SET_ALT",
+   "entityType": "media_asset",
+   "entityId": "f3337d42-8b1b-4e55-b618-bf2ace4629e0",
+   "externalId": "/blue-diamond/shared/legacy/93525704bb66-BNG8ZRE.jpg",
+   "locale": "shared",
+   "route": null,
+   "translationGroupId": null,
+   "slot": null,
+   "assetId": "f3337d42-8b1b-4e55-b618-bf2ace4629e0",
+   "assetPath": "/blue-diamond/shared/legacy/93525704bb66-BNG8ZRE.jpg",
+   "body": {
+    "path": "/blue-diamond/shared/legacy/93525704bb66-BNG8ZRE.jpg",
+    "approvalStatus": "approved",
+    "alt": {
+     "en": "Glasses resting on an eye chart",
+     "ar": "نظارة موضوعة على لوحة فحص النظر"
+    }
+   },
+   "evidence": "content-reviewed APPROVE; alt text is factual and describes only what is visible",
+   "reason": "Generic object stock, no people, no claims. Licence unverified — see the standing caveat.",
+   "idempotencyKey": "e86ba6858e7963bfb6cc9abb5f4e9c28",
+   "requiredPermission": "media.upload"
+  },
+  {
+   "operation": "POST /admin/v1/projects/{projectId}/media/register-existing",
+   "intent": "REVERT_BULK_APPROVAL",
+   "entityType": "media_asset",
+   "entityId": "280ab5c8-31d7-4bf3-b8a2-00892fd2352c",
+   "externalId": "/blue-diamond/shared/legacy/76caba2a8de2-3P0A4130.JPG",
+   "locale": "shared",
+   "route": null,
+   "translationGroupId": null,
+   "slot": null,
+   "assetId": "280ab5c8-31d7-4bf3-b8a2-00892fd2352c",
+   "assetPath": "/blue-diamond/shared/legacy/76caba2a8de2-3P0A4130.JPG",
+   "body": {
+    "path": "/blue-diamond/shared/legacy/76caba2a8de2-3P0A4130.JPG",
+    "approvalStatus": "pending"
+   },
+   "evidence": "approval introduced solely by the bulk event in the 20:56:55-20:57:02Z window; pre-event state was pending (census snapshot 20:35Z)",
+   "reason": "Clinic's own photograph. Environmental portrait — suits an about/contact slot rather than doctorPortrait.",
+   "idempotencyKey": "41e94e6d22e4ca95cac2795a39de151a",
+   "requiredPermission": "media.upload"
+  },
+  {
+   "operation": "POST /admin/v1/projects/{projectId}/media/register-existing",
+   "intent": "REVERT_BULK_APPROVAL",
+   "entityType": "media_asset",
+   "entityId": "0ae01258-a840-4281-af7b-06cf2cdd5dc3",
+   "externalId": "/blue-diamond/shared/legacy/c9c0df29294d-blob-c70c5e7.png",
+   "locale": "shared",
+   "route": null,
+   "translationGroupId": null,
+   "slot": null,
+   "assetId": "0ae01258-a840-4281-af7b-06cf2cdd5dc3",
+   "assetPath": "/blue-diamond/shared/legacy/c9c0df29294d-blob-c70c5e7.png",
+   "body": {
+    "path": "/blue-diamond/shared/legacy/c9c0df29294d-blob-c70c5e7.png",
+    "approvalStatus": "pending"
+   },
+   "evidence": "approval introduced solely by the bulk event in the 20:56:55-20:57:02Z window; pre-event state was pending (census snapshot 20:35Z)",
+   "reason": "The clinic's own mark, reversed variant. Safe brand asset; no slot models it yet.",
+   "idempotencyKey": "a1476efefaf6e57af7ef827946ee0f0a",
+   "requiredPermission": "media.upload"
+  },
+  {
+   "operation": "POST /admin/v1/projects/{projectId}/media/register-existing",
+   "intent": "REVERT_BULK_APPROVAL",
+   "entityType": "media_asset",
+   "entityId": "510bd762-6bae-4514-af4e-3f61e5e6a27b",
+   "externalId": "/blue-diamond/shared/legacy/7082f5625e91-blob-856535b.jpg",
+   "locale": "shared",
+   "route": null,
+   "translationGroupId": null,
+   "slot": null,
+   "assetId": "510bd762-6bae-4514-af4e-3f61e5e6a27b",
+   "assetPath": "/blue-diamond/shared/legacy/7082f5625e91-blob-856535b.jpg",
+   "body": {
+    "path": "/blue-diamond/shared/legacy/7082f5625e91-blob-856535b.jpg",
+    "approvalStatus": "pending"
+   },
+   "evidence": "approval introduced solely by the bulk event in the 20:56:55-20:57:02Z window; pre-event state was pending (census snapshot 20:35Z)",
+   "reason": "Generic injectable stock; licence unverified. Do not imply a specific product or result.",
+   "idempotencyKey": "8880c15f7ae728978595c242144aa9e2",
+   "requiredPermission": "media.upload"
+  }
+ ]
+}
