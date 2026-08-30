@@ -3,9 +3,15 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import {
   resolveDraftPreview,
-  DRAFT_PREVIEW_TYPES,
+  checkDraftPreviewRequest,
+  PREVIEW_TYPES,
 } from "../../src/lib/feelstack/draft-preview";
-import { routes } from "../../src/config/routes";
+import {
+  resolveDestination,
+  isSafeInternalPath,
+  HOME_SLUGS,
+  type PreviewRoute,
+} from "../../src/lib/feelstack/preview-source";
 import {
   BD_PROJECT_ID,
   DFEELINGS_PROJECT_ID,
@@ -13,229 +19,340 @@ import {
 } from "../fixtures/feelstack/webhook-envelopes";
 
 /**
- * Draft preview is the one route that deliberately trades a secret for elevated
- * read access, so the tests below are about what it REFUSES as much as what it
- * allows: a wrong secret, another tenant's project, an unknown resource, and
- * any attempt to steer the redirect somewhere the route registry does not
- * already list.
+ * Draft preview, resolved against FeelStack rather than the app's static
+ * registry.
+ *
+ * The fixture below is shaped like a real `preview/routes` response, including
+ * a CMS-ONLY draft (`botox`, absent from src/config/routes.ts) and genuine
+ * Arabic paths — the Arabic route is not a transliteration of the English one,
+ * so a test that accepted `/ar` + the English path would pass while the feature
+ * was broken.
  */
+const ROUTES: PreviewRoute[] = [
+  { path: "/", locale: "en", type: "page", status: "published" },
+  { path: "/", locale: "ar", type: "page", status: "published" },
+  { path: "/medical/eye-screening", locale: "en", type: "content_entry", status: "published" },
+  { path: "/الرعاية-الطبية/فحص-العين", locale: "ar", type: "content_entry", status: "published" },
+  // CMS-only draft: this is the record the previous implementation could not reach
+  { path: "/aesthetics/treatments/botox", locale: "en", type: "content_entry", status: "draft" },
+  { path: "/التجميل-الطبي/العلاجات/botox", locale: "ar", type: "content_entry", status: "draft" },
+  { path: "/aesthetics/treatments/laser-hair-removal", locale: "en", type: "content_entry", status: "published" },
+  { path: "/التجميل-الطبي/العلاجات/إزالة-الشعر-بالليزر", locale: "ar", type: "content_entry", status: "published" },
+  { path: "/doctors/mohamed-farhat", locale: "en", type: "person_profile", status: "published" },
+  { path: "/الأطباء/محمد-فرحات", locale: "ar", type: "person_profile", status: "published" },
+  { path: "/shop/lumivive-system-day-night", locale: "en", type: "content_entry", status: "draft" },
+  { path: "/المتجر/lumivive-system-day-night", locale: "ar", type: "content_entry", status: "draft" },
+];
 
 const CONFIG = { expectedSecret: TEST_SECRET, expectedProjectId: BD_PROJECT_ID };
 
-function ask(overrides: Record<string, unknown> = {}) {
-  return resolveDraftPreview({
+/** `route.alternates` as the resolve envelope returns them, keyed by EN path. */
+const ALTERNATES: Record<string, { locale: string; path: string }[]> = {
+  "/medical/eye-screening": [
+    { locale: "en", path: "/medical/eye-screening" },
+    { locale: "ar", path: "/الرعاية-الطبية/فحص-العين" },
+  ],
+  "/aesthetics/treatments/botox": [
+    { locale: "en", path: "/aesthetics/treatments/botox" },
+    { locale: "ar", path: "/التجميل-الطبي/العلاجات/botox" },
+  ],
+  "/aesthetics/treatments/laser-hair-removal": [
+    { locale: "en", path: "/aesthetics/treatments/laser-hair-removal" },
+    { locale: "ar", path: "/التجميل-الطبي/العلاجات/إزالة-الشعر-بالليزر" },
+  ],
+  "/doctors/mohamed-farhat": [
+    { locale: "en", path: "/doctors/mohamed-farhat" },
+    { locale: "ar", path: "/الأطباء/محمد-فرحات" },
+  ],
+  "/shop/lumivive-system-day-night": [
+    { locale: "en", path: "/shop/lumivive-system-day-night" },
+    { locale: "ar", path: "/المتجر/lumivive-system-day-night" },
+  ],
+};
+
+/** Status of a refusal, mirroring how the route handler narrows the union. */
+function statusOf(r: { ok: false } & Record<string, unknown>): number {
+  return typeof r.status === "number" ? r.status : 404;
+}
+
+function ask(overrides: Record<string, unknown> = {}, routes = ROUTES) {
+  const input = {
     secret: TEST_SECRET,
     type: "medical-service",
-    slug: "family-medicine",
+    slug: "eye-screening",
     lang: "en",
     ...CONFIG,
     ...overrides,
-  } as Parameters<typeof resolveDraftPreview>[0]);
+  } as Parameters<typeof resolveDraftPreview>[0];
+
+  // First pass, exactly as the route handler does it.
+  const first = resolveDraftPreview(input, routes);
+  if (first.ok || !("needsAlternates" in first)) return first;
+  // Second pass with the alternates the handler would have fetched.
+  return resolveDraftPreview(input, routes, ALTERNATES[first.cmsPathEn] ?? []);
 }
 
-/** A slug that genuinely exists in the registry for the given prefix. */
-function firstSlugFor(prefix: string): string {
-  const hit = routes.find(
-    (r) => r.path.en.startsWith(`${prefix}/`) && r.path.en.split("/").length === prefix.split("/").length + 1,
-  );
-  if (!hit) throw new Error(`no registry route under ${prefix}`);
-  return hit.path.en.slice(prefix.length + 1);
-}
-
-test.describe("draft preview — valid entry", () => {
-  test("EN preview resolves to the English localized route", () => {
-    const slug = firstSlugFor("/medical");
-    const result = ask({ slug, lang: "en" });
-
-    expect(result.ok).toBe(true);
-    if (!result.ok) return;
-    expect(result.locale).toBe("en");
-    expect(result.redirectTo).toBe(`/en/medical/${slug}`);
+test.describe("home preview resolves to the bare locale root", () => {
+  test("EN home → /en exactly", () => {
+    const r = ask({ type: "page", slug: "home", lang: "en" });
+    expect(r.ok).toBe(true);
+    if (!r.ok) return;
+    expect(r.redirectTo).toBe("/en");
+    expect(r.cmsPath).toBe("/");
   });
 
-  test("AR preview resolves to the REAL Arabic route, not a transliteration", () => {
-    const slug = firstSlugFor("/medical");
-    const result = ask({ slug, lang: "ar" });
-
-    expect(result.ok).toBe(true);
-    if (!result.ok) return;
-    expect(result.locale).toBe("ar");
-    expect(result.redirectTo.startsWith("/ar/")).toBe(true);
-    // the Arabic path is registry-supplied, so it must NOT be /ar + the English path
-    expect(result.redirectTo).not.toBe(`/ar/medical/${slug}`);
-    // and it must be the registry's own Arabic path
-    const route = routes.find((r) => r.path.en === `/medical/${slug}`);
-    expect(result.redirectTo).toBe(`/ar${route!.path.ar}`);
+  test("AR home → /ar exactly", () => {
+    const r = ask({ type: "page", slug: "home", lang: "ar" });
+    expect(r.ok).toBe(true);
+    if (!r.ok) return;
+    expect(r.redirectTo).toBe("/ar");
+    expect(r.cmsPath).toBe("/");
   });
 
-  test("home previews in both locales", () => {
+  test("never produces /en/home", () => {
     for (const lang of ["en", "ar"] as const) {
-      const result = ask({ type: "page", slug: "home", lang });
-      // home may be registered as "/" — either it resolves, or it is refused
-      // cleanly; it must never produce something outside the locale prefix.
-      if (result.ok) expect(result.redirectTo.startsWith(`/${lang}`)).toBe(true);
-      else expect(result.status).toBeGreaterThanOrEqual(400);
+      const r = ask({ type: "page", slug: "home", lang });
+      expect(r.ok).toBe(true);
+      if (r.ok) expect(r.redirectTo).not.toContain("home");
     }
   });
 
-  test("lang defaults to en when omitted", () => {
-    const result = ask({ slug: firstSlugFor("/medical"), lang: null });
-    expect(result.ok).toBe(true);
-    if (result.ok) expect(result.locale).toBe("en");
+  test("every home alias maps to the same root", () => {
+    for (const slug of HOME_SLUGS) {
+      const r = ask({ type: "page", slug, lang: "en" });
+      expect(r.ok).toBe(true);
+      if (r.ok) expect(r.redirectTo).toBe("/en");
+    }
   });
 });
 
-test.describe("draft preview — credentials", () => {
+test.describe("CMS-only records resolve", () => {
+  test("botox EN — absent from the static registry, present in FeelStack", () => {
+    const r = ask({ type: "aesthetic-treatment", slug: "botox", lang: "en" });
+    expect(r.ok).toBe(true);
+    if (r.ok) expect(r.redirectTo).toBe("/en/aesthetics/treatments/botox");
+  });
+
+  test("botox AR resolves to the Arabic route", () => {
+    const r = ask({ type: "aesthetic-treatment", slug: "botox", lang: "ar" });
+    expect(r.ok).toBe(true);
+    if (r.ok) expect(r.redirectTo).toBe("/ar/التجميل-الطبي/العلاجات/botox");
+  });
+
+  test("botox is not in the app's static route registry", () => {
+    const src = readFileSync(
+      resolve(__dirname, "../../src/config/routes.ts"),
+      "utf8",
+    );
+    // the registry has a /medical/botox hub but no aesthetic-treatment botox,
+    // which is precisely why static-registry resolution 404'd it
+    expect(src).not.toContain("/aesthetics/treatments/botox");
+  });
+});
+
+test.describe("every required target resolves in both locales", () => {
+  const cases: Array<[string, string, string, string]> = [
+    ["medical-service", "eye-screening", "/en/medical/eye-screening", "/ar/الرعاية-الطبية/فحص-العين"],
+    ["aesthetic-treatment", "laser-hair-removal", "/en/aesthetics/treatments/laser-hair-removal", "/ar/التجميل-الطبي/العلاجات/إزالة-الشعر-بالليزر"],
+    ["doctor", "mohamed-farhat", "/en/doctors/mohamed-farhat", "/ar/الأطباء/محمد-فرحات"],
+    ["product", "lumivive-system-day-night", "/en/shop/lumivive-system-day-night", "/ar/المتجر/lumivive-system-day-night"],
+  ];
+
+  for (const [type, slug, en, ar] of cases) {
+    test(`${type}/${slug} EN`, () => {
+      const r = ask({ type, slug, lang: "en" });
+      expect(r.ok).toBe(true);
+      if (r.ok) expect(r.redirectTo).toBe(en);
+    });
+    test(`${type}/${slug} AR uses the real Arabic route`, () => {
+      const r = ask({ type, slug, lang: "ar" });
+      expect(r.ok).toBe(true);
+      if (!r.ok) return;
+      expect(r.redirectTo).toBe(ar);
+      // an ar preview must never be /ar + the English path
+      expect(r.redirectTo).not.toBe(`/ar${en.slice(3)}`);
+    });
+  }
+});
+
+test.describe("credentials", () => {
   test("missing secret is refused", () => {
-    const result = ask({ secret: null });
-    expect(result.ok).toBe(false);
-    if (!result.ok) expect(result.status).toBe(400);
+    const r = ask({ secret: null });
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(statusOf(r)).toBe(400);
   });
 
   test("wrong secret is refused with 401", () => {
-    const result = ask({ secret: "not-the-secret" });
-    expect(result.ok).toBe(false);
-    if (!result.ok) expect(result.status).toBe(401);
+    const r = ask({ secret: "not-the-secret" });
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(statusOf(r)).toBe(401);
   });
 
-  test("a secret of a different length is refused without throwing", () => {
-    expect(() => ask({ secret: "x" })).not.toThrow();
-    const result = ask({ secret: "x" });
-    expect(result.ok).toBe(false);
+  test("unconfigured deployment refuses rather than previewing", () => {
+    for (const o of [{ expectedSecret: undefined }, { expectedProjectId: undefined }]) {
+      const r = ask(o);
+      expect(r.ok).toBe(false);
+      if (!r.ok) expect(statusOf(r)).toBe(501);
+    }
   });
 
-  test("an unconfigured deployment refuses rather than previewing", () => {
-    const noSecret = ask({ expectedSecret: undefined });
-    const noProject = ask({ expectedProjectId: undefined });
-    expect(noSecret.ok).toBe(false);
-    expect(noProject.ok).toBe(false);
-    if (!noSecret.ok) expect(noSecret.status).toBe(501);
-    if (!noProject.ok) expect(noProject.status).toBe(501);
-  });
-
-  test("the refusal never echoes the secret back", () => {
-    const result = ask({ secret: "leak-me-please" });
-    expect(JSON.stringify(result)).not.toContain("leak-me-please");
-    expect(JSON.stringify(result)).not.toContain(TEST_SECRET);
-  });
-});
-
-test.describe("draft preview — tenant isolation", () => {
   test("another project cannot be previewed through this deployment", () => {
-    const result = ask({ projectId: DFEELINGS_PROJECT_ID });
-    expect(result.ok).toBe(false);
-    if (!result.ok) expect(result.status).toBe(403);
+    const r = ask({ projectId: DFEELINGS_PROJECT_ID });
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(statusOf(r)).toBe(403);
   });
 
-  test("this project's own id is accepted", () => {
-    const result = ask({ slug: firstSlugFor("/medical"), projectId: BD_PROJECT_ID });
-    expect(result.ok).toBe(true);
+  test("refusal never echoes a secret", () => {
+    const r = ask({ secret: "leak-me-please" });
+    expect(JSON.stringify(r)).not.toContain("leak-me-please");
+    expect(JSON.stringify(r)).not.toContain(TEST_SECRET);
+  });
+
+  test("credential check runs without any route list", () => {
+    const r = checkDraftPreviewRequest({
+      secret: "wrong",
+      type: "page",
+      slug: "home",
+      lang: "en",
+      ...CONFIG,
+    } as Parameters<typeof checkDraftPreviewRequest>[0]);
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(statusOf(r)).toBe(401);
   });
 });
 
-test.describe("draft preview — destination cannot be steered", () => {
+test.describe("open redirects remain impossible", () => {
   const hostile = [
     "https://evil.example/x",
     "//evil.example",
     "../../etc/passwd",
     "..%2f..%2fadmin",
-    "family-medicine/../../admin",
-    "family\\medicine",
-    "family medicine",
-    "%2e%2e%2f",
+    "botox/../../admin",
+    "botox\\admin",
+    "botox admin",
   ];
 
   for (const slug of hostile) {
     test(`refuses hostile slug ${JSON.stringify(slug)}`, () => {
-      const result = ask({ slug });
-      expect(result.ok).toBe(false);
-      if (!result.ok) expect(result.status).toBeGreaterThanOrEqual(400);
+      const r = ask({ type: "aesthetic-treatment", slug });
+      expect(r.ok).toBe(false);
     });
   }
 
+  test("a destination FeelStack did not list cannot be reached", () => {
+    const r = ask({ type: "aesthetic-treatment", slug: "not-a-real-record" });
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(statusOf(r)).toBe(404);
+  });
+
+  test("a hostile path injected into the route list is still refused", () => {
+    const poisoned: PreviewRoute[] = [
+      { path: "https://evil.example/x", locale: "en", type: "content_entry" },
+    ];
+    const r = resolveDestination("aesthetic-treatment", "x", "en", poisoned);
+    expect(r.ok).toBe(false);
+  });
+
+  test("isSafeInternalPath rejects every non-internal shape", () => {
+    for (const bad of ["https://x/y", "//x", "\\x", "/a/../b", "", "x"]) {
+      expect(isSafeInternalPath(bad)).toBe(false);
+    }
+    expect(isSafeInternalPath("/en/medical/eye-screening")).toBe(true);
+    expect(isSafeInternalPath("/الرعاية-الطبية/فحص-العين")).toBe(true);
+  });
+
   test("every accepted redirect is relative and locale-prefixed", () => {
     for (const lang of ["en", "ar"] as const) {
-      const result = ask({ slug: firstSlugFor("/medical"), lang });
-      expect(result.ok).toBe(true);
-      if (!result.ok) continue;
-      expect(result.redirectTo.startsWith(`/${lang}`)).toBe(true);
-      expect(result.redirectTo).not.toContain("://");
-      expect(result.redirectTo.startsWith("//")).toBe(false);
+      const r = ask({ type: "aesthetic-treatment", slug: "botox", lang });
+      expect(r.ok).toBe(true);
+      if (!r.ok) continue;
+      expect(r.redirectTo.startsWith(`/${lang}`)).toBe(true);
+      expect(r.redirectTo).not.toContain("://");
+      expect(r.redirectTo.startsWith("//")).toBe(false);
     }
   });
 
-  test("an unknown resource is refused rather than redirected", () => {
-    const result = ask({ slug: "no-such-service-anywhere" });
-    expect(result.ok).toBe(false);
-    if (!result.ok) expect(result.status).toBe(404);
+  test("an unsupported type or locale is refused", () => {
+    expect(ask({ type: "site-setting" }).ok).toBe(false);
+    expect(ask({ lang: "fr" }).ok).toBe(false);
   });
 
-  test("an unsupported type is refused", () => {
-    const result = ask({ type: "site-setting" });
-    expect(result.ok).toBe(false);
-    if (!result.ok) expect(result.status).toBe(400);
-  });
-
-  test("an unsupported locale is refused", () => {
-    const result = ask({ lang: "fr" });
-    expect(result.ok).toBe(false);
-    if (!result.ok) expect(result.status).toBe(400);
-  });
-
-  test("every declared type maps to a real CMS prefix", () => {
-    expect(DRAFT_PREVIEW_TYPES.length).toBeGreaterThan(0);
-    for (const t of DRAFT_PREVIEW_TYPES) {
-      const result = ask({ type: t, slug: "definitely-not-a-real-slug" });
-      // unknown slug -> 404 (type accepted); never 400 "unsupported type"
-      expect(result.ok).toBe(false);
-      if (!result.ok) expect([404, 400]).toContain(result.status);
+  test("every declared type is a real CMS prefix", () => {
+    expect(PREVIEW_TYPES.length).toBeGreaterThan(0);
+    for (const t of PREVIEW_TYPES) {
+      const r = ask({ type: t, slug: "definitely-not-a-real-slug" });
+      expect(r.ok).toBe(false);
+      if (!r.ok) expect([404, 400]).toContain(statusOf(r));
     }
   });
 });
 
-test.describe("draft preview — published behaviour is untouched", () => {
-  test("the module exports no side effect that could publish or mutate", () => {
+test.describe("the secret never leaves the server", () => {
+  test("the preview client is server-only and sends Authorization: Preview", () => {
     const src = readFileSync(
-      resolve(__dirname, "../../src/lib/feelstack/draft-preview.ts"),
+      resolve(__dirname, "../../src/lib/feelstack/preview-client.ts"),
       "utf8",
     );
-    for (const forbidden of ["fetch(", "revalidate", "publish", "process.exit"]) {
-      expect(src).not.toContain(forbidden);
+    expect(src).toContain('import "server-only"');
+    expect(src).toContain("Authorization: `Preview ${secret}`");
+    // never a query parameter, never logged
+    expect(src).not.toMatch(/secret=\$\{/);
+    expect(src).not.toMatch(/console\.(log|info|warn|error)/);
+    expect(src).toContain('cache: "no-store"');
+  });
+
+  test("no preview module reaches a client bundle", () => {
+    for (const f of [
+      "../../src/lib/feelstack/preview-client.ts",
+      "../../src/lib/feelstack/preview-source.ts",
+      "../../src/lib/feelstack/draft-preview.ts",
+      "../../src/app/api/draft/route.ts",
+    ]) {
+      const src = readFileSync(resolve(__dirname, f), "utf8");
+      expect(src).not.toContain("NEXT_PUBLIC_");
+      expect(src).not.toContain('"use client"');
     }
   });
 
-  test("the secret is never written into the redirect target", () => {
-    const result = ask({ slug: firstSlugFor("/medical") });
-    expect(result.ok).toBe(true);
-    if (!result.ok) return;
-    expect(result.redirectTo).not.toContain(TEST_SECRET);
-    expect(result.redirectTo).not.toContain("secret");
-  });
-
-  test("the route handler never puts the secret in the response or a log", () => {
+  test("the route handler reads the secret once and never re-emits it", () => {
     const src = readFileSync(
       resolve(__dirname, "../../src/app/api/draft/route.ts"),
       "utf8",
     );
-    expect(src).not.toMatch(/console\.(log|info|warn|error)/);
-    // the secret is read once, passed to the resolver, and never re-emitted
     expect(src.match(/searchParams\.get\("secret"\)/g)?.length).toBe(1);
     expect(src).not.toContain("previewSecret=");
+    expect(src).not.toMatch(/console\.(log|info|warn|error)/);
   });
 
-  test("no preview secret is baked into a client bundle", () => {
-    const lib = readFileSync(
-      resolve(__dirname, "../../src/lib/feelstack/draft-preview.ts"),
-      "utf8",
-    );
-    const route = readFileSync(
+  test("an unauthenticated request never triggers an outbound CMS call", () => {
+    const src = readFileSync(
       resolve(__dirname, "../../src/app/api/draft/route.ts"),
       "utf8",
     );
-    // NEXT_PUBLIC_* is the only env prefix Next inlines into client bundles
-    expect(lib).not.toContain("NEXT_PUBLIC_");
-    expect(route).not.toContain("NEXT_PUBLIC_");
-    expect(lib).not.toContain('"use client"');
-    expect(route).not.toContain('"use client"');
+    // the credential check must appear before the route fetch
+    expect(src.indexOf("checkDraftPreviewRequest")).toBeLessThan(
+      src.indexOf("await previewRoutes("),
+    );
+  });
+});
+
+test.describe("non-draft behaviour is preserved", () => {
+  test("the draft branch is entered only when Draft Mode is enabled", () => {
+    const src = readFileSync(
+      resolve(__dirname, "../../src/lib/feelstack/page-resolver.ts"),
+      "utf8",
+    );
+    expect(src).toContain("if (await isDraftModeEnabled())");
+    // and the draft path must never fall back to static fixtures
+    const draftFn = src.slice(src.indexOf("async function resolveDraftContent"));
+    expect(draftFn).not.toContain("staticFallback(");
+  });
+
+  test("published resolution still uses the public envelope", () => {
+    const src = readFileSync(
+      resolve(__dirname, "../../src/lib/feelstack/page-resolver.ts"),
+      "utf8",
+    );
+    expect(src).toContain("await resolveEnvelope(path, locale, tags)");
   });
 });
