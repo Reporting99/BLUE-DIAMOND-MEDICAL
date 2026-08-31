@@ -18,8 +18,24 @@ const viewDetailsLabel = { en: "View Product Details", ar: "عرض تفاصيل 
  * rather than a hand-built path, so it automatically resolves to the
  * pretty Arabic URL like every other cross-link on the site.
  */
-export function ProductCard({ product, locale }: { product: Product; locale: Locale }) {
-  const image = product.images[0];
+export function ProductCard({
+  product,
+  locale,
+  resolved,
+}: {
+  product: Product;
+  locale: Locale;
+  /**
+   * Media resolved for this product from the CMS by the listing page.
+   *
+   * A listing renders many entities, and `resolvePageContent` resolves one — so
+   * without this the card falls back to the static `product.images`, and the
+   * shop index shows a placeholder for a product whose own detail page renders
+   * a real photograph. Optional so every existing caller keeps working.
+   */
+  resolved?: { path: string; status: Product["images"][number]["status"]; alt: Product["images"][number]["alt"] };
+}) {
+  const image = resolved ?? product.images[0];
   const category = productCategories.find((c) => c.id === product.categoryIds[0]);
 
   return (

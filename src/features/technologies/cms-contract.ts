@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { defineEntityContract, localizedBilingual, adaptFaqs } from "@/lib/feelstack/adapters";
+import { resolveSlotImage } from "@/lib/feelstack/media-slots";
 import type { Technology } from "./types";
 
 /**
@@ -38,7 +39,7 @@ export type TechnologyFields = z.infer<typeof technologyFieldsSchema>;
 export const technologyCmsContract = defineEntityContract<TechnologyFields, Technology>({
   contentType: "technology",
   fields: technologyFieldsSchema,
-  adapt: ({ locale, title, fields: f, faqs, path }) => {
+  adapt: ({ locale, title, fields: f, faqs, path, media }) => {
     const tech: Technology = {
       id: f.technology_id,
       slug: path.replace(/^\/aesthetics\/technologies\//, ""),
@@ -66,6 +67,9 @@ export const technologyCmsContract = defineEntityContract<TechnologyFields, Tech
     }
     if (f.related_doctor_ids) tech.relatedDoctorIds = f.related_doctor_ids;
     if (faqs.length) tech.faqs = adaptFaqs(locale, faqs);
+    // Card image from this technology's real media assignment, if one exists.
+    const image = resolveSlotImage({ media, slot: ["card", "hero"] });
+    if (image) tech.image = image;
     return tech;
   },
 });

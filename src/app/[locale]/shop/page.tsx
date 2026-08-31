@@ -4,6 +4,9 @@ import { notFound } from "next/navigation";
 import { Container } from "@/components/layout/Container";
 import { SectionTransition } from "@/components/layout/SectionTransition";
 import { ProductCard } from "@/features/products";
+import { resolveListingMedia } from "@/lib/feelstack/listing-media";
+import { cmsAlt } from "@/lib/feelstack/media-slots";
+import { cacheTags } from "@/lib/feelstack/cache-tags";
 import { isLocale, type Locale } from "@/i18n/config";
 import { getRoute, href } from "@/lib/routing";
 import { features } from "@/config/features";
@@ -51,6 +54,15 @@ export default async function ShopHubPage({ params }: { params: Promise<{ locale
 
   const { locale: rawLocale } = await params;
   const locale: Locale = isLocale(rawLocale) ? rawLocale : "en";
+
+  // Catalogue media. The shop index renders 23 products; resolvePageContent
+  // resolves one, so without this every card falls back to the static record
+  // while each product's own detail page renders its real packshot.
+  const listingMedia = await resolveListingMedia(
+    products.map((p) => ({ id: p.id, englishPath: `/shop/${p.slug}` })),
+    locale,
+    [cacheTags.productsIndex?.(process.env.FEELSTACK_SITE_KEY ?? "", locale) ?? ""].filter(Boolean),
+  );
   const t = copy[locale];
   const ownRoute = getRoute("shop-hub")!;
   const title = ownRoute.title[locale];
@@ -114,7 +126,16 @@ export default async function ShopHubPage({ params }: { params: Promise<{ locale
         <p className="mt-2 text-sm text-text-secondary">{availabilityNotice[locale]}</p>
         <ul className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {products.map((product) => (
-            <ProductCard key={product.id} product={product} locale={locale} />
+            <ProductCard
+              key={product.id}
+              product={product}
+              locale={locale}
+              resolved={(() => {
+                const m = (listingMedia[product.id] ?? []).find((x) => x.slot === "productPrimary");
+                if (!m) return undefined;
+                return { path: m.path, status: m.status, alt: cmsAlt(m) ?? product.images[0]?.alt ?? { en: "", ar: "" } };
+              })()}
+            />
           ))}
         </ul>
 
