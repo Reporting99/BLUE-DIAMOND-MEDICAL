@@ -99,3 +99,64 @@ test("every literal ImageKit-style path (path=\"...\" or ogImagePath: \"...\") i
   }
   expect(offenders, `These literal ImageKit paths are missing the /blue-diamond root:\n${offenders.join("\n")}`).toEqual([]);
 });
+
+/**
+ * Every ImageKit path this repository states must be one the media library
+ * actually holds.
+ *
+ * The homepage's OG image pointed at `/blue-diamond/hero/homepage-hero.jpg`
+ * for months. The media library has no `hero/` directory at all, so every
+ * share card for the site requested a 404 and rendered blank. It survived
+ * because an OG image is not gated on approval status the way an `<img>` is:
+ * `getRouteMetadata` emits the URL whatever the manifest says, so the page
+ * showed a correct placeholder while its social preview was broken.
+ *
+ * The library is not reachable from a unit test, so this asserts the shape
+ * that was wrong rather than the inventory: a path must sit under one of the
+ * namespaces that exist. `hero/` is absent from that list deliberately — it is
+ * the directory that never existed.
+ *
+ * A `pending` manifest entry is exempt. Its path names where an asset would
+ * go, nothing fetches it, and a namespace that does not exist yet is the
+ * normal state of a plan. An OG image is not exempt, because it is emitted
+ * whatever the status says — which is the whole reason this bug reached
+ * production.
+ */
+const MEDIA_NAMESPACES = [
+  "aesthetics",
+  "before-after",
+  "home",
+  "medical",
+  "shared",
+  "shop",
+  "technologies",
+  "treatments",
+];
+
+test("an APPROVED manifest entry sits in a real media namespace", () => {
+  // A `pending` entry is a placeholder and a plan: its path names where an
+  // asset would go, nothing fetches it, and a namespace that does not exist
+  // yet is normal. `approved` is the claim that bytes are there, so its
+  // namespace has to be one the library actually has.
+  for (const asset of imageManifest) {
+    if (asset.status !== "approved") continue;
+    const match = asset.path.match(/^\/blue-diamond\/([^/]+)\//);
+    expect(match, `${asset.id}: "${asset.path}" is not under /blue-diamond/<namespace>/`).toBeTruthy();
+    expect(
+      MEDIA_NAMESPACES,
+      `${asset.id}: "${match![1]}" is not a namespace the media library has`,
+    ).toContain(match![1]);
+  }
+});
+
+test("no ogImagePath names a namespace the library does not have", () => {
+  const offenders: string[] = [];
+  for (const file of walk(SRC_DIR)) {
+    if (!/\.tsx?$/.test(file)) continue;
+    for (const [, path] of readFileSync(file, "utf8").matchAll(/ogImagePath:\s*"([^"]+)"/g)) {
+      const match = path.match(/^\/blue-diamond\/([^/]+)\//);
+      if (!match || !MEDIA_NAMESPACES.includes(match[1])) offenders.push(`${file}: ${path}`);
+    }
+  }
+  expect(offenders, offenders.join("\n")).toEqual([]);
+});
