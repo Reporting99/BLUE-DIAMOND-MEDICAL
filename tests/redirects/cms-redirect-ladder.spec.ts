@@ -317,7 +317,6 @@ test.describe("the ladder is wired, and in the right order", () => {
     expect(encodeLocation("/ar/طازج-جديد")).toBe(
       "/ar/%D8%B7%D8%A7%D8%B2%D8%AC-%D8%AC%D8%AF%D9%8A%D8%AF",
     );
-    // eslint-disable-next-line no-control-regex
     expect(/^[\x00-\x7F]*$/.test(encodeLocation("/ar/الأطباء/أحمد"))).toBe(true);
   });
 
