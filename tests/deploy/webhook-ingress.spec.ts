@@ -213,9 +213,30 @@ test.describe("the generated upstream round-trips through the deploy script", ()
 });
 
 test.describe("nginx itself accepts the configuration", () => {
+  test("the vhost uses the modern http2 directive", () => {
+    // `listen 443 ssl http2;` has been deprecated since nginx 1.25.1 in favour
+    // of a standalone `http2 on;`. Asserted separately from the syntax check
+    // below because that check has to tolerate a runner older than 1.25.1,
+    // and tolerating it must not quietly stop pinning the form we ship.
+    expect(read(VHOST)).toMatch(/^\s*http2 on;/m);
+    expect(read(VHOST)).not.toMatch(/listen[^\n]*\bhttp2\b/);
+  });
+
   test("the vhost and snippet pass `nginx -t`", () => {
     const nginx = spawnSync("nginx", ["-v"], { encoding: "utf8" });
     test.skip(nginx.error !== undefined, "nginx binary not available on this runner");
+
+    // The deployment host runs 1.30.x. A CI runner may be older than 1.25.1,
+    // which does not know the standalone `http2 on;` directive and fails the
+    // whole file on it. Downgrading the shipped config to suit the older
+    // parser would be the wrong way round -- so the directive is dropped for
+    // the syntax check on such a runner, and everything else in the file is
+    // still validated. The form itself is pinned by the test above.
+    const version = `${nginx.stdout ?? ""}${nginx.stderr ?? ""}`;
+    const parsed = version.match(/nginx\/(\d+)\.(\d+)\.(\d+)/);
+    const [major, minor, patch] = parsed ? parsed.slice(1).map(Number) : [0, 0, 0];
+    const knowsHttp2Directive =
+      major > 1 || (major === 1 && (minor > 25 || (minor === 25 && patch >= 1)));
 
     const dir = mkdtempSync(join(tmpdir(), "bd-nginx-"));
     try {
@@ -240,7 +261,8 @@ test.describe("nginx itself accepts the configuration", () => {
         .replace(/\/etc\/nginx\/ssl-certificates\/bd-hooks\.dfeelings\.com\.crt/, join(dir, "certs", "t.crt"))
         .replace(/\/etc\/nginx\/ssl-certificates\/bd-hooks\.dfeelings\.com\.key/, join(dir, "certs", "t.key"))
         .replace(/access_log[^\n]*\n/, "")
-        .replace(/error_log[^\n]*\n/, "");
+        .replace(/error_log[^\n]*\n/, "")
+        .replace(/^[ \t]*http2 on;\n/m, (match) => (knowsHttp2Directive ? match : ""));
 
       writeFileSync(
         join(dir, "nginx.conf"),
