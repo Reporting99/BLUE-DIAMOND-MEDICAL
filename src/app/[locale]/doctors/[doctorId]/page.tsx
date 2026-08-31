@@ -12,7 +12,7 @@ import { isLocale, locales, type Locale } from "@/i18n/config";
 import { doctors, getDoctor } from "@/features/doctors";
 import { getBookingUrl } from "@/config/booking";
 import { siteConfig } from "@/config/site";
-import { getRoute, href } from "@/lib/routing";
+import { getRoute, href, cmsPathForLocale } from "@/lib/routing";
 import { servicesForDoctor } from "@/lib/seo/entity-graph";
 import { resolvePageContent, entityCacheTags } from "@/lib/feelstack/page-resolver";
 import { cacheTags } from "@/lib/feelstack/cache-tags";
@@ -38,7 +38,9 @@ export function generateStaticParams() {
  * entityCacheTags() in page-resolver.ts.
  */
 async function loadDoctor(id: string, locale: Locale) {
-  const cmsPath = `/doctors/${id}`;
+  // FeelStack registers the Arabic route under its Arabic slug, so ask
+  // for THIS locale's path rather than the English one. See cmsPathForLocale.
+  const cmsPath = cmsPathForLocale(`/doctors/${id}`, locale);
   const resolution = await resolvePageContent({
     path: cmsPath,
     locale,
