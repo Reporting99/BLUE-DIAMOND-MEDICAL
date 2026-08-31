@@ -101,7 +101,37 @@ export async function resolvePageContent<T, F = unknown>(
   // deployment misconfiguration, never a silent page 404 (brief §5).
   assertFeelstackEnvValid();
 
-  const result = await resolveEnvelope(path, locale, tags);
+  let result = await resolveEnvelope(path, locale, tags);
+
+  // RETRY ON THE LOCALE'S OWN PATH.
+  //
+  // FeelStack registers one route per locale, and a localized route's path is
+  // that locale's slug -- `/الأطباء/محمد-فرحات`, not `/doctors/mohamed-farhat`.
+  // A page whose Next.js segment is the English slug therefore asks for a path
+  // that only exists in English, and the backend answers with the English row
+  // plus `usedFallback: true`. `checkLocaleIntegrity` correctly refuses that,
+  // so every Arabic page silently fell back to static content and lost its CMS
+  // media.
+  //
+  // `cmsPathForLocale` fixes this for entities in the route registry with no
+  // extra request. This handles the remainder: entities the registry does not
+  // list (individual treatments, for one) whose localized path is known only to
+  // the CMS. The first response carries `route.alternates`, so the correct path
+  // is already in hand -- ask again for it, exactly once.
+  //
+  // This does NOT weaken locale integrity. The retry's answer is put through
+  // the same unmodified check below, and is accepted only if the CMS resolved
+  // EXACTLY the requested locale with no fallback. A retry that also falls back
+  // is discarded and the page degrades as before.
+  if (result.ok && result.data.route.usedFallback) {
+    const alternate = result.data.route.alternates?.find(
+      (candidate) => candidate.locale === locale,
+    )?.path;
+    if (alternate && alternate !== path) {
+      const retry = await resolveEnvelope(alternate, locale, tags);
+      if (retry.ok && !retry.data.route.usedFallback) result = retry;
+    }
+  }
 
   if (result.ok) {
     const envelope = result.data;

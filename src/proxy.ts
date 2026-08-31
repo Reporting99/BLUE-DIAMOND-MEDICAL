@@ -3,6 +3,7 @@ import type { NextRequest } from "next/server";
 import { defaultLocale, isLocale } from "@/i18n/config";
 import { legacyRedirects } from "@/lib/routing";
 import { routes } from "@/lib/routing";
+import { localizedEntityRoutes } from "@/config/localized-entity-routes.generated";
 import { isSiteLaunched, PRE_LAUNCH_ROBOTS_HEADER } from "@/config/launch";
 
 /**
@@ -14,9 +15,23 @@ import { isSiteLaunched, PRE_LAUNCH_ROBOTS_HEADER } from "@/config/launch";
  * while Next's file-system router resolves it against the English folder
  * tree. See docs/ROUTING.md.
  */
-const arabicToCanonicalPath = new Map(
-  routes.filter((r) => r.path.ar !== r.path.en).map((r) => [r.path.ar, r.path.en]),
-);
+const arabicToCanonicalPath = new Map<string, string>([
+  ...routes
+    .filter((r) => r.path.ar !== r.path.en)
+    .map((r) => [r.path.ar, r.path.en] as const),
+  // Entity routes -- doctors, treatments, concerns, technologies, services,
+  // products -- are created in the CMS, and their Arabic slugs are authored
+  // there rather than here. Only 6 of them were ever hand-copied into
+  // src/config/routes.ts, so 52 of 58 CMS routes had no entry in this map and
+  // every one of their Arabic URLs was unreachable: no rewrite matched, so the
+  // Arabic slug never resolved to the English folder Next actually routes on.
+  //
+  // The generated artifact carries all of them, straight from the CMS
+  // alternates, and localized-route-parity.spec.ts fails if the CMS gains a
+  // route the artifact lacks. That turns "someone forgot to add the Arabic
+  // path" from a silent 404 into a failing test.
+  ...localizedEntityRoutes.map((r) => [r.ar, r.en] as const),
+]);
 
 /**
  * The reverse map: an ENGLISH-slug path to the approved Arabic path.

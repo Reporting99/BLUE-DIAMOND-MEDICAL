@@ -1,0 +1,350 @@
+[
+ {
+  "en": "/aesthetics/concerns/acne-scars",
+  "ar": "/التجميل-الطبي/المخاوف-الجمالية/ندبات-حب-الشباب",
+  "type": "content_entry",
+  "title": "Acne Scars"
+ },
+ {
+  "en": "/aesthetics/concerns/dry-skin",
+  "ar": "/التجميل-الطبي/المخاوف-الجمالية/جفاف-البشرة",
+  "type": "content_entry",
+  "title": "Dry Skin"
+ },
+ {
+  "en": "/aesthetics/concerns/fine-lines-wrinkles",
+  "ar": "/التجميل-الطبي/المخاوف-الجمالية/الخطوط-الدقيقة-والتجاعيد",
+  "type": "content_entry",
+  "title": "Fine Lines & Wrinkles"
+ },
+ {
+  "en": "/aesthetics/concerns/razor-bumps",
+  "ar": "/التجميل-الطبي/المخاوف-الجمالية/حبوب-الحلاقة",
+  "type": "content_entry",
+  "title": "Razor Bumps"
+ },
+ {
+  "en": "/aesthetics/concerns/rosacea-redness",
+  "ar": "/التجميل-الطبي/المخاوف-الجمالية/الوردية-والاحمرار",
+  "type": "content_entry",
+  "title": "Rosacea & Redness"
+ },
+ {
+  "en": "/aesthetics/concerns/skin-laxity",
+  "ar": "/التجميل-الطبي/المخاوف-الجمالية/ترهل-البشرة",
+  "type": "content_entry",
+  "title": "Skin Laxity"
+ },
+ {
+  "en": "/aesthetics/concerns/skin-revitalization",
+  "ar": "/التجميل-الطبي/المخاوف-الجمالية/تجديد-البشرة",
+  "type": "content_entry",
+  "title": "Skin Revitalization"
+ },
+ {
+  "en": "/aesthetics/concerns/spider-veins",
+  "ar": "/التجميل-الطبي/المخاوف-الجمالية/الأوردة-العنكبوتية",
+  "type": "content_entry",
+  "title": "Spider Veins"
+ },
+ {
+  "en": "/aesthetics/concerns/sun-damage-pigmentation",
+  "ar": "/التجميل-الطبي/المخاوف-الجمالية/تلف-الشمس-والتصبغ",
+  "type": "content_entry",
+  "title": "Sun Damage & Pigmentation"
+ },
+ {
+  "en": "/aesthetics/technologies/elite-iq",
+  "ar": "/التجميل-الطبي/التقنيات/إيليت-آي-كيو",
+  "type": "content_entry",
+  "title": "Elite iQ™"
+ },
+ {
+  "en": "/aesthetics/technologies/potenza",
+  "ar": "/التجميل-الطبي/التقنيات/بوتنزا",
+  "type": "content_entry",
+  "title": "Potenza"
+ },
+ {
+  "en": "/aesthetics/technologies/tempsure",
+  "ar": "/التجميل-الطبي/التقنيات/تمبشور",
+  "type": "content_entry",
+  "title": "TempSure"
+ },
+ {
+  "en": "/aesthetics/technologies/tempsure-vitalia",
+  "ar": "/التجميل-الطبي/التقنيات/تمبشور-فيتاليا",
+  "type": "content_entry",
+  "title": "TempSure Vitalia"
+ },
+ {
+  "en": "/aesthetics/technologies/ultra",
+  "ar": "/التجميل-الطبي/التقنيات/الترا",
+  "type": "content_entry",
+  "title": "Ultra"
+ },
+ {
+  "en": "/aesthetics/treatments/laser-hair-removal",
+  "ar": "/التجميل-الطبي/العلاجات/إزالة-الشعر-بالليزر",
+  "type": "content_entry",
+  "title": "Laser Hair Removal"
+ },
+ {
+  "en": "/aesthetics/treatments/laser-skin-treatments",
+  "ar": "/التجميل-الطبي/العلاجات/علاجات-البشرة-بالليزر",
+  "type": "content_entry",
+  "title": "Laser Skin Treatments"
+ },
+ {
+  "en": "/aesthetics/treatments/prp-hair-restoration",
+  "ar": "/التجميل-الطبي/العلاجات/استعادة-الشعر-بالبلازما",
+  "type": "content_entry",
+  "title": "PRP Hair Restoration"
+ },
+ {
+  "en": "/aesthetics/treatments/prp-skin-rejuvenation",
+  "ar": "/التجميل-الطبي/العلاجات/تجديد-البشرة-بالبلازما",
+  "type": "content_entry",
+  "title": "PRP Skin Rejuvenation"
+ },
+ {
+  "en": "/aesthetics/treatments/radio-frequency",
+  "ar": "/التجميل-الطبي/العلاجات/الترددات-الراديوية",
+  "type": "content_entry",
+  "title": "Radio Frequency"
+ },
+ {
+  "en": "/aesthetics/treatments/rf-microneedling",
+  "ar": "/التجميل-الطبي/العلاجات/الإبر-الدقيقة-بالترددات-الراديوية",
+  "type": "content_entry",
+  "title": "RF Micro-Needling"
+ },
+ {
+  "en": "/aesthetics/treatments/tempsure-vitalia",
+  "ar": "/التجميل-الطبي/العلاجات/تمبشور-فيتاليا",
+  "type": "content_entry",
+  "title": "TempSure Vitalia"
+ },
+ {
+  "en": "/aesthetics/treatments/ultra",
+  "ar": "/التجميل-الطبي/العلاجات/الترا",
+  "type": "content_entry",
+  "title": "Ultra Treatment"
+ },
+ {
+  "en": "/doctors/ahmed-gwea",
+  "ar": "/الأطباء/أحمد-جويع",
+  "type": "person_profile",
+  "title": "Dr. Ahmed Gwea"
+ },
+ {
+  "en": "/doctors/bakare",
+  "ar": "/الأطباء/باكاري",
+  "type": "person_profile",
+  "title": "Dr. Bakare"
+ },
+ {
+  "en": "/doctors/mohamed-farhat",
+  "ar": "/الأطباء/محمد-فرحات",
+  "type": "person_profile",
+  "title": "Dr. Mohamed Farhat"
+ },
+ {
+  "en": "/doctors/omaima-saeed",
+  "ar": "/الأطباء/أميمة-سعيد",
+  "type": "person_profile",
+  "title": "Dr. Omaima Saeed"
+ },
+ {
+  "en": "/doctors/omonijo",
+  "ar": "/الأطباء/أومونيجو",
+  "type": "person_profile",
+  "title": "Dr. Omonijo"
+ },
+ {
+  "en": "/doctors/reem-hamdi",
+  "ar": "/الأطباء/ريم-حمدي",
+  "type": "person_profile",
+  "title": "Dr. Reem Hamdi"
+ },
+ {
+  "en": "/medical/after-hours-care",
+  "ar": "/الرعاية-الطبية/الرعاية-خارج-أوقات-الدوام",
+  "type": "content_entry",
+  "title": "After-Hours Care"
+ },
+ {
+  "en": "/medical/chronic-disease-management",
+  "ar": "/الرعاية-الطبية/إدارة-الأمراض-المزمنة",
+  "type": "content_entry",
+  "title": "Chronic Disease Management"
+ },
+ {
+  "en": "/medical/eye-screening",
+  "ar": "/الرعاية-الطبية/فحص-العين",
+  "type": "content_entry",
+  "title": "Eye Disease Screening"
+ },
+ {
+  "en": "/medical/minor-procedures",
+  "ar": "/الرعاية-الطبية/الإجراءات-البسيطة",
+  "type": "content_entry",
+  "title": "Minor Procedures"
+ },
+ {
+  "en": "/medical/pain-management",
+  "ar": "/الرعاية-الطبية/إدارة-الألم",
+  "type": "content_entry",
+  "title": "Pain Management"
+ },
+ {
+  "en": "/medical/preventive-care",
+  "ar": "/الرعاية-الطبية/الرعاية-الوقائية",
+  "type": "content_entry",
+  "title": "Preventive Care"
+ },
+ {
+  "en": "/medical/weight-management",
+  "ar": "/الرعاية-الطبية/إدارة-الوزن",
+  "type": "content_entry",
+  "title": "Weight Management"
+ },
+ {
+  "en": "/shop/aha-bha-cream",
+  "ar": "/المتجر/كريم-aha-bha",
+  "type": "content_entry",
+  "title": "AHA/BHA Cream"
+ },
+ {
+  "en": "/shop/aha-bha-exfoliating-cleanser",
+  "ar": "/المتجر/غسول-مقشر-aha-bha",
+  "type": "content_entry",
+  "title": "AHA/BHA Exfoliating Cleanser"
+ },
+ {
+  "en": "/shop/daily-physical-defense-spf-34",
+  "ar": "/المتجر/واقي-الشمس-اليومي-spf-34",
+  "type": "content_entry",
+  "title": "Daily Physical Defense® SPF 34"
+ },
+ {
+  "en": "/shop/dermal-repair-cream",
+  "ar": "/المتجر/كريم-إصلاح-البشرة",
+  "type": "content_entry",
+  "title": "Dermal Repair Cream"
+ },
+ {
+  "en": "/shop/facial-cleanser",
+  "ar": "/المتجر/غسول-الوجه",
+  "type": "content_entry",
+  "title": "Facial Cleanser"
+ },
+ {
+  "en": "/shop/ha5-rejuvenative-hydrator",
+  "ar": "/المتجر/مرطب-ha5-المنشط",
+  "type": "content_entry",
+  "title": "HA5® Rejuvenating Hydrator"
+ },
+ {
+  "en": "/shop/lumivive-system-day-night",
+  "ar": "/المتجر/نظام-لوميفيف-نهار-ليل",
+  "type": "content_entry",
+  "title": "Lumivive® System Day, Night"
+ },
+ {
+  "en": "/shop/lytera-2-pigment-brightening-serum",
+  "ar": "/المتجر/سيروم-لايتيرا-٢-لتفتيح-التصبغات",
+  "type": "content_entry",
+  "title": "Lytera® 2.0 Pigment Brightening Serum"
+ },
+ {
+  "en": "/shop/rejuvenative-moisturizer",
+  "ar": "/المتجر/مرطب-منشط",
+  "type": "content_entry",
+  "title": "Rejuvenative Moisturizer"
+ },
+ {
+  "en": "/shop/replenish-hydrating-cream",
+  "ar": "/المتجر/كريم-ترطيب-مجدد",
+  "type": "content_entry",
+  "title": "Replenish Hydrating Cream"
+ },
+ {
+  "en": "/shop/retinol-complex-0-25",
+  "ar": "/المتجر/مركب-الريتينول-٠٫٢٥",
+  "type": "content_entry",
+  "title": "Retinol Complex 0.25"
+ },
+ {
+  "en": "/shop/retinol-complex-0-5",
+  "ar": "/المتجر/مركب-الريتينول-٠٫٥",
+  "type": "content_entry",
+  "title": "Retinol Complex 0.5"
+ },
+ {
+  "en": "/shop/retinol-complex-1-0",
+  "ar": "/المتجر/مركب-الريتينول-١٫٠",
+  "type": "content_entry",
+  "title": "Retinol Complex 1.0"
+ },
+ {
+  "en": "/shop/scar-recovery-gel-with-centelline-large",
+  "ar": "/المتجر/جل-علاج-الندبات-بالسنتيلين-كبير",
+  "type": "content_entry",
+  "title": "Scar Recovery Gel with Centelline® (Large)"
+ },
+ {
+  "en": "/shop/scar-recovery-gel-with-centelline-small",
+  "ar": "/المتجر/جل-علاج-الندبات-بالسنتيلين-صغير",
+  "type": "content_entry",
+  "title": "Scar Recovery Gel with Centelline® (Small)"
+ },
+ {
+  "en": "/shop/tns-advanced-plus-serum",
+  "ar": "/المتجر/سيروم-tns-المتقدم-بلس",
+  "type": "content_entry",
+  "title": "TNS® Advanced+ Serum"
+ },
+ {
+  "en": "/shop/tns-ceramide-treatment-cream",
+  "ar": "/المتجر/كريم-tns-العلاجي-بالسيراميد",
+  "type": "content_entry",
+  "title": "TNS Ceramide Treatment Cream®"
+ },
+ {
+  "en": "/shop/tns-eye-repair",
+  "ar": "/المتجر/تي-إن-إس-لإصلاح-محيط-العين",
+  "type": "content_entry",
+  "title": "TNS® Eye Repair"
+ },
+ {
+  "en": "/shop/tns-recovery-complex",
+  "ar": "/المتجر/مركب-tns-للتعافي",
+  "type": "content_entry",
+  "title": "TNS Recovery Complex®"
+ },
+ {
+  "en": "/shop/total-defence-repair-spf-34-clear",
+  "ar": "/المتجر/واقي-الشمس-الشامل-والإصلاح-spf-34-شفاف",
+  "type": "content_entry",
+  "title": "Total Defense + Repair SPF 34 (Clear)"
+ },
+ {
+  "en": "/shop/total-defence-repair-spf-34-tinted",
+  "ar": "/المتجر/واقي-الشمس-الشامل-والإصلاح-spf-34-ملون",
+  "type": "content_entry",
+  "title": "Total Defense + Repair SPF 34 (Tinted)"
+ },
+ {
+  "en": "/shop/ultra-sheer-moisturizer",
+  "ar": "/المتجر/مرطب-خفيف-فائق",
+  "type": "content_entry",
+  "title": "Ultra Sheer Moisturizer"
+ },
+ {
+  "en": "/shop/vitamin-c-e-complex",
+  "ar": "/المتجر/مركب-فيتامين-سي-إي",
+  "type": "content_entry",
+  "title": "Vitamin C+E Complex"
+ }
+]

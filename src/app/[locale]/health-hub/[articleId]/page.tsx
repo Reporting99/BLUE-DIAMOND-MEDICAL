@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { cmsPathForLocale } from "@/lib/routing";
 import { notFound } from "next/navigation";
 import { isLocale, type Locale } from "@/i18n/config";
 import { healthHubArticles, getHealthHubArticle } from "@/features/health-hub";
@@ -29,7 +30,9 @@ export function generateStaticParams() {
  * entityCacheTags() in page-resolver.ts.
  */
 async function loadArticle(id: string, locale: Locale) {
-  const cmsPath = `/health-hub/${id}`;
+  // FeelStack registers the Arabic route under its Arabic slug, so ask
+  // for THIS locale's path rather than the English one. See cmsPathForLocale.
+  const cmsPath = cmsPathForLocale(`/health-hub/${id}`, locale);
   const resolution = await resolvePageContent({
     path: cmsPath,
     locale,

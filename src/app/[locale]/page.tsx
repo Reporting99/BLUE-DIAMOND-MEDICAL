@@ -7,6 +7,8 @@ import { SiteClosingExperience } from "@/components/layout/SiteClosingExperience
 import { Button } from "@/components/ui/button";
 import { ImageKitImage } from "@/components/shared/ImageKitImage";
 import { FacetTile } from "@/components/shared/FacetTile";
+import { resolveListingMedia } from "@/lib/feelstack/listing-media";
+import { cmsAlt } from "@/lib/feelstack/media-slots";
 import { ClinicSchema } from "@/components/shared/schema";
 import { FaqPageSchema } from "@/components/shared/schema";
 import { ConcernExplorer } from "@/features/concerns";
@@ -50,6 +52,15 @@ export async function generateMetadata({
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale: rawLocale } = await params;
   const locale: Locale = isLocale(rawLocale) ? rawLocale : "en";
+
+  // Home is a real CMS page whose route is "/" in both locales, so its hero
+  // arrives like any other entity's media. Before the root-page designation
+  // existed the homepage had no CMS entity at all and its imagery could only
+  // be a placeholder; now that "/" resolves, not consuming it would leave a
+  // publishable, approved asset rendering as a FacetTile -- the exact
+  // detail/listing gap this work has been closing everywhere else.
+  const homeMedia = await resolveListingMedia([{ id: "home", englishPath: "/" }], locale);
+  const homeHero = (homeMedia.home ?? []).find((m) => m.slot === "hero");
   const dict = getDictionary(locale);
   const copy = homepageCopy[locale];
   const bookingHub = getRoute("book-appointment")!;
@@ -131,7 +142,29 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
               className="relative min-w-0 overflow-hidden rounded-lg"
               style={{ clipPath: "polygon(0 0, 94% 0, 100% 100%, 0 100%)" }}
             >
-              <FacetTile role="hero" alt={({ en: "Family medicine at Blue Diamond Medical", ar: "طب الأسرة في بلو دايموند الطبية" })[locale]} className="h-full w-full" />
+              {homeHero ? (
+                <ImageKitImage
+                  path={homeHero.path}
+                  preset="hero"
+                  role={homeHero.role}
+                  status={homeHero.status}
+                  alt={
+                    cmsAlt(homeHero) ?? {
+                      en: "Family medicine at Blue Diamond Medical",
+                      ar: "طب الأسرة في بلو دايموند الطبية",
+                    }
+                  }
+                  caption={homeHero.caption}
+                  locale={locale}
+                  width={homeHero.width}
+                  height={homeHero.height}
+                  sizes="(min-width: 1024px) 50vw, 50vw"
+                  preload
+                  className="h-full w-full"
+                />
+              ) : (
+                <FacetTile role="hero" alt={({ en: "Family medicine at Blue Diamond Medical", ar: "طب الأسرة في بلو دايموند الطبية" })[locale]} className="h-full w-full" />
+              )}
             </div>
             <div
               className="relative min-w-0 overflow-hidden rounded-lg"

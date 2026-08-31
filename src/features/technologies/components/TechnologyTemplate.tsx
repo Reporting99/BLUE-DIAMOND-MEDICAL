@@ -3,6 +3,8 @@ import { ArrowRight } from "lucide-react";
 import { Container } from "@/components/layout/Container";
 import { SectionTransition } from "@/components/layout/SectionTransition";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
+import { ImageKitImage } from "@/components/shared/ImageKitImage";
+import { cmsAlt } from "@/lib/feelstack/media-slots";
 import { MedicalWebPageSchema } from "@/components/shared/schema";
 import { FaqPageSchema } from "@/components/shared/schema";
 import { getRoute, href } from "@/lib/routing";
@@ -99,6 +101,22 @@ export function TechnologyTemplate({ technology, locale }: { technology: Technol
           items={[{ label: technologiesHub.title[locale], href: href("aesthetics-technologies-hub", locale) }, { label: technology.title[locale] }]}
         />
         <h1 className="mt-4 text-display-1 font-heading lg:text-display-1-lg">{technology.title[locale]}</h1>
+
+        {technology.image ? (
+          <ImageKitImage
+            path={technology.image.path}
+            preset="technology"
+            role={technology.image.role}
+            status={technology.image.status}
+            alt={cmsAlt(technology.image) ?? { en: technology.title.en, ar: technology.title.ar }}
+            caption={technology.image.caption}
+            locale={locale}
+            width={technology.image.width}
+            height={technology.image.height}
+            sizes="(min-width: 768px) 28rem, 100vw"
+            className="mt-8 aspect-square max-w-md rounded-lg"
+          />
+        ) : null}
         {technology.manufacturer ? (
           <p className="mt-2 text-sm text-text-secondary">
             {t.manufacturer}: <span className="font-medium text-text-body">{technology.manufacturer}</span>

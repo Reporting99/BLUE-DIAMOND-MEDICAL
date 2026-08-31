@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { cmsPathForLocale } from "@/lib/routing";
 import { notFound } from "next/navigation";
 import { isLocale, locales, type Locale } from "@/i18n/config";
 import { treatments, getTreatment, getGatedTreatment } from "@/features/aesthetics";
@@ -29,7 +30,9 @@ export function generateStaticParams() {
  * entityCacheTags() in page-resolver.ts.
  */
 async function loadTreatment(id: string, locale: Locale) {
-  const cmsPath = `/aesthetics/treatments/${id}`;
+  // FeelStack registers the Arabic route under its Arabic slug, so ask
+  // for THIS locale's path rather than the English one. See cmsPathForLocale.
+  const cmsPath = cmsPathForLocale(`/aesthetics/treatments/${id}`, locale);
   const resolution = await resolvePageContent({
     path: cmsPath,
     locale,

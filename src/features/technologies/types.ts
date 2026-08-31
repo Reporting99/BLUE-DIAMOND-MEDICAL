@@ -1,7 +1,10 @@
 import type { Bilingual, FaqEntry } from "@/types/common";
+import type { ImageKitAsset } from "@/types/media";
 
 export interface Technology {
   id: string;
+  /** Card image from this technology's FeelStack media assignment, if any. */
+  image?: ImageKitAsset;
   slug: string;
   slugAr: string;
   title: Bilingual;
