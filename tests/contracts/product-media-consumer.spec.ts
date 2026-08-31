@@ -97,3 +97,32 @@ test("every product still carries alt text for the placeholder it renders", () =
     }
   }
 });
+
+test("no product-image URL is built by gluing an ImageKit path onto the site domain", () => {
+  // The Product schema emitted
+  // https://bluediamondmedical.ca/blue-diamond/shop/<file>.jpg for all 19
+  // photographed products -- siteConfig.url concatenated with an ImageKit
+  // path. Those bytes are on ImageKit; that URL 404s, and it was handed to
+  // every crawler reading the structured data. Invisible on the page, because
+  // the rendered <img> resolves through ImageKitImage and was always correct.
+  const source = readFileSync(
+    path.join(process.cwd(), "src", "features", "products", "components", "ProductTemplate.tsx"),
+    "utf8",
+  );
+  expect(source).not.toMatch(/siteConfig\.url\}\$\{[a-zA-Z]*[iI]mage\.path/);
+  expect(source).not.toMatch(/\$\{siteConfig\.url\}\$\{coverImage\.path\}/);
+  // And it goes through the ImageKit builder instead.
+  expect(source).toMatch(/buildSrc\(/);
+});
+
+test("no product component guesses an image path from a slug", () => {
+  for (const file of ["ProductTemplate.tsx", "ProductCard.tsx"]) {
+    const source = readFileSync(
+      path.join(process.cwd(), "src", "features", "products", "components", file),
+      "utf8",
+    );
+    expect(source, `${file} must not construct an image path`).not.toMatch(
+      /products\/skinmedica\/\$\{/,
+    );
+  }
+});
