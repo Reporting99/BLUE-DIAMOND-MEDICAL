@@ -1,0 +1,132 @@
+{
+  "type": "content_entry",
+  "status": "published",
+  "route": {
+    "id": "4105b25f-b4e3-482d-a3ba-0595d7ae45d7",
+    "path": "/shop/tns-recovery-complex",
+    "locale": "en",
+    "requestedLocale": "en",
+    "resolvedLocale": "en",
+    "usedFallback": false,
+    "alternates": [
+      {
+        "locale": "ar",
+        "path": "/المتجر/مركب-tns-للتعافي"
+      },
+      {
+        "locale": "en",
+        "path": "/shop/tns-recovery-complex"
+      }
+    ],
+    "sectionId": null,
+    "updatedAt": "2026-08-23T13:06:44.446Z"
+  },
+  "data": {
+    "id": "d3e5d337-1035-43b4-84ba-5c0341ab9e9a",
+    "contentType": "product",
+    "title": "TNS Recovery Complex®",
+    "fields": {
+      "images": [
+        {
+          "alt": "TNS Recovery Complex®",
+          "path": "/blue-diamond/products/skinmedica/tns-recovery-complex.jpg",
+          "status": "pending"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://www.skinmedica.com/us/product-category/correction/95863.html",
+          "publisher": "SkinMedica official site (skinmedica.com — the .ca storefront returned an access error during research; .com is the same manufacturer/brand and used as the verification source)",
+          "retrievedDate": "2026-08-22"
+        }
+      ],
+      "brand_id": "skinmedica",
+      "in_stock": true,
+      "overview": "A concentrated growth-factor serum formulated to help reduce the appearance of fine lines and wrinkles while improving skin tone and texture.",
+      "how_to_use": "Apply to the entire face (neck and chest if desired), morning and evening. Avoid the eye area; if contact occurs, rinse eyes thoroughly with water.",
+      "product_id": "tns-recovery-complex",
+      "size_label": "28.4 g",
+      "what_it_is": "A growth-factor and exosome serum. Per manufacturer information, it contains over 1 trillion exosomes per bottle, described as the highest concentration of the brand's patented growth-factor blend.",
+      "price_cents": 25000,
+      "category_ids": [
+        "serums"
+      ],
+      "product_type": "Growth-factor and exosome serum",
+      "price_currency": "CAD",
+      "approval_status": "approved",
+      "routine_placement": "Morning and evening, after cleansing and toning; if used with TNS Advanced+ Serum, apply this first.",
+      "related_product_ids": [
+        "tns-advanced-plus-serum",
+        "vitamin-c-e-complex"
+      ]
+    },
+    "translationGroupId": "b828fba5-9061-42b7-90dc-b30bd087dd91",
+    "publishedAt": "2026-08-23T13:06:44.446Z",
+    "updatedAt": "2026-08-30T04:29:23.014Z"
+  },
+  "seo": {
+    "title": "TNS Recovery Complex®",
+    "description": "A concentrated growth-factor serum formulated to help reduce the appearance of fine lines and wrinkles while improving skin tone and texture."
+  },
+  "relations": {
+    "items": [],
+    "faqs": [
+      {
+        "id": "3ee25897-c3c3-4561-bba3-4b8b9f83791b",
+        "key": "pr-tns-recovery-complex-faq-1",
+        "question": "What are exosomes?",
+        "answer": "The manufacturer describes this product as containing over 1 trillion exosomes per bottle as part of its growth-factor and protein blend."
+      },
+      {
+        "id": "dab9a844-8dd0-4cd9-82ab-258aeea7cc41",
+        "key": "pr-tns-recovery-complex-faq-2",
+        "question": "Should this go before or after TNS Advanced+ Serum?",
+        "answer": "Before — apply TNS Recovery Complex first, then TNS Advanced+ Serum, per manufacturer guidance."
+      },
+      {
+        "id": "84c94737-9bd1-4116-93f7-848d0860bf8c",
+        "key": "pr-tns-recovery-complex-faq-3",
+        "question": "When do I apply this?",
+        "answer": "Morning and evening, after cleansing and toning."
+      },
+      {
+        "id": "37173284-2ee1-440b-b41f-467ddd77a7bb",
+        "key": "pr-tns-recovery-complex-faq-4",
+        "question": "What is this formulated to help with?",
+        "answer": "The appearance of fine lines and wrinkles, and skin tone and texture, per manufacturer information."
+      },
+      {
+        "id": "c54db2bc-3bbf-4645-93bc-32b3eeef6eff",
+        "key": "pr-tns-recovery-complex-faq-5",
+        "question": "What size is this?",
+        "answer": "28.4 g."
+      },
+      {
+        "id": "6b85854a-d41c-4c31-86d8-69dd21224ac3",
+        "key": "pr-tns-recovery-complex-faq-6",
+        "question": "How do I confirm current price and availability?",
+        "answer": "Contact Blue Diamond Medical Clinic directly."
+      }
+    ],
+    "sections": [],
+    "taxonomies": []
+  },
+  "media": [
+    {
+      "id": "6717bed8-5281-42df-b2b1-ece86f3648d5",
+      "path": "/blue-diamond/shop/22_TNS_Recovery_Complex.jpg",
+      "width": 1074,
+      "height": 1074,
+      "aspectRatio": 1,
+      "alt": {
+        "ar": "عبوة منتج TNS Recovery Complex® من سكين ميديكا",
+        "en": "SkinMedica TNS Recovery Complex® product bottle"
+      },
+      "role": "productPrimary",
+      "slot": "productPrimary",
+      "approvalStatus": "approved",
+      "sortOrder": 0,
+      "localeMode": "shared"
+    }
+  ]
+}

@@ -1,29 +1,17 @@
 # Nginx
 
-Two things live here, and only one of them is for launch.
+Blue Diamond has no public vhost yet, by design. Nothing here is installed on
+the host until the canonical domain is connected.
 
-## 1. Webhook-only ingress (installed BEFORE launch)
+## The canonical-domain vhost (launch)
 
-`bd-hooks.dfeelings.com.conf` exposes exactly one route --
-`POST /api/feelstack/revalidate` -- on a hostname that serves nothing else.
-Every other path and method returns 404, the body is capped, and requests are
-rate limited.
-
-It exists because Blue Diamond must stay unreachable while FeelStack still needs
-to reach its revalidation endpoint. Without it the CMS has nowhere to deliver,
-which is the state that left 1301 events recorded as delivered with nothing
-registered to receive them. Publishing this hostname cannot make the unlaunched
-site crawlable: no page, asset, sitemap or other API route is reachable on it,
-and every response carries `X-Robots-Tag: noindex`.
-
-It is NOT the canonical domain and must never become it.
-
-## 2. Canonical-domain vhost (launch only)
-
-Still to be written. Launch additionally requires:
+Still to be written. Launch requires:
 
 1. A vhost for the canonical domain whose `location /` proxies to
-   `blue_diamond_app`.
+   `blue_diamond_app`, plus a `location = /api/feelstack/revalidate` so
+   FeelStack can reach the application's revalidation endpoint. Both come from
+   the same generated upstream, so a Blue/Green switch moves the site and its
+   webhook together and the two can never disagree.
 2. TLS for that domain.
 3. `SITE_LAUNCHED=true` in **both** slot env files
    (`/home/blue-diamond/shared/{blue,green}-runtime.env`) and both slots
@@ -44,6 +32,21 @@ sitemap. Canonical, hreflang and OG URLs continue to point at the real launch
 domain -- they are stable and correct, and nothing anywhere emits a temporary or
 runtime hostname.
 
+### There is no temporary webhook hostname
+
+A `bd-hooks.dfeelings.com` vhost briefly existed here to give FeelStack somewhere
+to deliver before launch. It has been removed: the real domain is close enough
+that standing up a second public hostname, with its own certificate to obtain
+and renew, buys nothing and leaves a name nobody intends to keep.
+
+Until the canonical vhost exists, FeelStack has nowhere to deliver and cache
+invalidation does not fire in production. That is a known, accepted
+consequence of being pre-launch, not a defect: content is resolved fresh on
+each ISR revalidation window regardless, and the application's
+`/api/feelstack/revalidate` route is fully implemented and tested
+(`tests/security/feelstack-webhook.spec.ts`) so it works the day a vhost routes
+to it.
+
 ## The switch invariant
 
 `blue-diamond-active-slot.conf` is the single authority on which slot serves
@@ -57,8 +60,8 @@ An `upstream` block is only valid at `http` level, and on this host
 `nginx.conf` includes `sites-enabled/*.conf` there and nothing else --
 `snippets/` is pulled in only by an explicit `include` inside a `location`,
 which cannot hold an upstream. A generated file placed under `snippets/` would
-be written on every switch and read by nothing, and `bd-hooks.dfeelings.com`
-would fail `nginx -t` with an undefined upstream. FeelStack's
+be written on every switch and read by nothing, and any vhost referencing the
+upstream would fail `nginx -t` on an undefined upstream. FeelStack's
 `feelstack-active-slot.conf` follows the same convention on this host.
 
 It declares an `upstream`, not a bare `proxy_pass http://127.0.0.1:PORT/;`. The

@@ -1,5 +1,4 @@
 import type { Product, ProductBrand, ProductCategory, ProductConcern, ProductSource } from "@/features/products/types";
-import { MEDIA_ROOT } from "@/config/imagekit";
 
 /**
  * Shop content store — brief §18, plus the "MANDATORY APPROVED SKINMEDICA
@@ -77,8 +76,25 @@ export const categoryTaglines: Record<string, { en: string; ar: string }> = {
   "the-hydration-factor": { en: "Essential hydration skin needs", ar: "الترطيب الأساسي الذي تحتاجه البشرة" },
 };
 
-function pendingImage(slug: string, name: Product["name"]): Product["images"][number] {
-  return { path: `${MEDIA_ROOT}/products/skinmedica/${slug}.jpg`, status: "pending", alt: name };
+/**
+ * The placeholder record a product falls back to when FeelStack has no
+ * `productPrimary` assignment for it.
+ *
+ * It carries NO path. The previous version built one from the slug —
+ * `${MEDIA_ROOT}/products/skinmedica/<slug>.jpg` — a location no asset has
+ * ever occupied: the real packshots live under `/blue-diamond/shop/` with
+ * catalogue-numbered filenames, and FeelStack decides which belongs to which
+ * product. Guessing a path from a slug was inert only because `status` is
+ * `"pending"` and `ImageKitImage` refuses to request bytes below `"approved"`;
+ * flipping that status would have pointed 23 products at 23 URLs that 404.
+ *
+ * An empty path is the honest statement — "no image, and nothing here knows
+ * where one would be" — and it keeps the source of truth in one place. Adding
+ * a photograph is a CMS action: upload, approve, assign `productPrimary`,
+ * publish. No code change, no redeploy.
+ */
+function pendingImage(_slug: string, name: Product["name"]): Product["images"][number] {
+  return { path: "", status: "pending", alt: name };
 }
 
 const officialSite: Omit<ProductSource, "url"> = { retrievedDate: "2026-08-22", publisher: "SkinMedica official site (skinmedica.com — the .ca storefront returned an access error during research; .com is the same manufacturer/brand and used as the verification source)" };
