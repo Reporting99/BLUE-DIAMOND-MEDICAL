@@ -8,7 +8,8 @@ import { Button } from "@/components/ui/button";
 import { ImageKitImage } from "@/components/shared/ImageKitImage";
 import { FacetTile } from "@/components/shared/FacetTile";
 import { resolveListingMedia } from "@/lib/feelstack/listing-media";
-import { cmsAlt } from "@/lib/feelstack/media-slots";
+import { cacheTags } from "@/lib/feelstack/cache-tags";
+import { cmsAlt, resolveSlotImageRef } from "@/lib/feelstack/media-slots";
 import { ClinicSchema } from "@/components/shared/schema";
 import { FaqPageSchema } from "@/components/shared/schema";
 import { ConcernExplorer } from "@/features/concerns";
@@ -59,8 +60,6 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   // be a placeholder; now that "/" resolves, not consuming it would leave a
   // publishable, approved asset rendering as a FacetTile -- the exact
   // detail/listing gap this work has been closing everywhere else.
-  const homeMedia = await resolveListingMedia([{ id: "home", englishPath: "/" }], locale);
-  const homeHero = (homeMedia.home ?? []).find((m) => m.slot === "hero");
   const dict = getDictionary(locale);
   const copy = homepageCopy[locale];
   const bookingHub = getRoute("book-appointment")!;
@@ -68,6 +67,34 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const featuredDoctors = doctors.slice(0, 3);
 
   const { serviceCards, techShowcase, treatmentShowcase, productShowcase } = getHomeShowcases(locale);
+
+  // Home's own hero, plus the media for every entity this page features.
+  //
+  // The homepage is the largest LISTING on the site: it shows medical services,
+  // treatments, technologies, doctors and products, all from static modules.
+  // Each of those entities may already carry an approved assignment that its own
+  // detail page renders -- so without resolving here the homepage shows a
+  // placeholder for the very image the page it links to displays. That is the
+  // same detail/listing split closed on /doctors and /shop, at homepage scale.
+  const homeEntities = [
+    { id: "home", englishPath: "/" },
+    ...serviceCards.map((c) => ({ id: `service:${c.id}`, englishPath: `/medical/${c.id}` })),
+    ...treatmentShowcase.map((t) => ({ id: `treatment:${t.id}`, englishPath: `/aesthetics/treatments/${t.id}` })),
+    ...techShowcase.map((t) => ({ id: `tech:${t.id}`, englishPath: `/aesthetics/technologies/${t.id}` })),
+    ...featuredDoctors.map((d) => ({ id: `doctor:${d.id}`, englishPath: `/doctors/${d.id}` })),
+    ...productShowcase.map((pr) => ({ id: `product:${pr.id}`, englishPath: `/shop/${pr.slug}` })),
+  ];
+  const homeMedia = await resolveListingMedia(homeEntities, locale, [
+    cacheTags.doctorsIndex(process.env.FEELSTACK_SITE_KEY ?? "", locale),
+    cacheTags.medicalServicesIndex(process.env.FEELSTACK_SITE_KEY ?? "", locale),
+    cacheTags.aestheticTreatmentsIndex(process.env.FEELSTACK_SITE_KEY ?? "", locale),
+    cacheTags.technologiesIndex(process.env.FEELSTACK_SITE_KEY ?? "", locale),
+    cacheTags.productsIndex(process.env.FEELSTACK_SITE_KEY ?? "", locale),
+  ]);
+  const homeHero = (homeMedia.home ?? []).find((m) => m.slot === "hero");
+  /** First asset in any of `slots` for a featured entity, or undefined. */
+  const featured = (key: string, ...slots: string[]) =>
+    (homeMedia[key] ?? []).find((m) => slots.includes(m.slot));
   const faqSchemaEntries = homeFaqSchemaEntries(locale);
 
   const findByNeedIcon = { stethoscope: Stethoscope, sparkles: Sparkles, search: Search, cpu: Cpu };
@@ -293,6 +320,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                 ctaLabel={card.ctaLabel}
                 routeId={card.routeId}
                 imageId={card.id}
+                resolved={featured(`service:${card.id}`, "hero", "card")}
                 locale={locale}
                 delay={i}
                 className={i < 2 ? "col-span-2" : "col-span-2 sm:col-span-1"}
@@ -338,14 +366,14 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           {treatmentShowcase.length ? (
             <div className="mt-10 grid gap-4 lg:grid-cols-6">
               {treatmentShowcase.slice(0, 1).map((treatment) => (
-                <TreatmentCard key={treatment.id} treatment={treatment} locale={locale} concern={concernForTreatment(treatment.id)} size="large" className="lg:col-span-4 lg:row-span-2" />
+                <TreatmentCard key={treatment.id} resolved={featured(`treatment:${treatment.id}`, "hero", "card")} treatment={treatment} locale={locale} concern={concernForTreatment(treatment.id)} size="large" className="lg:col-span-4 lg:row-span-2" />
               ))}
               {treatmentShowcase.slice(1, 3).map((treatment, i) => (
-                <TreatmentCard key={treatment.id} treatment={treatment} locale={locale} concern={concernForTreatment(treatment.id)} size="medium" className="lg:col-span-2" delay={i} />
+                <TreatmentCard key={treatment.id} resolved={featured(`treatment:${treatment.id}`, "hero", "card")} treatment={treatment} locale={locale} concern={concernForTreatment(treatment.id)} size="medium" className="lg:col-span-2" delay={i} />
               ))}
               <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:col-span-6 lg:grid-cols-5">
                 {treatmentShowcase.slice(3).map((treatment, i) => (
-                  <TreatmentCard key={treatment.id} treatment={treatment} locale={locale} concern={concernForTreatment(treatment.id)} size="small" delay={i} />
+                  <TreatmentCard key={treatment.id} resolved={featured(`treatment:${treatment.id}`, "hero", "card")} treatment={treatment} locale={locale} concern={concernForTreatment(treatment.id)} size="small" delay={i} />
                 ))}
               </div>
             </div>
@@ -381,16 +409,16 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           {techShowcase.length ? (
             <div className="mt-12 grid gap-6 lg:grid-cols-6">
               {techShowcase.slice(0, 1).map((tech, i) => (
-                <TechnologyCard key={tech.id} technology={tech} locale={locale} number={i + 1} size="large" className="lg:col-span-4" />
+                <TechnologyCard key={tech.id} resolved={featured(`tech:${tech.id}`, "card", "hero")} technology={tech} locale={locale} number={i + 1} size="large" className="lg:col-span-4" />
               ))}
               <div className="grid gap-6 sm:grid-cols-2 lg:col-span-2 lg:grid-cols-1">
                 {techShowcase.slice(1, 3).map((tech, i) => (
-                  <TechnologyCard key={tech.id} technology={tech} locale={locale} number={i + 2} size="small" delay={i} />
+                  <TechnologyCard key={tech.id} resolved={featured(`tech:${tech.id}`, "card", "hero")} technology={tech} locale={locale} number={i + 2} size="small" delay={i} />
                 ))}
               </div>
               <div className="grid gap-6 sm:grid-cols-2 lg:col-span-6 lg:grid-cols-2">
                 {techShowcase.slice(3).map((tech, i) => (
-                  <TechnologyCard key={tech.id} technology={tech} locale={locale} number={i + 4} size="medium" delay={i} />
+                  <TechnologyCard key={tech.id} resolved={featured(`tech:${tech.id}`, "card", "hero")} technology={tech} locale={locale} number={i + 4} size="medium" delay={i} />
                 ))}
               </div>
             </div>
@@ -441,11 +469,30 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                 >
                   <div className="facet-corner-sm relative aspect-[4/5] overflow-hidden">
                     <ImageKitImage
-                      path={doctor.image.path}
+                      path={
+                        resolveSlotImageRef({
+                          media: homeMedia[`doctor:${doctor.id}`] ?? [],
+                          slot: "doctorPortrait",
+                          override: doctor.image,
+                          fallback: doctor.image,
+                        }).path
+                      }
                       preset="doctor-card"
                       role="doctor"
-                      status={doctor.image.status}
-                      alt={{ en: `Portrait of ${doctor.name.en}`, ar: `صورة ${doctor.name.ar}` }}
+                      status={
+                        resolveSlotImageRef({
+                          media: homeMedia[`doctor:${doctor.id}`] ?? [],
+                          slot: "doctorPortrait",
+                          override: doctor.image,
+                          fallback: doctor.image,
+                        }).status
+                      }
+                      alt={
+                        cmsAlt(featured(`doctor:${doctor.id}`, "doctorPortrait")) ?? {
+                          en: `Portrait of ${doctor.name.en}`,
+                          ar: `صورة ${doctor.name.ar}`,
+                        }
+                      }
                       locale={locale}
                       width={480}
                       height={600}
@@ -502,11 +549,11 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
               >
                 <div className="facet-corner-sm aspect-square overflow-hidden rounded">
                   <ImageKitImage
-                    path={product.images[0]!.path}
+                    path={(featured(`product:${product.id}`, "productPrimary") ?? product.images[0]!).path}
                     preset="product"
                     role="product"
-                    status={product.images[0]!.status}
-                    alt={product.images[0]!.alt}
+                    status={(featured(`product:${product.id}`, "productPrimary") ?? product.images[0]!).status}
+                    alt={cmsAlt(featured(`product:${product.id}`, "productPrimary")) ?? product.images[0]!.alt}
                     locale={locale}
                     width={400}
                     height={400}

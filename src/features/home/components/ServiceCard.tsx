@@ -1,6 +1,9 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { FacetTile } from "@/components/shared/FacetTile";
+import { ImageKitImage } from "@/components/shared/ImageKitImage";
+import type { ResolvedMedia } from "@/lib/feelstack/media";
+import { cmsAlt } from "@/lib/feelstack/media-slots";
 import { getRoute } from "@/lib/routing";
 import type { Bilingual } from "@/types/common";
 import type { Locale } from "@/i18n/config";
@@ -20,6 +23,7 @@ import type { Locale } from "@/i18n/config";
  * one thing tried first and rejected here.
  */
 function ServiceCard({
+  resolved,
   title,
   short,
   long,
@@ -29,6 +33,8 @@ function ServiceCard({
   delay,
   className = "",
 }: {
+  /** Media resolved for this entity by the homepage. See lib/feelstack/listing-media.ts. */
+  resolved?: ResolvedMedia;
   title: Bilingual;
   short: Bilingual;
   long: Bilingual;
@@ -48,7 +54,22 @@ function ServiceCard({
       className={`group relative isolate flex flex-col overflow-hidden rounded-lg border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 lg:aspect-[4/5] lg:border-0 ${className}`}
     >
       <div className="relative aspect-[4/3] overflow-hidden lg:absolute lg:inset-0 lg:aspect-auto">
+        {resolved ? (
+          <ImageKitImage
+            path={resolved.path}
+            preset="service"
+            role={resolved.role}
+            status={resolved.status}
+            alt={cmsAlt(resolved) ?? { en: `${title.en} at Blue Diamond Medical`, ar: `${title.ar} في بلو دايموند الطبية` }}
+            locale={locale}
+            width={resolved.width}
+            height={resolved.height}
+            sizes="(min-width: 1024px) 33vw, 100vw"
+            className="h-full w-full transition-opacity duration-[380ms] lg:group-hover:opacity-0 lg:group-focus-within:opacity-0"
+          />
+        ) : (
         <FacetTile role="service" alt={({ en: `${title.en} at Blue Diamond Medical`, ar: `${title.ar} في بلو دايموند الطبية` })[locale]} className="h-full w-full transition-opacity duration-[380ms] lg:group-hover:opacity-0 lg:group-focus-within:opacity-0" />
+        )}
       </div>
 
       <div className="relative flex flex-1 flex-col gap-1.5 p-5 lg:absolute lg:inset-0 lg:z-10 lg:justify-end lg:text-white lg:transition-opacity lg:duration-[380ms] lg:group-hover:opacity-0 lg:group-focus-within:opacity-0">

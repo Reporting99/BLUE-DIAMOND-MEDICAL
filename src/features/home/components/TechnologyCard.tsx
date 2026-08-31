@@ -1,6 +1,9 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { FacetTile } from "@/components/shared/FacetTile";
+import { ImageKitImage } from "@/components/shared/ImageKitImage";
+import type { ResolvedMedia } from "@/lib/feelstack/media";
+import { cmsAlt } from "@/lib/feelstack/media-slots";
 import { getRoute } from "@/lib/routing";
 import { treatments } from "@/features/aesthetics/data/treatments";
 import type { Technology } from "@/features/technologies/types";
@@ -11,6 +14,7 @@ import type { Locale } from "@/i18n/config";
  * featured + asymmetric supporting grid" spec for the dark section.
  */
 function TechnologyCard({
+  resolved,
   technology,
   locale,
   number,
@@ -18,6 +22,8 @@ function TechnologyCard({
   className = "",
   delay = 0,
 }: {
+  /** Media resolved for this entity by the homepage. See lib/feelstack/listing-media.ts. */
+  resolved?: ResolvedMedia;
   technology: Technology;
   locale: Locale;
   number: number;
@@ -39,7 +45,22 @@ function TechnologyCard({
       className={`group flex flex-col gap-4 rounded-lg border border-white/10 bg-white/5 p-6 text-white transition-colors hover:border-white/30 ${size === "large" ? "lg:flex-row lg:items-center lg:gap-8" : ""} ${className}`}
     >
       <div className={`relative aspect-square overflow-hidden rounded-md bg-white/5 ${size === "large" ? "w-full lg:w-64 lg:shrink-0" : size === "small" ? "w-16 shrink-0" : "w-full"}`}>
+        {resolved ? (
+          <ImageKitImage
+            path={resolved.path}
+            preset="technology"
+            role={resolved.role}
+            status={resolved.status}
+            alt={cmsAlt(resolved) ?? { en: `${technology.title.en} device at Blue Diamond Medical`, ar: `جهاز ${technology.title.ar} في بلو دايموند الطبية` }}
+            locale={locale}
+            width={resolved.width}
+            height={resolved.height}
+            sizes="(min-width: 1024px) 33vw, 100vw"
+            className="h-full w-full"
+          />
+        ) : (
         <FacetTile role="technology" alt={({ en: `${technology.title.en} device at Blue Diamond Medical`, ar: `جهاز ${technology.title.ar} في بلو دايموند الطبية` })[locale]} className="h-full w-full" />
+        )}
       </div>
       <div className={size === "small" ? "flex flex-1 items-center justify-between gap-3" : ""}>
         <div>
