@@ -34,7 +34,15 @@ export const features = {
   // shipping-returns stub pages.
   shopCheckoutEnabled: false,
   newProductBrandEnabled: false,
-  aestheticPricingEnabled: false, // no separate approved aesthetics-treatment price list beyond the SkinMedica product prices
+  // Published from the client-approved pricing workbook
+  // (BLUE_DIAMOND_AESTHETIC_PRICING_APPROVED_2026-08-23.xlsx) plus the
+  // client approval email of the same date — GAP-003, resolved. 78 of the
+  // 81 rows publish; the 3 ampoule add-ons stay publicDisplay:false behind
+  // GAP-014 (clinician review), enforced in the data file, not here.
+  // See docs/APPROVED_AESTHETIC_PRICING_MATRIX.md. Flipping this to false
+  // withdraws the entire price list — pricing index and every per-treatment
+  // pricing block — in one move.
+  aestheticPricingEnabled: true,
   beforeAfterEnabled: false, // no approved before/after photography supplied
   newsletterEnabled: false,
   careersFormEnabled: true, // "Join our Team" form is live on the legacy site

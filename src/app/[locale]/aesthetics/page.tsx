@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { features } from "@/config/features";
 import { ArrowRight, Sparkles, Target, Cpu } from "lucide-react";
 import { Container } from "@/components/layout/Container";
 import { SectionTransition } from "@/components/layout/SectionTransition";
@@ -42,6 +43,7 @@ export default async function AestheticsHubPage({ params }: { params: Promise<{ 
       byConcern: { title: "By Concern", body: "Start from what's bothering you — acne scars, redness, fine lines — and see what treats it." },
       byTechnology: { title: "Our Technologies", body: "The Cynosure equipment behind our treatments." },
       botoxCta: "Explore Botox services",
+      pricingCta: "View aesthetics pricing",
     },
     ar: {
       title: "التجميل الطبي",
@@ -52,6 +54,7 @@ export default async function AestheticsHubPage({ params }: { params: Promise<{ 
       byConcern: { title: "حسب المخاوف", body: "ابدأوا مما يقلقكم — ندبات حب الشباب، الاحمرار، الخطوط الدقيقة — واكتشفوا العلاج المناسب." },
       byTechnology: { title: "تقنياتنا", body: "معدات Cynosure التي تقف خلف علاجاتنا." },
       botoxCta: "تعرّف على خدمات البوتوكس",
+      pricingCta: "اطّلع على أسعار التجميل الطبي",
     },
   }[locale];
 
@@ -111,9 +114,21 @@ export default async function AestheticsHubPage({ params }: { params: Promise<{ 
             ))}
           </div>
 
-          <Link href={href("botox-hub", locale)} className="mt-8 inline-flex items-center gap-1 font-medium text-primary hover:text-primary-hover">
-            {copy.botoxCta} <ArrowRight className="size-4 rtl:rotate-180" />
-          </Link>
+          <div className="mt-8 flex flex-wrap gap-x-8 gap-y-3">
+            <Link href={href("botox-hub", locale)} className="inline-flex items-center gap-1 font-medium text-primary hover:text-primary-hover">
+              {copy.botoxCta} <ArrowRight className="size-4 rtl:rotate-180" />
+            </Link>
+            {/* Published price list — gated with the same flag as the page itself
+                so this never links to a 404 while pricing is withdrawn. */}
+            {features.aestheticPricingEnabled ? (
+              <Link
+                href={href("aesthetics-pricing", locale)}
+                className="inline-flex items-center gap-1 font-medium text-primary hover:text-primary-hover"
+              >
+                {copy.pricingCta} <ArrowRight className="size-4 rtl:rotate-180" />
+              </Link>
+            ) : null}
+          </div>
         </Container>
       </section>
       <SectionTransition from="var(--surface)" to="var(--surface-dark)" />

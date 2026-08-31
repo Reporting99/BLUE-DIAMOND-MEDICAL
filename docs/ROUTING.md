@@ -86,7 +86,7 @@ None of these appear in the sitemap, main navigation, or search results, and eve
 | `medical-botox-hub` + migraine/bruxism-tmj/hyperhidrosis (4) | `medicalBotoxDetailPagesEnabled` | Would duplicate content already published on `/botox` |
 | `treatment-cosmetic-botox` | `cosmeticBotoxTreatmentPageEnabled` | Would duplicate `/botox`'s existing content |
 | `treatment-skin-tightening` | `skinTighteningTreatmentPageEnabled` | Would duplicate `/aesthetics/treatments/radio-frequency` |
-| `aesthetics-pricing` | `aestheticPricingEnabled` | No approved aesthetics prices supplied |
+| `aesthetics-pricing` | `aestheticPricingEnabled` | **Published 2026-08-31** — flag `true`, route `index`/`inSitemap`. The flag is retained so the whole price list can be withdrawn in one move if the clinic revises the sheet |
 | `aesthetics-consultation` | `consultationFormEnabled` | No approved consultation-intake flow supplied |
 | `aesthetics-before-after` | `beforeAfterEnabled` | No approved before/after photography |
 | `legal-terms`, `legal-privacy-policy`, `legal-accessibility`, `legal-medical-disclaimer` (4) | `legalPagesEnabled` | No approved legal copy (legacy showed literal "Coming soon") |

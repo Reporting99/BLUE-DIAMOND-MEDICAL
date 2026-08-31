@@ -25,6 +25,10 @@ const pages = [
   "/en/aesthetics/concerns/acne-scars",
   "/en/aesthetics/technologies",
   "/en/aesthetics/technologies/potenza",
+  // Published price list (GAP-003 resolved) — a long two-column money
+  // table is contrast- and structure-sensitive, so it is scanned in both
+  // locales rather than only English.
+  "/en/aesthetics/pricing",
   "/en/patient-resources",
   "/en/health-hub",
   "/en/about",
@@ -42,6 +46,7 @@ const pages = [
   "/ar/الأطباء",
   "/ar/الأطباء/محمد-فرحات",
   "/ar/التجميل-الطبي/العلاجات/الإبر-الدقيقة-بالترددات-الراديوية",
+  "/ar/التجميل-الطبي/الأسعار",
 ];
 
 /**

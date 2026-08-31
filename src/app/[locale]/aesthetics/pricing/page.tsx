@@ -6,16 +6,18 @@ import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
 import { isLocale, type Locale } from "@/i18n/config";
 import { getRoute, href } from "@/lib/routing";
 import { features } from "@/config/features";
-import { aestheticsPricingGroups } from "@/features/aesthetics";
-import { formatPrice } from "@/types/pricing";
+import { aestheticsPricingGroups, PricingTable } from "@/features/aesthetics";
 import { getRouteMetadata } from "@/lib/seo/metadata";
 
 /**
- * Feature-flagged off (`aestheticPricingEnabled`) — see
- * src/features/aesthetics/data/pricing.ts. Fully built: type model, currency
- * formatting, and this page all work correctly the moment approved prices
- * are added to the content file; until then it 404s rather than
- * publishing an empty pricing page.
+ * The published aesthetic price list — every `publicDisplay` row of the
+ * client-approved pricing workbook, grouped by treatment. The same records
+ * render on each treatment page via `getTreatmentPricing()`; this page is an
+ * index over them, not a second copy. See
+ * docs/APPROVED_AESTHETIC_PRICING_MATRIX.md.
+ *
+ * Still gated on `aestheticPricingEnabled` so the whole price list can be
+ * withdrawn with one boolean if the clinic revises the sheet.
  */
 export async function generateMetadata({
   params,
@@ -40,6 +42,14 @@ export default async function AestheticsPricingPage({ params }: { params: Promis
   const locale: Locale = isLocale(rawLocale) ? rawLocale : "en";
   const aestheticsRoute = getRoute("aesthetics-hub")!;
   const title = locale === "ar" ? "أسعار التجميل الطبي" : "Aesthetics Pricing";
+  const intro =
+    locale === "ar"
+      ? "تختلف الأسعار حسب منطقة العلاج والخيارات المختارة. جميع الأسعار بالدولار الكندي وتشمل الجلسة الواحدة."
+      : "Pricing varies by treatment area and the options selected. All prices are in Canadian dollars and are per session.";
+  const packagesNote =
+    locale === "ar"
+      ? "تتوفر باقات علاجية مخصّصة حسب احتياجات كل عميل. يُرجى التواصل مع فريقنا للحصول على خطة علاجية وأسعار باقات مخصّصة."
+      : "Customized treatment packages are available based on individual client needs. Please contact our team for a personalized treatment plan and package pricing.";
 
   return (
     <>
@@ -48,21 +58,13 @@ export default async function AestheticsPricingPage({ params }: { params: Promis
         <Breadcrumbs locale={locale} items={[{ label: aestheticsRoute.title[locale], href: href("aesthetics-hub", locale) }, { label: title }]} />
         <h1 className="mt-4 text-display-1 font-heading lg:text-display-1-lg">{title}</h1>
 
-        {aestheticsPricingGroups.map((group) => (
-          <div key={group.heading.en} className="mt-8">
-            <h2 className="text-h4 font-heading">{group.heading[locale]}</h2>
-            <ul className="mt-3 space-y-2">
-              {group.items.map((item) => (
-                <li key={item.id} className="flex justify-between rounded-md border border-border bg-surface px-4 py-3 text-sm">
-                  <span>{item.label[locale]}</span>
-                  <span className="ltr-run font-medium" style={{ fontFamily: "var(--font-data)" }}>
-                    {formatPrice(item.priceCents, item.startingFrom)}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
+        <p className="mt-4 max-w-prose text-body text-text-secondary">{intro}</p>
+
+        <div className="mt-8">
+          <PricingTable groups={aestheticsPricingGroups} locale={locale} headingLevel={2} />
+        </div>
+
+        <p className="mt-8 max-w-prose text-sm text-text-secondary">{packagesNote}</p>
       </Container>
       </section>
       <SectionTransition from="var(--background)" to="var(--surface-dark)" />

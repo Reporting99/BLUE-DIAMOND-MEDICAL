@@ -15,7 +15,14 @@ export {
   getBeforeAfterPairsForTechnology,
   publishableBeforeAfterPairs,
 } from "./data/before-after";
-export { aestheticsPricingGroups } from "./data/pricing";
+export type { AestheticPriceRow } from "./pricing-types";
+export {
+  aestheticPriceRows,
+  publishedPriceRows,
+  aestheticsPricingGroups,
+  getTreatmentPricing,
+} from "./data/pricing";
+export { PricingTable } from "./components/PricingTable";
 export { AestheticTreatmentTemplate } from "./components/AestheticTreatmentTemplate";
 export { BeforeAfterGallery } from "./components/BeforeAfterGallery";
 export { BeforeAfterSlider } from "./components/BeforeAfterSlider";

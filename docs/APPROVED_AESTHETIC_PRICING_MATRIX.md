@@ -1,9 +1,17 @@
 # Blue Diamond — Approved Aesthetic Pricing Matrix
 
 Reconciliation of the approved cosmetic-treatment pricing workbook against the
-canonical treatment taxonomy. **Documentation only** — no application source
-code, UI component, FeelStack content, deployment, production system, or DNS
-record was touched in this pass.
+canonical treatment taxonomy.
+
+> **Implementation status — 2026-08-31.** This matrix was documentation-only
+> when first written (no application source was touched in that pass). It has
+> since been implemented: all 81 rows now live in
+> `src/features/aesthetics/data/pricing.ts`, keyed by the `PR-0xx` ids below,
+> with `aestheticPricingEnabled: true`. The 78 `publicDisplay: true` rows render
+> on each treatment page and on `/aesthetics/pricing`; the 3 ampoule add-ons
+> stay unpublished pending GAP-014. This document remains the source of record
+> that `tests/unit/aesthetic-pricing.spec.ts` asserts the code against — if the
+> two ever disagree, this document wins and the test fails.
 
 ## Approved source
 
