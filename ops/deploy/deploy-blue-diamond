@@ -41,7 +41,7 @@ SHARED_ENV="/home/blue-diamond/shared/.env.production"
 DEPLOYMENTS_DIR="/home/blue-diamond/deployments"
 DEPLOY_LOG="${DEPLOYMENTS_DIR}/deployments.log"
 ACTIVE_FILE="${DEPLOYMENTS_DIR}/active-release.env"
-NGINX_SNIPPET="/etc/nginx/snippets/blue-diamond-active-slot.conf"
+NGINX_SNIPPET="/etc/nginx/sites-enabled/blue-diamond-active-slot.conf"
 NODE_BIN="/opt/nodejs/versions/v20.19.5/bin/node"
 LOCK_FILE="/run/lock/blue-diamond-deploy.lock"
 KEEP_RELEASES=3
@@ -52,7 +52,7 @@ KEEP_RELEASES=3
 write_active_slot_snippet() {
   local slot="$1" port="$2"
   cat <<SNIPPET
-# /etc/nginx/snippets/blue-diamond-active-slot.conf
+# /etc/nginx/sites-enabled/blue-diamond-active-slot.conf
 #
 # GENERATED FILE -- DO NOT EDIT BY HAND.
 # Rewritten atomically by /usr/local/sbin/deploy-blue-diamond on every switch.

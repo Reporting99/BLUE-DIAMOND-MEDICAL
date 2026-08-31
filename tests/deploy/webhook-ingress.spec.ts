@@ -189,6 +189,20 @@ test.describe("the generated upstream round-trips through the deploy script", ()
     expect(read(SNIPPET)).toMatch(/upstream\s+blue_diamond_app\s*\{/);
   });
 
+  test("the generated file lands where nginx loads it at http level", () => {
+    // An `upstream` block is only valid at `http` level. This host's
+    // nginx.conf includes `sites-enabled/*.conf` there and nothing else;
+    // `snippets/` is reached only by an explicit `include` inside a
+    // `location`, which cannot hold an upstream. Writing the generated file
+    // under `snippets/` would rewrite it on every switch while nginx read
+    // none of it, and bd-hooks.dfeelings.com would fail `nginx -t` with an
+    // undefined upstream. That was the shipped path; this pins the fix.
+    const target = deployCode().match(/^NGINX_SNIPPET="([^"]+)"/m);
+    expect(target, "deploy script must define NGINX_SNIPPET").toBeTruthy();
+    expect(target![1]).toBe("/etc/nginx/sites-enabled/blue-diamond-active-slot.conf");
+    expect(target![1]).not.toContain("/snippets/");
+  });
+
   test("the switch is atomic: write to .new, then rename", () => {
     const code = deployCode();
     expect(code).toMatch(/> "\$\{NGINX_SNIPPET\}\.new"/);
@@ -205,7 +219,7 @@ test.describe("nginx itself accepts the configuration", () => {
 
     const dir = mkdtempSync(join(tmpdir(), "bd-nginx-"));
     try {
-      mkdirSync(join(dir, "snippets"), { recursive: true });
+      mkdirSync(join(dir, "http-level"), { recursive: true });
       mkdirSync(join(dir, "certs"), { recursive: true });
 
       // A throwaway self-signed pair, so `nginx -t` can load an ssl_certificate
@@ -220,7 +234,7 @@ test.describe("nginx itself accepts the configuration", () => {
       );
       test.skip(ssl.status !== 0, "openssl not available on this runner");
 
-      writeFileSync(join(dir, "snippets", "blue-diamond-active-slot.conf"), read(SNIPPET));
+      writeFileSync(join(dir, "http-level", "blue-diamond-active-slot.conf"), read(SNIPPET));
 
       const vhost = read(VHOST)
         .replace(/\/etc\/nginx\/ssl-certificates\/bd-hooks\.dfeelings\.com\.crt/, join(dir, "certs", "t.crt"))
@@ -233,7 +247,7 @@ test.describe("nginx itself accepts the configuration", () => {
         [
           "events {}",
           "http {",
-          `  include ${join(dir, "snippets", "blue-diamond-active-slot.conf")};`,
+          `  include ${join(dir, "http-level", "blue-diamond-active-slot.conf")};`,
           vhost.replace(/limit_req_zone[^\n]*\n/, (m) => m),
           "}",
           "",

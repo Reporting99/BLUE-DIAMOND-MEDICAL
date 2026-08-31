@@ -28,6 +28,7 @@ if [ "${1:-}" != "--no-build" ]; then
 fi
 
 test -f .next/standalone/server.js
+test -s .next/BUILD_ID
 test -d .next/static
 
 rm -rf .next/standalone/.next/static
@@ -39,5 +40,9 @@ if [ -d public ]; then
   mkdir -p .next/standalone/public
   cp -RL --preserve=mode,timestamps public/. .next/standalone/public/
 fi
+
+# package-standalone.sh installs BUILD_ID beside the server; mirror it, or the
+# harness runs a layout production never ships.
+install -m 644 .next/BUILD_ID .next/standalone/.next/BUILD_ID
 
 exec env PORT="$PORT" HOSTNAME="$HOSTNAME" node .next/standalone/server.js

@@ -52,6 +52,15 @@ trusting the stored state file, and refuses to deploy if the two disagree. That
 refusal is deliberate: a stale state file silently "corrected" is how a deploy
 overwrites the slot that is actually serving.
 
+It is generated into `/etc/nginx/sites-enabled/`, not `/etc/nginx/snippets/`.
+An `upstream` block is only valid at `http` level, and on this host
+`nginx.conf` includes `sites-enabled/*.conf` there and nothing else --
+`snippets/` is pulled in only by an explicit `include` inside a `location`,
+which cannot hold an upstream. A generated file placed under `snippets/` would
+be written on every switch and read by nothing, and `bd-hooks.dfeelings.com`
+would fail `nginx -t` with an undefined upstream. FeelStack's
+`feelstack-active-slot.conf` follows the same convention on this host.
+
 It declares an `upstream`, not a bare `proxy_pass http://127.0.0.1:PORT/;`. The
 earlier form was written for a whole-site `location /`, where the trailing slash
 is harmless. It cannot be reused for an exact-path route: with
