@@ -262,13 +262,36 @@ test.describe("nginx itself accepts the configuration", () => {
         .replace(/\/etc\/nginx\/ssl-certificates\/bd-hooks\.dfeelings\.com\.key/, join(dir, "certs", "t.key"))
         .replace(/access_log[^\n]*\n/, "")
         .replace(/error_log[^\n]*\n/, "")
-        .replace(/^[ \t]*http2 on;\n/m, (match) => (knowsHttp2Directive ? match : ""));
+        .replace(/^[ \t]*http2 on;\n/m, (match) => (knowsHttp2Directive ? match : ""))
+        // `nginx -t` test-binds every listen address, and 80/443 are
+        // privileged. A CI runner is unprivileged, so it failed there on
+        // bind() rather than on anything about this configuration. Whether
+        // this host may bind port 80 is a privilege question; what this test
+        // is for is the structure -- the exact-path location, the method and
+        // body limits, the rate-limit zone, and the upstream resolving from
+        // the generated file. Ports are moved above 1024 so that structure
+        // gets checked wherever the suite runs.
+        .replace(/^(\s*listen\s+(?:\[::\]:)?)80;/gm, "$1{{HTTP}};")
+        .replace(/^(\s*listen\s+(?:\[::\]:)?)443(\s|;)/gm, "$1{{HTTPS}}$2")
+        .replace(/\{\{HTTP\}\}/g, "8080")
+        .replace(/\{\{HTTPS\}\}/g, "8443");
 
       writeFileSync(
         join(dir, "nginx.conf"),
         [
+          // `nginx -t` still resolves pid and error_log even though it starts
+          // no worker, and defaults them to /run and /var/log -- which an
+          // unprivileged runner cannot open, so the test failed on a
+          // permission error while reporting "syntax is ok". Both are pointed
+          // into the temp dir so this check depends on nothing outside it.
+          `pid ${join(dir, "nginx.pid")};`,
+          `error_log ${join(dir, "error.log")};`,
           "events {}",
           "http {",
+          // Same reason as pid/error_log: nginx's compiled-in default
+          // access_log is /var/log/nginx/access.log, which it opens during
+          // -t regardless of the vhost's own (stripped) directives.
+          `  access_log ${join(dir, "access.log")};`,
           `  include ${join(dir, "http-level", "blue-diamond-active-slot.conf")};`,
           vhost.replace(/limit_req_zone[^\n]*\n/, (m) => m),
           "}",
