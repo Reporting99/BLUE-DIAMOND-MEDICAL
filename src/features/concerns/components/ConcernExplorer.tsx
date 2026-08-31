@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { ImageKitImage } from "@/components/shared/ImageKitImage";
+import { FacetTile } from "@/components/shared/FacetTile";
 import { concerns } from "@/features/concerns/data";
 import { getRoute, href } from "@/lib/routing";
 import type { Locale } from "@/i18n/config";
@@ -51,17 +51,7 @@ export function ConcernExplorer({ locale }: { locale: Locale }) {
       <div className="mt-8 grid gap-8 lg:grid-cols-[5fr_7fr] lg:items-start">
         {active ? (
           <div className="facet-corner relative aspect-square overflow-hidden rounded-lg lg:sticky lg:top-24">
-            <ImageKitImage
-              path={`/concerns/${active.id}.jpg`}
-              preset="concern"
-              role="concern"
-              status="pending"
-              alt={{ en: `${active.title.en} — Blue Diamond Medical Aesthetics`, ar: `${active.title.ar} — بلو دايموند للتجميل الطبي` }}
-              locale={locale}
-              width={600}
-              height={600}
-              className="h-full w-full"
-            />
+            <FacetTile role="concern" alt={({ en: `${active.title.en} — Blue Diamond Medical Aesthetics`, ar: `${active.title.ar} — بلو دايموند للتجميل الطبي` })[locale]} className="h-full w-full" />
             <div
               aria-hidden="true"
               className="absolute inset-x-0 bottom-0 p-6"

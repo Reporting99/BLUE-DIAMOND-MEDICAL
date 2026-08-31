@@ -1,7 +1,14 @@
 import type { Bilingual } from "@/types/common";
+import type { ImageKitAsset } from "@/types/media";
 
 export interface AestheticTreatment {
   id: string;
+  /**
+   * Lead image, resolved from this treatment's FeelStack media assignment.
+   * Absent when no assignment exists, in which case the template renders no
+   * image block — the existing behaviour. Never a hardcoded path.
+   */
+  image?: ImageKitAsset;
   slug: string;
   slugAr: string;
   title: Bilingual;

@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { defineEntityContract, localizedBilingual } from "@/lib/feelstack/adapters";
+import { resolveSlotImageRef } from "@/lib/feelstack/media-slots";
 import type { Doctor } from "./types";
 
 /**
@@ -53,7 +54,7 @@ export type DoctorPersonFields = z.infer<typeof doctorPersonFieldsSchema>;
 export const doctorCmsContract = defineEntityContract<DoctorPersonFields, Doctor>({
   contentType: "person_profile",
   fields: doctorPersonFieldsSchema,
-  adapt: ({ locale, fields }) => {
+  adapt: ({ locale, fields, media }) => {
     const meta = fields.metadata;
     return {
       id: meta.doctorId,
@@ -73,10 +74,19 @@ export const doctorCmsContract = defineEntityContract<DoctorPersonFields, Doctor
           }
         : {}),
       practicesAesthetics: meta.practicesAesthetics,
+      // ImageKit remains the store; FeelStack owns only the reference. The
+      // portrait now comes from the entity's real `doctorPortrait` media
+      // assignment when one exists, and falls back to the legacy `metadata`
+      // reference when it does not. `photoDeclined` / `disabled` are passed as
+      // the override so they beat any assignment outright -- a doctor who has
+      // declined photography never acquires a portrait from an import.
       image: {
-        // ImageKit remains the store; FeelStack owns only the reference.
-        path: meta.imagePath,
-        status: meta.imageStatus,
+        ...resolveSlotImageRef({
+          media,
+          slot: "doctorPortrait",
+          override: { status: meta.imageStatus, ...(meta.photoDeclined ? { photoDeclined: true } : {}) },
+          fallback: { path: meta.imagePath, status: meta.imageStatus },
+        }),
         ...(meta.photoDeclined ? { photoDeclined: true } : {}),
       },
       bookingChannel: meta.bookingChannel,

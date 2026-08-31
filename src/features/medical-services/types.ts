@@ -1,5 +1,6 @@
 import type { BookingChannel } from "@/config/booking";
 import type { Bilingual, FaqEntry } from "@/types/common";
+import type { ImageKitAsset } from "@/types/media";
 
 export type { Bilingual, FaqEntry };
 
@@ -24,6 +25,14 @@ export interface MedicalServiceContent {
   externalPartners?: { name: string; url: string; note: Bilingual }[];
   contactNote?: Bilingual;
   faqs?: FaqEntry[];
+  /**
+   * Lead image, resolved from this entity's FeelStack media assignment.
+   *
+   * Optional because most services have no assignment yet: absent means the
+   * template renders no image block at all, which is the existing behaviour.
+   * Never populated from a hardcoded path — see lib/feelstack/media-slots.ts.
+   */
+  image?: ImageKitAsset;
   /** true only when every field above traces directly to the approved content-extraction doc. */
   sourceVerified: boolean;
 }

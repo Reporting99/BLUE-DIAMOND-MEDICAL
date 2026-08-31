@@ -4,7 +4,7 @@ import { ArrowRight, Sparkles, Target, Cpu } from "lucide-react";
 import { Container } from "@/components/layout/Container";
 import { SectionTransition } from "@/components/layout/SectionTransition";
 import { Button } from "@/components/ui/button";
-import { ImageKitImage } from "@/components/shared/ImageKitImage";
+import { FacetTile } from "@/components/shared/FacetTile";
 import { isLocale, type Locale } from "@/i18n/config";
 import { getRouteMetadata } from "@/lib/seo/metadata";
 import { getBookingUrl } from "@/config/booking";
@@ -83,17 +83,7 @@ export default async function AestheticsHubPage({ params }: { params: Promise<{ 
             </Button>
           </div>
           <div className="facet-corner aspect-[4/3] overflow-hidden rounded-lg">
-            <ImageKitImage
-              path="/blue-diamond/aesthetics/hub-hero.jpg"
-              preset="treatment"
-              role="treatment"
-              status="pending"
-              alt={{ en: "Blue Diamond Medical Aesthetics", ar: "التجميل الطبي في بلو دايموند" }}
-              locale={locale}
-              width={800}
-              height={600}
-              className="h-full w-full"
-            />
+            <FacetTile role="treatment" alt={({ en: "Blue Diamond Medical Aesthetics", ar: "التجميل الطبي في بلو دايموند" })[locale]} className="h-full w-full" />
           </div>
         </Container>
       </section>

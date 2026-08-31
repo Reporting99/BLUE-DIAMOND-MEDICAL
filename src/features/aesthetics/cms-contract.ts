@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { defineEntityContract, localizedBilingual, localizedBilingualList, adaptFaqs } from "@/lib/feelstack/adapters";
+import { resolveSlotImage } from "@/lib/feelstack/media-slots";
 import type { AestheticTreatment } from "./types";
 
 /**
@@ -59,7 +60,7 @@ export type TreatmentFields = z.infer<typeof treatmentFieldsSchema>;
 export const aestheticTreatmentCmsContract = defineEntityContract<TreatmentFields, AestheticTreatment>({
   contentType: "aesthetic-treatment",
   fields: treatmentFieldsSchema,
-  adapt: ({ locale, title, fields: f, faqs, path }) => {
+  adapt: ({ locale, title, fields: f, faqs, path, media }) => {
     const t: AestheticTreatment = {
       id: f.treatment_id,
       slug: path.replace(/^\/aesthetics\/treatments\//, ""),
@@ -99,6 +100,9 @@ export const aestheticTreatmentCmsContract = defineEntityContract<TreatmentField
     if (f.related_treatment_ids) t.relatedTreatmentIds = f.related_treatment_ids;
     if (f.related_doctor_ids) t.relatedDoctorIds = f.related_doctor_ids;
     if (faqs.length) t.faqs = adaptFaqs(locale, faqs);
+    // Lead image from this treatment's real media assignment, if one exists.
+    const image = resolveSlotImage({ media, slot: ["hero", "card", "gallery"] });
+    if (image) t.image = image;
     return t;
   },
 });

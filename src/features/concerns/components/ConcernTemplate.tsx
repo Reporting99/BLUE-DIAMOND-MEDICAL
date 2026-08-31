@@ -4,6 +4,8 @@ import { Container } from "@/components/layout/Container";
 import { SectionTransition } from "@/components/layout/SectionTransition";
 import { Button } from "@/components/ui/button";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
+import { ImageKitImage } from "@/components/shared/ImageKitImage";
+import { cmsAlt } from "@/lib/feelstack/media-slots";
 import { MedicalWebPageSchema } from "@/components/shared/schema";
 import { FaqPageSchema } from "@/components/shared/schema";
 import { getBookingUrl } from "@/config/booking";
@@ -86,6 +88,31 @@ export function ConcernTemplate({ concern, locale }: { concern: AestheticConcern
         />
         <h1 className="mt-4 text-display-1 font-heading lg:text-display-1-lg">{concern.title[locale]}</h1>
         <p className="mt-4 text-body-lg text-text-secondary">{concern.summary[locale]}</p>
+
+        {/* Lead image, present only when this entity has a real FeelStack
+            media assignment. ImageKitImage still decides, from the asset's own
+            status, whether real bytes or the FacetTile placeholder appear. */}
+        {concern.image ? (
+          <ImageKitImage
+            path={concern.image.path}
+            preset="concern"
+            role={concern.image.role}
+            status={concern.image.status}
+            alt={
+              cmsAlt(concern.image) ?? {
+                en: concern.title.en || concern.id,
+                ar: concern.title.ar || concern.id,
+              }
+            }
+            caption={concern.image.caption}
+            locale={locale}
+            width={concern.image.width}
+            height={concern.image.height}
+            sizes="(min-width: 768px) 48rem, 100vw"
+            className="mt-8 aspect-video rounded-lg"
+          />
+        ) : null}
+
 
         <Button size="lg" className="mt-8" render={<a href={booking.href} target="_blank" rel="noopener noreferrer" />}>
           {t.consultCta}

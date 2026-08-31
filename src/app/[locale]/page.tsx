@@ -6,6 +6,7 @@ import { SectionTransition } from "@/components/layout/SectionTransition";
 import { SiteClosingExperience } from "@/components/layout/SiteClosingExperience";
 import { Button } from "@/components/ui/button";
 import { ImageKitImage } from "@/components/shared/ImageKitImage";
+import { FacetTile } from "@/components/shared/FacetTile";
 import { ClinicSchema } from "@/components/shared/schema";
 import { FaqPageSchema } from "@/components/shared/schema";
 import { ConcernExplorer } from "@/features/concerns";
@@ -130,35 +131,13 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
               className="relative min-w-0 overflow-hidden rounded-lg"
               style={{ clipPath: "polygon(0 0, 94% 0, 100% 100%, 0 100%)" }}
             >
-              <ImageKitImage
-                path="/blue-diamond/pathways/medical-care.jpg"
-                preset="hero"
-                role="hero"
-                status="pending"
-                alt={{ en: "Family medicine at Blue Diamond Medical", ar: "طب الأسرة في بلو دايموند الطبية" }}
-                locale={locale}
-                width={800}
-                height={1000}
-                preload
-                className="h-full w-full"
-              />
+              <FacetTile role="hero" alt={({ en: "Family medicine at Blue Diamond Medical", ar: "طب الأسرة في بلو دايموند الطبية" })[locale]} className="h-full w-full" />
             </div>
             <div
               className="relative min-w-0 overflow-hidden rounded-lg"
               style={{ clipPath: "polygon(6% 0, 100% 0, 100% 100%, 0 100%)" }}
             >
-              <ImageKitImage
-                path="/blue-diamond/pathways/medical-aesthetics.jpg"
-                preset="hero"
-                role="treatment"
-                status="pending"
-                alt={{ en: "Physician-led medical aesthetics at Blue Diamond Medical", ar: "التجميل الطبي بإشراف طبي في بلو دايموند الطبية" }}
-                locale={locale}
-                width={800}
-                height={1000}
-                preload
-                className="h-full w-full"
-              />
+              <FacetTile role="treatment" alt={({ en: "Physician-led medical aesthetics at Blue Diamond Medical", ar: "التجميل الطبي بإشراف طبي في بلو دايموند الطبية" })[locale]} className="h-full w-full" />
             </div>
           </div>
         </Container>
@@ -200,17 +179,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
               href={href("aesthetics-hub", locale)}
               className="group relative isolate flex aspect-[4/3] flex-col justify-end overflow-hidden rounded-lg p-9 text-white"
             >
-              <ImageKitImage
-                path="/blue-diamond/aesthetics/consultation-room.jpg"
-                preset="treatment"
-                role="treatment"
-                status="pending"
-                alt={{ en: "Medical aesthetics consultation room at Blue Diamond Medical", ar: "غرفة استشارات التجميل الطبي في بلو دايموند الطبية" }}
-                locale={locale}
-                width={900}
-                height={700}
-                className="absolute inset-0 -z-20 h-full w-full"
-              />
+              <FacetTile role="treatment" alt={({ en: "Medical aesthetics consultation room at Blue Diamond Medical", ar: "غرفة استشارات التجميل الطبي في بلو دايموند الطبية" })[locale]} className="absolute inset-0 -z-20 h-full w-full" />
               <div
                 aria-hidden="true"
                 className="absolute inset-0 -z-10"
@@ -614,17 +583,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           </div>
 
           <div data-reveal="end" className="facet-corner aspect-[4/3] overflow-hidden rounded-lg lg:aspect-auto lg:self-stretch">
-            <ImageKitImage
-              path="/blue-diamond/clinic/map-placeholder.jpg"
-              preset="service"
-              role="location"
-              status="pending"
-              alt={{ en: "Map to Blue Diamond Medical Clinic", ar: "خريطة الوصول إلى عيادة بلو دايموند الطبية" }}
-              locale={locale}
-              width={800}
-              height={600}
-              className="h-full w-full"
-            />
+            <FacetTile role="location" alt={({ en: "Map to Blue Diamond Medical Clinic", ar: "خريطة الوصول إلى عيادة بلو دايموند الطبية" })[locale]} className="h-full w-full" />
           </div>
         </Container>
       </section>

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { ImageKitImage } from "@/components/shared/ImageKitImage";
+import { FacetTile } from "@/components/shared/FacetTile";
 import { getRoute } from "@/lib/routing";
 import type { AestheticTreatment } from "@/features/aesthetics/types";
 import type { Locale } from "@/i18n/config";
@@ -34,17 +34,7 @@ function TreatmentCard({
     return (
       <Link data-reveal="up" data-reveal-delay={String(delay % 4)} href={linkHref} className="group flex flex-col gap-2">
         <div className="aspect-square overflow-hidden rounded-md bg-background/60">
-          <ImageKitImage
-            path={`/treatments/${treatment.id}.jpg`}
-            preset="treatment"
-            role="treatment"
-            status="pending"
-            alt={{ en: `${treatment.title.en} at Blue Diamond Medical`, ar: `${treatment.title.ar} في بلو دايموند الطبية` }}
-            locale={locale}
-            width={300}
-            height={300}
-            className="h-full w-full transition-transform duration-300 group-hover:scale-[1.04]"
-          />
+          <FacetTile role="treatment" alt={({ en: `${treatment.title.en} at Blue Diamond Medical`, ar: `${treatment.title.ar} في بلو دايموند الطبية` })[locale]} className="h-full w-full transition-transform duration-300 group-hover:scale-[1.04]" />
         </div>
         <span className="text-sm font-semibold group-hover:text-primary">{treatment.title[locale]}</span>
       </Link>
@@ -58,17 +48,7 @@ function TreatmentCard({
       href={linkHref}
       className={`group relative isolate flex flex-col justify-end overflow-hidden rounded-lg p-7 text-white ${size === "large" ? "aspect-[4/3] lg:aspect-auto lg:min-h-[420px]" : "aspect-[4/3]"} ${className}`}
     >
-      <ImageKitImage
-        path={`/treatments/${treatment.id}.jpg`}
-        preset="treatment"
-        role="treatment"
-        status="pending"
-        alt={{ en: `${treatment.title.en} at Blue Diamond Medical`, ar: `${treatment.title.ar} في بلو دايموند الطبية` }}
-        locale={locale}
-        width={900}
-        height={700}
-        className="absolute inset-0 -z-20 h-full w-full"
-      />
+      <FacetTile role="treatment" alt={({ en: `${treatment.title.en} at Blue Diamond Medical`, ar: `${treatment.title.ar} في بلو دايموند الطبية` })[locale]} className="absolute inset-0 -z-20 h-full w-full" />
       {/* Darkens most of the card, not just the bottom third — a shorter
           aspect ratio (the "medium" size) can put the h3/p high enough
           that a steeper falloff left them over the near-white FacetTile
