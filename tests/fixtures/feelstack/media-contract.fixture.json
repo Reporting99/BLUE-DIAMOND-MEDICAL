@@ -1,0 +1,214 @@
+{
+  "contractVersion": "media-contract/v2",
+  "description": "The public media contract, as FeelStack's PublicRouteResolverService.publicMedia emits it. Byte-identical copies live in both repositories; each side asserts its own code against every section and pins this file's SHA-256. `published` is what the producer emits and the consumer must accept. `neverPublished` is public-shaped but not publishable: the producer must withhold it, and the consumer must degrade it toward a placeholder if it ever arrives. `malformed` violates the contract: the consumer must drop each record without failing the page.",
+  "published": [
+    {
+      "id": "3f7c1a9e-0000-4000-8000-000000000001",
+      "path": "/blue-diamond/treatments/rf-microneedling-hero.png",
+      "width": 1672,
+      "height": 941,
+      "aspectRatio": 1.776833,
+      "alt": {
+        "en": "RF Micro-Needling at Blue Diamond Medical",
+        "ar": "الإبر الدقيقة بالترددات الراديوية في بلو دايموند الطبية"
+      },
+      "role": "hero",
+      "slot": "hero",
+      "approvalStatus": "approved",
+      "sortOrder": 0,
+      "localeMode": "shared"
+    },
+    {
+      "id": "3f7c1a9e-0000-4000-8000-000000000002",
+      "path": "/blue-diamond/shop/19_Scar_Recovery_Gel_with_Centelline_Small.jpg",
+      "width": 1074,
+      "height": 1074,
+      "aspectRatio": 1,
+      "alt": {
+        "en": "Scar Recovery Gel with Centelline (Small) — SkinMedica",
+        "ar": "جل علاج الندبات بالسنتيلين (صغير) — سكين ميديكا"
+      },
+      "caption": {
+        "en": "14.2 g",
+        "ar": "14.2 غرام"
+      },
+      "role": "productPrimary",
+      "slot": "productPrimary",
+      "approvalStatus": "approved",
+      "focalPoint": {
+        "x": 50,
+        "y": 45
+      },
+      "sortOrder": 0,
+      "localeMode": "shared"
+    },
+    {
+      "id": "3f7c1a9e-0000-4000-8000-000000000003",
+      "path": "/blue-diamond/shared/open-graph-background.png",
+      "width": 1733,
+      "height": 908,
+      "aspectRatio": 1.90859,
+      "alt": {
+        "en": "",
+        "ar": ""
+      },
+      "role": "ogImage",
+      "slot": "ogImage",
+      "approvalStatus": "approved",
+      "sortOrder": 0,
+      "localeMode": "shared"
+    },
+    {
+      "id": "3f7c1a9e-0000-4000-8000-000000000004",
+      "path": "/blue-diamond/technologies/potenza-abstract-card.png",
+      "width": 1254,
+      "height": 1254,
+      "aspectRatio": 1,
+      "alt": {
+        "en": "Potenza RF micro-needling device",
+        "ar": "جهاز Potenza للإبر الدقيقة"
+      },
+      "role": "gallery",
+      "slot": "gallery",
+      "approvalStatus": "approved",
+      "sortOrder": 1,
+      "localeMode": "shared"
+    },
+    {
+      "id": "3f7c1a9e-0000-4000-8000-000000000005",
+      "path": "/blue-diamond/technologies/ultra-abstract-card.png",
+      "width": 1254,
+      "height": 1254,
+      "aspectRatio": 1,
+      "alt": {
+        "en": "Ultra device at Blue Diamond Medical",
+        "ar": "جهاز الترا في بلو دايموند الطبية"
+      },
+      "role": "gallery",
+      "slot": "gallery",
+      "approvalStatus": "approved",
+      "sortOrder": 0,
+      "localeMode": "shared"
+    }
+  ],
+  "neverPublished": [
+    {
+      "case": "pending approval",
+      "record": {
+        "id": "3f7c1a9e-0000-4000-8000-00000000000a",
+        "path": "/blue-diamond/shop/product-image-pending-abstract.png",
+        "width": 1254,
+        "height": 1254,
+        "aspectRatio": 1,
+        "alt": {
+          "en": "Product image pending approval",
+          "ar": "صورة المنتج بانتظار الاعتماد"
+        },
+        "role": "sharedPlaceholder",
+        "slot": "productPrimary",
+        "approvalStatus": "pending",
+        "sortOrder": 0,
+        "localeMode": "shared"
+      }
+    },
+    {
+      "case": "rejected by review",
+      "record": {
+        "id": "3f7c1a9e-0000-4000-8000-00000000000b",
+        "path": "/blue-diamond/shared/careers-team-hero.png",
+        "width": 1672,
+        "height": 941,
+        "aspectRatio": 1.776833,
+        "alt": {
+          "en": "Rejected asset",
+          "ar": "أصل مرفوض"
+        },
+        "role": "hero",
+        "slot": "hero",
+        "approvalStatus": "rejected",
+        "sortOrder": 0,
+        "localeMode": "shared"
+      }
+    },
+    {
+      "case": "approval status this build has never heard of",
+      "record": {
+        "id": "3f7c1a9e-0000-4000-8000-00000000000c",
+        "path": "/blue-diamond/medical/eye-screening-hero.png",
+        "width": 1672,
+        "height": 941,
+        "aspectRatio": 1.776833,
+        "alt": {
+          "en": "Eye Screening at Blue Diamond Medical",
+          "ar": "فحص العيون في بلو دايموند الطبية"
+        },
+        "role": "hero",
+        "slot": "card",
+        "approvalStatus": "awaiting_legal_review",
+        "sortOrder": 0,
+        "localeMode": "shared"
+      }
+    }
+  ],
+  "malformed": [
+    {
+      "case": "missing dimensions",
+      "record": {
+        "id": "3f7c1a9e-0000-4000-8000-00000000001a",
+        "path": "/blue-diamond/home/home-hero-blue-diamond.png",
+        "width": 0,
+        "height": 0,
+        "alt": {
+          "en": "No dimensions",
+          "ar": "بدون أبعاد"
+        },
+        "role": "hero",
+        "slot": "hero",
+        "approvalStatus": "approved",
+        "sortOrder": 0,
+        "localeMode": "shared"
+      }
+    },
+    {
+      "case": "path outside the project prefix",
+      "record": {
+        "id": "3f7c1a9e-0000-4000-8000-00000000001b",
+        "path": "/other-tenant/shop/leaked.jpg",
+        "width": 800,
+        "height": 600,
+        "aspectRatio": 1.333333,
+        "alt": {
+          "en": "Cross-project leak",
+          "ar": "تسرب بين المشاريع"
+        },
+        "role": "hero",
+        "slot": "hero",
+        "approvalStatus": "approved",
+        "sortOrder": 0,
+        "localeMode": "shared"
+      }
+    },
+    {
+      "case": "alt text missing a locale",
+      "record": {
+        "id": "3f7c1a9e-0000-4000-8000-00000000001c",
+        "path": "/blue-diamond/aesthetics/aesthetics-hub-hero.png",
+        "width": 1672,
+        "height": 941,
+        "aspectRatio": 1.776833,
+        "alt": {
+          "en": "English only"
+        },
+        "role": "hero",
+        "slot": "hero",
+        "approvalStatus": "approved",
+        "sortOrder": 0,
+        "localeMode": "shared"
+      }
+    },
+    {
+      "case": "not an object at all",
+      "record": "this is not a media assignment"
+    }
+  ]
+}

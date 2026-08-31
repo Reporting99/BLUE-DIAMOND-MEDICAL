@@ -2,6 +2,7 @@ import { z } from "zod";
 import type { Locale } from "./contracts";
 import type { Bilingual } from "@/types/common";
 import type { FeelstackResolveEnvelope, FeelstackFaq, FeelstackRelation } from "./transport";
+import { primaryForSlot, type ResolvedMedia } from "./media";
 
 /**
  * Transport -> domain adapter boundary.
@@ -59,6 +60,22 @@ export interface AdapterInput<F> {
   relations: readonly FeelstackRelation[];
   /** Resolved public path for this locale, from the route registration. */
   path: string;
+  /**
+   * Media assigned to this entity, already validated item-by-item and sorted by
+   * (slot, sortOrder). Invalid rows were dropped upstream in the resolver, so an
+   * adapter never sees a partial asset and never has to decide what to do about
+   * one. Empty when the CMS returned no media, when every row was rejected, or
+   * when this build is serving static content.
+   */
+  media: readonly ResolvedMedia[];
+}
+
+/** Convenience for adapters: the first asset in a slot, or undefined. */
+export function mediaForSlot(
+  input: Pick<AdapterInput<unknown>, "media">,
+  slot: string,
+): ResolvedMedia | undefined {
+  return primaryForSlot(input.media, slot);
 }
 
 export type EntityAdapter<F, T> = (input: AdapterInput<F>) => T;
@@ -107,6 +124,13 @@ export function toAdapterInput<F>(
   envelope: FeelstackResolveEnvelope,
   locale: Locale,
   fields: F,
+  /**
+   * Already-validated media. Passed in rather than parsed here because
+   * rejected rows must be LOGGED, and logging belongs with the resolver that
+   * holds the requestId — not in a pure adapter helper. Defaults to empty so
+   * every existing caller and captured-envelope test keeps working unchanged.
+   */
+  media: readonly ResolvedMedia[] = [],
 ): AdapterInput<F> {
   return {
     locale,
@@ -116,5 +140,6 @@ export function toAdapterInput<F>(
     faqs: envelope.relations?.faqs ?? [],
     relations: envelope.relations?.items ?? [],
     path: envelope.route.path,
+    media,
   };
 }

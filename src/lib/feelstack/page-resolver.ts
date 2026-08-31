@@ -11,6 +11,7 @@ import { FeelStackUnavailableError, logFeelstackEvent } from "./errors";
 import type { Locale } from "./contracts";
 import { checkLocaleIntegrity } from "./locale-integrity";
 import { toAdapterInput, type EntityContract } from "./adapters";
+import { parseMediaAssignments } from "./media";
 import { entityPayload } from "./transport";
 
 /**
@@ -140,8 +141,29 @@ export async function resolvePageContent<T, F = unknown>(
       throw new FeelStackUnavailableError("INVALID_RESPONSE", { requestId: result.requestId });
     }
 
+    // Media is validated per item and NEVER escalated to a page failure. A
+    // malformed asset row is a content defect to fix, not a reason to hide a
+    // medical page: the row is dropped, the reason is logged with this
+    // request's id, and the page renders with whatever media is sound. This is
+    // the one place in this resolver where an invalid CMS response does not
+    // throw, and that asymmetry is deliberate -- entity FIELDS are the page,
+    // media only decorates it.
+    const { media, rejected } = parseMediaAssignments(envelope.media);
+    if (rejected.length > 0) {
+      logFeelstackEvent({
+        category: "INVALID_RESPONSE",
+        locale,
+        path,
+        requestId: result.requestId,
+        upstreamContext: `dropped ${rejected.length} invalid media assignment(s): ${rejected.join(" | ")}`,
+      });
+    }
+
     logFeelstackEvent({ category: "OK", locale, path, requestId: result.requestId });
-    return { source: "cms", data: contract.adapt(toAdapterInput(envelope, locale, fields.data)) };
+    return {
+      source: "cms",
+      data: contract.adapt(toAdapterInput(envelope, locale, fields.data, media)),
+    };
   }
 
   if (result.error === "NOT_FOUND") {
