@@ -514,11 +514,21 @@ grant_isr_prerender_cache_write() {
   local app_dir="$STAGING_DIR/.next/server/app"
   [ -d "$app_dir" ] || return 0
 
-  find "$app_dir" -type f \
-    \( -name '*.body' -o -name '*.meta' -o -name '*.html' -o -name '*.rsc' \) \
+  # ONE list, used for both the directories and the files inside them. These
+  # two finds used to disagree: directories were granted on any of the four
+  # artifact types, but only .body/.meta FILES were made writable. Next 16
+  # rewrites .html and .rsc (including *.segment.rsc) on every revalidation
+  # and opens the EXISTING file to do it, so a group-writable directory did
+  # not help -- it failed with EACCES on 163 .html and 813 .rsc files, and
+  # every ISR route re-rendered on each request instead of serving cache,
+  # re-querying the CMS each time. Sharing the list is what stops them
+  # drifting again; tests/deploy/active-slot.spec.ts asserts they match.
+  local -a artifacts=(-name '*.body' -o -name '*.meta' -o -name '*.html' -o -name '*.rsc')
+
+  find "$app_dir" -type f \( "${artifacts[@]}" \) \
     -printf '%h\0' | sort -zu | xargs -0 -r chmod g+ws
 
-  find "$app_dir" -type f \( -name '*.body' -o -name '*.meta' \) -print0 \
+  find "$app_dir" -type f \( "${artifacts[@]}" \) -print0 \
     | xargs -0 -r chmod g+w
 }
 

@@ -46,6 +46,11 @@ test.describe("Desktop service cards — hover/focus reveal", () => {
     });
   }
 
+  // The two reveal tests below assert THAT the CTA appears, not how fast. The
+  // transition is ~400ms (see the layout-shift test's 450ms wait), and a 1s
+  // poll was comfortable on an idle machine and lost on a loaded one -- it
+  // flaked once in a full-suite run that took 16.7 minutes under contention.
+  // Widened rather than removed: a reveal that never happens still fails.
   test("hover reveals the longer explanation and a descriptive CTA, image fades out", async ({ page, isMobile }) => {
     // Playwright's synthetic .hover() doesn't reliably produce a genuine
     // CSS :hover match on a touch-emulated device — and per the brief's
@@ -58,7 +63,7 @@ test.describe("Desktop service cards — hover/focus reveal", () => {
     expect(await getCtaOpacity(page)).toBe(0);
     const card = page.locator("a", { has: page.getByRole("heading", { name: "Eye Disease Screening", level: 3 }) }).first();
     await card.hover();
-    await expect.poll(() => getCtaOpacity(page), { timeout: 1000 }).toBe(1);
+    await expect.poll(() => getCtaOpacity(page), { timeout: 5000 }).toBe(1);
   });
 
   test("keyboard focus produces the same reveal as hover", async ({ page }) => {
@@ -66,7 +71,7 @@ test.describe("Desktop service cards — hover/focus reveal", () => {
     expect(await getCtaOpacity(page)).toBe(0);
     const card = page.locator("a", { has: page.getByRole("heading", { name: "Eye Disease Screening", level: 3 }) }).first();
     await card.focus();
-    await expect.poll(() => getCtaOpacity(page), { timeout: 1000 }).toBe(1);
+    await expect.poll(() => getCtaOpacity(page), { timeout: 5000 }).toBe(1);
   });
 
   test("card dimensions stay fixed on hover (no layout shift to neighbors)", async ({ page }) => {
