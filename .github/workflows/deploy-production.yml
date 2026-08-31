@@ -124,6 +124,45 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # CMS configuration must be present DURING the build, not only at
+      # runtime. Most entity pages are prerendered (generateStaticParams), and
+      # `getFeelstackContentMode()` is read while they render -- so a build
+      # without FEELSTACK_* silently resolves in `static` mode and bakes the
+      # static fallback into every page. The runtime `.env` symlink then
+      # correctly says `hybrid`, but the HTML is already fixed and no CMS media
+      # can ever appear. That is exactly how a release shipped with 0 rendered
+      # images while every loopback check passed: the checks were built with
+      # the environment the pipeline lacked.
+      - name: Verify build-time CMS configuration
+        shell: bash
+        env:
+          FEELSTACK_API_URL: ${{ vars.FEELSTACK_API_URL }}
+          FEELSTACK_SITE_KEY: ${{ vars.FEELSTACK_SITE_KEY }}
+          FEELSTACK_CONTENT_MODE: hybrid
+        run: |
+          set -euo pipefail
+
+          # A production build that ASKS for hybrid/cms must have somewhere to
+          # ask. Failing closed here is the whole point: a missing variable
+          # would otherwise degrade to `static` with a green build and an empty
+          # site, which is far harder to notice than a failed job.
+          case "${FEELSTACK_CONTENT_MODE:-static}" in
+            hybrid|cms)
+              missing=()
+              [[ -n "${FEELSTACK_API_URL:-}" ]]  || missing+=("FEELSTACK_API_URL")
+              [[ -n "${FEELSTACK_SITE_KEY:-}" ]] || missing+=("FEELSTACK_SITE_KEY")
+              if (( ${#missing[@]} > 0 )); then
+                echo "::error::FEELSTACK_CONTENT_MODE=${FEELSTACK_CONTENT_MODE} but ${missing[*]} is missing. A production hybrid build must never fall back to static."
+                exit 1
+              fi
+              echo "build-time CMS configuration present (mode=${FEELSTACK_CONTENT_MODE})"
+              ;;
+            *)
+              echo "::error::Production builds must run in hybrid mode; got '${FEELSTACK_CONTENT_MODE:-unset}'."
+              exit 1
+              ;;
+          esac
+
       # Built WITHOUT SITE_LAUNCHED. The indexing gate is read at request time
       # (src/config/launch.ts), so the artifact carries no indexability of its
       # own -- launching is a change to the slot's runtime env, never a
@@ -131,6 +170,9 @@ jobs:
       - name: Build production application
         env:
           NODE_ENV: production
+          FEELSTACK_API_URL: ${{ vars.FEELSTACK_API_URL }}
+          FEELSTACK_SITE_KEY: ${{ vars.FEELSTACK_SITE_KEY }}
+          FEELSTACK_CONTENT_MODE: hybrid
         run: npm run build
 
       - name: Package standalone release
