@@ -55,13 +55,15 @@ export default async function ShopHubPage({ params }: { params: Promise<{ locale
   const { locale: rawLocale } = await params;
   const locale: Locale = isLocale(rawLocale) ? rawLocale : "en";
 
-  // Catalogue media. The shop index renders 23 products; resolvePageContent
-  // resolves one, so without this every card falls back to the static record
-  // while each product's own detail page renders its real packshot.
+  // Catalogue media. The shop index renders 23 products while the single-entity
+  // page resolver handles one at a time, so without this every card falls back
+  // to the static record while each product's own detail page renders its real
+  // packshot. Tagged with productsIndex so a publish invalidates the catalogue
+  // exactly as it invalidates the detail pages.
   const listingMedia = await resolveListingMedia(
     products.map((p) => ({ id: p.id, englishPath: `/shop/${p.slug}` })),
     locale,
-    [cacheTags.productsIndex?.(process.env.FEELSTACK_SITE_KEY ?? "", locale) ?? ""].filter(Boolean),
+    [cacheTags.productsIndex(process.env.FEELSTACK_SITE_KEY ?? "", locale)],
   );
   const t = copy[locale];
   const ownRoute = getRoute("shop-hub")!;
