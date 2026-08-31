@@ -92,7 +92,7 @@ afterwards would mean shipping the bug first.
 
 ### Pre-domain behaviour
 
-With no `/etc/nginx/snippets/blue-diamond-backend.conf`, the deploy script
+With no `/etc/nginx/sites-enabled/blue-diamond-active-slot.conf`, the deploy script
 derives the serving slot from systemd plus a loopback probe, deploys and
 verifies the inactive slot on loopback, and logs `TRAFFIC_SWITCH_SKIPPED`
 instead of pretending a switch happened. The same script works unchanged after

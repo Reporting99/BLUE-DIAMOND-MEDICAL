@@ -53,7 +53,13 @@ export function Footer({ locale }: { locale: Locale }) {
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 -z-10"
-        style={{ background: "linear-gradient(180deg, rgba(16,47,66,0) 0%, rgba(16,47,66,0.34) 100%)" }}
+        // Deliberately gentle (0.14, was 0.34). At 0.34 this overlay pulled
+        // the footer's lower half back down to roughly the OLD near-navy,
+        // which would have cancelled most of the §50 lightening; 0.14 keeps
+        // the "settles slightly deeper toward the bottom" reading while the
+        // whole block stays visibly in the lighter blue. Text still clears
+        // AA against the darkest point of the overlay (7.8:1 / 6.3:1).
+        style={{ background: "linear-gradient(180deg, rgba(16,47,66,0) 0%, rgba(16,47,66,0.14) 100%)" }}
       />
       <div className="mx-auto grid max-w-[1280px] gap-10 px-4 py-16 lg:grid-cols-[1.3fr_1fr_1fr_1fr_1fr] lg:gap-8 lg:px-6 lg:py-20">
         <div className="flex flex-col gap-4">

@@ -27,6 +27,8 @@ import {
 } from "@/features/home";
 import { getDictionary, isLocale, type Locale } from "@/i18n/config";
 import { getRoute, href } from "@/lib/routing";
+import { publishableBeforeAfterPairs } from "@/features/aesthetics/data/before-after";
+import { BeforeAfterGallery } from "@/features/aesthetics/components/BeforeAfterGallery";
 import { getBookingUrl } from "@/config/booking";
 import { siteConfig } from "@/config/site";
 import { getOpenStatus, statutoryHolidayNotice } from "@/config/clinic-hours";
@@ -98,6 +100,15 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const faqSchemaEntries = homeFaqSchemaEntries(locale);
 
   const findByNeedIcon = { stethoscope: Stethoscope, sparkles: Sparkles, search: Search, cpu: Cpu };
+
+  // Up to 6, one per treatment, so Home shows range rather than six views
+  // of the same procedure (§27).
+  const homeBeforeAfter = Object.values(
+    publishableBeforeAfterPairs().reduce<Record<string, ReturnType<typeof publishableBeforeAfterPairs>[number]>>((acc, pair) => {
+      acc[pair.treatmentId] ??= pair;
+      return acc;
+    }, {}),
+  ).slice(0, 6);
 
   return (
     <>
@@ -427,6 +438,30 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       </section>
 
       <SectionTransition from="var(--blue-4)" to="var(--background)" />
+
+      {/* ============ SECTION 7b — CLINICAL BEFORE & AFTER (curated) ============ */}
+      {/* Closure brief §27: a curated handful, never the whole library —
+          the site has to keep reading as a medical practice, not a results
+          gallery. `homeBeforeAfter` is empty while nothing is publishable,
+          and the whole section (heading, seam and all) then renders
+          nothing rather than leaving a titled empty band (§46). */}
+      {homeBeforeAfter.length > 0 ? (
+        <>
+          <section className="section-y bg-background">
+            <Container>
+              <BeforeAfterGallery pairs={homeBeforeAfter} locale={locale} />
+              <Link
+                href={href("aesthetics-before-after", locale)}
+                className="mt-8 inline-flex items-center gap-1 text-sm font-semibold text-primary hover:text-primary-hover"
+              >
+                {locale === "ar" ? "عرض جميع أمثلة قبل وبعد" : "View all Before & After examples"}
+                <ArrowRight className="size-4 rtl:rotate-180" />
+              </Link>
+            </Container>
+          </section>
+          <SectionTransition from="var(--background)" to="var(--background)" />
+        </>
+      ) : null}
 
       {/* ============ SECTION 8 — PATIENT JOURNEY ============ */}
       <section className="section-y bg-background">

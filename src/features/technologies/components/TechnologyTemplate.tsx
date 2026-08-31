@@ -9,7 +9,9 @@ import { MedicalWebPageSchema } from "@/components/shared/schema";
 import { FaqPageSchema } from "@/components/shared/schema";
 import { getRoute, href } from "@/lib/routing";
 import { getTreatment } from "@/features/aesthetics/data/treatments";
-import { getConcern } from "@/features/concerns/data";
+import { concerns, getConcern } from "@/features/concerns/data";
+import { getBeforeAfterPairsForTechnology } from "@/features/aesthetics/data/before-after";
+import { BeforeAfterGallery } from "@/features/aesthetics/components/BeforeAfterGallery";
 import { doctors } from "@/features/doctors";
 import type { Technology } from "@/features/technologies/types";
 import type { Bilingual } from "@/types/common";
@@ -79,7 +81,23 @@ export function TechnologyTemplate({ technology, locale }: { technology: Technol
   const technologiesHub = getRoute("aesthetics-technologies-hub")!;
   const ownRoute = getRoute(`technology-${technology.id}`);
   const relatedTreatments = technology.relatedTreatmentIds.map(getTreatment).filter(Boolean) as NonNullable<ReturnType<typeof getTreatment>>[];
-  const relatedConcerns = (technology.relatedConcernIds ?? []).map(getConcern).filter(Boolean) as NonNullable<ReturnType<typeof getConcern>>[];
+  /**
+   * Technology -> Concern (brief §12/§30), mirroring the derivation on the
+   * concern page. An authored `relatedConcernIds` wins; otherwise the list
+   * is the concerns that already recommend one of THIS technology's own
+   * treatments — walked through authored data
+   * (`concern.relatedTreatmentIds` -> `technology.relatedTreatmentIds`),
+   * never inferred from what a device looks like it should treat, which
+   * §46 explicitly forbids.
+   */
+  const derivedConcerns = concerns.filter((concern) =>
+    concern.relatedTreatmentIds.some((treatmentId) => technology.relatedTreatmentIds.includes(treatmentId)),
+  );
+  const relatedConcerns = (
+    technology.relatedConcernIds?.length
+      ? (technology.relatedConcernIds.map(getConcern).filter(Boolean) as NonNullable<ReturnType<typeof getConcern>>[])
+      : derivedConcerns
+  );
   const relatedDoctors = doctors.filter((d) => (technology.relatedDoctorIds ?? []).includes(d.id));
 
   const steps: { label: string; body?: Bilingual }[] = [
@@ -148,6 +166,11 @@ export function TechnologyTemplate({ technology, locale }: { technology: Technol
             </ul>
           </section>
         ) : null}
+
+        {/* Manufacturer clinical examples are most at home here (§31): the
+            device relationship is the one thing these assets' own
+            filenames actually prove. */}
+        <BeforeAfterGallery pairs={getBeforeAfterPairsForTechnology(technology.id)} locale={locale} />
 
         {relatedConcerns.length ? (
           <section className="mt-10">

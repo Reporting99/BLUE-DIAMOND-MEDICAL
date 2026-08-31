@@ -86,7 +86,7 @@ None of these appear in the sitemap, main navigation, or search results, and eve
 | `medical-botox-hub` + migraine/bruxism-tmj/hyperhidrosis (4) | `medicalBotoxDetailPagesEnabled` | Would duplicate content already published on `/botox` |
 | `treatment-cosmetic-botox` | `cosmeticBotoxTreatmentPageEnabled` | Would duplicate `/botox`'s existing content |
 | `treatment-skin-tightening` | `skinTighteningTreatmentPageEnabled` | Would duplicate `/aesthetics/treatments/radio-frequency` |
-| `aesthetics-pricing` | `aestheticPricingEnabled` | No approved aesthetics prices supplied |
+| `aesthetics-pricing` | `aestheticPricingEnabled` | **Published 2026-08-31** — flag `true`, route `index`/`inSitemap`. The flag is retained so the whole price list can be withdrawn in one move if the clinic revises the sheet |
 | `aesthetics-consultation` | `consultationFormEnabled` | No approved consultation-intake flow supplied |
 | `aesthetics-before-after` | `beforeAfterEnabled` | No approved before/after photography |
 | `legal-terms`, `legal-privacy-policy`, `legal-accessibility`, `legal-medical-disclaimer` (4) | `legalPagesEnabled` | No approved legal copy (legacy showed literal "Coming soon") |
@@ -220,3 +220,53 @@ Only the two legal-page targets (`/en/terms`, `/en/privacy-policy`) still resolv
 ### Tested
 
 `tests/e2e/locale-routing.spec.ts` verifies `/services → /en/medical` as a representative case. The full redirect table should get one test per row before launch —.
+
+---
+
+## Primary navigation IA (final IA brief §13 / §18 / §19) — 2026-08-31
+
+The top level changed this pass. It was:
+
+```
+Home · Services · Treatments ▾ · Medical Aesthetics · Our Team · About · Contact
+```
+
+which put one *aesthetic* category (Treatments) at the same level as the two
+halves of the clinic, and labelled the medical half "Services" — so the top
+level never said that Blue Diamond is one brand with two care areas. It is now:
+
+```
+Home · Medical ▾ · Aesthetics ▾ · Our Team · About · Contact
+        (+ EN | العربية and Book Appointment)
+```
+
+**No route was renamed, added or removed by this change**, and nothing was
+dropped from the navigation: `Services` is now the Medical mega menu (which
+links to the same `/medical` hub the label used to), and `Treatments` is the
+first column of the Aesthetics mega menu. Existing redirects, including
+`/en/services → /en/medical`, are unaffected.
+
+| Top-level item | Links to | Mega menu |
+|---|---|---|
+| Home | `home` | — |
+| Medical | `medical-hub` | **Medical**: the 7 built medical-service pages + Botox hub + "View all medical care". **Uninsured Services**: the fees page (grouped separately per §18/§33). |
+| Aesthetics | `aesthetics-hub` | **Treatments** (9 + view all) · **Concerns** (9 + view all) · **Technologies** (5 + view all) — the three kept visually distinct per §11/§19. |
+| Our Team | `doctors-index` | — |
+| About | `about` | — |
+| Contact | `contact` | — |
+
+Both mega-menu labels are real `<a href>` links as well as disclosure
+triggers: clicking or pressing Enter goes to the hub, hovering or focusing
+opens the panel first.
+
+The Concerns and Technologies columns are generated from `concerns` and
+`technologies` rather than hand-listed, so a page cannot exist and be missing
+from the menu.
+
+**Deliberately not in the Medical menu:** General Family Medicine,
+Vaccination, Onsite Paediatrician, Mental Health and Women's Health. On the
+original site these are single line items in an AHS-insured services list,
+not pages with content. They are rendered as exactly that — a labelled list —
+on the Medical hub. A menu row must lead somewhere real; creating five thin
+pages to fill out a menu would mean writing medical copy no approved source
+supports. Tracked as a content gap, not a routing gap.

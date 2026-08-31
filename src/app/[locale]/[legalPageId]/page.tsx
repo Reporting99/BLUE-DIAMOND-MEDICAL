@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { cmsPathForLocale } from "@/lib/routing";
-import { notFound } from "next/navigation";
 
 import { pathnameFrom, redirectOrNotFound } from "@/lib/feelstack/redirect-or-404";
 import { isLocale, type Locale } from "@/i18n/config";
@@ -24,7 +23,7 @@ import { cacheTags } from "@/lib/feelstack/cache-tags";
  * requests that don't match any other top-level route.
  */
 export function generateStaticParams() {
-  return []; // nothing pre-rendered while disabled — see notFound() below
+  return []; // nothing pre-rendered while disabled — see the gate below
 }
 
 

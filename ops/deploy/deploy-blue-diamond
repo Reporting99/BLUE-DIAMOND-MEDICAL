@@ -41,10 +41,29 @@ SHARED_ENV="/home/blue-diamond/shared/.env.production"
 DEPLOYMENTS_DIR="/home/blue-diamond/deployments"
 DEPLOY_LOG="${DEPLOYMENTS_DIR}/deployments.log"
 ACTIVE_FILE="${DEPLOYMENTS_DIR}/active-release.env"
-NGINX_SNIPPET="/etc/nginx/snippets/blue-diamond-backend.conf"
+NGINX_SNIPPET="/etc/nginx/sites-enabled/blue-diamond-active-slot.conf"
 NODE_BIN="/opt/nodejs/versions/v20.19.5/bin/node"
 LOCK_FILE="/run/lock/blue-diamond-deploy.lock"
 KEEP_RELEASES=3
+
+# Renders the generated active-slot snippet. Kept in one place so the file the
+# deploy script writes and the file it later parses cannot drift apart -- the
+# round trip is asserted by tests/deploy/webhook-ingress.spec.ts.
+write_active_slot_snippet() {
+  local slot="$1" port="$2"
+  cat <<SNIPPET
+# /etc/nginx/sites-enabled/blue-diamond-active-slot.conf
+#
+# GENERATED FILE -- DO NOT EDIT BY HAND.
+# Rewritten atomically by /usr/local/sbin/deploy-blue-diamond on every switch.
+#
+# ACTIVE_SLOT=${slot}
+
+upstream blue_diamond_app {
+    server 127.0.0.1:${port};
+}
+SNIPPET
+}
 
 BLUE_PORT="3030"
 GREEN_PORT="3031"
@@ -199,7 +218,10 @@ fi
 NGINX_MANAGED=0
 if [ -f "$NGINX_SNIPPET" ]; then
   NGINX_MANAGED=1
-  CURRENT_PORT="$(sed -nE 's|^[[:space:]]*proxy_pass http://127\.0\.0\.1:([0-9]+)/;[[:space:]]*$|\1|p' "$NGINX_SNIPPET")"
+  # The snippet declares an upstream, not a bare proxy_pass. An exact-path
+  # location cannot use a trailing-slash proxy_pass: it would replace the
+  # matched URI with "/" and deliver the webhook to the application root.
+  CURRENT_PORT="$(sed -nE 's|^[[:space:]]*server[[:space:]]+127\.0\.0\.1:([0-9]+);[[:space:]]*$|\1|p' "$NGINX_SNIPPET" | head -n 1)"
   case "$CURRENT_PORT" in
     "$BLUE_PORT")  LIVE_SLOT="blue" ;;
     "$GREEN_PORT") LIVE_SLOT="green" ;;
@@ -525,7 +547,7 @@ wait_for_http_200 "http://127.0.0.1:${TARGET_PORT}/api/version"
 verify_served_sha "http://127.0.0.1:${TARGET_PORT}" "$RELEASE_ID"
 
 if [ "$NGINX_MANAGED" -eq 1 ]; then
-  printf 'proxy_pass http://127.0.0.1:%s/;\n' "$TARGET_PORT" > "${NGINX_SNIPPET}.new"
+  write_active_slot_snippet "$TARGET_SLOT" "$TARGET_PORT" > "${NGINX_SNIPPET}.new"
   chown root:root "${NGINX_SNIPPET}.new"
   chmod 644 "${NGINX_SNIPPET}.new"
   mv -f "${NGINX_SNIPPET}.new" "$NGINX_SNIPPET"
@@ -587,6 +609,20 @@ if [ "$NGINX_MANAGED" -eq 0 ] && systemctl is-active --quiet "${APP_NAME}@${ACTI
   else
     log "PREVIOUS_SLOT_STOPPED slot=${ACTIVE_SLOT} state=inactive"
   fi
+
+  # Stopping is not enough: the unit stays ENABLED, so the next reboot starts
+  # it again alongside the serving slot, on whatever release it last held.
+  # That is not hypothetical -- a reboot left blue serving the current SHA and
+  # green serving the previous one, and the next deploy correctly refused to
+  # run, because two healthy slots disagreeing about what they serve is exactly
+  # the ambiguity this script will not guess its way through. One stood-down
+  # slot must stay stood down across a reboot, so it is disabled here as well.
+  #
+  # Only in this pre-domain branch. Once Nginx steers traffic, the previous
+  # slot is deliberately left running as the warm rollback and must remain
+  # enabled.
+  systemctl disable "$PREVIOUS_SERVICE" >/dev/null 2>&1 || true
+  log "PREVIOUS_SLOT_DISABLED slot=${ACTIVE_SLOT} reason=pre-domain single-serving-slot"
 
   # Required end state: stood down cleanly, not left looking broken.
   FINAL_STATE="$(systemctl is-active "$PREVIOUS_SERVICE" 2>/dev/null || true)"

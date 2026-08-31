@@ -92,7 +92,16 @@ export function SiteClosingExperience({ locale, variant = "light" }: { locale: L
           <Button
             size="lg"
             variant="outline"
-            className="border-white/45 text-white hover:bg-white/10 hover:text-white focus-visible:ring-white"
+            // `bg-transparent` is load-bearing, not tidying. The `outline`
+            // variant carries `bg-background` (white), so this button was
+            // rendering white text on a white pill — measured
+            // color: rgb(255,255,255) on background-color: rgb(255,255,255),
+            // a 1:1 contrast ratio, i.e. the site's secondary booking CTA
+            // was invisible on the homepage. Pre-existing; found by reading
+            // the rendered pixels during this pass rather than the markup.
+            // The button is meant to be a hairline outline over the closing
+            // gradient, which is what it now is.
+            className="border-white/45 bg-transparent text-white hover:bg-white/10 hover:text-white focus-visible:ring-white"
             render={<Link href={bookingHref} />}
           >
             {t.exploreBooking} <ArrowRight className="ms-1 size-4 rtl:rotate-180" />

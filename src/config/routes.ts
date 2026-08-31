@@ -187,9 +187,13 @@ export const routes: RouteEntry[] = [
     templateType: "pricing",
     path: { en: "/aesthetics/pricing", ar: "/التجميل-الطبي/الأسعار" },
     title: { en: "Aesthetics Pricing", ar: "أسعار التجميل الطبي" },
+    // Indexable now that it publishes the approved workbook prices rather
+    // than an empty list (GAP-003 resolved). `requiresFeature` still governs
+    // reachability: with the flag off the page 404s and drops out of the
+    // sitemap, because src/app/sitemap.ts filters on the same flag.
     requiresFeature: "aestheticPricingEnabled",
-    indexing: "noindex",
-    inSitemap: false,
+    indexing: "index",
+    inSitemap: true,
     inNav: false,
     parentId: "aesthetics-hub",
   },

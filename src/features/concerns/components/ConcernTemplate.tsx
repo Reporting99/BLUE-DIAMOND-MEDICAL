@@ -13,6 +13,8 @@ import { getRoute, href } from "@/lib/routing";
 import { getTreatment } from "@/features/aesthetics/data/treatments";
 import { getConcern } from "@/features/concerns/data";
 import { getTechnology } from "@/features/technologies/data";
+import { getBeforeAfterPairsForConcern } from "@/features/aesthetics/data/before-after";
+import { BeforeAfterGallery } from "@/features/aesthetics/components/BeforeAfterGallery";
 import { doctors } from "@/features/doctors";
 import type { AestheticConcern } from "@/features/concerns/types";
 import type { Locale } from "@/i18n/config";
@@ -71,7 +73,31 @@ export function ConcernTemplate({ concern, locale }: { concern: AestheticConcern
   const concernsHub = getRoute("aesthetics-concerns-hub")!;
   const ownRoute = getRoute(`concern-${concern.id}`);
   const relatedTreatments = concern.relatedTreatmentIds.map(getTreatment).filter(Boolean) as NonNullable<ReturnType<typeof getTreatment>>[];
-  const relatedTechnologies = (concern.relatedTechnologyIds ?? []).map(getTechnology).filter(Boolean) as NonNullable<ReturnType<typeof getTechnology>>[];
+
+  /**
+   * Concern -> Technology (brief §11/§12/§29). An explicitly authored
+   * `relatedTechnologyIds` always wins. When there isn't one, the link is
+   * DERIVED from the concern's own recommended treatments: whatever device
+   * those treatments already say they run on.
+   *
+   * This is a derivation, not an inference. It never asks "what device
+   * probably treats this concern" — the answer comes only from
+   * `treatment.technologyIds`, which is authored per treatment from
+   * approved source content. So the page can only ever show a technology
+   * that a treatment already on this same page is documented to use,
+   * which is exactly the "Concern -> Recommended Treatment -> Technology"
+   * chain the brief asks the UI to make walkable. Before this, most
+   * concern pages simply omitted the section, and a visitor who arrived
+   * knowing their problem (the common case for aesthetics) hit a dead end
+   * one step short of the technology page.
+   */
+  const derivedTechnologyIds = Array.from(
+    new Set(relatedTreatments.flatMap((treatment) => treatment.technologyIds ?? [])),
+  );
+  const technologyIds = concern.relatedTechnologyIds?.length
+    ? concern.relatedTechnologyIds
+    : derivedTechnologyIds;
+  const relatedTechnologies = technologyIds.map(getTechnology).filter(Boolean) as NonNullable<ReturnType<typeof getTechnology>>[];
   const relatedConcerns = (concern.relatedConcernIds ?? []).map(getConcern).filter(Boolean) as AestheticConcern[];
   const relatedDoctors = doctors.filter((d) => (concern.relatedDoctorIds ?? []).includes(d.id));
 
@@ -138,6 +164,10 @@ export function ConcernTemplate({ concern, locale }: { concern: AestheticConcern
             <CrossLinkList items={relatedTreatments} locale={locale} getHref={(tr) => `/${locale}${getRoute(`treatment-${tr.id}`)!.path[locale]}`} />
           </section>
         ) : null}
+
+        {/* Concern-level examples (§30) — only pairs whose own source
+            evidence names this concern, never aggregated by appearance. */}
+        <BeforeAfterGallery pairs={getBeforeAfterPairsForConcern(concern.id)} locale={locale} />
 
         {relatedTechnologies.length ? (
           <section className="mt-10">

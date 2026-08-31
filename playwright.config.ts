@@ -29,9 +29,17 @@ export default defineConfig({
     // CI already runs `npm run build` as its own step before Playwright —
     // rebuilding here too would double the work. Locally, build+start
     // keeps a single command self-sufficient for a fresh checkout.
+    // The STANDALONE server, not `next start`. next.config.ts sets
+    // `output: "standalone"`, which `next start` explicitly does not
+    // support — Next says so on every boot — and running it anyway
+    // produced intermittent 500s ("client reference manifest … does not
+    // exist") on gated routes, failing ~26 tests for reasons unrelated to
+    // the app. scripts/serve-standalone.sh assembles and runs the exact
+    // server shape production runs. CI has already built, so it skips the
+    // build; a local run does it.
     command: process.env.CI
-      ? `npm run start -- --hostname 127.0.0.1 --port ${TEST_SERVER_PORT}`
-      : `npm run build && npm run start -- --hostname 127.0.0.1 --port ${TEST_SERVER_PORT}`,
+      ? `scripts/serve-standalone.sh --no-build`
+      : `scripts/serve-standalone.sh`,
     url: TEST_SERVER_URL,
     // NEVER reuse whatever happens to be listening. This used to be
     // `!process.env.CI`, which on this shared VPS meant a local
@@ -52,7 +60,12 @@ export default defineConfig({
     // flag is absent, so the site is not indexable. The unlaunched branch is
     // covered by tests/unit/prelaunch-guard.spec.ts, which asserts the gate
     // directly rather than needing a second server.
-    env: { ...process.env, SITE_LAUNCHED: "true" },
+    env: {
+      ...process.env,
+      SITE_LAUNCHED: "true",
+      PORT: String(TEST_SERVER_PORT),
+      HOSTNAME: "127.0.0.1",
+    },
   },
   projects: [
     { name: "chromium-desktop", use: { ...devices["Desktop Chrome"] } },

@@ -72,7 +72,7 @@ validates is not a privilege boundary.
 
 ## Pre-domain behaviour
 
-With no `/etc/nginx/snippets/blue-diamond-backend.conf`, the deploy script:
+With no `/etc/nginx/sites-enabled/blue-diamond-active-slot.conf`, the deploy script:
 
 - derives the serving slot from systemd plus a loopback probe;
 - deploys and verifies the inactive slot on loopback;

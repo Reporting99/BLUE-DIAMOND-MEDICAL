@@ -5,12 +5,13 @@
 @custom-variant dark (&:is(.dark *));
 
 /* Keyboard focus and anchor jumps must never land fully behind the sticky
- * header — WCAG 2.2 "Focus Not Obscured (Minimum)". Matches Header.tsx's
- * settled 72px height; the homepage's taller 92px floating state is
- * `fixed`/overlaid by design (the header floats over the hero on purpose),
- * so this value only needs to cover the shorter, in-flow sticky state. */
+ * header — WCAG 2.2 "Focus Not Obscured (Minimum)". The header is `fixed`
+ * on every route now (Header.tsx), so an anchor target always has to clear
+ * it: 72px is the settled/scrolled height it will be in by the time any
+ * in-page anchor is reached, plus 16px so the target is not flush against
+ * the header's lower edge. */
 html {
-  scroll-padding-top: 72px;
+  scroll-padding-top: 88px;
 }
 
 /*
@@ -57,24 +58,32 @@ html {
   --surface-muted: #eef3f6;
   /* Homepage surface rhythm — docs/UI_UX_FOUNDATION.md §15.1. The
      alternating surfaces that keep the page from reading as one long
-     white scroll: soft blue washes, a deep-blue feature band, and a dark
-     charcoal-blue footer, all derived from the same brand primitives. */
+     white scroll: soft blue washes, a deep-blue feature band, and a
+     mid-blue footer, all derived from the same brand primitives. */
   --surface-blue-soft: #eaf1f5;
   --surface-blue-mist: #edf4f7;
-  /* Was #20272c (near-black charcoal) — "SEAMLESS CLOSING SECTION AND
-     FOOTER COLOR REDESIGN" pass replaced it with the deepest stop of the
-     closing-experience gradient below (--footer-blue-bottom) so the
-     footer reads as the natural deepest point of the same blue family
-     instead of an unrelated dark rectangle bolted on underneath. Every
-     template's closing SectionTransition already targets this token, so
-     the fix applies sitewide from this one value change. */
-  --surface-dark: #102f42;
+  /* FOOTER LIGHTENING (brief §50). History: #20272c (near-black charcoal)
+     -> #102f42 (deepest closing-gradient stop) -> #1d5678 now.
+     #1d5678 is not a new colour invented for this pass: it is the brand's
+     own blue-3, the deepest facet of the Blue Diamond mark itself
+     (Logo.tsx), so the footer is now made of the brand rather than of a
+     near-black that merely sat under it. Measured against #102f42 its
+     relative luminance is 3.4x higher (0.084 vs 0.025) — "visibly lighter"
+     is a measurement here, not an impression — while white still clears
+     7.8:1, so it stays unmistakably a footer rather than fading into the
+     page. Every template's closing SectionTransition targets this one
+     token, so the change applies sitewide from this single value. */
+  --surface-dark: #1d5678;
   --surface-dark-foreground: #ffffff;
-  /* Solid color, not rgba — axe-core flagged the translucent-white version
-     at ~3.9:1 against the dark footer background (an alpha-compositing
-     edge case, not a deliberate choice). --grey-2 solid measures 8.1:1. */
-  --surface-dark-foreground-muted: var(--grey-2);
-  --surface-dark-border: rgba(255, 255, 255, 0.12);
+  /* Solid colour, not rgba — axe-core previously flagged a translucent-white
+     version at ~3.9:1 (an alpha-compositing edge case, not a deliberate
+     choice). This was --grey-2 (#bebebe), which measured 7.5:1 on the old
+     near-navy but only 4.2:1 on the lighter footer — below AA. Re-picked as
+     a cool blue-tinted light that measures 5.7:1 on #1d5678. */
+  --surface-dark-foreground-muted: #cfe0ea;
+  /* 0.12 white was calibrated against a near-black ground; on the lighter
+     footer it disappears, so hairlines get slightly more presence. */
+  --surface-dark-border: rgba(255, 255, 255, 0.18);
 
   /* ---- Closing-experience tokens ("SEAMLESS CLOSING SECTION AND FOOTER
      COLOR REDESIGN" pass) — used only by SiteClosingExperience.tsx and
@@ -86,20 +95,32 @@ html {
   --closing-mist: #e5f0f5;
   --closing-blue-soft: #a9c9dc;
   --closing-blue-mid: #4f88aa;
-  --closing-blue-deep: #245f80;
-  --footer-blue-top: #1d5678;
-  --footer-blue-mid: #17465f;
-  --footer-blue-bottom: #102f42;
+  /* Re-based so the closing gradient still descends monotonically and
+     still ENDS on exactly --surface-dark. Because the footer is lighter
+     now, the last three stops lift with it — otherwise the gradient would
+     dip darker than the footer and reintroduce the seam this system
+     exists to remove. --footer-blue-top doubles as the text colour of the
+     white booking button inside SiteClosingExperience: 6.0:1 on white. */
+  --closing-blue-deep: #2f7398;
+  --footer-blue-top: #276a8d;
+  --footer-blue-mid: #226083;
+  --footer-blue-bottom: #1d5678;
 
   --closing-text-primary: #ffffff;
   --closing-text-secondary: rgba(255, 255, 255, 0.84);
   --closing-text-muted: rgba(255, 255, 255, 0.72);
 
+  /* All solid values on the lighter footer, all measured against #1d5678:
+     heading 6.5:1, text 7.1:1, muted 5.7:1, focus 5.6:1. The two text
+     tokens used to be rgba white (0.82 / 0.66); at 0.66 the muted token
+     would have composited to 4.4:1 on the new ground — just under AA — so
+     they are now explicit colours whose contrast does not depend on what
+     happens to be painted behind them. */
   --footer-heading: #d8edf7;
-  --footer-text: rgba(255, 255, 255, 0.82);
-  --footer-text-muted: rgba(255, 255, 255, 0.66);
+  --footer-text: #eef5f9;
+  --footer-text-muted: #cfe0ea;
   --footer-link-hover: #ffffff;
-  --footer-focus: #88b9d7;
+  --footer-focus: #bfe0f2;
 
   --destructive: #b3261e;
   --destructive-surface: #fbeae9;
@@ -260,13 +281,19 @@ html {
     -webkit-font-smoothing: antialiased;
     /* Safety net for [data-reveal="start"/"end"]: their pre-reveal state
        is a translateX(±22px) — genuinely off-canvas until the element
-       scrolls into view — which was found (via direct scrollWidth
-       measurement, not visually) to widen the real page beyond the
-       viewport at narrow widths, since nothing previously clipped it.
-       This does not affect any element's own overflow or vertical
-       scrolling — it only prevents the *page* from growing a horizontal
-       scrollbar because of content sitting just outside the viewport. */
-    overflow-x: hidden;
+       scrolls into view — which widens the real page beyond the viewport
+       at narrow widths, since nothing otherwise clips it.
+
+       `clip`, not `hidden`. `hidden` turns body into a scroll container,
+       and a scroll container only suppresses panning in ONE direction
+       here: measured at 320px in Arabic, the page could still be panned
+       11px because RTL overflow leaks past the *inline-start* edge, which
+       is the left edge, which `hidden` on an LTR-origin scroll container
+       does not clip. `clip` clips both edges and creates no scroll
+       container at all, so nothing can be panned in either direction and
+       no sticky/fixed descendant behaviour changes. Vertical scrolling is
+       untouched (`overflow-y` stays visible). */
+    overflow-x: clip;
   }
 
   h1,
@@ -382,17 +409,31 @@ html {
   html.reveal-active [data-reveal="up"] {
     transform: translateY(24px);
   }
-  html.reveal-active [data-reveal="start"] {
-    transform: translateX(-22px);
-  }
-  html.reveal-active [data-reveal="start"]:dir(rtl) {
-    transform: translateX(22px);
-  }
+  /* Below `lg` the two-column layouts these entrances were designed for
+     are stacked into a single full-bleed column, so a horizontal slide is
+     both the wrong gesture (nothing is arriving from the side any more)
+     and the sole cause of the page extending past the viewport at narrow
+     widths. Phones and small tablets therefore get the same restrained
+     vertical entrance as everything else; the horizontal version returns
+     at `lg`, where the columns it describes actually exist and the
+     viewport is wide enough that 22px cannot reach the edge. */
+  html.reveal-active [data-reveal="start"],
   html.reveal-active [data-reveal="end"] {
-    transform: translateX(22px);
+    transform: translateY(24px);
   }
-  html.reveal-active [data-reveal="end"]:dir(rtl) {
-    transform: translateX(-22px);
+  @media (width >= 64rem) {
+    html.reveal-active [data-reveal="start"] {
+      transform: translateX(-22px);
+    }
+    html.reveal-active [data-reveal="start"]:dir(rtl) {
+      transform: translateX(22px);
+    }
+    html.reveal-active [data-reveal="end"] {
+      transform: translateX(22px);
+    }
+    html.reveal-active [data-reveal="end"]:dir(rtl) {
+      transform: translateX(-22px);
+    }
   }
   html.reveal-active [data-reveal="scale"] {
     transform: scale(0.96);

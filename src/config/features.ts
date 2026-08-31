@@ -34,8 +34,20 @@ export const features = {
   // shipping-returns stub pages.
   shopCheckoutEnabled: false,
   newProductBrandEnabled: false,
-  aestheticPricingEnabled: false, // no separate approved aesthetics-treatment price list beyond the SkinMedica product prices
-  beforeAfterEnabled: false, // no approved before/after photography supplied
+  // Published from the client-approved pricing workbook
+  // (BLUE_DIAMOND_AESTHETIC_PRICING_APPROVED_2026-08-23.xlsx) plus the
+  // client approval email of the same date — GAP-003, resolved. 78 of the
+  // 81 rows publish; the 3 ampoule add-ons stay publicDisplay:false behind
+  // GAP-014 (clinician review), enforced in the data file, not here.
+  // See docs/APPROVED_AESTHETIC_PRICING_MATRIX.md. Flipping this to false
+  // withdraws the entire price list — pricing index and every per-treatment
+  // pricing block — in one move.
+  aestheticPricingEnabled: true,
+  // The 14 recovered pairs are imported to /blue-diamond/before-after/ and
+  // approved. They are manufacturer clinical collateral, not Blue Diamond
+  // patient photography, and every gallery says so — see
+  // docs/BEFORE_AFTER_SOURCE_AUDIT.md and tests/unit/before-after-provenance.
+  beforeAfterEnabled: true,
   newsletterEnabled: false,
   careersFormEnabled: true, // "Join our Team" form is live on the legacy site
   consultationFormEnabled: false, // no approved consultation-request flow supplied yet
