@@ -610,6 +610,20 @@ if [ "$NGINX_MANAGED" -eq 0 ] && systemctl is-active --quiet "${APP_NAME}@${ACTI
     log "PREVIOUS_SLOT_STOPPED slot=${ACTIVE_SLOT} state=inactive"
   fi
 
+  # Stopping is not enough: the unit stays ENABLED, so the next reboot starts
+  # it again alongside the serving slot, on whatever release it last held.
+  # That is not hypothetical -- a reboot left blue serving the current SHA and
+  # green serving the previous one, and the next deploy correctly refused to
+  # run, because two healthy slots disagreeing about what they serve is exactly
+  # the ambiguity this script will not guess its way through. One stood-down
+  # slot must stay stood down across a reboot, so it is disabled here as well.
+  #
+  # Only in this pre-domain branch. Once Nginx steers traffic, the previous
+  # slot is deliberately left running as the warm rollback and must remain
+  # enabled.
+  systemctl disable "$PREVIOUS_SERVICE" >/dev/null 2>&1 || true
+  log "PREVIOUS_SLOT_DISABLED slot=${ACTIVE_SLOT} reason=pre-domain single-serving-slot"
+
   # Required end state: stood down cleanly, not left looking broken.
   FINAL_STATE="$(systemctl is-active "$PREVIOUS_SERVICE" 2>/dev/null || true)"
   if [ "$FINAL_STATE" = "failed" ] || systemctl is-failed --quiet "$PREVIOUS_SERVICE"; then

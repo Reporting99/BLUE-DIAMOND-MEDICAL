@@ -257,6 +257,31 @@ test.describe("deploy script: active-slot resolution", () => {
   test("neither healthy bootstraps so blue receives the first release", () => {
     expect(resolveSlot({}).stdout).toContain("SLOT=green");
   });
+
+  test("the stood-down slot is disabled, not merely stopped", () => {
+    // A stopped-but-enabled unit comes back on the next reboot, on whatever
+    // release it last held. That actually happened: a reboot left blue on the
+    // current SHA and green on the previous one, and the next deploy refused
+    // to run -- correctly, per "both healthy but different SHAs fails closed"
+    // above. Stopping the previous slot has to survive a reboot for that
+    // refusal to stay rare rather than routine.
+    const source = readFileSync(SCRIPT, "utf8");
+    const start = source.indexOf('STAGE="stop-previous-slot"');
+    expect(start).toBeGreaterThan(-1);
+    const stopBlock = source.slice(start, source.indexOf('echo "ACTIVE_SLOT=${TARGET_SLOT}"', start));
+    expect(stopBlock).toContain('systemctl disable "$PREVIOUS_SERVICE"');
+    expect(stopBlock).toContain("PREVIOUS_SLOT_DISABLED");
+  });
+
+  test("the disable is confined to the pre-domain branch", () => {
+    // Once Nginx steers traffic the previous slot is deliberately left running
+    // as the warm rollback. Disabling it there would remove the thing a
+    // rollback depends on.
+    const source = readFileSync(SCRIPT, "utf8");
+    const guard = source.indexOf('if [ "$NGINX_MANAGED" -eq 0 ] && systemctl is-active');
+    expect(guard).toBeGreaterThan(-1);
+    expect(source.indexOf('systemctl disable "$PREVIOUS_SERVICE"')).toBeGreaterThan(guard);
+  });
 });
 
 test.describe("deploy script: failure observability", () => {
