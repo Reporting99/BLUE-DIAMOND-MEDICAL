@@ -47,7 +47,14 @@ export async function generateMetadata({
       en: "Family medicine, walk-in care, and physician-led medical aesthetics at Blue Diamond Medical Clinic in West Springs, Calgary. Male and female physicians accepting new patients.",
       ar: "طب الأسرة، والرعاية بدون موعد، والتجميل الطبي بإشراف طبي في عيادة بلو دايموند الطبية في ويست سبرينغز، كالغاري. أطباء وطبيبات يستقبلون مرضى جددًا.",
     },
-    ogImagePath: "/blue-diamond/hero/homepage-hero.jpg",
+    // The approved home hero, and an asset that actually exists. This pointed
+    // at /blue-diamond/hero/homepage-hero.jpg, a path nothing has ever
+    // occupied -- so every share card for the homepage requested a 404 from
+    // ImageKit and rendered with no image. Unlike an <img>, an OG image is not
+    // gated on approval status: metadata emits the URL whatever the manifest
+    // says, which is why this one broke in production while the on-page hero
+    // correctly showed a placeholder.
+    ogImagePath: "/blue-diamond/home/home-hero-blue-diamond.png",
   });
 }
 

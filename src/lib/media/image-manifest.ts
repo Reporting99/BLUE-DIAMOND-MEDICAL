@@ -19,7 +19,12 @@ import { MEDIA_ROOT } from "@/config/imagekit";
 export const imageManifest: ImageKitAsset[] = [
   {
     id: "homepage-hero",
-    path: `${MEDIA_ROOT}/hero/homepage-hero.jpg`,
+    // The real approved asset. The previous path, /hero/homepage-hero.jpg,
+    // named a directory the media library does not have; it stayed invisible
+    // because `status: "pending"` renders a FacetTile and never requests the
+    // bytes. Correct even so -- a wrong path that happens not to be fetched is
+    // a trap for whoever flips the status.
+    path: `${MEDIA_ROOT}/home/home-hero-blue-diamond.png`,
     width: 1920,
     height: 1080,
     aspectRatio: "16:9",
