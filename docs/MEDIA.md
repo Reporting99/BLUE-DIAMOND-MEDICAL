@@ -3,10 +3,9 @@
 > **2026-08-24 — architecture change.** Media is no longer imported by a
 > workstation script holding an ImageKit private key. The authenticated import
 > now lives in FeelStack, and this repository never sees a private credential at
-> all. See "Import architecture" immediately below; the older
-> `scripts/imagekit-import.mjs` procedure described further down is superseded
-> for the master-pack import and kept only as the record of the legacy-archive
-> pass.
+> all. See "Import architecture" immediately below. The workstation script
+> that predated this has been removed; the legacy-archive pass it ran is kept
+> below as a record, not as a procedure.
 
 ## Import architecture (current)
 
@@ -69,59 +68,47 @@ import can change that, because there is nothing to import.
 Consolidated from the per-task documents this project accumulated; every
 fact below is carried over verbatim from the source noted at each section.
 
-## ImageKit Setup
+## ImageKit account and credentials
 
-How to activate real image delivery for this site.
+The approved account/endpoint is **`https://ik.imagekit.io/oq92dh6zib`**, media
+root **`/blue-diamond/`** — e.g. `/blue-diamond/home/home-hero-blue-diamond.png`.
+`src/config/imagekit.ts` defaults `NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT` to this
+value and exports `MEDIA_ROOT` for every content file that builds a path, so no
+environment variable is required just to point at the right account.
 
-### 1. Account and credentials
+**This repository holds no ImageKit credential, and does not need one.** The
+private key lives in FeelStack's per-project media-provider configuration and
+never leaves it. Imports authenticate as a project-scoped FeelStack user
+(`bd-media-import`) whose token can only write inside this project's path
+prefix; the two importers that exist —
+`POST /admin/v1/projects/:id/media/import` and, wrapping it,
+`scripts/import-before-after.mjs` — both go through that door. Anything asking
+for `IMAGEKIT_PRIVATE_KEY` in this repository is reaching for a credential
+scoped to the whole account when a narrower one already exists, and lands bytes
+in ImageKit that no `MediaAsset` row points at, which the public resolver
+cannot serve.
 
-The approved account/endpoint is known (brief §12): **`https://ik.imagekit.io/oq92dh6zib`**, media root **`/blue-diamond/`** — e.g. `/blue-diamond/home/home-hero-blue-diamond.png`. `src/config/imagekit.ts` already defaults `NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT` to this value and exports `MEDIA_ROOT` for every content file that builds a path, so **no environment variable is required just to point at the right account**. What's still genuinely missing:
+`NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT` is the only ImageKit value the application
+reads, and it is public by design — it grants delivery, not upload or delete.
 
-- **Public key** and **private key** — real secrets, needed only for the SDK's authenticated upload flow (`scripts/imagekit-import.mjs --upload`). Not yet supplied.
-- **Real photography uploaded into the account** — the endpoint being known doesn't mean any asset exists at it yet. Every path in `src/lib/media/image-manifest.ts` is `status: "pending"`, which is what actually keeps every image rendering the FacetTile placeholder (`imagekitIsConfigured` alone isn't sufficient — see `src/components/shared/ImageKitImage.tsx`).
+### Flipping an asset from placeholder to real
 
-### 2. Set environment variables (only needed to add the keys, or to override the endpoint)
+Uploading bytes is not publication. `ImageKitImage` renders a real CDN URL only
+when the referencing record says `status`/`approvalStatus` is `"approved"`;
+everything else renders the FacetTile placeholder, never a stock photo or a
+generated face. Promotion is a deliberate edit to the record that owns the
+asset — `src/features/doctors/data.ts`, `src/features/products/data.ts`,
+`src/features/aesthetics/data/before-after.ts` — and the site never promotes an
+asset just because a file appeared in the account. That is what keeps
+`"pending"` a signal rather than a formality, and it is the invariant a bulk
+`approvalStatus` write broke once already.
 
-Add to `.env.local` (never commit real values — `.env.local` is gitignored):
+### Verify
 
-```env
-NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT=https://ik.imagekit.io/oq92dh6zib
-NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY=public_xxxxxxxxxxxx
-IMAGEKIT_PRIVATE_KEY=private_xxxxxxxxxxxx
-```
-
-The `NEXT_PUBLIC_` prefixed values are safe to expose (ImageKit's public key and URL endpoint are meant to be public — they don't grant upload/delete access). `IMAGEKIT_PRIVATE_KEY` must **never** get a `NEXT_PUBLIC_` prefix — it's read only server-side, by `scripts/imagekit-import.mjs` and (once wired up) any future signed-upload API route.
-
-Nothing else in the codebase needs to change once real photography is uploaded and public/private keys are set. Flipping the relevant manifest entry's `status` to `"approved"` (see step 4) is what actually switches that entry's `ImageKitImage` instance from the FacetTile placeholder to the real ImageKit-delivered asset — no template or component code needs touching.
-
-### 3. Run the real import
-
-A licensed source archive (`blue-diamond-original-site-images.zip`, 70 images) was found and fully classified this pass — see `docs/MEDIA.md` for exactly what's in it and what's ready to go.
-
-```bash
-## Dry run (safe, no credentials needed, already verified working):
-node scripts/imagekit-import.mjs
-
-## Real upload, once credentials are set in the environment:
-node scripts/imagekit-import.mjs --upload
-```
-
-The script uploads only the assets it classified as "ready to import" — it does **not** upload the 3 unidentified doctor portraits or the 15 before/after-review candidates automatically; those need a human decision first (see `docs/CONTENT_MODEL.md`).
-
-### 4. Flip approval status in content files
-
-After a real upload, each content file's `status: "pending"` needs to become `status: "approved"` for the corresponding entry (e.g. in `src/features/doctors/data.ts` for doctor portraits, `src/features/products/data.ts` once product photography exists, `src/features/aesthetics/data/before-after.ts` once real pairs are approved). This is a manual, deliberate step — the site never auto-promotes an asset's status just because a file exists in the account, which is what keeps "pending" a meaningful signal rather than a formality.
-
-### 5. Verify
-
-- `tests/unit/image-usage.spec.ts` — confirms no code bypasses `ImageKitImage` and every referenced path has a manifest entry (already passing; re-run after real assets are wired up).
-- Visually check a few pages in both locales — the FacetTile placeholders should be replaced by real photos wherever `status: "approved"` is now set.
-- Confirm `IMAGEKIT_PRIVATE_KEY` never appears in any client-side bundle: `grep -r "IMAGEKIT_PRIVATE_KEY" .next/static` after a production build should return nothing.
-
-### What was NOT tested (honest gap)
-
-No live ImageKit account exists in this build environment, so the actual upload path (`--upload` flag) and the real CDN delivery URL have never been exercised end-to-end — only the dry-run classification logic has been run and verified. This procedure is believed correct based on the official `@imagekit/next` SDK's documented Upload API, but "believed correct, never executed" is a different claim than "tested," and this document doesn't pretend otherwise.
-
+- `tests/unit/image-usage.spec.ts` — no code bypasses `ImageKitImage`, and every
+  referenced path has a manifest entry.
+- `npm run validate:secrets` — and, after a production build,
+  `grep -r "IMAGEKIT_PRIVATE_KEY" .next/static` must return nothing.
 ## ImageKit Media Manifest
 
 Generated from `src/lib/media/image-manifest.ts` (source of truth — regenerate this file by hand whenever it changes). Every path is relative to the approved ImageKit account/media root (brief §12): **`https://ik.imagekit.io/oq92dh6zib`**, root **`/blue-diamond/`**. This is the audit-trail view the brief asks for (path, page, section, alt text EN/AR, dimensions, aspect ratio, focal point, priority, approval status); `docs/MEDIA.md` and `docs/MEDIA.md` carry the deeper planning/evidence layer (which real source-archive file is a candidate for which entry).
@@ -223,34 +210,29 @@ Dr. Ahmed Gwea additionally: per brief §12, must use the approved abstract tile
 
 Source: `blue-diamond-original-site-images.zip` (client-supplied, usage rights confirmed for images extracted from `bluediamondmedical.ca` and `bluediamondmedicalaesthetics.ca`) — 70 image files plus `source-map.json`, which records each asset's real dimensions, byte size, originating page(s), and a `reviewRequired` flag the extraction tool itself set on 15 assets.
 
-Generated by `scripts/imagekit-import.mjs` (dry run — see that file for the full architecture notes). Real output, not hand-written: `docs/imagekit-import-report.json` is the machine-readable version this document summarizes. Re-run the script any time the archive changes; it's idempotent and safe to run repeatedly.
+This section is the **record of the legacy-archive pass**, kept for its
+provenance: what the archive contained, what was excluded and why, and which
+portraits may never be published blind. It is not a procedure to run.
 
-### Architecture
+The script that produced it, `scripts/imagekit-import.mjs`, has been removed.
+It predated the current architecture: it uploaded straight to the ImageKit
+Upload API with an account-wide `IMAGEKIT_PRIVATE_KEY`, which this repository
+does not hold and should not, and it left no `MediaAsset` row behind, so
+nothing it uploaded could be resolved or approved. Its work is done — the
+archive's assets are registered in FeelStack under `/blue-diamond/shared/legacy/`
+— and the door it used is closed. Imports now go through
+`POST /admin/v1/projects/:id/media/import`, described under "Import
+architecture" above.
 
-```
-Licensed local archive → scripts/imagekit-import.mjs → ImageKit Upload API
-                                                              ↓
-                                    FeelStack stores only the resulting ImageKit
-                                    path + metadata (alt, focal point, role, sort
-                                    order) — never the image bytes
-                                                              ↓
-                                        Next.js resolves that metadata at
-                                        build/ISR time via the typed content
-                                        modules already in this repo
-                                                              ↓
-                                     Browser loads the optimized image directly
-                                     from ImageKit through @imagekit/next
-```
+### Status
 
-FeelStack never proxies image bytes at any point in this flow — it isn't wired into this script at all, by design.
+The archive was imported and is registered in the FeelStack media library. The
+review holds recorded below still stand and are not superseded by the import:
+the three unidentified physician portraits and the assets flagged for
+claim-accuracy review remain unpublished, and publishing any of them is a human
+decision, not an import step.
 
-### Current status: dry run only
-
-**No ImageKit credentials exist in this environment.** `NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT`, `NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY`, and `IMAGEKIT_PRIVATE_KEY` are all unset (`.env.example` documents the exact names; no `.env.local` exists). The script detects this and refuses to attempt an upload even if `--upload` is passed — it writes the dry-run report and exits. **No credentials were fabricated.** Every image below is still served through the FacetTile placeholder on the live site; nothing changes on the rendered pages from this report alone.
-
-Once real credentials are supplied, running `node scripts/imagekit-import.mjs --upload` performs the actual import — the classification, exclusion, and destination-path logic below is already final and does not need to be re-derived.
-
-### Summary (from the real dry run)
+### What the archive contained
 
 | | |
 |---|---|
@@ -324,20 +306,21 @@ The source archive's own extraction tool already flagged these 15 assets as `rev
 
 **None of these are imported or linked to a route yet.** Per the brief: "Before/After assets may be imported because usage rights are confirmed, but visible medical claims must match the approved source content... do not silently treat unrelated images as a Before/After pair." These are manufacturer/marketing result images, not confirmed to be genuine matched before/after pairs of the same real patient — several file-name pairs look plausible (e.g., the two `arroyo-legveins` files, `.png`+`.jpg`, may be the same pairing exported twice rather than a true before/after pair) but this needs a human — ideally clinical — reviewer to confirm each pairing and its claim before it appears on `/aesthetics/before-after` (still `beforeAfterEnabled: false`).
 
-### Technology and treatment imagery — ready to import once credentials exist
+### Technology and treatment imagery
 
-The remaining 37 assets (technology device photography for Cynosure/Elite iQ/Potenza/TempSure/Ultra, and generic treatment/concern thumbnails not flagged `reviewRequired`) classify cleanly by their originating legacy page and carry no identity or claim-accuracy risk — they're manufacturer device photography and generic marketing graphics, not patient photos. Full per-file mapping (destination path, dimensions, source URL) is in `docs/imagekit-import-report.json`. These can be imported in the same `--upload` pass as the confirmed doctor photos without further manual review.
+The remaining 37 assets (technology device photography for Cynosure/Elite iQ/Potenza/TempSure/Ultra, and generic treatment/concern thumbnails not flagged `reviewRequired`) classify cleanly by their originating legacy page and carry no identity or claim-accuracy risk — they're manufacturer device photography and generic marketing graphics, not patient photos.
 
-### What's still needed before any of this goes live
+### What is still open
 
-1. **ImageKit account credentials** (`NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT`, `NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY`, `IMAGEKIT_PRIVATE_KEY`) — none exist in this environment; add them to `.env.local` (never commit real values).
-2. **Client confirmation of the 3 unidentified doctor portraits** — which roster name (if any) each belongs to.
-3. **Clinical/marketing review of the 15 before/after-style assets** — confirm each genuine pairing and that any claim it implies matches approved copy, before `beforeAfterEnabled` is ever switched on.
-4. Once 1–3 are resolved, run `node scripts/imagekit-import.mjs --upload` to perform the real import, then flip the relevant `ImageStatus` values from `"pending"` to `"approved"` in the content files that reference each image.
+Credentials are no longer among these. The remaining items are human decisions, not engineering steps:
+
+1. **Client confirmation of the 3 unidentified doctor portraits** — which roster name (if any) each belongs to. Until then all three stay unmapped and unpublished.
+2. **Clinical/marketing review of the 15 before/after-style legacy assets** — each pairing, and any claim it implies, confirmed against approved copy. This is separate from the 14 recovered pairs now published under `/blue-diamond/before-after/`, whose provenance is settled in `docs/BEFORE_AFTER_SOURCE_AUDIT.md`.
+3. **Licensing for the retained Cynosure asset** — appearing on the legacy site is evidence of use, not a transferable licence.
 
 ## Image Replacement Manifest
 
-The approved ImageKit account/endpoint is now known (`https://ik.imagekit.io/oq92dh6zib`, media root `/blue-diamond/` — brief §12, `src/config/imagekit.ts`), but no real photography has been uploaded to it and no public/private key has been supplied yet. Every image below currently renders the code-generated "Facet Tile" placeholder (`src/components/shared/FacetTile.tsx`) instead of a real photo, because each entry's approval `status` is still `"pending"` — see `docs/MEDIA.md`. This file is the planning layer; `docs/MEDIA.md` is the *evidence* layer (real dimensions, source URLs, classification of 70 actual licensed source images found this pass) and `docs/MEDIA.md` is the generated-from-code audit trail — read all three together.
+The approved ImageKit account/endpoint is `https://ik.imagekit.io/oq92dh6zib`, media root `/blue-diamond/` (`src/config/imagekit.ts`). Media now exists in the account and is registered in FeelStack. An entry below still renders the code-generated "Facet Tile" placeholder (`src/components/shared/FacetTile.tsx`) wherever its record's approval `status` is `"pending"` — the account holding a file is never on its own what publishes it. Treat the FeelStack media library as the authority on what exists; this table is the planning layer for what each slot is *for*.
 
 | Page | Section | Subject | ImageKit path (planned) | Aspect ratio | Status | Notes |
 |---|---|---|---|---|---|---|
@@ -361,7 +344,7 @@ The approved ImageKit account/endpoint is now known (`https://ik.imagekit.io/oq9
 
 ### Real source archive — summary (full detail in `docs/MEDIA.md`)
 
-70 licensed images found this pass (`blue-diamond-original-site-images.zip`), classified by `scripts/imagekit-import.mjs`: 8 excluded (legacy screenshots/superseded logos), 4 identity-confirmed doctor photos, 3 unidentified doctor photos, 15 before/after-style assets flagged for review, ~37 technology/treatment/concern images ready to import without further review. Real dimensions, byte sizes, and originating legacy-page context are recorded for every asset — nothing above is guessed.
+70 licensed images found this pass (`blue-diamond-original-site-images.zip`), classified during the legacy-archive pass: 8 excluded (legacy screenshots/superseded logos), 4 identity-confirmed doctor photos, 3 unidentified doctor photos, 15 before/after-style assets flagged for review, ~37 technology/treatment/concern images carrying no identity or claim-accuracy risk. Real dimensions, byte sizes, and originating legacy-page context are recorded for every asset — nothing above is guessed.
 
 ### Presets defined, ready for real assets
 

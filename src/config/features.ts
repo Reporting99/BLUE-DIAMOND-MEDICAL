@@ -43,7 +43,11 @@ export const features = {
   // withdraws the entire price list — pricing index and every per-treatment
   // pricing block — in one move.
   aestheticPricingEnabled: true,
-  beforeAfterEnabled: false, // no approved before/after photography supplied
+  // The 14 recovered pairs are imported to /blue-diamond/before-after/ and
+  // approved. They are manufacturer clinical collateral, not Blue Diamond
+  // patient photography, and every gallery says so — see
+  // docs/BEFORE_AFTER_SOURCE_AUDIT.md and tests/unit/before-after-provenance.
+  beforeAfterEnabled: true,
   newsletterEnabled: false,
   careersFormEnabled: true, // "Join our Team" form is live on the legacy site
   consultationFormEnabled: false, // no approved consultation-request flow supplied yet

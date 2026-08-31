@@ -14,7 +14,7 @@
 //      into that same bundle.
 //   4. A credential-shaped literal committed anywhere in source.
 //
-// Plain Node with no dependencies, matching scripts/imagekit-import.mjs, so it
+// Plain Node with no dependencies, so it
 // adds nothing to package.json and runs anywhere `node` does.
 //
 // Salvaged and adapted from the abandoned feat/feelstack-production-foundation

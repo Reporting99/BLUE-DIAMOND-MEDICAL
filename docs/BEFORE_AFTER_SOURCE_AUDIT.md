@@ -131,11 +131,11 @@ a style guide:
 | MAPPED to a treatment | 14 / 14 |
 | MAPPED to a technology (filename/widget evidence only) | 4 |
 | MAPPED to a concern (source metadata only) | 1 |
-| PUBLISHED (binary live on the approved CDN) | 0 — see §7 |
+| PUBLISHED (binary live on the approved CDN) | 28 / 28 — see §7 |
 
 `scripts/before-after-manifest.json` carries every file's source URL,
 original filename, byte size and SHA-256. `scripts/import-before-after.mjs`
-re-verifies each checksum and uploads to ImageKit; it has been run in
+re-verifies each checksum and imports through FeelStack; it has been run in
 verify mode from both the staged directory and, independently, by
 re-downloading every file from its recorded source URL — **28/28 verified,
 0 failed, in both modes**, so the payload is reproducible from provenance
@@ -156,31 +156,52 @@ from the site owner's own widget title "Spider". The two "Acne …" widgets
 record `sourceConditionLabel: "Acne"` but map to no concern: the registry's
 term is `acne-scars`, and acne is not acne scarring.
 
-## 7. The one remaining step
+## 7. Import and publication — done
 
-`approvalStatus` is `"pending"` on all 14 and `beforeAfterEnabled` is
-`false`. This is **not** an editorial hold — the decision to use these
-assets is made. It is one mechanical fact:
+All 14 pairs are `approved` / `PUBLISHED` and `features.beforeAfterEnabled`
+is `true`. The 28 binaries live at `/blue-diamond/before-after/` on the
+project's ImageKit endpoint.
 
-> **`IMAGEKIT_PRIVATE_KEY` does not exist anywhere on this host** — not in
-> `/home/blue-diamond/shared/*.env`, not in any release `.env`. The 28
-> binaries therefore cannot be uploaded to `ik.imagekit.io/oq92dh6zib`, and
-> `ImageKitImage` renders a real CDN URL only at `approved`. Flipping the
-> flag now would publish 28 URLs with no file behind them — 28 broken
-> images on treatment, technology and gallery pages.
-
-To finish, with the key available:
+**They were imported through FeelStack, not straight at ImageKit.** The
+blocker recorded here previously was that `IMAGEKIT_PRIVATE_KEY` exists
+nowhere on this host. It does not need to: FeelStack holds the ImageKit
+provider credential per project, and
+`POST /admin/v1/projects/:id/media/import` uploads the bytes and records the
+asset in one authenticated call, using a credential
+(`bd-media-import`) whose token is scoped to this project alone and which can
+only write inside this project's path prefix. Reaching for an account-wide
+ImageKit key would have been both unnecessary and broader than the job.
 
 ```bash
+set -a; . /home/blue-diamond/secrets/feelstack-admin.env; set +a
+FEELSTACK_API_URL=https://feelstack.dfeelings.com/api \
 BEFORE_AFTER_STAGE_DIR=/home/blue-diamond/tmp/before-after-migration \
-IMAGEKIT_PRIVATE_KEY=… node scripts/import-before-after.mjs --upload
+  node scripts/import-before-after.mjs --upload
 ```
 
-then set each pair's `approvalStatus` to `"approved"` and `pipelineState`
-to `"PUBLISHED"`, and `features.beforeAfterEnabled` to `true`. No code
-change is required — the gallery, the attribution, the relationships, the
-routes and the tests are all in place and exercised.
+| Stage | Count |
+|---|---|
+| FOUND | 14 pairs / 28 files |
+| CHECKSUM VERIFIED (client and server) | 28 / 28 |
+| IMPORTED | 28 / 28 |
+| REGISTERED in `beforeAfterPairs` | 14 / 14 |
+| MAPPED | 14 / 14 |
+| PUBLISHED | 14 / 14 |
+| Delivery URLs returning 200 | 28 / 28 |
+| Duplicate assets created | 0 |
+
+The import is idempotent and safe to re-run: the endpoint refuses to
+overwrite, so identical bytes at a known path return `reused` and different
+bytes at the same path are a 409 rather than a silent replacement. A second
+full run reported 0 uploaded / 28 reused.
+
+`approvalStatus` is deliberately never sent by the importer. Sending it on
+this endpoint is what flipped 36 medical assets to `approved` in one
+unattended run on 2026-08-30. The 28 assets are `pending` in FeelStack, which
+is correct — nothing consumes them from there. Publication is controlled by
+`src/features/aesthetics/data/before-after.ts`, which is what
+`ImageKitImage` reads.
 
 The staged payload is at `/home/blue-diamond/tmp/before-after-migration/`
-(28 files, 21,251,425 bytes), and is fully reconstructible from the
-manifest if that directory is lost.
+(28 files, 21,251,425 bytes), and is fully reconstructible from
+`scripts/before-after-manifest.json` if that directory is lost.

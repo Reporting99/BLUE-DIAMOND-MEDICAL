@@ -38,11 +38,15 @@ import type { BeforeAfterPair } from "@/features/aesthetics/before-after-types";
  * NOT a licence, and must never be silently upgraded to
  * VERIFIED_REPUBLISHABLE without a rights document (§22).
  *
- * `approvalStatus: "pending"` is not editorial hesitation — the editorial
- * decision to use these assets has been made. It reflects one mechanical
- * fact: the binaries are not yet on the approved ImageKit endpoint, and
- * the shared ImageKitImage renders a real CDN URL only at "approved". See
- * scripts/import-before-after.mjs and section 20 of the closure report.
+ * All 14 are `approved` / `PUBLISHED`. They were held at `pending` for one
+ * mechanical reason — the binaries were not yet on the approved CDN, and
+ * ImageKitImage renders a real URL only at "approved", so flipping early
+ * would have published 28 broken images. The 28 files were imported through
+ * FeelStack (scripts/import-before-after.mjs) into
+ * /blue-diamond/before-after/, checksum-verified on both sides, and every
+ * delivery URL answers 200. The editorial decision to use them was already
+ * made; see docs/BEFORE_AFTER_SOURCE_AUDIT.md for what they actually are and
+ * for the attribution rules that make using them honest.
  */
 export const beforeAfterPairs: BeforeAfterPair[] = [
   {
@@ -73,8 +77,8 @@ export const beforeAfterPairs: BeforeAfterPair[] = [
       sourceWidget: "Before & After Slider",
     },
     rightsStatus: "LEGACY_SITE_USAGE_EVIDENCE",
-    pipelineState: "MAPPED",
-    approvalStatus: "pending",
+    pipelineState: "PUBLISHED",
+    approvalStatus: "approved",
   },
   {
     pairId: "laser-hair-removal-02",
@@ -104,8 +108,8 @@ export const beforeAfterPairs: BeforeAfterPair[] = [
       sourceWidget: "Before & After Slider",
     },
     rightsStatus: "LEGACY_SITE_USAGE_EVIDENCE",
-    pipelineState: "MAPPED",
-    approvalStatus: "pending",
+    pipelineState: "PUBLISHED",
+    approvalStatus: "approved",
   },
   {
     pairId: "laser-skin-treatments-01",
@@ -137,8 +141,8 @@ export const beforeAfterPairs: BeforeAfterPair[] = [
       manufacturerReference: "1731549407223_marketing_materials_BA-Elite-C-Nanni-Pigment-Pre-Post2Tx-01",
     },
     rightsStatus: "LEGACY_SITE_USAGE_EVIDENCE",
-    pipelineState: "MAPPED",
-    approvalStatus: "pending",
+    pipelineState: "PUBLISHED",
+    approvalStatus: "approved",
   },
   {
     pairId: "laser-skin-treatments-02",
@@ -168,8 +172,8 @@ export const beforeAfterPairs: BeforeAfterPair[] = [
       sourceWidget: "Before & After Slider copy",
     },
     rightsStatus: "LEGACY_SITE_USAGE_EVIDENCE",
-    pipelineState: "MAPPED",
-    approvalStatus: "pending",
+    pipelineState: "PUBLISHED",
+    approvalStatus: "approved",
   },
   {
     pairId: "laser-skin-treatments-03",
@@ -201,8 +205,8 @@ export const beforeAfterPairs: BeforeAfterPair[] = [
       sourceConditionLabel: "Spider",
     },
     rightsStatus: "LEGACY_SITE_USAGE_EVIDENCE",
-    pipelineState: "MAPPED",
-    approvalStatus: "pending",
+    pipelineState: "PUBLISHED",
+    approvalStatus: "approved",
   },
   {
     pairId: "laser-skin-treatments-04",
@@ -232,8 +236,8 @@ export const beforeAfterPairs: BeforeAfterPair[] = [
       sourceWidget: "Before & After Slider copy copy",
     },
     rightsStatus: "LEGACY_SITE_USAGE_EVIDENCE",
-    pipelineState: "MAPPED",
-    approvalStatus: "pending",
+    pipelineState: "PUBLISHED",
+    approvalStatus: "approved",
   },
   {
     pairId: "laser-skin-treatments-05",
@@ -266,8 +270,8 @@ export const beforeAfterPairs: BeforeAfterPair[] = [
       manufacturerReference: "1731549748427_PRD-0844-Elite-iQ-BNAs-CAN-EN_02",
     },
     rightsStatus: "LEGACY_SITE_USAGE_EVIDENCE",
-    pipelineState: "MAPPED",
-    approvalStatus: "pending",
+    pipelineState: "PUBLISHED",
+    approvalStatus: "approved",
   },
   {
     pairId: "prp-skin-rejuvenation-01",
@@ -297,8 +301,8 @@ export const beforeAfterPairs: BeforeAfterPair[] = [
       sourceWidget: "Before & After Slider",
     },
     rightsStatus: "LEGACY_SITE_USAGE_EVIDENCE",
-    pipelineState: "MAPPED",
-    approvalStatus: "pending",
+    pipelineState: "PUBLISHED",
+    approvalStatus: "approved",
   },
   {
     pairId: "radio-frequency-01",
@@ -331,8 +335,8 @@ export const beforeAfterPairs: BeforeAfterPair[] = [
       manufacturerReference: "1731554603454_TempSure_Before",
     },
     rightsStatus: "LEGACY_SITE_USAGE_EVIDENCE",
-    pipelineState: "MAPPED",
-    approvalStatus: "pending",
+    pipelineState: "PUBLISHED",
+    approvalStatus: "approved",
   },
   {
     pairId: "radio-frequency-02",
@@ -365,8 +369,8 @@ export const beforeAfterPairs: BeforeAfterPair[] = [
       manufacturerReference: "1731554683080_PRD_4497_TempSureEnvi_BampA_Standard_Format-921-000-0000",
     },
     rightsStatus: "LEGACY_SITE_USAGE_EVIDENCE",
-    pipelineState: "MAPPED",
-    approvalStatus: "pending",
+    pipelineState: "PUBLISHED",
+    approvalStatus: "approved",
   },
   {
     pairId: "radio-frequency-03",
@@ -396,8 +400,8 @@ export const beforeAfterPairs: BeforeAfterPair[] = [
       sourceWidget: "Before & After Slider copy",
     },
     rightsStatus: "LEGACY_SITE_USAGE_EVIDENCE",
-    pipelineState: "MAPPED",
-    approvalStatus: "pending",
+    pipelineState: "PUBLISHED",
+    approvalStatus: "approved",
   },
   {
     pairId: "rf-microneedling-01",
@@ -428,8 +432,8 @@ export const beforeAfterPairs: BeforeAfterPair[] = [
       sourceConditionLabel: "Acne",
     },
     rightsStatus: "LEGACY_SITE_USAGE_EVIDENCE",
-    pipelineState: "MAPPED",
-    approvalStatus: "pending",
+    pipelineState: "PUBLISHED",
+    approvalStatus: "approved",
   },
   {
     pairId: "rf-microneedling-02",
@@ -460,8 +464,8 @@ export const beforeAfterPairs: BeforeAfterPair[] = [
       sourceConditionLabel: "Acne",
     },
     rightsStatus: "LEGACY_SITE_USAGE_EVIDENCE",
-    pipelineState: "MAPPED",
-    approvalStatus: "pending",
+    pipelineState: "PUBLISHED",
+    approvalStatus: "approved",
   },
   {
     pairId: "ultra-01",
@@ -493,8 +497,8 @@ export const beforeAfterPairs: BeforeAfterPair[] = [
       manufacturer: "Cynosure",
     },
     rightsStatus: "LEGACY_SITE_USAGE_EVIDENCE",
-    pipelineState: "MAPPED",
-    approvalStatus: "pending",
+    pipelineState: "PUBLISHED",
+    approvalStatus: "approved",
   },];
 
 /** Pairs whose binaries are live on the CDN and cleared to render. */

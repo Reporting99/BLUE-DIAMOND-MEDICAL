@@ -25,7 +25,7 @@ in its current state, not whether the gap is closed.
 | GAP-005 | `health-hub` | Approved, medically-reviewed article copy | Hub is published with zero articles; template and model are built | Yes (hub) | `healthHubArticlesEnabled: false`; no machine-generated medical content published | Client + clinical reviewer |
 | GAP-006 | `doctor-hamdi` | Confirmation of whether Dr. Hamdi still practises aesthetics | The aesthetics site listed her; the approved record flags only Dr. Farhat | Yes | `practicesAesthetics` relation left off pending confirmation; the biography publishes | Client |
 | GAP-007 | `patient-resources-hub` | Nothing missing — 4 approved policies are simply not yet rendered | General Conduct, Test Results, Referrals & Investigations, and Telephone Consultations are approved source content sitting unpublished | Yes | Classified `MERGE_WITH_CANONICAL_ENTITY`; scheduled for the implementation pass. **This is an implementation task, not a client approval** | Internal — implementation |
-| GAP-008 | 23 `shop-product-*` | Approved, uploaded SkinMedica product photography | Every product record is complete (name, price, size, descriptions, category, usage, sources), but no packshot is live. Per `docs/IMAGEKIT_MISSING_ASSETS.md` (committed 2026-08-24) an asset pack covering **19 of 23** products exists; that import run stopped at the credential gate and **uploaded nothing**, so all 23 records remain `status: "pending"` and 4 products have no source asset at all | Yes | Approved neutral placeholder renders for all 23 | Client + internal (ImageKit credentials) |
+| GAP-008 | 23 `shop-product-*` | Approved, uploaded SkinMedica product photography | Every product record is complete (name, price, size, descriptions, category, usage, sources), but no packshot is live. 21 SkinMedica packshots are now in the FeelStack media library under `/blue-diamond/shop/` (19 approved, 2 pending), so the assets are no longer the blocker. `src/features/products/data.ts` still derives a hardcoded `/products/skinmedica/<slug>.jpg` path at `status: "pending"`, which matches nothing in the library, so every product renders the placeholder. Closing this is a media-consumption change in the products feature — the same wiring done for home, treatments, concerns and technologies — not a content gap | Yes | Approved neutral placeholder renders for all 23 | Client + internal (ImageKit credentials) |
 | GAP-009 | `hours:main-clinic`, `hours:aesthetics` | Day-by-day weekly schedule | Both legacy sites published only a single "Open today" line. Saturday and Sunday are recorded as unconfirmed, not as verified closures | Yes | Weekdays published from the source value; unconfirmed days omitted from opening-hours structured data rather than asserted as closed (wrong hours in local search actively misdirect patients) | Client |
 | GAP-010 | `booking:walk-in` | Whether Skip the Waiting Room is still in use | `ab.skipthewaitingroom.com` appears in the source but is not in the approved booking allowlist | Yes | Walk-in booking routes through the approved Mika channel. **No URL invented**; every booking href resolves through the centralized typed booking config | Client |
 | GAP-011 | 9 treatment/concern blocks | "Individual results vary" qualifier on outcome-timeline statements | Statements such as "visible uniformity in as little as 2 treatments", "spider veins in as little as 2 treatments", "effects lasting up to 2 years", "nourished and glowing for months", "easily removed", "faster, more dramatic results" are stated as typical protocol without a qualifier | Yes, with the qualifier | Publish with a standard results-vary qualifier applied consistently. The Ultra page already carries one, which sets the precedent | Client (wording sign-off) |
@@ -66,7 +66,7 @@ Each of these publishes only after sign-off, or with the flagged phrase removed.
 |---|---|---|---|---|---|---|
 | CFG-001 | `doctor-saeed` | Missing booking CTA on the legacy page — the only physician without one | Could be a deliberate omission (not accepting bookings) or a legacy oversight. **No booking URL was invented** | Yes | Currently assigned the shared `family-doctor` (Mika) channel used by every other physician. Confirm this is correct | Client |
 | CFG-002 | `doctor-saeed` | Portrait policy — approved branded abstract tile | §7: no portrait, stock person, generated face, or human silhouette may be displayed. She has declined photography; the approved abstract tile is also absent from the media pack | Yes | `image.status: "disabled"`, `photoDeclined: true`; abstract FacetTile renders | Client |
-| CFG-003 | `doctor-gwea` | Approved photograph, **and** the approved branded abstract placeholder itself | §7: must use the approved branded abstract placeholder until a real photograph is supplied. `docs/IMAGEKIT_MISSING_ASSETS.md` records that the media pack contains **no doctor imagery of any kind**, including that placeholder | Yes | The code-generated abstract FacetTile stands in — never a stock or generated person | Client |
+| CFG-003 | `doctor-gwea` | Approved photograph, **and** the approved branded abstract placeholder itself | §7: must use the approved branded abstract placeholder until a real photograph is supplied. the FeelStack media library holds **no doctor imagery of any kind** under `/blue-diamond/`, including that placeholder | Yes | The code-generated abstract FacetTile stands in — never a stock or generated person | Client |
 | CFG-004 | `doctor-gwea` | Biography markup | Both biography paragraphs are authored as `###` headings in the source | Yes | Convert to body text with **no change to meaning** — a structural correction, not an edit | Internal — implementation |
 | CFG-005 | Aesthetics domain | Host-level 301 for `bluediamondmedicalaesthetics.ca/` | The domain root has no mapping; without it the aesthetics site keeps resolving as a second canonical website | **Blocks launch** | PROPOSED in the redirect map; requires DNS/hosting configuration, not app code | Internal — infrastructure |
 | CFG-006 | `contact:fax` | Fax reconciliation | Same value on both domains, formatted differently | Yes | **Frozen — no change this phase per explicit client instruction** (CONF-007) | Client (deferred) |
@@ -124,9 +124,13 @@ are stored with `publicDisplay: false` pending GAP-014.
 ## Cross-references
 
 This register is scoped to **content** gaps found in
-`BLUE_DIAMOND_CONTENT.md`. Media-asset gaps are tracked separately and in more
-detail in `docs/IMAGEKIT_MISSING_ASSETS.md`, `docs/IMAGEKIT_IMPORT_REPORT.md`,
-`docs/MEDIA_QA_REPORT.md`, and `docs/FEELSTACK_MEDIA_MAPPING.md` (committed
-2026-08-24 by a separate media-import pass). GAP-004, GAP-008, CFG-002, and
-CFG-003 above are the content-side view of those findings; where the two differ,
-the media reports are authoritative on asset state.
+`BLUE_DIAMOND_CONTENT.md`. It used to defer to four reports generated by the
+2026-08-24 media-import pass, which stopped at a credential gate and uploaded
+nothing. Those reports described a plan that never ran and have been removed;
+their findings are stated directly above where they still hold.
+
+**The FeelStack media library is now the authority on asset state**, not any
+committed report. `GET /admin/v1/projects/:id/media` is the query; a path under
+`/blue-diamond/` plus `approvalStatus: "approved"` is what makes an asset
+publishable. Ask it rather than a Markdown file, which can only ever describe
+a library as it was on the day it was written.
