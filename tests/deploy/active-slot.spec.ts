@@ -109,3 +109,54 @@ test.describe("the generated upstream round-trips through the deploy script", ()
     expect(code).toMatch(/systemctl reload nginx/);
   });
 });
+
+test.describe("the ISR prerender cache is writable by the runtime user", () => {
+  /**
+   * A release is owned by root and served by the `blue-diamond` user, so the
+   * deploy script grants write access to exactly the prerender-cache
+   * artifacts and nothing else.
+   *
+   * Its two finds drifted: directories were granted on any of four artifact
+   * types, but only `.body`/`.meta` FILES were made writable. Next 16 rewrites
+   * `.html` and `.rsc` (including `*.segment.rsc`) on revalidation, and it
+   * opens the EXISTING file to do it, so a group-writable directory did not
+   * help. Production logged EACCES on 163 `.html` and 813 `.rsc` files: every
+   * ISR route re-rendered on every request instead of serving its cache, and
+   * re-queried the CMS each time.
+   */
+  const grantBlock = () => {
+    const source = read(DEPLOY);
+    const start = source.indexOf("grant_isr_prerender_cache_write() {");
+    expect(start, "the grant function must exist").toBeGreaterThan(-1);
+    return source.slice(start, source.indexOf("\n}", start));
+  };
+
+  test("the same artifact list grants the directories and the files", () => {
+    const block = grantBlock();
+    const finds = (block.match(/find "\$app_dir"/g) ?? []).length;
+    const shared = (block.match(/\$\{artifacts\[@\]\}/g) ?? []).length;
+    expect(finds, "expected a directory grant and a file grant").toBe(2);
+    // Both must be driven by one shared list, not two hand-kept copies --
+    // two literal lists are exactly how these drifted apart.
+    expect(shared, "both finds must use the shared artifact list").toBe(finds);
+    expect(block, "the list must be declared once").toMatch(/local -a artifacts=\(/);
+  });
+
+  test("every artifact type Next rewrites is granted", () => {
+    const block = grantBlock();
+    for (const ext of ["body", "meta", "html", "rsc"]) {
+      expect(block, `*.${ext} must be in the granted artifact list`).toContain(`-name '*.${ext}'`);
+    }
+  });
+
+  test("the grant stays confined to the prerender cache", () => {
+    // Code, static assets and server.js must remain read-only to the runtime
+    // user; a writable release is a writable application.
+    const block = grantBlock();
+    expect(block).toContain('.next/server/app');
+    expect(block).not.toMatch(/chmod[^\n]*-R/);
+    expect(block).not.toContain(".next/static");
+    expect(block).not.toContain("server.js");
+    expect(block).not.toMatch(/\bo\+w\b|777|a\+w/);
+  });
+});
