@@ -272,12 +272,19 @@ jobs:
           bash -n "$LOCAL_SCRIPT"
           SCRIPT_SHA256="$(sha256sum "$LOCAL_SCRIPT" | awk '{print $1}')"
 
+          # shellcheck disable=SC2029  # client-side expansion is intended:
+          # these paths are computed HERE from the run id and artifact name, and
+          # are embedded single-quoted so the remote shell treats them as
+          # literals rather than re-expanding them.
           ssh "${SSH_OPTIONS[@]}" "$DEPLOY_USER@$DEPLOY_HOST" \
             "rm -f -- '$REMOTE_TEMP' '$REMOTE_ARTIFACT' '$REMOTE_SCRIPT' '$REMOTE_SUM'"
 
           scp "${SCP_OPTIONS[@]}" "$ARTIFACT_PATH" "$DEPLOY_USER@$DEPLOY_HOST:$REMOTE_TEMP"
           scp "${SCP_OPTIONS[@]}" "$LOCAL_SCRIPT" "$DEPLOY_USER@$DEPLOY_HOST:$REMOTE_SCRIPT"
 
+          # shellcheck disable=SC2029  # same rule as above: the local values are
+          # deliberately baked in, and anything that must stay remote is escaped
+          # (\$ ...) so only the intended names expand on this side.
           ssh "${SSH_OPTIONS[@]}" "$DEPLOY_USER@$DEPLOY_HOST" "
             set -euo pipefail
 
