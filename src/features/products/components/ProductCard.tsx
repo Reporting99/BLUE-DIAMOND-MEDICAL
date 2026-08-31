@@ -55,6 +55,12 @@ export function ProductCard({
               locale={locale}
               width={400}
               height={400}
+              // The card is one cell of a 1/2/3/4-column grid, so a browser
+              // that is told nothing assumes full viewport width and picks a
+              // needlessly large candidate for a ~300px box. Catalogue images
+              // stay lazy -- no `preload` here -- because a 23-product grid
+              // has no LCP candidate worth preloading.
+              sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
               className="h-full w-full transition-transform group-hover:scale-[1.02]"
             />
           ) : null}
