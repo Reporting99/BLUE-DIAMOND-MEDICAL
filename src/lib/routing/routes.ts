@@ -1,4 +1,5 @@
 import { routes } from "@/config/routes";
+import { localizedEntityRoutes } from "@/config/localized-entity-routes.generated";
 import type { RouteEntry } from "@/types/route";
 import type { Locale } from "@/i18n/config";
 
@@ -50,5 +51,9 @@ export function href(id: string, locale: Locale): string {
 export function cmsPathForLocale(englishPath: string, locale: Locale): string {
   if (locale === "en") return englishPath;
   const route = routes.find((r) => r.path.en === englishPath);
-  return route?.path[locale] ?? englishPath;
+  if (route) return route.path[locale];
+  // Entity routes live in the generated CMS artifact rather than the
+  // hand-maintained registry -- see localized-entity-routes.generated.ts.
+  const entity = localizedEntityRoutes.find((r) => r.en === englishPath);
+  return entity ? entity.ar : englishPath;
 }

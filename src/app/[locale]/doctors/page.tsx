@@ -6,6 +6,9 @@ import { ImageKitImage } from "@/components/shared/ImageKitImage";
 import { isLocale, type Locale } from "@/i18n/config";
 import { getRoute } from "@/lib/routing";
 import { doctors } from "@/features/doctors";
+import { resolveListingMedia } from "@/lib/feelstack/listing-media";
+import { resolveSlotImageRef, cmsAlt } from "@/lib/feelstack/media-slots";
+import { cacheTags } from "@/lib/feelstack/cache-tags";
 import { getRouteMetadata } from "@/lib/seo/metadata";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
 import { PageSchema } from "@/components/shared/schema";
@@ -29,6 +32,15 @@ export async function generateMetadata({
 export default async function DoctorsIndexPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale: rawLocale } = await params;
   const locale: Locale = isLocale(rawLocale) ? rawLocale : "en";
+
+  // Listing media. Without this the index renders a FacetTile for a doctor
+  // whose detail page one click away renders a real portrait -- same person,
+  // same assignment, different consumer. See lib/feelstack/listing-media.ts.
+  const listingMedia = await resolveListingMedia(
+    doctors.map((d) => ({ id: d.id, englishPath: `/doctors/${d.id}` })),
+    locale,
+    [cacheTags.doctorsIndex(process.env.FEELSTACK_SITE_KEY ?? "", locale)],
+  );
   const heading = locale === "ar" ? "أطباؤنا" : "Our Doctors";
   const intro =
     locale === "ar"
@@ -62,6 +74,15 @@ export default async function DoctorsIndexPage({ params }: { params: Promise<{ l
         <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {doctors.map((doctor) => {
             const route = getRoute(doctor.routeId)!;
+            // photoDeclined / disabled still beat the assignment, evaluated in
+            // the same central resolver the detail page uses.
+            const portrait = resolveSlotImageRef({
+              media: listingMedia[doctor.id] ?? [],
+              slot: "doctorPortrait",
+              override: doctor.image,
+              fallback: doctor.image,
+            });
+            const assigned = (listingMedia[doctor.id] ?? []).find((m) => m.slot === "doctorPortrait");
             return (
               <Link
                 key={doctor.id}
@@ -70,11 +91,16 @@ export default async function DoctorsIndexPage({ params }: { params: Promise<{ l
               >
                 <div className="facet-corner-sm relative aspect-[4/5] overflow-hidden">
                   <ImageKitImage
-                    path={doctor.image.path}
+                    path={portrait.path}
                     preset="doctor-card"
                     role="doctor"
-                    status={doctor.image.status}
-                    alt={{ en: `Portrait of ${doctor.name.en}`, ar: `صورة ${doctor.name.ar}` }}
+                    status={portrait.status}
+                    alt={
+                      cmsAlt(assigned) ?? {
+                        en: `Portrait of ${doctor.name.en}`,
+                        ar: `صورة ${doctor.name.ar}`,
+                      }
+                    }
                     locale={locale}
                     width={480}
                     height={600}
