@@ -21,6 +21,28 @@ import { features } from "../../src/config/features";
  * instructions" rule — see docs/CONTENT_MODEL.md for the
  * documented reasoning.
  */
+/**
+ * A dropped connection is not a content violation.
+ *
+ * This test fetches every published route in sequence while the rest of the
+ * suite drives the same single-process standalone server, and one transient
+ * `read ECONNRESET` used to fail it outright — reported as if a prohibited
+ * disclaimer phrase had been found. That is worse than a flake: the failure
+ * message points at content, so the natural response is to go looking for
+ * text that was never there. Transport errors are retried once and only then
+ * allowed to fail, so a red result here means what it says.
+ */
+async function getWithRetry(
+  request: { get: (url: string) => Promise<{ status: () => number; text: () => Promise<string> }> },
+  url: string,
+) {
+  try {
+    return await request.get(url);
+  } catch {
+    return await request.get(url);
+  }
+}
+
 const publishedRoutes = routes.filter(
   (r) => r.inSitemap && r.indexing === "index" && (!r.requiresFeature || features[r.requiresFeature as keyof typeof features]),
 );
@@ -49,7 +71,7 @@ test.describe("No repeated emergency/generic disclaimer text", () => {
 
       for (const route of publishedRoutes) {
         const path = route.path[locale];
-        const res = await request.get(`/${locale}${path}`);
+        const res = await getWithRetry(request, `/${locale}${path}`);
         if (res.status() >= 400) continue; // covered by broken-links.spec.ts
         const html = await res.text();
         for (const phrase of phrases) {
