@@ -44,7 +44,7 @@ export default async function BeforeAfterPage({ params }: { params: Promise<{ lo
       <Container>
         <Breadcrumbs locale={locale} items={[{ label: aestheticsRoute.title[locale], href: href("aesthetics-hub", locale) }, { label: title }]} />
         <h1 className="mt-4 text-display-1 font-heading lg:text-display-1-lg">{title}</h1>
-        <BeforeAfterGallery pairs={getBeforeAfterPairs()} locale={locale} />
+        <BeforeAfterGallery pairs={getBeforeAfterPairs()} locale={locale} renderEmptyState />
       </Container>
       </section>
       <SectionTransition from="var(--background)" to="var(--surface-dark)" />

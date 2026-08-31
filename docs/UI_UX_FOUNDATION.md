@@ -350,3 +350,60 @@ The middle stop (`#173f55`) is a genuine intermediate blue-to-charcoal tone (not
 ### Remaining work
 
 None outstanding from this checklist. Every template and page in the current route tree carries the footer seam; internal multi-background pages (homepage, `/medical`, `/aesthetics`) carry seams between each internal section too.
+
+---
+
+## Header motion and footer tone — 2026-08-31 pass
+
+### Header (`src/components/layout/Header.tsx`)
+
+`fixed` on **every** route now, not only the homepage, with a static in-flow
+spacer (`HEADER_HEIGHT_REST`) on non-homepage routes. That combination is what
+makes an animated height safe: an out-of-flow header can shrink without moving
+a pixel of page content, and the spacer never changes, so the scrolled state
+cannot cause a layout shift.
+
+| | Resting (scrollY ≤ 48) | Scrolled |
+|---|---|---|
+| Height | 84px | 72px |
+| Homepage fill | transparent | `rgba(255,255,255,0.84)` + 16px blur |
+| Other routes' fill | opaque `background` | same as homepage |
+| Border / shadow | transparent / none | hairline + `0 1px 16px rgba(29,86,120,0.08)` |
+| Inner row geometry | `max-w-[1280px]`, `px-4 lg:px-6` | **identical** |
+| Transition | `420ms cubic-bezier(0.22,1,0.36,1)` on background-color, box-shadow, border-color, height |
+
+The last row of that table is the substantive fix. The resting state used to
+be full-bleed (`max-w-none` + `lg:px-16`) and the scrolled state a centred
+1280px container, so scrolling dragged the logo and booking button sideways —
+measured against the previous release: **69px at 1440, 184px at 1728, 280px at
+1920**. Now measured at **0px at all three**. Nothing translates; only colour,
+shadow, border and 12px of height animate.
+
+### Footer tone
+
+`--surface-dark` went from `#102f42` (near-navy) to `#1d5678` — the brand's own
+blue-3, the deepest facet of the Blue Diamond mark itself. Measured relative
+luminance **0.0254 → 0.0827**, i.e. 3.3× lighter, with link text still at
+7.18:1, muted text at 5.84:1 and headings at 6.55:1 — all above WCAG AA.
+
+Two knock-on values had to move with it, both because they were calibrated
+against a much darker ground:
+`--surface-dark-foreground-muted` (was `--grey-2` `#bebebe`, which measured
+4.2:1 on the new ground — below AA) and `--surface-dark-border` (0.12 → 0.18
+white). `--footer-text` / `--footer-text-muted` became solid colours instead of
+rgba white so their contrast no longer depends on what is painted behind them.
+
+`SiteClosingExperience`'s gradient stops lifted with the footer so the ramp
+still ends on exactly `--surface-dark` and the seam stays invisible, and the
+footer's own internal overlay dropped from 0.34 to 0.14 — at 0.34 it pulled the
+footer's lower half back to roughly the old near-navy, cancelling the change.
+
+### Reveal transforms
+
+`[data-reveal="start"|"end"]` now translate **vertically** below `lg`. Their
+±22px horizontal pre-reveal offset was the sole cause of the page extending
+past the viewport at narrow widths — measured as 11px of real horizontal pan on
+Arabic at 320px. `body` also moved from `overflow-x: hidden` to
+`overflow-x: clip`: `hidden` makes body a scroll container and only suppressed
+panning in one direction, which is why the RTL leak past the inline-start edge
+survived it.

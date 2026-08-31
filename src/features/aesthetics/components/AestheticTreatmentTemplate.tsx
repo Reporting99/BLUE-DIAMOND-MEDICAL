@@ -11,9 +11,11 @@ import { MedicalWebPageSchema } from "@/components/shared/schema";
 import { FaqPageSchema } from "@/components/shared/schema";
 import { getBookingUrl } from "@/config/booking";
 import { getRoute, href } from "@/lib/routing";
-import { getConcern } from "@/features/concerns/data";
+import { concerns, getConcern } from "@/features/concerns/data";
 import { getTechnology } from "@/features/technologies/data";
 import { getTreatment } from "@/features/aesthetics/data/treatments";
+import { getBeforeAfterPairs } from "@/features/aesthetics/data/before-after";
+import { BeforeAfterGallery } from "./BeforeAfterGallery";
 import { doctors } from "@/features/doctors";
 import type { AestheticTreatment } from "@/features/aesthetics/types";
 import type { Locale } from "@/i18n/config";
@@ -93,8 +95,38 @@ export function AestheticTreatmentTemplate({
   const booking = getBookingUrl("aesthetics-consultation");
   const treatmentsHub = getRoute("aesthetics-treatments-hub")!;
   const ownRoute = getRoute(`treatment-${treatment.id}`);
-  const relatedTreatments = (treatment.relatedTreatmentIds ?? []).map(getTreatment).filter(Boolean) as AestheticTreatment[];
-  const relatedConcerns = (treatment.relatedConcernIds ?? []).map(getConcern).filter(Boolean);
+  /**
+   * Treatment -> Concern and Treatment -> Treatment (brief §12/§27).
+   * Authored ids win. When a treatment has none, both lists are derived by
+   * walking the concern registry, which authors the relationship in the
+   * other direction: a concern that recommends this treatment IS a concern
+   * this treatment addresses, and two treatments recommended for the same
+   * concern ARE alternatives worth showing side by side. Both are
+   * restatements of already-approved data, not new clinical claims.
+   *
+   * Before this, a treatment whose ids were simply never filled in
+   * rendered neither section, so the treatment page became a leaf with no
+   * route back into the concern-led journey — half of the two-way linking
+   * the brief asks for existed only where someone had typed it out.
+   */
+  const concernsAddressing = concerns.filter((concern) => concern.relatedTreatmentIds.includes(treatment.id));
+
+  const relatedConcerns = treatment.relatedConcernIds?.length
+    ? (treatment.relatedConcernIds.map(getConcern).filter(Boolean) as typeof concernsAddressing)
+    : concernsAddressing;
+
+  const derivedTreatmentIds = Array.from(
+    new Set(
+      concernsAddressing
+        .flatMap((concern) => concern.relatedTreatmentIds)
+        .filter((id) => id !== treatment.id),
+    ),
+  );
+  const relatedTreatments = (
+    treatment.relatedTreatmentIds?.length ? treatment.relatedTreatmentIds : derivedTreatmentIds
+  )
+    .map(getTreatment)
+    .filter(Boolean) as AestheticTreatment[];
   const relatedTechnologies = (treatment.technologyIds ?? []).map(getTechnology).filter(Boolean);
   const relatedDoctors = doctors.filter((d) => (treatment.relatedDoctorIds ?? []).includes(d.id));
 
@@ -204,6 +236,10 @@ export function AestheticTreatmentTemplate({
             </ul>
           </Section>
         ) : null}
+
+        {/* Clinical Before/After examples for this treatment (§29). Renders
+            nothing at all while no pair is publishable — §46. */}
+        <BeforeAfterGallery pairs={getBeforeAfterPairs(treatment.id)} locale={locale} />
 
         {relatedConcerns.length ? (
           <Section title={t.relatedConcerns}>

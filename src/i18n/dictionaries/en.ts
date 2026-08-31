@@ -14,6 +14,14 @@ export interface Dictionary {
     services: string;
     treatments: string;
     medicalAesthetics: string;
+    medical: string;
+    aesthetics: string;
+    concerns: string;
+    technologies: string;
+    uninsuredServices: string;
+    viewAllMedical: string;
+    viewAllConcerns: string;
+    viewAllTechnologies: string;
     ourTeam: string;
     about: string;
     contact: string;
@@ -75,6 +83,14 @@ const en: Dictionary = {
     ourTeam: "Our Team",
     about: "About",
     contact: "Contact",
+    medical: "Medical",
+    aesthetics: "Aesthetics",
+    concerns: "Concerns",
+    technologies: "Technologies",
+    uninsuredServices: "Uninsured Services",
+    viewAllMedical: "View all medical care",
+    viewAllConcerns: "View all concerns",
+    viewAllTechnologies: "View all technologies",
     viewAllTreatments: "View all treatments",
     openMenu: "Open menu",
     closeMenu: "Close menu",

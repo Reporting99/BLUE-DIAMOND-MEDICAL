@@ -1,11 +1,23 @@
 import { test, expect, type Page } from "@playwright/test";
 
 /**
- * Homepage header transparency/scroll-state tests — "HEADER, DISCLAIMER
- * REMOVAL, COUNTERS AND SERVICE-CARD INTERACTIONS" pass §3-6/§16.
- * Non-homepage pages keep the original always-solid sticky header
- * untouched (see the pre-existing `header-solid-on-other-pages` test at
- * the bottom of this file) — only `/en` and `/ar` get the new behavior.
+ * Header state + motion tests.
+ *
+ * REWRITTEN for the navbar-motion brief §14-§17/§86, which supersedes the
+ * behaviour two of these tests used to assert:
+ *
+ *  - "logo moves inward after scroll" was a PASSING test for what the new
+ *    brief names as the defect ("the navbar feels too far away initially
+ *    and then visibly moves/approaches the content"). The header's inner
+ *    row went from full-bleed to a centred 1280px container on scroll,
+ *    dragging the logo ~40px at 1440px wide and ~280px at 1920px. The
+ *    replacement test asserts the opposite: ZERO horizontal travel.
+ *
+ *  - "non-homepage header stays sticky and never changes" was the "fixed
+ *    on Home only" behaviour §16 forbids. Internal pages now run the same
+ *    global header motion; the replacement test asserts that, plus the
+ *    absence of any layout shift, which is what `fixed` + an in-flow
+ *    spacer buys us.
  */
 
 async function getHeaderState(page: Page) {
@@ -29,9 +41,16 @@ async function getLogoAndBookingX(page: Page) {
   return page.evaluate(() => {
     const header = document.querySelector("header");
     const logo = header?.querySelector("a[aria-label*='Home'], a[aria-label*='الرئيسية']");
-    const booking = header?.querySelector("a[href*='mika'], a[href*='janeapp'], a[href*='euclid'], button, a");
+    // The booking CTA is the only external link in the header.
+    const booking = header?.querySelector("a[target='_blank']");
     const logoRect = logo?.getBoundingClientRect();
-    return { logoLeft: logoRect ? logoRect.left : null, viewportWidth: window.innerWidth, hasBooking: Boolean(booking) };
+    const ctaRect = booking?.getBoundingClientRect();
+    return {
+      logoLeft: logoRect ? logoRect.left : null,
+      ctaLeft: ctaRect ? ctaRect.left : null,
+      viewportWidth: window.innerWidth,
+      hasBooking: Boolean(booking),
+    };
   });
 }
 
@@ -114,36 +133,81 @@ test.describe("Homepage header — transparent at top, floating after scroll", (
   });
 });
 
-test.describe("Homepage header — logo/booking inset on a wide viewport", () => {
-  // The "moves inward" effect comes from the scrolled state's centered
-  // max-w-[1280px] container — only visible on a viewport wider than
-  // that cap. The Playwright "Desktop Chrome" default viewport is
-  // exactly 1280px, right at the boundary, so this suite uses a wider
-  // one matching a real, common desktop monitor width.
-  test.use({ viewport: { width: 1728, height: 900 } });
+test.describe("Header motion — nothing translates horizontally (brief §15)", () => {
+  // The old defect was only visible on a viewport wider than the 1280px
+  // container cap, so this suite deliberately runs wider than Playwright's
+  // 1280px "Desktop Chrome" default, which sat exactly on the boundary.
+  for (const width of [1440, 1728, 1920]) {
+    test(`logo and booking CTA do not move horizontally on scroll at ${width}px`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto("/en");
+      await page.waitForTimeout(200);
+      const atTop = await getLogoAndBookingX(page);
+      await page.evaluate(() => window.scrollTo(0, 300));
+      await expect.poll(async () => (await getHeaderState(page))?.height, { timeout: 5000 }).toBe(72);
+      const scrolled = await getLogoAndBookingX(page);
+      expect(atTop.logoLeft).not.toBeNull();
+      expect(scrolled.logoLeft).not.toBeNull();
+      expect(Math.abs(scrolled.logoLeft! - atTop.logoLeft!)).toBe(0);
+      expect(atTop.ctaLeft).not.toBeNull();
+      expect(Math.abs(scrolled.ctaLeft! - atTop.ctaLeft!)).toBe(0);
+    });
+  }
 
-  test("logo sits at the far edge at the top and moves inward after scroll (LTR)", async ({ page }) => {
+  test("the height change is subtle (12px) rather than a dramatic resize", async ({ page }) => {
     await page.goto("/en");
-    const atTop = await getLogoAndBookingX(page);
-    await page.evaluate(() => window.scrollTo(0, 200));
-    await page.waitForTimeout(350);
-    const scrolled = await getLogoAndBookingX(page);
-    expect(atTop.logoLeft).not.toBeNull();
-    expect(scrolled.logoLeft).not.toBeNull();
-    // After scrolling, the centered/narrower container should place the
-    // logo farther from the viewport's left edge than the full-bleed top
-    // state did (LTR: logo starts near x=0, moves inward = larger x).
-    expect(scrolled.logoLeft!).toBeGreaterThan(atTop.logoLeft!);
+    await expect.poll(async () => (await getHeaderState(page))?.height, { timeout: 5000 }).toBe(84);
+    await page.evaluate(() => window.scrollTo(0, 300));
+    // Poll rather than a fixed wait: the settled height is only reached
+    // after hydration + a scroll event + a 420ms CSS transition, and on a
+    // loaded CI box under mobile emulation that chain has been observed to
+    // take longer than a fixed 600ms sleep — which made this fail against a
+    // header that was behaving correctly (verified directly at 412px).
+    await expect.poll(async () => (await getHeaderState(page))?.height, { timeout: 5000 }).toBe(72);
   });
 });
 
-test.describe("Non-homepage header — unchanged behavior", () => {
-  test("stays solid/sticky on an inner page regardless of scroll", async ({ page }) => {
-    await page.goto("/en/medical");
-    const state = await getHeaderState(page);
-    expect(state!.position).toBe("sticky");
-    expect(state!.backgroundColor).not.toBe("rgba(0, 0, 0, 0)");
-  });
+test.describe("Header motion is global, not homepage-only (brief §16/§86)", () => {
+  const ROUTES = [
+    "/en/medical",
+    "/en/aesthetics",
+    "/en/aesthetics/treatments/rf-microneedling",
+    "/en/aesthetics/concerns/acne-scars",
+    "/en/aesthetics/technologies/potenza",
+    "/en/doctors",
+    "/en/about",
+    "/en/contact",
+    "/en/patient-resources",
+  ];
+
+  for (const route of ROUTES) {
+    test(`${route} runs the same rest -> scrolled transition with no layout shift`, async ({ page }) => {
+      await page.goto(route);
+      await expect.poll(async () => (await getHeaderState(page))?.height, { timeout: 5000 }).toBe(84);
+      const atTop = await getHeaderState(page);
+      // Same global positioning as the homepage — one header, one behaviour.
+      expect(atTop!.position).toBe("fixed");
+      // Off the homepage the resting state is opaque, not transparent:
+      // there is no full-bleed hero here to float over.
+      expect(atTop!.backgroundColor).not.toBe("rgba(0, 0, 0, 0)");
+
+      const firstHeadingBefore = await page.evaluate(
+        () => document.querySelector("h1")!.getBoundingClientRect().top + window.scrollY,
+      );
+
+      await page.evaluate(() => window.scrollTo(0, 300));
+      await expect.poll(async () => (await getHeaderState(page))?.height, { timeout: 5000 }).toBe(72);
+
+      await page.evaluate(() => window.scrollTo(0, 0));
+      await page.waitForTimeout(600);
+      const firstHeadingAfter = await page.evaluate(
+        () => document.querySelector("h1")!.getBoundingClientRect().top + window.scrollY,
+      );
+      // The header shrinking must not move page content by a single pixel:
+      // it is `fixed`, and the flow spacer keeps the resting height.
+      expect(Math.abs(firstHeadingAfter - firstHeadingBefore)).toBeLessThan(2);
+    });
+  }
 
   test("no empty strip remains beneath the header on any page", async ({ page }) => {
     await page.goto("/en/medical");

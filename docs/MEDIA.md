@@ -294,6 +294,17 @@ Three more genuine, non-stock physician portraits exist in the archive, all from
 
 **Per the brief's explicit instruction — "never assign a legacy portrait to the wrong doctor" — none of these three files were mapped to a doctor ID.** `src/features/doctors/data.ts` is unchanged for Dr. Omonijo, Dr. Bakare, and Dr. Gwea; all three keep their placeholder. This needs a direct client answer before any of these three files gets imported and linked.
 
+> **2026-08-31 — RESOLVED, and the answer is stronger than "needs review".**
+> Both original websites were re-crawled live and rendered in a real browser
+> this pass, and the galleries' third-party widget datasets were pulled
+> directly. All 14 before/after pairs on the original aesthetics site are
+> **Cynosure device-manufacturer marketing collateral showing other
+> clinicians' patients** — the surviving filenames name Dr. Nanni and
+> Dr. Arroyo and carry Cynosure product-document numbers (PRD-0844,
+> PRD-4497). They must not be migrated as Blue Diamond results. Full
+> evidence, complete pair-by-pair inventory and the decision:
+> **`docs/BEFORE_AFTER_SOURCE_AUDIT.md`**.
+
 ### Before/After and result-claim imagery — flagged for manual review (15 files)
 
 The source archive's own extraction tool already flagged these 15 assets as `reviewRequired: true` — mostly filenames literally containing `-ba-` (before/after) or paired `acne-2`/`acne-3`-style result images, tied to specific concern and treatment pages:

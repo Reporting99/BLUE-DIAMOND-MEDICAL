@@ -8,7 +8,13 @@ export type { AestheticTreatment } from "./types";
 export type { BeforeAfterPair } from "./before-after-types";
 export { resultsVaryDisclaimer } from "./before-after-types";
 export { treatments, gatedTreatments, getTreatment, getGatedTreatment } from "./data/treatments";
-export { beforeAfterPairs, getBeforeAfterPairs } from "./data/before-after";
+export {
+  beforeAfterPairs,
+  getBeforeAfterPairs,
+  getBeforeAfterPairsForConcern,
+  getBeforeAfterPairsForTechnology,
+  publishableBeforeAfterPairs,
+} from "./data/before-after";
 export { aestheticsPricingGroups } from "./data/pricing";
 export { AestheticTreatmentTemplate } from "./components/AestheticTreatmentTemplate";
 export { BeforeAfterGallery } from "./components/BeforeAfterGallery";

@@ -1,11 +1,17 @@
 import { test, expect, type Page, type Locator } from "@playwright/test";
 
 /**
- * "FINAL MANDATORY NAVIGATION" brief — one authoritative header/mobile-nav
- * component, exact bilingual order, accessible Treatments dropdown,
- * transparent/scrolled header states, RTL mirroring. Source of truth:
- * src/config/navigation.ts, src/components/layout/Header.tsx,
- * src/components/layout/MobileNav.tsx.
+ * Global navigation — one authoritative header/mobile-nav component, exact
+ * bilingual order, accessible mega menus, header states, RTL mirroring.
+ * Source of truth: src/config/navigation.ts,
+ * src/components/layout/Header.tsx, src/components/layout/MobileNav.tsx.
+ *
+ * UPDATED for the final IA brief §13/§18/§19, which replaces the previous
+ * top level (Home, Services, Treatments, Medical Aesthetics, …) with the
+ * two-care-area structure: Home, Medical, Aesthetics, Our Team, About,
+ * Contact. "Services" and "Treatments" have not been removed — they are
+ * now inside the mega menu of the care area they belong to, which is what
+ * these tests assert.
  *
  * Locators are scoped to `header` throughout — the footer (Footer.tsx)
  * independently renders a logo, a "Book Appointment" link, and several
@@ -20,8 +26,8 @@ import { test, expect, type Page, type Locator } from "@playwright/test";
  * queried by role "button", not "link".
  */
 
-const ENGLISH_ORDER = ["Home", "Services", "Treatments", "Medical Aesthetics", "Our Team", "About", "Contact"];
-const ARABIC_ORDER = ["الرئيسية", "الخدمات", "العلاجات", "التجميل الطبي", "فريقنا", "من نحن", "تواصل معنا"];
+const ENGLISH_ORDER = ["Home", "Medical", "Aesthetics", "Our Team", "About", "Contact"];
+const ARABIC_ORDER = ["الرئيسية", "الرعاية الطبية", "التجميل الطبي", "فريقنا", "من نحن", "تواصل معنا"];
 
 const REPRESENTATIVE_PAGES = [
   "/en",
@@ -71,7 +77,7 @@ test.describe("Global navigation — present on every page family", () => {
 test.describe("English desktop navigation — exact order", () => {
   test.use({ viewport: { width: 1440, height: 900 } });
 
-  test("order is exactly Home, Services, Treatments, Medical Aesthetics, Our Team, About, Contact", async ({ page }) => {
+  test("order is exactly Home, Medical, Aesthetics, Our Team, About, Contact", async ({ page }) => {
     await page.goto("/en/contact"); // non-homepage: settled header, no scroll needed
     const labels = await desktopNavLabels(page);
     expect(labels).toEqual(ENGLISH_ORDER);
@@ -137,80 +143,83 @@ test.describe("Arabic desktop navigation — mirrored order and layout", () => {
   });
 });
 
-test.describe("Treatments dropdown — desktop interaction", () => {
+test.describe("Mega menus — desktop interaction (brief §18/§19)", () => {
   test.use({ viewport: { width: 1440, height: 900 } });
 
-  test("hovering the Treatments trigger reveals the menu", async ({ page }) => {
+  test("hovering AESTHETICS reveals the Treatments/Concerns/Technologies columns", async ({ page }) => {
     await page.goto("/en/contact");
-    const trigger = page.locator("header").getByRole("button", { name: "Treatments" });
-    await trigger.hover();
+    await page.locator("header").getByRole("button", { name: "Aesthetics" }).hover();
+    const panel = page.locator("[data-slot='navigation-menu-content']");
+    await expect(panel.getByText("Treatments", { exact: true })).toBeVisible();
+    await expect(panel.getByText("Concerns", { exact: true })).toBeVisible();
+    await expect(panel.getByText("Technologies", { exact: true })).toBeVisible();
     await expect(page.getByRole("link", { name: "RF Micro-Needling" })).toBeVisible();
   });
 
-  test("keyboard focus on the Treatments trigger reveals the menu", async ({ page }) => {
+  test("hovering MEDICAL reveals the medical services and a separate Uninsured Services group", async ({ page }) => {
     await page.goto("/en/contact");
-    const trigger = page.locator("header").getByRole("button", { name: "Treatments" });
-    await trigger.focus();
-    await expect(trigger).toHaveAttribute("aria-expanded", "true");
-    await expect(page.getByRole("link", { name: "RF Micro-Needling" })).toBeVisible();
+    await page.locator("header").getByRole("button", { name: "Medical", exact: true }).hover();
+    const panel = page.locator("[data-slot='navigation-menu-content']");
+    await expect(panel.getByText("Uninsured Services", { exact: true })).toBeVisible();
+    await expect(page.getByRole("link", { name: "View all medical care" })).toBeVisible();
   });
 
-  test("Escape closes the open menu without navigating away", async ({ page }) => {
+  for (const name of ["Medical", "Aesthetics"]) {
+    test(`keyboard focus on ${name} reveals its menu`, async ({ page }) => {
+      await page.goto("/en/contact");
+      const trigger = page.locator("header").getByRole("button", { name, exact: true });
+      await trigger.focus();
+      await expect(trigger).toHaveAttribute("aria-expanded", "true");
+    });
+
+    test(`Escape closes the ${name} menu without navigating away`, async ({ page }) => {
+      await page.goto("/en/contact");
+      const trigger = page.locator("header").getByRole("button", { name, exact: true });
+      await trigger.focus();
+      await expect(trigger).toHaveAttribute("aria-expanded", "true");
+      await page.keyboard.press("Escape");
+      await expect(trigger).toHaveAttribute("aria-expanded", "false");
+      await expect(page).toHaveURL(/\/en\/contact$/);
+    });
+  }
+
+  test("clicking the AESTHETICS label itself navigates to the Aesthetics hub", async ({ page }) => {
     await page.goto("/en/contact");
-    const trigger = page.locator("header").getByRole("button", { name: "Treatments" });
-    await trigger.focus();
-    await expect(trigger).toHaveAttribute("aria-expanded", "true");
-    await page.keyboard.press("Escape");
-    await expect(trigger).toHaveAttribute("aria-expanded", "false");
-    await expect(page).toHaveURL(/\/en\/contact$/);
+    await page.locator("header").getByRole("button", { name: "Aesthetics" }).click();
+    await expect(page).toHaveURL(/\/en\/aesthetics$/);
   });
 
-  test("tabbing from the trigger moves into the open panel's first item", async ({ page, isMobile }) => {
-    // Real Tab-key sequencing is a desktop/physical-keyboard interaction —
-    // Pixel 7 touch-device emulation (chromium-mobile) doesn't preserve
-    // focus the same way mid-keyboard-navigation. Covered on
-    // chromium-desktop; the equivalent mobile-menu accordion flow is
-    // covered separately below.
-    test.skip(isMobile, "Tab-key keyboard sequencing is desktop-only; mobile touch emulation doesn't apply here");
+  test("clicking the MEDICAL label itself navigates to the Medical hub", async ({ page }) => {
     await page.goto("/en/contact");
-    const trigger = page.locator("header").getByRole("button", { name: "Treatments" });
-    await trigger.focus();
-    await page.keyboard.press("Tab");
-    const focused = page.locator(":focus");
-    await expect(focused).toHaveText("Cosmetic Botox");
-    await expect(focused).toHaveAttribute("href", "/en/botox");
+    await page.locator("header").getByRole("button", { name: "Medical", exact: true }).click();
+    await expect(page).toHaveURL(/\/en\/medical$/);
   });
 
-  test("moving the pointer from the trigger down into the panel does not close it (close delay)", async ({ page }) => {
+  test("moving the pointer from a trigger into its panel does not close it (close delay)", async ({ page }) => {
     await page.goto("/en/contact");
-    const trigger = page.locator("header").getByRole("button", { name: "Treatments" });
-    await trigger.hover();
+    await page.locator("header").getByRole("button", { name: "Aesthetics" }).hover();
     const item = page.getByRole("link", { name: "RF Micro-Needling" });
     await expect(item).toBeVisible();
     await item.hover();
     await expect(item).toBeVisible();
   });
 
-  test("clicking the Treatments label itself navigates to the Treatments hub", async ({ page }) => {
-    await page.goto("/en/contact");
-    await page.locator("header").getByRole("button", { name: "Treatments" }).click();
-    await expect(page).toHaveURL(/\/en\/aesthetics\/treatments$/);
-  });
-
-  test("every Treatments menu item resolves to a real, live, non-gated page (200)", async ({ page, request }) => {
-    await page.goto("/en/contact");
-    await page.locator("header").getByRole("button", { name: "Treatments" }).hover();
-    await expect(page.getByRole("link", { name: "RF Micro-Needling" })).toBeVisible();
-    const hrefs = await page
-      .locator("[data-slot='navigation-menu-content'] a")
-      .evaluateAll((els) => els.map((el) => (el as HTMLAnchorElement).getAttribute("href")));
-    const uniqueHrefs = [...new Set(hrefs.filter((h): h is string => Boolean(h)))];
-    expect(uniqueHrefs.length).toBeGreaterThanOrEqual(10); // 10 items + "view all treatments"
-    for (const h of uniqueHrefs) {
-      const res = await request.get(h);
-      expect(res.status(), `${h} should be 200`).toBe(200);
-    }
-  });
+  for (const name of ["Medical", "Aesthetics"]) {
+    test(`every ${name} menu item resolves to a real, live, non-gated page (200)`, async ({ page, request }) => {
+      await page.goto("/en/contact");
+      await page.locator("header").getByRole("button", { name, exact: true }).hover();
+      await expect(page.locator("[data-slot='navigation-menu-content']")).toBeVisible();
+      const hrefs = await page
+        .locator("[data-slot='navigation-menu-content'] a")
+        .evaluateAll((els) => els.map((el) => (el as HTMLAnchorElement).getAttribute("href")));
+      const uniqueHrefs = [...new Set(hrefs.filter((h): h is string => Boolean(h)))];
+      expect(uniqueHrefs.length).toBeGreaterThanOrEqual(5);
+      for (const h of uniqueHrefs) {
+        const res = await request.get(h);
+        expect(res.status(), `${h} should be 200`).toBe(200);
+      }
+    });
+  }
 });
 
 test.describe("Header transparent/scrolled states — homepage", () => {
@@ -237,8 +246,7 @@ test.describe("Header transparent/scrolled states — homepage", () => {
     await page.goto("/en");
     const header = page.locator("header");
     const topHeight = await header.evaluate((el) => el.getBoundingClientRect().height);
-    expect(topHeight).toBeGreaterThanOrEqual(88);
-    expect(topHeight).toBeLessThanOrEqual(96);
+    expect(topHeight).toBe(84);
 
     await page.evaluate(() => window.scrollTo(0, 400));
     await expect(async () => {
@@ -258,7 +266,7 @@ test.describe("Header transparent/scrolled states — homepage", () => {
 test.describe("Mobile navigation", () => {
   test.use({ viewport: { width: 390, height: 844 } });
 
-  test("mobile menu opens, shows the exact order, and Treatments is a collapsed accordion", async ({ page }) => {
+  test("mobile menu opens, shows the exact order, and keeps the two care areas collapsed", async ({ page }) => {
     await page.goto("/en/contact");
     await page.getByRole("button", { name: "Open menu" }).click();
     const dialog = page.getByRole("dialog");
@@ -266,11 +274,27 @@ test.describe("Mobile navigation", () => {
     for (const label of ENGLISH_ORDER) {
       await expect(dialog.getByText(label, { exact: true }).first()).toBeVisible();
     }
-    // Individual treatment links are not visible until the accordion opens.
+    // Nothing inside a care area is exposed until its group is opened —
+    // brief §20's "no huge uncontrolled link lists".
     await expect(dialog.getByRole("link", { name: "RF Micro-Needling" })).toBeHidden();
-    await dialog.getByRole("button", { name: "Treatments" }).click();
+    await dialog.getByRole("button", { name: "Aesthetics" }).click();
     await expect(dialog.getByRole("link", { name: "RF Micro-Needling" })).toBeVisible();
     await expect(dialog.getByRole("link", { name: "View all treatments" })).toBeVisible();
+    // …and the sub-groups stay labelled rather than merging into one list.
+    await expect(dialog.getByText("Concerns", { exact: true })).toBeVisible();
+    await expect(dialog.getByText("Technologies", { exact: true })).toBeVisible();
+  });
+
+  test("Booking and the language switch are reachable without expanding anything", async ({ page }) => {
+    await page.goto("/en/contact");
+    await page.getByRole("button", { name: "Open menu" }).click();
+    const dialog = page.getByRole("dialog");
+    await expect(dialog.getByRole("link", { name: "Book Appointment" })).toBeVisible();
+    const lang = dialog.getByRole("link", { name: "العربية" });
+    await expect(lang).toBeVisible();
+    // WCAG 2.5.8 target size — this measured 28px before this pass.
+    const box = await lang.boundingBox();
+    expect(box!.height).toBeGreaterThanOrEqual(44);
   });
 
   test("Escape closes the mobile menu", async ({ page }) => {
@@ -305,9 +329,9 @@ test.describe("Mobile navigation", () => {
 test.describe("Services and legacy-alias resolution", () => {
   test.use({ viewport: { width: 1440, height: 900 } }); // desktop nav link, hidden below `lg` by design
 
-  test("Services nav item opens the real Medical Services hub (200, substantial content)", async ({ page }) => {
+  test("the MEDICAL nav item opens the real Medical Services hub (200, substantial content)", async ({ page }) => {
     await page.goto("/en/contact");
-    await page.locator("header").getByRole("link", { name: "Services", exact: true }).click();
+    await page.locator("header").getByRole("button", { name: "Medical", exact: true }).click();
     await expect(page).toHaveURL(/\/en\/medical$/);
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
   });

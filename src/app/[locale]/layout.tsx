@@ -8,6 +8,7 @@ import { imagekitConfig } from "@/config/imagekit";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { ScrollReveal } from "@/components/layout/ScrollReveal";
+import { RouteScrollManager } from "@/components/layout/RouteScrollManager";
 import "../globals.css";
 
 // This is the true root layout — see the note in the (removed) app/layout.tsx
@@ -59,8 +60,17 @@ export default async function LocaleLayout({
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
 
+  // `data-scroll-behavior="smooth"` on <html> below is REQUIRED, not
+  // decorative: globals.css sets `scroll-behavior: smooth` for in-page
+  // anchors, and as of Next.js 16 the router no longer disables that during
+  // a route transition unless this attribute is present (see
+  // node_modules/next/dist/shared/lib/router/utils/disable-smooth-scroll.js).
+  // Without it every navigation's scroll-to-top becomes an ANIMATED glide
+  // down through the destination page that any wheel/touch input cancels
+  // part-way — the "the page opened halfway down" defect this pass fixes.
+  // With it, in-page anchors stay smooth and route changes land instantly.
   return (
-    <html lang={locale} dir={dirFor(locale)} className={fontVariables}>
+    <html lang={locale} dir={dirFor(locale)} className={fontVariables} data-scroll-behavior="smooth">
       <body>
         {/* One centralized ImageKit provider (brief §8) — every ImageKitImage
             instance inherits urlEndpoint from here instead of repeating it. */}
@@ -69,6 +79,7 @@ export default async function LocaleLayout({
           <main id="main-content">{children}</main>
           <Footer locale={locale} />
           <ScrollReveal />
+          <RouteScrollManager />
         </ImageKitProvider>
       </body>
     </html>

@@ -2,7 +2,7 @@
 
 import { useId, useState } from "react";
 import { ImageKitImage } from "@/components/shared/ImageKitImage";
-import { resultsVaryDisclaimer } from "@/features/aesthetics/before-after-types";
+import { attributionFor, resultsVaryDisclaimer } from "@/features/aesthetics/before-after-types";
 import type { BeforeAfterPair } from "@/features/aesthetics/before-after-types";
 import type { Locale } from "@/i18n/config";
 
@@ -35,6 +35,7 @@ export function BeforeAfterSlider({ pair, locale }: { pair: BeforeAfterPair; loc
   // which side is visually revealed, so the "after" clip direction flips
   // with it rather than fighting it.
   const afterClip = isRtl ? `inset(0 0 0 ${value}%)` : `inset(0 ${100 - value}% 0 0)`;
+  const attribution = attributionFor(pair);
 
   return (
     <figure className="relative">
@@ -92,6 +93,12 @@ export function BeforeAfterSlider({ pair, locale }: { pair: BeforeAfterPair; loc
       <figcaption className="mt-3 text-sm text-text-secondary">
         <p>{pair.description[locale]}</p>
         {pair.sessionInfo ? <p className="mt-1">{pair.sessionInfo[locale]}</p> : null}
+        {/* Attribution is rendered from the pair's own provenance rather
+            than written per page — closure brief §19/§20. If a source
+            filename evidenced the manufacturer, this names it. Suppressing
+            it is not possible from a call site, which is the point: an
+            asset cannot be shown as if it were a Blue Diamond patient. */}
+        {attribution ? <p className="mt-1 text-xs font-medium">{attribution[locale]}</p> : null}
         <p className="mt-1 text-xs">{resultsVaryDisclaimer[locale]}</p>
       </figcaption>
     </figure>
