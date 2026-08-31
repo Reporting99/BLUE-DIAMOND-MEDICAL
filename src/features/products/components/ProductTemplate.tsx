@@ -8,8 +8,12 @@ import { FaqPageSchema } from "@/components/shared/schema";
 import { Button } from "@/components/ui/button";
 import { formatPrice } from "@/types/pricing";
 import { getRoute, href } from "@/lib/routing";
-import { siteConfig } from "@/config/site";
-import { MEDIA_ROOT } from "@/config/imagekit";
+import { imagekitConfig, imagekitIsConfigured, imagePresets } from "@/config/imagekit";
+// From @imagekit/javascript, not @imagekit/next: the latter's entrypoint is
+// marked "use client", and importing it from a Server Component throws
+// "Attempted to call buildSrc() from the server". Same reason
+// src/lib/seo/metadata.ts imports it this way.
+import { buildSrc } from "@imagekit/javascript";
 import { availabilityNotice, getProductById, productCategories } from "@/features/products/data";
 import type { Product } from "@/features/products/types";
 import type { Locale } from "@/i18n/config";
@@ -71,12 +75,14 @@ export function ProductTemplate({ product, locale }: { product: Product; locale:
   // the FacetTile placeholder for any non-"approved" status, so this keeps
   // every product card visually consistent even before real photography
   // is supplied.
+  // No path. This used to build /products/skinmedica/<slug>.jpg from the slug,
+  // a location no asset has ever occupied — the real packshots live under
+  // /blue-diamond/shop/ and FeelStack decides which belongs to which product.
+  // ImageKitImage renders the FacetTile placeholder for any non-"approved"
+  // status and never requests the path, so the guess was invisible; it was
+  // still a guess, and one that would 404 the moment anyone approved it.
   const coverImage = product.images[0] ?? {
-    // Matches the same /products/skinmedica/<slug>.jpg convention every
-    // real product image uses (src/features/products/data.ts `pendingImage`) —
-    // previously diverged to a different path shape, which would never
-    // have matched a real uploaded asset had this fallback ever fired.
-    path: `${MEDIA_ROOT}/products/skinmedica/${product.slug}.jpg`,
+    path: "",
     status: "pending" as const,
     alt: product.name,
   };
@@ -101,7 +107,22 @@ export function ProductTemplate({ product, locale }: { product: Product; locale:
     description: detail?.overview[locale] ?? product.description?.[locale],
     category: category?.name[locale],
     brand: { "@type": "Brand", name: "SkinMedica" },
-    ...(coverImage.status === "approved" ? { image: `${siteConfig.url}${coverImage.path}` } : {}),
+    // The image lives on ImageKit, not on the canonical domain. Concatenating
+    // siteConfig.url with an ImageKit path produced
+    // https://bluediamondmedical.ca/blue-diamond/shop/<file>.jpg for all 19
+    // photographed products — a URL that 404s, handed to every crawler reading
+    // this Product schema. Built through the same ImageKit helper the OG image
+    // uses, and omitted entirely when ImageKit is not configured rather than
+    // emitting a link that cannot resolve.
+    ...(coverImage.status === "approved" && imagekitIsConfigured
+      ? {
+          image: buildSrc({
+            src: coverImage.path,
+            urlEndpoint: imagekitConfig.urlEndpoint,
+            transformation: [imagePresets["product-gallery"]],
+          }),
+        }
+      : {}),
   };
 
   return (

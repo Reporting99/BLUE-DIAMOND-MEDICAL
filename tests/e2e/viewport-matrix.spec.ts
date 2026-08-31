@@ -97,8 +97,18 @@ test.describe("tap targets and the mobile drawer", () => {
       await page.keyboard.press("Escape");
       await expect(drawer).toBeHidden();
 
-      const unlocked = await page.evaluate(() => getComputedStyle(document.body).overflow !== "hidden");
-      expect(unlocked, "body scroll must be restored after closing").toBe(true);
+      // Poll rather than sample once. The drawer hides before the lock is
+      // released -- the close is animated, and the style is cleared when the
+      // transition ends -- so reading `overflow` the instant `toBeHidden()`
+      // resolves races the unlock and fails intermittently. The lock IS
+      // released; the test was measuring too early. Restoring scroll is what
+      // matters, not the frame on which it happens.
+      await expect
+        .poll(
+          () => page.evaluate(() => getComputedStyle(document.body).overflow),
+          { message: "body scroll must be restored after closing" },
+        )
+        .not.toBe("hidden");
     });
   }
 });
