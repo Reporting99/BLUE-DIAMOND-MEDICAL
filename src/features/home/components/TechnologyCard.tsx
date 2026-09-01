@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { FacetTile } from "@/components/shared/FacetTile";
 import { ImageKitImage } from "@/components/shared/ImageKitImage";
+import { deviceMediaFrame, deviceMediaPadding } from "@/components/shared/device-media-frame";
 import type { ResolvedMedia } from "@/lib/feelstack/media";
 import { cmsAlt } from "@/lib/feelstack/media-slots";
 import { getRoute } from "@/lib/routing";
@@ -44,7 +45,19 @@ function TechnologyCard({
       href={linkHref}
       className={`group flex flex-col gap-4 rounded-lg border border-white/10 bg-white/5 p-6 text-white transition-colors hover:border-white/30 ${size === "large" ? "lg:flex-row lg:items-center lg:gap-8" : ""} ${className}`}
     >
-      <div className={`relative aspect-square overflow-hidden rounded-md bg-white/5 ${size === "large" ? "w-full lg:w-64 lg:shrink-0" : size === "small" ? "w-16 shrink-0" : "w-full"}`}>
+      <div
+        /* The mat and inset come from `device-media-frame.ts`, the same module
+           the /aesthetics/technologies listing uses, so one device reads
+           identically in this dark strip and on that light page. The
+           `bg-white/5` this replaces was a translucent wash that took its
+           colour from whatever sat behind the section; a product shot needs
+           one fixed ground, not a different one per surface.
+
+           `size === "small"` keeps the old wash and the cover crop: at 64px
+           square there is no room to contain anything, and that variant is a
+           thumbnail beside a link rather than a product card. */
+        className={`relative aspect-square overflow-hidden rounded-md ${size === "small" ? "w-16 shrink-0 bg-white/5" : `w-full ${deviceMediaFrame} ${deviceMediaPadding}`} ${size === "large" ? "lg:w-64 lg:shrink-0" : ""}`}
+      >
         {resolved ? (
           <ImageKitImage
             path={resolved.path}
@@ -56,6 +69,7 @@ function TechnologyCard({
             width={resolved.width}
             height={resolved.height}
             sizes="(min-width: 1024px) 33vw, 100vw"
+            fit={size === "small" ? "cover" : "contain"}
             className="h-full w-full"
           />
         ) : (
