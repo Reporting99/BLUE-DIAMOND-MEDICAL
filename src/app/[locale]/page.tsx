@@ -87,6 +87,17 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   // same detail/listing split closed on /doctors and /shop, at homepage scale.
   const homeEntities = [
     { id: "home", englishPath: "/" },
+    /* HUB ROUTES AS MEDIA OWNERS.
+     *
+     * `/medical` and `/aesthetics` are static Next routes, but each also has a
+     * FeelStack `page` record — the same primitive `/` already uses to own the
+     * homepage hero. A page owns media without owning content: this app reads
+     * only `media` from the envelope and never renders `data.blocks`, so a
+     * published hub page cannot replace or override the static page it sits
+     * beside. That is what makes this safe, and it is why the hub cards below
+     * can consume a real assignment instead of hardcoding a placeholder. */
+    { id: "hub:medical", englishPath: "/medical" },
+    { id: "hub:aesthetics", englishPath: "/aesthetics" },
     ...serviceCards.map((c) => ({ id: `service:${c.id}`, englishPath: `/medical/${c.id}` })),
     ...treatmentShowcase.map((t) => ({ id: `treatment:${t.id}`, englishPath: `/aesthetics/treatments/${t.id}` })),
     ...techShowcase.map((t) => ({ id: `tech:${t.id}`, englishPath: `/aesthetics/technologies/${t.id}` })),
@@ -104,6 +115,10 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   /** First asset in any of `slots` for a featured entity, or undefined. */
   const featured = (key: string, ...slots: string[]) =>
     (homeMedia[key] ?? []).find((m) => slots.includes(m.slot));
+  /* Hub media, resolved through the same slot precedence every other surface
+     uses. `undefined` when the hub has no approved assignment — the callers
+     below fall back to the facet tile rather than rendering an empty box. */
+  const aestheticsHubMedia = featured("hub:aesthetics", "hero", "card");
   const faqSchemaEntries = homeFaqSchemaEntries(locale);
 
   const findByNeedIcon = { stethoscope: Stethoscope, sparkles: Sparkles, search: Search, cpu: Cpu };
@@ -306,7 +321,31 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
               href={href("aesthetics-hub", locale)}
               className="group relative isolate flex aspect-[4/3] flex-col justify-end overflow-hidden rounded-lg p-9 text-white"
             >
-              <FacetTile role="treatment" alt={({ en: "Medical aesthetics consultation room at Blue Diamond Medical", ar: "غرفة استشارات التجميل الطبي في بلو دايموند الطبية" })[locale]} className="absolute inset-0 -z-20 h-full w-full" />
+              {/* Real assigned media wins; the facet tile is the fallback, not
+                  the default. This used to be a hardcoded FacetTile, which meant
+                  an approved photograph assigned to the Aesthetics hub could
+                  never reach the card no matter what the CMS said. */}
+              {aestheticsHubMedia ? (
+                <ImageKitImage
+                  path={aestheticsHubMedia.path}
+                  preset="hero"
+                  role={aestheticsHubMedia.role}
+                  status={aestheticsHubMedia.status}
+                  alt={
+                    cmsAlt(aestheticsHubMedia) ?? {
+                      en: "Medical aesthetics consultation room at Blue Diamond Medical",
+                      ar: "غرفة استشارات التجميل الطبي في بلو دايموند الطبية",
+                    }
+                  }
+                  locale={locale}
+                  width={aestheticsHubMedia.width}
+                  height={aestheticsHubMedia.height}
+                  sizes="(min-width: 1024px) 58vw, 100vw"
+                  className="absolute inset-0 -z-20 h-full w-full"
+                />
+              ) : (
+                <FacetTile role="treatment" alt={({ en: "Medical aesthetics consultation room at Blue Diamond Medical", ar: "غرفة استشارات التجميل الطبي في بلو دايموند الطبية" })[locale]} className="absolute inset-0 -z-20 h-full w-full" />
+              )}
               <div
                 aria-hidden="true"
                 className="absolute inset-0 -z-10"
