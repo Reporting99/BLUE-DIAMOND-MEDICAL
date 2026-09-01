@@ -322,6 +322,151 @@ html {
     display: inline-block;
   }
 
+  /*
+   * SCROLLBAR — the third piece of scroll chrome, after the reading rail and
+   * the back-to-top arrow (docs/UI_UX_FOUNDATION.md, "Scroll chrome"). The
+   * browser default is a grey or near-black bar, which on a phone is a
+   * permanent strip of somebody else's colour down the edge of every page.
+   *
+   * COLOUR. No new blues are introduced. The thumb is the brand's own facet
+   * gradient, the same light-to-dark run the reading rail already uses:
+   * --blue-2 -> --blue-1 -> --blue-3. That gradient is what makes it read as
+   * glossy; the highlight is one inset white line at the top, not a metallic
+   * ramp.
+   *
+   * CONTRAST, and why the gradient is load-bearing rather than decorative.
+   * What the thumb has to stand out against depends on which kind of
+   * scrollbar the browser gives it, and the two answers are different:
+   *
+   *  - Classic, layout-space scrollbar (desktop Chromium and Safari, and
+   *    Android Chrome once these rules apply). The thumb never touches the
+   *    page: it sits in its own gutter, and its neighbour is the track, which
+   *    composites to #eaf2f8 over the page canvas. Rendered and sampled, the
+   *    gradient's body measures 3.1:1 against that track and 3.5:1 against
+   *    white — over AA's 3:1 for a non-text control either way.
+   *  - Overlay scrollbar, where the thumb IS drawn on the page. Then it is
+   *    scrolled over white sections, pale blue washes and the --surface-dark
+   *    footer (#1d5678) alike, and no single colour clears 3:1 against both
+   *    white and that footer: the requirements are L <= 0.30 and L >= 0.35,
+   *    which cannot both hold. A flat thumb has to fail one of them. The
+   *    gradient does not — its --blue-1/--blue-3 body measures 3.1:1 and
+   *    6.3:1 on white, its --blue-2 crown 3.8:1 on the footer — so whichever
+   *    ground it is over, part of it is clearly separated from that ground.
+   *
+   * The outer white ring is the same device, and for the same reason, as the
+   * ring on BackToTop: over the footer the thumb is brand blue on brand blue,
+   * and blue on blue needs an edge. On light sections the ring is white on
+   * white and costs nothing.
+   *
+   * MOTION. Nothing here transitions or animates. Hover and active are
+   * instant state changes, so there is no scrollbar motion for
+   * prefers-reduced-motion to have to switch off.
+   *
+   * FALLBACK. Browsers that do not expose these pseudo-elements (notably iOS
+   * Safari, which keeps its own overlay indicator on the document scroller)
+   * are left with native behaviour. That is the intended outcome, not a gap:
+   * the rules below only ever restyle a scrollbar, they never hide or replace
+   * one, and no JavaScript scrollbar exists to fall back from.
+   */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  /* Barely-there tint of --blue-2 rather than a drawn channel: enough to seat
+     the thumb on light sections, and enough to lift the strip slightly where
+     it crosses the dark footer, without reading as a second UI element. */
+  ::-webkit-scrollbar-track {
+    background: rgba(136, 185, 215, 0.18);
+  }
+
+  ::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+    background: linear-gradient(
+      180deg,
+      var(--blue-2) 0%,
+      var(--blue-1) 38%,
+      var(--blue-3) 100%
+    );
+    /* Top line = the gloss. Bottom line = the shaded underside that stops the
+       gradient ending on a flat edge. Outer ring = the footer insurance
+       described above. */
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.55),
+      inset 0 -1px 0 rgba(29, 86, 120, 0.35),
+      0 0 0 1px rgba(255, 255, 255, 0.3);
+    /* On a long page the proportional thumb can shrink to a few pixels, which
+       is a target nobody can grab. 44px is the WCAG 2.2 target minimum. */
+    min-height: 44px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(
+      180deg,
+      var(--blue-2) 0%,
+      var(--blue-1) 40%,
+      var(--blue-4) 100%
+    );
+  }
+
+  /* Deeper still while dragging, and the inner shading inverts so the thumb
+     reads as pressed. The crown stays light in both states: it is what the
+     thumb is seen by over the footer, so hover must never darken it away. */
+  ::-webkit-scrollbar-thumb:active {
+    background: linear-gradient(
+      180deg,
+      var(--blue-1) 0%,
+      var(--blue-3) 45%,
+      var(--blue-4) 100%
+    );
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.4),
+      inset 0 2px 4px rgba(29, 86, 120, 0.3),
+      0 0 0 1px rgba(255, 255, 255, 0.3);
+  }
+
+  /* Phones get 8px rather than 10px — still comfortably above the "too thin
+     to hit" line, and narrower next to a 375px-wide column. */
+  @media (width < 48rem) {
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+  }
+
+  /*
+   * Firefox. Two properties, no gradients, so the compromise above has to be
+   * resolved in one colour: --blue-1 is the brand's medium blue and the only
+   * primitive that clears 3:1 on white (3.1:1) while staying clearly visible
+   * on the footer (2.5:1). `thin` is Firefox's ~8-9px bar, which is the same
+   * weight the WebKit rules ask for — not its hairline, and never `none`.
+   * scrollbar-color inherits, so the document scroller and every nested one
+   * are covered from here.
+   *
+   * THE @supports IS NOT OPTIONAL, and this is the one thing about this block
+   * that is easy to get wrong. Chromium has shipped the standard properties
+   * too, and it treats them as an opt-out: the moment `scrollbar-color` or a
+   * non-auto `scrollbar-width` applies to a scroller, Chromium ignores every
+   * ::-webkit-scrollbar rule for it. Written unguarded — as this was, and as
+   * a browser check caught before it shipped — these two lines silently
+   * replace the entire gradient above with a flat bar in the browser most
+   * visitors use. The guard hands each engine only the mechanism it is the
+   * best expression of: Firefox, which has no ::-webkit-scrollbar, matches
+   * and takes the flat colours; Chromium and Safari do not match and keep
+   * the gradient. (Safari, if it is old enough not to understand
+   * `selector()`, also does not match — which is the right answer there too.)
+   */
+  @supports not selector(::-webkit-scrollbar) {
+    html {
+      scrollbar-width: thin;
+      scrollbar-color: var(--blue-1) rgba(136, 185, 215, 0.18);
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
