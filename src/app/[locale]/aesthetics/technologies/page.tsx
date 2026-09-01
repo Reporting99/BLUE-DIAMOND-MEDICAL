@@ -100,6 +100,15 @@ export default async function TechnologiesHubPage({ params }: { params: Promise<
                 image={image}
                 imageRole="technology"
                 preset="technology"
+                /* Device photography is contained, not cropped, and sits a
+                   stop taller than the 16/10 default. Manufacturer shots are
+                   portrait or near-square far more often than they are wide
+                   (of the three approved here two are taller than they are
+                   wide, and one is 711x2048), so a 4/3 frame spends the
+                   card's height on the device rather than on mat. See
+                   `device-media-frame.ts`. */
+                aspect="photo"
+                mediaFit="contain"
                 seed={tech.id}
                 imageAlt={{
                   en: `${tech.title.en} at Blue Diamond Medical Aesthetics`,

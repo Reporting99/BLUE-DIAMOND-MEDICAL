@@ -3,6 +3,7 @@ import { ArrowRight } from "lucide-react";
 import { ImageKitImage } from "@/components/shared/ImageKitImage";
 import { FacetTile } from "@/components/shared/FacetTile";
 import { cmsAlt } from "@/lib/feelstack/media-slots";
+import { deviceMediaFrame, deviceMediaPadding } from "@/components/shared/device-media-frame";
 import type { ImagePresetKey } from "@/config/imagekit";
 import type { ImageKitAsset, ImageRole } from "@/types/media";
 import type { Locale } from "@/i18n/config";
@@ -58,6 +59,13 @@ export interface MediaCardProps {
   /** Anything extra between the summary and the CTA. */
   children?: React.ReactNode;
   aspect?: keyof typeof aspectClasses;
+  /**
+   * `cover` (default) crops the asset to the card's frame. `contain` fits the
+   * whole asset inside it on a light mat -- for cards whose subject is a
+   * single object whose silhouette identifies it, where a crop removes the
+   * thing being shown. See `device-media-frame.ts`.
+   */
+  mediaFit?: "cover" | "contain";
   /** Stagger index within its grid. Reset per row by the caller (`i % 4`). */
   delay?: number;
   /** `sizes` for the real asset. Defaults to a three-across desktop grid. */
@@ -85,6 +93,7 @@ export function MediaCard({
   eyebrow,
   children,
   aspect = "wide",
+  mediaFit = "cover",
   delay = 0,
   sizes = "(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw",
   headingLevel: Heading = "h3",
@@ -100,7 +109,13 @@ export function MediaCard({
         className,
       )}
     >
-      <div className={cn("relative overflow-hidden", aspectClasses[aspect])}>
+      <div
+        className={cn(
+          "relative overflow-hidden",
+          aspectClasses[aspect],
+          mediaFit === "contain" && cn(deviceMediaFrame, deviceMediaPadding),
+        )}
+      >
         {image ? (
           <ImageKitImage
             path={image.path}
@@ -112,10 +127,22 @@ export function MediaCard({
             width={image.width}
             height={image.height}
             sizes={sizes}
+            fit={mediaFit}
             /* The lift on hover is on the picture, not the card: moving the
                whole card shifts the text it sits above, and text that moves
-               under the cursor is harder to read, not more alive. */
-            className="h-full w-full transition-transform duration-[600ms] ease-[var(--motion-ease)] group-hover:scale-[1.04]"
+               under the cursor is harder to read, not more alive.
+
+               A contained asset does not take the zoom. `object-contain` fits
+               the asset to the frame, so scaling it up pushes its own edges
+               past the mat and clips the silhouette on hover -- reintroducing,
+               for a third of a second at a time, exactly the crop this mode
+               exists to avoid. The card keeps its border and shadow response,
+               so the hover still reads. */
+            className={cn(
+              "h-full w-full",
+              mediaFit === "cover" &&
+                "transition-transform duration-[600ms] ease-[var(--motion-ease)] group-hover:scale-[1.04]",
+            )}
           />
         ) : (
           <FacetTile

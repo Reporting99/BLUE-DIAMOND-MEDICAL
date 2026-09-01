@@ -16,6 +16,19 @@ interface ImageKitImageProps {
   height: number;
   className?: string;
   sizes?: string;
+  /**
+   * How the asset meets its frame.
+   *
+   * `cover` (default, and every existing caller's behaviour) fills the frame
+   * and crops the overflow -- correct for scene photography, where the frame
+   * is a window.
+   *
+   * `contain` fits the whole asset inside the frame and leaves the remainder
+   * as mat -- correct for a photograph OF AN OBJECT, where the silhouette is
+   * the identity and a crop removes the thing being identified. See
+   * `device-media-frame.ts`.
+   */
+  fit?: "cover" | "contain";
   /** Replaces the deprecated `priority` prop — see Next.js 16 image API. */
   preload?: boolean;
   caption?: { en: string; ar: string };
@@ -55,6 +68,7 @@ export function ImageKitImage({
   preload,
   caption,
   seed,
+  fit = "cover",
 }: ImageKitImageProps) {
   const canRenderReal = imagekitIsConfigured && status === "approved";
   const altText = alt[locale];
@@ -71,7 +85,10 @@ export function ImageKitImage({
           height={height}
           sizes={sizes}
           preload={preload}
-          className="h-full w-full object-cover"
+          className={cn(
+            "h-full w-full",
+            fit === "contain" ? "object-contain" : "object-cover",
+          )}
         />
       ) : (
         <FacetTile role={role} alt={altText} seed={seed} className="h-full w-full" />
