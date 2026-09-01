@@ -75,7 +75,22 @@ export function ImageKitImage({
   const captionText = caption?.[locale];
 
   return (
-    <figure className={cn("relative overflow-hidden bg-surface", className)}>
+    <figure
+      className={cn(
+        "relative overflow-hidden",
+        /* `bg-surface` is a ground for a COVER image: the picture fills the
+           figure, so the colour is never actually seen and only prevents a
+           flash of nothing while it decodes. Under `contain` the figure is
+           larger than the picture by definition, so that same colour becomes
+           the visible mat -- painting over whatever ground the caller chose
+           and, for a photo with its own white studio background, drawing
+           exactly the rectangle-inside-a-frame seam the contained treatment
+           exists to remove. Contained images therefore let the caller's
+           background show through. */
+        fit === "contain" ? "bg-transparent" : "bg-surface",
+        className,
+      )}
+    >
       {canRenderReal ? (
         <ImageKitSdkImage
           src={path}
