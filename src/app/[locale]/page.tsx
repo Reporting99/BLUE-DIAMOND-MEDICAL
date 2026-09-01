@@ -122,28 +122,119 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       <ClinicSchema locale={locale} />
       <FaqPageSchema faqs={faqSchemaEntries} locale={locale} />
 
-      {/* ============ SECTION 1 — UNIFIED PREMIUM HERO ============ */}
-      {/* No data-reveal anywhere in this section: H1, CTAs, and both
-          images are LCP-critical/above-the-fold and must render
-          immediately, per the brief's explicit "do not animate hero H1,
-          hero CTA, LCP image, critical booking information" rule. */}
-      <section className="relative overflow-hidden border-b border-border">
+      {/* ============ SECTION 1 — FULL-BLEED PREMIUM HERO ============ */}
+      {/* One photograph, edge to edge, with the copy laid over its calm
+          side. This replaced a two-panel composition — a clipped photo
+          beside a decorative FacetTile — which read as two cards in a box
+          rather than as one image.
+
+          No data-reveal anywhere in this section: H1, CTAs and the LCP
+          image are above the fold and must render immediately, per the
+          brief's "do not animate hero H1, hero CTA, LCP image, critical
+          booking information" rule. */}
+      <section className="relative isolate overflow-hidden border-b border-border">
+        {/* THE PHOTOGRAPH. Still the FeelStack `hero` assignment resolved
+            server-side above — swapping it stays a CMS action (upload,
+            approve, assign `hero`, publish), never a code change. When no
+            assignment exists ImageKitImage renders the FacetTile placeholder
+            at the same full-bleed size, so the layout holds either way.
+
+            object-position is set from here rather than through a new prop on
+            the shared component: the framing differs only on this one
+            surface. At narrow widths a 16:9 photograph cropped to a tall box
+            loses its subject, so the focal point moves off centre to keep the
+            clinician and patient in frame; on wide screens the natural centre
+            already places them to the side of the copy. */}
+        <div className="absolute inset-0 -z-30">
+          {homeHero ? (
+            <ImageKitImage
+              path={homeHero.path}
+              preset="hero"
+              role={homeHero.role}
+              status={homeHero.status}
+              alt={
+                cmsAlt(homeHero) ?? {
+                  en: "A clinician in conversation with a patient in the Blue Diamond Medical consultation room",
+                  ar: "طبيبة تتحدث مع مريضة في غرفة الاستشارات في بلو دايموند الطبية",
+                }
+              }
+              locale={locale}
+              width={homeHero.width}
+              height={homeHero.height}
+              /* The LCP image, and the only preloaded image on this page.
+                 100vw because it is now full-bleed; it used to be sized for a
+                 half-width panel, which made every candidate twice the size
+                 the layout could use. */
+              preload
+              sizes="100vw"
+              /* Arabic mirrors the layout, so the photograph mirrors with it.
+                 The frame is directional: its calm, near-white facet panel is
+                 on the left and the clinician and patient are on the right.
+                 Left as-is under RTL the copy would land on the busiest part
+                 of the picture while the calm side sat behind nothing.
+                 Flipping puts the quiet side back under the words. There is
+                 no text in the frame, so nothing reads backwards. */
+              className="h-full w-full [&>img]:object-[68%_center] lg:[&>img]:object-center rtl:[&>img]:-scale-x-100"
+            />
+          ) : (
+            <FacetTile
+              role="hero"
+              alt={({ en: "Blue Diamond Medical consultation room", ar: "غرفة الاستشارات في بلو دايموند الطبية" })[locale]}
+              className="h-full w-full"
+            />
+          )}
+        </div>
+
+        {/* READABILITY WASH — light, never dark. Blue Diamond stays clinical
+            and calm, so contrast comes from lifting the copy side toward white
+            rather than dimming the photograph.
+
+            Two directions, because the copy sits in two different places:
+            beside the photograph on desktop, stacked over it on mobile — so
+            the mobile wash holds its light until below the trust line rather
+            than clearing halfway down, which would leave the smallest text on
+            the brightest part of the picture. The horizontal wash mirrors for
+            Arabic: the copy moves to the right, so the lit side moves with it.
+            Every stop is a slow fade with no hard edge, which is what keeps
+            this from reading as a white rectangle behind the text. */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 -z-10"
+          className="absolute inset-0 -z-20 lg:hidden"
           style={{
             background:
-              "radial-gradient(120% 70% at 85% 15%, var(--surface-blue-soft) 0%, transparent 60%), radial-gradient(90% 60% at 10% 90%, var(--surface-blue-mist) 0%, transparent 55%)",
+              "linear-gradient(to bottom, rgba(250,253,255,0.97) 0%, rgba(250,253,255,0.95) 50%, rgba(250,253,255,0.90) 74%, rgba(250,253,255,0.72) 90%, rgba(250,253,255,0.40) 100%)",
           }}
         />
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 -z-20 hidden lg:block"
+          style={{
+            background: `linear-gradient(${locale === "ar" ? "to left" : "to right"}, rgba(250,253,255,0.97) 0%, rgba(250,253,255,0.94) 20%, rgba(250,253,255,0.78) 38%, rgba(250,253,255,0.34) 56%, rgba(250,253,255,0.06) 72%, rgba(250,253,255,0) 84%)`,
+          }}
+        />
+        {/* A whisper of light under the floating header so the nav links stay
+            legible wherever the photograph happens to be bright or busy, and a
+            fade into the page colour at the bottom so the hero meets the next
+            section's seam without a visible edge. */}
+        <div
+          aria-hidden="true"
+          className="absolute inset-x-0 top-0 -z-10 h-32"
+          style={{ background: "linear-gradient(to bottom, rgba(255,255,255,0.62) 0%, rgba(255,255,255,0) 100%)" }}
+        />
+        <div
+          aria-hidden="true"
+          className="absolute inset-x-0 bottom-0 -z-10 h-24"
+          style={{ background: "linear-gradient(to top, var(--background) 0%, rgba(255,255,255,0) 100%)" }}
+        />
+
         {/* Extra top padding vs. other section-y content: the header is
             `fixed` (not `sticky`) on the homepage specifically so the
             hero can extend behind its transparent top-state, which means
             it no longer reserves any space in normal flow — this
             replaces that reserved space so the H1 doesn't render behind
             the floating header. */}
-        <Container className="grid gap-10 pt-28 pb-14 lg:grid-cols-[6fr_6fr] lg:items-center lg:pt-36 lg:pb-20">
-          <div className="max-w-xl">
+        <Container className="flex min-h-[580px] flex-col justify-center pt-28 pb-12 sm:min-h-[600px] lg:min-h-[620px] lg:pt-32 lg:pb-16 xl:min-h-[640px]">
+          <div className="max-w-[560px]">
             <p className="text-sm font-semibold uppercase tracking-wide text-primary">{dict.home.heroEyebrow}</p>
             <h1 className="mt-4 text-display-1 font-heading lg:text-display-1-lg">{dict.home.heroTitle}</h1>
             <p className="mt-5 text-body-lg text-text-secondary">{dict.home.heroBody}</p>
@@ -171,52 +262,6 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                 </span>
               ))}
             </p>
-          </div>
-
-          {/* Dual-image composition: medical care + medical aesthetics,
-              joined by a restrained diamond-facet seam (each half clipped
-              with a complementary diagonal notch). */}
-          {/* min-w-0 on the grid and both cells: without it, CSS Grid's
-              default `min-width: auto` lets each image's intrinsic
-              width (800) force its column wider than the track — a real
-              horizontal-overflow bug found by measuring scrollWidth at
-              375/768/1024px, not visible at 1440px where the column
-              happens to still exceed 800px unscaled. */}
-          <div className="relative grid aspect-[4/5] min-w-0 grid-cols-2 gap-1 lg:aspect-[16/10]">
-            <div
-              className="relative min-w-0 overflow-hidden rounded-lg"
-              style={{ clipPath: "polygon(0 0, 94% 0, 100% 100%, 0 100%)" }}
-            >
-              {homeHero ? (
-                <ImageKitImage
-                  path={homeHero.path}
-                  preset="hero"
-                  role={homeHero.role}
-                  status={homeHero.status}
-                  alt={
-                    cmsAlt(homeHero) ?? {
-                      en: "Family medicine at Blue Diamond Medical",
-                      ar: "طب الأسرة في بلو دايموند الطبية",
-                    }
-                  }
-                  caption={homeHero.caption}
-                  locale={locale}
-                  width={homeHero.width}
-                  height={homeHero.height}
-                  sizes="(min-width: 1024px) 50vw, 50vw"
-                  preload
-                  className="h-full w-full"
-                />
-              ) : (
-                <FacetTile role="hero" alt={({ en: "Family medicine at Blue Diamond Medical", ar: "طب الأسرة في بلو دايموند الطبية" })[locale]} className="h-full w-full" />
-              )}
-            </div>
-            <div
-              className="relative min-w-0 overflow-hidden rounded-lg"
-              style={{ clipPath: "polygon(6% 0, 100% 0, 100% 100%, 0 100%)" }}
-            >
-              <FacetTile role="treatment" alt={({ en: "Physician-led medical aesthetics at Blue Diamond Medical", ar: "التجميل الطبي بإشراف طبي في بلو دايموند الطبية" })[locale]} className="h-full w-full" />
-            </div>
           </div>
         </Container>
       </section>
