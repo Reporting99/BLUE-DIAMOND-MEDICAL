@@ -382,6 +382,158 @@ html {
   }
 
   /*
+   * BEFORE/AFTER COMPARISON — src/features/aesthetics/components/BeforeAfterSlider.tsx.
+   *
+   * The handle sits on the seam, and the seam is positioned with
+   * `inset-inline-start`, which is `left` in English and `right` in Arabic.
+   * Centring it therefore means pulling it back by half its width in opposite
+   * physical directions per language — one of the few cases where a logical
+   * property still needs a direction-aware transform.
+   */
+  .ba-handle {
+    transform: translate(-50%, -50%);
+  }
+  .ba-handle:dir(rtl) {
+    transform: translate(50%, -50%);
+  }
+
+  /*
+   * The drag hint. A slow, small horizontal nudge on the handle's arrows,
+   * running only until the reader first moves the slider (the component drops
+   * the class on first change). It is deliberately tiny — 3px, once every few
+   * seconds — because its job is to say "this is draggable" to someone
+   * scanning the page, not to animate in their peripheral vision while they
+   * read the caption. The global reduced-motion rule in @layer base collapses
+   * it to nothing, which is the correct outcome: the two arrows inside the
+   * handle already carry the same message statically.
+   */
+  @keyframes ba-drag-nudge {
+    0%,
+    62%,
+    100% {
+      transform: translateX(0);
+    }
+    72% {
+      transform: translateX(3px);
+    }
+    86% {
+      transform: translateX(-3px);
+    }
+  }
+  .ba-drag-hint {
+    animation: ba-drag-nudge 3.6s var(--motion-ease) 1.5s infinite;
+  }
+  .group:hover .ba-drag-hint,
+  .group:focus-within .ba-drag-hint {
+    animation-play-state: paused;
+  }
+
+  /*
+   * BLUE READING RAIL — src/components/layout/ScrollProgress.tsx.
+   *
+   * A hairline of brand blue across the top of the viewport that fills as the
+   * page is scrolled. It reads as progress rather than as a loading bar
+   * because it never moves on its own: it is a direct readout of scroll
+   * position, so it advances only while the reader does.
+   *
+   * The gradient runs from the mid facet blue into the deepest one, so the
+   * filled part is darkest at the leading edge — the same light-to-dark facet
+   * logic the rest of the brand uses, at 3px tall. `transform-origin` follows
+   * the writing direction so the rail grows away from the edge the language
+   * starts at, and the opacity transition is what fades it in off the top of
+   * the page (the transform itself is written every frame and must not be
+   * eased, or the rail would lag the finger).
+   */
+  .scroll-progress-fill {
+    background: linear-gradient(to right, var(--blue-1) 0%, var(--blue-3) 55%, var(--blue-4) 100%);
+    transform-origin: left center;
+    transition: opacity var(--motion-normal) var(--motion-ease);
+    will-change: transform;
+  }
+  .scroll-progress-fill:dir(rtl) {
+    background: linear-gradient(to left, var(--blue-1) 0%, var(--blue-3) 55%, var(--blue-4) 100%);
+    transform-origin: right center;
+  }
+
+  /*
+   * PAGE HERO WASHES — src/components/layout/PageHero.tsx.
+   *
+   * Every hero on this site lays its copy over a photograph (or, until one is
+   * uploaded, over a FacetTile). Contrast is bought by lifting the copy side
+   * toward white rather than by dimming the picture: Blue Diamond is a calm,
+   * clinical, light brand, and a dark scrim over a bright clinic photo reads
+   * as a different brand entirely.
+   *
+   * Three directions, because the copy sits in three different places: stacked
+   * over the image on narrow screens, beside it on wide ones, and centred on
+   * the pages whose hero is symmetric. Every stop is a slow fade — a hard edge
+   * would turn the wash into a visible white rectangle behind the text, which
+   * is the exact failure this replaces.
+   *
+   * The inline wash mirrors under RTL via `:dir(rtl)` rather than a locale
+   * check in the component: the copy moves to the other side in Arabic, so the
+   * lit side has to move with it, and CSS already knows the direction.
+   */
+  .hero-wash-block {
+    background: linear-gradient(
+      to bottom,
+      rgba(250, 253, 255, 0.97) 0%,
+      rgba(250, 253, 255, 0.95) 50%,
+      rgba(250, 253, 255, 0.9) 74%,
+      rgba(250, 253, 255, 0.72) 90%,
+      rgba(250, 253, 255, 0.4) 100%
+    );
+  }
+  .hero-wash-inline {
+    background: linear-gradient(
+      to right,
+      rgba(250, 253, 255, 0.97) 0%,
+      rgba(250, 253, 255, 0.94) 20%,
+      rgba(250, 253, 255, 0.78) 38%,
+      rgba(250, 253, 255, 0.34) 56%,
+      rgba(250, 253, 255, 0.06) 72%,
+      rgba(250, 253, 255, 0) 84%
+    );
+  }
+  .hero-wash-inline:dir(rtl) {
+    background: linear-gradient(
+      to left,
+      rgba(250, 253, 255, 0.97) 0%,
+      rgba(250, 253, 255, 0.94) 20%,
+      rgba(250, 253, 255, 0.78) 38%,
+      rgba(250, 253, 255, 0.34) 56%,
+      rgba(250, 253, 255, 0.06) 72%,
+      rgba(250, 253, 255, 0) 84%
+    );
+  }
+  /* The symmetric wash, for heroes whose copy sits in a centred column.
+     Two layers: a radial that protects the text band, and a much weaker
+     linear one that keeps the top and bottom edges from meeting the header
+     and the next section too abruptly. The linear layer is deliberately
+     faint — at the strength the radial needs in the middle, a second
+     full-height veil over it turned the whole hero into near-white paper
+     with the visual barely readable through it. Composited, this holds
+     ~0.96 where the headline and body text run (the middle ~50% of the
+     width, which is exactly what `measure="article"` spans) and falls to
+     ~0.4 at the outer edges, where the facet planes or the photograph get
+     to show. */
+  .hero-wash-center {
+    background:
+      radial-gradient(78% 72% at 50% 45%, rgba(250, 253, 255, 0.96) 0%, rgba(250, 253, 255, 0.88) 42%, rgba(250, 253, 255, 0.5) 74%, rgba(250, 253, 255, 0.14) 100%),
+      linear-gradient(to bottom, rgba(250, 253, 255, 0.38) 0%, rgba(250, 253, 255, 0.1) 40%, rgba(250, 253, 255, 0.3) 100%);
+  }
+  /* A whisper of light under the fixed header so nav links stay legible
+     wherever the image behind them happens to be bright or busy. */
+  .hero-wash-top {
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.62) 0%, rgba(255, 255, 255, 0) 100%);
+  }
+  /* And a fade into the page colour so the hero meets the next section's
+     seam without a visible edge. */
+  .hero-wash-bottom {
+    background: linear-gradient(to top, var(--background) 0%, rgba(255, 255, 255, 0) 100%);
+  }
+
+  /*
    * Global scroll-reveal system — docs/UI_UX_FOUNDATION.md §9-10.
    * Progressive enhancement: [data-reveal] elements are fully visible by
    * default (server-rendered, no JS required, nothing hidden from

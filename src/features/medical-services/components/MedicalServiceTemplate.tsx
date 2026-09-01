@@ -4,8 +4,7 @@ import { Container } from "@/components/layout/Container";
 import { SectionTransition } from "@/components/layout/SectionTransition";
 import { Button } from "@/components/ui/button";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
-import { ImageKitImage } from "@/components/shared/ImageKitImage";
-import { cmsAlt } from "@/lib/feelstack/media-slots";
+import { PageHero } from "@/components/layout/PageHero";
 import { MedicalWebPageSchema } from "@/components/shared/schema";
 import { FaqPageSchema } from "@/components/shared/schema";
 import { getBookingUrl } from "@/config/booking";
@@ -59,67 +58,61 @@ export function MedicalServiceTemplate({
       {ownRoute ? (
         <MedicalWebPageSchema locale={locale} name={service.title[locale]} description={service.summary[locale]} path={ownRoute.path[locale]} />
       ) : null}
+      {/* Hero, with the booking CTA in it. The urgent-care note deliberately
+          stays in the page body below: it is a safety instruction about when
+          NOT to use this service, and safety copy does not belong laid over a
+          photograph competing with a booking button. */}
+      <PageHero
+        locale={locale}
+        title={service.title[locale]}
+        body={service.summary[locale]}
+        image={service.image}
+        imageRole="service"
+        seed={service.id}
+        measure="article"
+        /* CMS alt wins inside PageHero. When the imported asset carries none,
+           this falls back to the entity's own title — factual and derived from
+           the record the image is assigned to, never a guess about what the
+           photograph depicts. */
+        imageAlt={{
+          en: service.title.en || service.id,
+          ar: service.title.ar || service.id,
+        }}
+        imageCaption={service.image?.caption}
+        breadcrumbs={
+          <Breadcrumbs
+            locale={locale}
+            items={[
+              { label: medicalRoute.title[locale], href: href("medical-hub", locale) },
+              { label: service.title[locale] },
+            ]}
+          />
+        }
+        actions={
+          <Button size="lg" render={<a href={booking.href} target="_blank" rel="noopener noreferrer" />}>
+            {booking.label[locale]}
+          </Button>
+        }
+      />
+
       <article className="section-y">
       <Container className="max-w-3xl">
-        <Breadcrumbs
-          locale={locale}
-          items={[
-            { label: medicalRoute.title[locale], href: href("medical-hub", locale) },
-            { label: service.title[locale] },
-          ]}
-        />
-
-        <h1 className="mt-4 text-display-1 font-heading lg:text-display-1-lg">{service.title[locale]}</h1>
-        <p className="mt-4 text-body-lg text-text-secondary">{service.summary[locale]}</p>
-
-        {/* Lead image, present only when this service has a real FeelStack
-            media assignment. Rendered through the single ImageKitImage entry
-            point, which still decides on the asset's own status whether real
-            bytes or the FacetTile placeholder appear. */}
-        {service.image ? (
-          <ImageKitImage
-            path={service.image.path}
-            preset="service"
-            role={service.image.role}
-            status={service.image.status}
-            // CMS alt wins. When the imported asset carries none, fall back to
-            // the entity's own title — factual and derived from the record this
-            // image is assigned to, never a guess about the photograph.
-            alt={
-              cmsAlt(service.image) ?? {
-                en: service.title.en || service.id,
-                ar: service.title.ar || service.id,
-              }
-            }
-            caption={service.image.caption}
-            locale={locale}
-            width={service.image.width}
-            height={service.image.height}
-            sizes="(min-width: 768px) 48rem, 100vw"
-            className="mt-8 aspect-video rounded-lg"
-          />
-        ) : null}
-
         {service.urgentCareNote ? (
-          <div className="mt-6 flex items-start gap-3 rounded-md border border-destructive/30 bg-destructive-surface px-4 py-3 text-sm text-destructive">
+          <div className="flex items-start gap-3 rounded-md border border-destructive/30 bg-destructive-surface px-4 py-3 text-sm text-destructive">
             <AlertTriangle className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
             <p>{service.urgentCareNote[locale]}</p>
           </div>
         ) : null}
 
-        <Button size="lg" className="mt-8" render={<a href={booking.href} target="_blank" rel="noopener noreferrer" />}>
-          {booking.label[locale]}
-        </Button>
-
         {service.whoItsFor ? (
-          <section className="mt-10">
+          <section data-reveal="up" className="mt-10">
             <h2 className="text-h4 font-heading">{labels.whoItsFor}</h2>
             <p className="mt-2 text-body text-text-secondary">{service.whoItsFor[locale]}</p>
           </section>
         ) : null}
 
         {service.whatsIncluded ? (
-          <section className="mt-10">
+          <section data-reveal="up" className="mt-10">
             <h2 className="text-h4 font-heading">{labels.whatsIncluded}</h2>
             <ul className="mt-3 space-y-2">
               {service.whatsIncluded[locale].map((item) => (
@@ -132,14 +125,14 @@ export function MedicalServiceTemplate({
         ) : null}
 
         {service.howAppointmentsWork ? (
-          <section className="mt-10">
+          <section data-reveal="up" className="mt-10">
             <h2 className="text-h4 font-heading">{labels.howAppointmentsWork}</h2>
             <p className="mt-2 text-body text-text-secondary">{service.howAppointmentsWork[locale]}</p>
           </section>
         ) : null}
 
         {service.externalPartners?.length ? (
-          <section className="mt-10">
+          <section data-reveal="up" className="mt-10">
             <ul className="space-y-3">
               {service.externalPartners.map((partner) => (
                 <li key={partner.name} className="rounded-md border border-border bg-surface px-4 py-3">
@@ -159,7 +152,7 @@ export function MedicalServiceTemplate({
         ) : null}
 
         {relatedDoctors.length ? (
-          <section className="mt-10">
+          <section data-reveal="up" className="mt-10">
             <h2 className="text-h4 font-heading">{labels.relatedDoctors}</h2>
             <ul className="mt-3 flex flex-wrap gap-3">
               {relatedDoctors.map((doctor) => {
@@ -180,7 +173,7 @@ export function MedicalServiceTemplate({
         ) : null}
 
         {service.faqs?.length ? (
-          <section className="mt-10">
+          <section data-reveal="up" className="mt-10">
             <h2 className="text-h4 font-heading">{labels.faqs}</h2>
             <dl className="mt-3 space-y-4">
               {service.faqs.map((faq) => (

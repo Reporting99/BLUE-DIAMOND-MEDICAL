@@ -1,5 +1,6 @@
 import { Container } from "@/components/layout/Container";
 import { SectionTransition } from "@/components/layout/SectionTransition";
+import { PageHero } from "@/components/layout/PageHero";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
 import { getRoute, href } from "@/lib/routing";
 import { doctors } from "@/features/doctors";
@@ -25,14 +26,29 @@ export function HealthHubArticleTemplate({ article, locale }: { article: HealthH
 
   return (
     <>
-      <article className="section-y">
-      <Container className="max-w-3xl">
-        <Breadcrumbs locale={locale} items={[{ label: healthHubRoute.title[locale], href: href("health-hub", locale) }, { label: article.title[locale] }]} />
-
-        <h1 className="mt-4 text-display-1 font-heading lg:text-display-1-lg">{article.title[locale]}</h1>
-        <p className="mt-4 text-body-lg text-text-secondary">{article.summary[locale]}</p>
-
-        <div className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-sm text-text-secondary">
+      {/* Byline, reviewer and last-updated date sit in the hero as an
+          article's dateline: on a health article, who wrote it and who
+          reviewed it is a trust signal, and trust signals belong where the
+          reader lands rather than below the fold. */}
+      <PageHero
+        locale={locale}
+        title={article.title[locale]}
+        body={article.summary[locale]}
+        imageRole="article"
+        seed={article.id}
+        measure="article"
+        imageAlt={{
+          en: `${article.title.en} — Blue Diamond Medical Health Hub`,
+          ar: `${article.title.ar} — المركز المعرفي في بلو دايموند الطبية`,
+        }}
+        breadcrumbs={
+          <Breadcrumbs
+            locale={locale}
+            items={[{ label: healthHubRoute.title[locale], href: href("health-hub", locale) }, { label: article.title[locale] }]}
+          />
+        }
+      >
+        <div className="mt-6 flex flex-wrap gap-x-4 gap-y-1 text-sm text-text-secondary">
           <span>
             {t.by} {article.author}
           </span>
@@ -47,11 +63,14 @@ export function HealthHubArticleTemplate({ article, locale }: { article: HealthH
             </span>
           ) : null}
         </div>
+      </PageHero>
 
-        <div className="mt-8 whitespace-pre-line text-body text-text-body">{article.body[locale]}</div>
+      <article className="section-y">
+      <Container className="max-w-3xl">
+        <div data-reveal="up" className="whitespace-pre-line text-body text-text-body">{article.body[locale]}</div>
 
         {article.faqs?.length ? (
-          <section className="mt-10">
+          <section data-reveal="up" className="mt-10">
             <h2 className="text-h4 font-heading">{t.faqs}</h2>
             <dl className="mt-3 space-y-4">
               {article.faqs.map((faq) => (
@@ -65,7 +84,7 @@ export function HealthHubArticleTemplate({ article, locale }: { article: HealthH
         ) : null}
 
         {relatedDoctors.length ? (
-          <section className="mt-10 flex flex-wrap gap-3">
+          <section data-reveal="up" className="mt-10 flex flex-wrap gap-3">
             {relatedDoctors.map((doctor) => {
               const route = getRoute(doctor!.routeId)!;
               return (
@@ -82,7 +101,7 @@ export function HealthHubArticleTemplate({ article, locale }: { article: HealthH
         ) : null}
 
         {article.sources?.length ? (
-          <section className="mt-10 border-t border-border pt-6">
+          <section data-reveal="up" className="mt-10 border-t border-border pt-6">
             <h2 className="text-h4 font-heading">{t.sources}</h2>
             <ul className="mt-2 space-y-1 text-sm">
               {article.sources.map((source) => (

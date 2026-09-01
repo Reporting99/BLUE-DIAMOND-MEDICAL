@@ -3,7 +3,7 @@ import type { Locale } from "@/i18n/config";
 
 export function FeeTable({ group, locale }: { group: FeeGroup; locale: Locale }) {
   return (
-    <div className="mt-6">
+    <div data-reveal="up" className="mt-6">
       <h2 id={`fee-table-${group.heading.en}`} className="text-h4 font-heading">
         {group.heading[locale]}
       </h2>

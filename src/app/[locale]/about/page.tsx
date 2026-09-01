@@ -2,12 +2,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Container } from "@/components/layout/Container";
+import { PageHero } from "@/components/layout/PageHero";
 import { SectionTransition } from "@/components/layout/SectionTransition";
 import { isLocale, type Locale } from "@/i18n/config";
 import { getRouteMetadata } from "@/lib/seo/metadata";
 import { getRoute, href } from "@/lib/routing";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
 import { PageSchema } from "@/components/shared/schema";
+import { resolvePageHeroImage } from "@/lib/feelstack/page-hero-media";
 
 export async function generateMetadata({
   params,
@@ -52,6 +54,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
   }[locale];
 
   const ownRoute = getRoute("about")!;
+  const hero = await resolvePageHeroImage(ownRoute.path.en, locale);
 
   return (
     <>
@@ -62,19 +65,34 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
         description={copy.mission}
         path={ownRoute.path[locale]}
       />
+      {/* The hero carries no subtitle on purpose: the mission statement
+          immediately below is this page's opening paragraph, and repeating a
+          shortened version of it over the photograph would make the reader
+          read the same thought twice before reaching anything new. */}
+      <PageHero
+        locale={locale}
+        title={copy.title}
+        image={hero}
+        imageRole="location"
+        seed="about"
+        measure="article"
+        imageAlt={{
+          en: "Blue Diamond Medical Clinic in West Springs, Calgary",
+          ar: "عيادة بلو دايموند الطبية في ويست سبرينغز، كالغاري",
+        }}
+        breadcrumbs={<Breadcrumbs locale={locale} items={[{ label: ownRoute.title[locale] }]} />}
+      />
+
       <section className="section-y">
       <Container className="max-w-3xl">
-        <Breadcrumbs locale={locale} items={[{ label: ownRoute.title[locale] }]} />
+        <h2 data-reveal="up" className="text-h3 font-heading">{copy.missionHeading}</h2>
+        <p data-reveal="up" className="mt-3 text-body-lg text-text-secondary">{copy.mission}</p>
 
-        <h1 className="mt-4 text-display-1 font-heading lg:text-display-1-lg">{copy.title}</h1>
-
-        <h2 className="mt-10 text-h3 font-heading">{copy.missionHeading}</h2>
-        <p className="mt-3 text-body-lg text-text-secondary">{copy.mission}</p>
-
-        <h2 className="mt-10 text-h3 font-heading">{copy.storyHeading}</h2>
-        <p className="mt-3 text-body-lg text-text-secondary">{copy.story}</p>
+        <h2 data-reveal="up" className="mt-10 text-h3 font-heading">{copy.storyHeading}</h2>
+        <p data-reveal="up" className="mt-3 text-body-lg text-text-secondary">{copy.story}</p>
 
         <Link
+          data-reveal="up"
           href={href("doctors-index", locale)}
           className="mt-8 inline-flex items-center gap-1 font-medium text-primary hover:text-primary-hover"
         >

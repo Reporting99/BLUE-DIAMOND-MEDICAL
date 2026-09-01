@@ -54,7 +54,7 @@ function TreatmentCard({
               className="h-full w-full transition-transform duration-300 group-hover:scale-[1.04]"
             />
           ) : (
-          <FacetTile role="treatment" alt={({ en: `${treatment.title.en} at Blue Diamond Medical`, ar: `${treatment.title.ar} في بلو دايموند الطبية` })[locale]} className="h-full w-full transition-transform duration-300 group-hover:scale-[1.04]" />
+          <FacetTile role="treatment" seed={treatment.id} alt={({ en: `${treatment.title.en} at Blue Diamond Medical`, ar: `${treatment.title.ar} في بلو دايموند الطبية` })[locale]} className="h-full w-full transition-transform duration-300 group-hover:scale-[1.04]" />
           )}
         </div>
         <span className="text-sm font-semibold group-hover:text-primary">{treatment.title[locale]}</span>
@@ -83,7 +83,7 @@ function TreatmentCard({
           className="absolute inset-0 -z-20 h-full w-full"
         />
       ) : (
-      <FacetTile role="treatment" alt={({ en: `${treatment.title.en} at Blue Diamond Medical`, ar: `${treatment.title.ar} في بلو دايموند الطبية` })[locale]} className="absolute inset-0 -z-20 h-full w-full" />
+      <FacetTile role="treatment" seed={treatment.id} alt={({ en: `${treatment.title.en} at Blue Diamond Medical`, ar: `${treatment.title.ar} في بلو دايموند الطبية` })[locale]} className="absolute inset-0 -z-20 h-full w-full" />
       )}
       {/* Darkens most of the card, not just the bottom third — a shorter
           aspect ratio (the "medium" size) can put the h3/p high enough

@@ -3,8 +3,7 @@ import { ArrowRight } from "lucide-react";
 import { Container } from "@/components/layout/Container";
 import { SectionTransition } from "@/components/layout/SectionTransition";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
-import { ImageKitImage } from "@/components/shared/ImageKitImage";
-import { cmsAlt } from "@/lib/feelstack/media-slots";
+import { PageHero } from "@/components/layout/PageHero";
 import { MedicalWebPageSchema } from "@/components/shared/schema";
 import { FaqPageSchema } from "@/components/shared/schema";
 import { getRoute, href } from "@/lib/routing";
@@ -112,34 +111,44 @@ export function TechnologyTemplate({ technology, locale }: { technology: Technol
       {ownRoute ? (
         <MedicalWebPageSchema locale={locale} name={technology.title[locale]} description={technology.summary[locale]} path={ownRoute.path[locale]} />
       ) : null}
-      <article className="section-y">
-      <Container className="max-w-3xl">
-        <Breadcrumbs
-          locale={locale}
-          items={[{ label: technologiesHub.title[locale], href: href("aesthetics-technologies-hub", locale) }, { label: technology.title[locale] }]}
-        />
-        <h1 className="mt-4 text-display-1 font-heading lg:text-display-1-lg">{technology.title[locale]}</h1>
-
-        {technology.image ? (
-          <ImageKitImage
-            path={technology.image.path}
-            preset="technology"
-            role={technology.image.role}
-            status={technology.image.status}
-            alt={cmsAlt(technology.image) ?? { en: technology.title.en, ar: technology.title.ar }}
-            caption={technology.image.caption}
+      {/* The device image is the hero. It used to be an aspect-square figure
+          capped at 28rem, rendered only when an assignment existed, so a
+          device page with no photograph opened on a bare heading. The
+          manufacturer line moves into the hero with it -- on a technology page
+          "who makes this" belongs beside the name, not below a picture. */}
+      <PageHero
+        locale={locale}
+        title={technology.title[locale]}
+        /* No `body`, deliberately. This page's own step 01 IS the summary
+           ("What it is", rendered from `technology.summary` a screen below),
+           and unlike the treatment/concern/service templates this one never
+           carried a summary paragraph in its header. Passing it here would
+           make the reader read the same sentence twice before reaching
+           anything new. The manufacturer line below fills the hero instead —
+           on a device page, who makes it is the fact that belongs next to the
+           name. */
+        image={technology.image}
+        imageRole="technology"
+        seed={technology.id}
+        measure="article"
+        imageAlt={{ en: technology.title.en, ar: technology.title.ar }}
+        imageCaption={technology.image?.caption}
+        breadcrumbs={
+          <Breadcrumbs
             locale={locale}
-            width={technology.image.width}
-            height={technology.image.height}
-            sizes="(min-width: 768px) 28rem, 100vw"
-            className="mt-8 aspect-square max-w-md rounded-lg"
+            items={[{ label: technologiesHub.title[locale], href: href("aesthetics-technologies-hub", locale) }, { label: technology.title[locale] }]}
           />
-        ) : null}
+        }
+      >
         {technology.manufacturer ? (
-          <p className="mt-2 text-sm text-text-secondary">
+          <p className="mt-5 text-sm text-text-secondary">
             {t.manufacturer}: <span className="font-medium text-text-body">{technology.manufacturer}</span>
           </p>
         ) : null}
+      </PageHero>
+
+      <article className="section-y">
+      <Container className="max-w-3xl">
 
         <NumberedStep index={1} label={t.steps.whatItIs} body={technology.summary[locale]} />
         {steps.map((step, i) =>
@@ -147,7 +156,7 @@ export function TechnologyTemplate({ technology, locale }: { technology: Technol
         )}
 
         {relatedTreatments.length ? (
-          <section className="mt-10 border-t border-border pt-8">
+          <section data-reveal="up" className="mt-10 border-t border-border pt-8">
             <h2 className="text-h4 font-heading">{t.treatments}</h2>
             <ul className="mt-3 flex flex-wrap gap-3">
               {relatedTreatments.map((treatment) => {
@@ -173,7 +182,7 @@ export function TechnologyTemplate({ technology, locale }: { technology: Technol
         <BeforeAfterGallery pairs={getBeforeAfterPairsForTechnology(technology.id)} locale={locale} />
 
         {relatedConcerns.length ? (
-          <section className="mt-10">
+          <section data-reveal="up" className="mt-10">
             <h2 className="text-h4 font-heading">{t.concerns}</h2>
             <ul className="mt-3 flex flex-wrap gap-3">
               {relatedConcerns.map((concern) => {
@@ -194,7 +203,7 @@ export function TechnologyTemplate({ technology, locale }: { technology: Technol
         ) : null}
 
         {relatedDoctors.length ? (
-          <section className="mt-10">
+          <section data-reveal="up" className="mt-10">
             <h2 className="text-h4 font-heading">{t.doctors}</h2>
             <ul className="mt-3 flex flex-wrap gap-3">
               {relatedDoctors.map((doctor) => {
@@ -215,7 +224,7 @@ export function TechnologyTemplate({ technology, locale }: { technology: Technol
         ) : null}
 
         {technology.faqs?.length ? (
-          <section className="mt-10">
+          <section data-reveal="up" className="mt-10">
             <h2 className="text-h4 font-heading">{t.faqs}</h2>
             <dl className="mt-3 space-y-4">
               {technology.faqs.map((faq) => (

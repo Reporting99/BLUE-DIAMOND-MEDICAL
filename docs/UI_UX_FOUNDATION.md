@@ -407,3 +407,98 @@ Arabic at 320px. `body` also moved from `overflow-x: hidden` to
 `overflow-x: clip`: `hidden` makes body a scroll container and only suppressed
 panning in one direction, which is why the RTL leak past the inline-start edge
 survived it.
+
+---
+
+## Sitewide imagery, heroes and scroll chrome — 2026-09-01 pass
+
+Before this pass the homepage was designed and every other route opened with an
+unadorned `<h1>` on white. This records what replaced that, so a future
+component that contradicts it is recognisable as a bug rather than a variation.
+
+### `PageHero` is the opening of every route
+
+`src/components/layout/PageHero.tsx`. One full-bleed visual, the copy laid over
+its calm side, breadcrumbs above. Its only per-page variables are the picture,
+the words, how tall it is (`size`), and which text measure it aligns to
+(`measure`). Two rules it enforces:
+
+- **The wash is light, never dark.** Contrast is bought by lifting the copy side
+  toward white (`.hero-wash-*` in `globals.css`), not by dimming the picture. A
+  dark scrim over a bright clinic photograph is a different brand.
+- **`measure` must match the column beneath it.** `wide` puts the copy at the
+  page container's edge; `article` (`max-w-3xl`), `narrow` (`max-w-2xl`) and
+  `form` (`max-w-xl`) reproduce the detail templates' own prose columns. A
+  mismatch shows as two different left margins stacked on each other. Any
+  centred measure also switches to the symmetric wash: the one-sided wash lights
+  only the inline-start ~40% of the viewport, which is not where a centred
+  column's text is.
+
+The homepage keeps its own hero — it is full-bleed *behind a transparent
+header* and carries its own top padding, where every other route sits below the
+header's flow spacer. Doctor and product detail pages also keep their own
+image-led two-column layouts; a hero above a portrait is redundant.
+
+### The FacetTile is a designed fallback, not a placeholder swatch
+
+Nearly every image on this site is still an unapproved asset, so the FacetTile
+is what visitors actually see. It therefore carries a graded ground, a soft
+highlight where the light lands, a lit seam — and **four compositions**
+(`src/lib/media/facet-tile-art.ts`) chosen by a deterministic `seed`. Any
+surface rendering more than one tile at a time passes a seed (an entity id or a
+map index). Six identical tiles in a grid read as one missing image repeated
+six times; six different ones read as a set. Varying the abstract art per doctor
+is explicitly *not* a violation of §18 — no face is generated, invented or
+implied.
+
+### `MediaCard` is the standard listing card
+
+`src/components/shared/MediaCard.tsx`. Image, title, summary, directional CTA,
+fixed crops (`wide` 16:10, `photo` 4:3, `portrait` 4:5) so two different
+listings never disagree about card shape. Its image slot is not optional: with
+no CMS assignment it draws a seeded FacetTile. Pass `headingLevel="h2"` on index
+pages whose cards are the top-level content, so the document never jumps from
+`h1` to `h3`.
+
+### Before/After: four across, one frame per card
+
+`BeforeAfterGallery` lays out four across at full page width, two in a narrower
+column, one on phones — using **container** queries, not viewport ones, because
+the same component renders both in the full-width Container and in the
+`max-w-3xl` article column of every treatment/concern/technology page. Keyed to
+the viewport, a desktop reader would get four 170px cards inside that column.
+
+`BeforeAfterSlider` reveals the "after" by dragging a handle across one frame.
+The control is a native `<input type="range">` stretched invisibly over the
+whole picture — that is what buys pointer dragging, click-to-jump, touch,
+arrow/Home/End keys, a correct accessible value and RTL mirroring without a line
+of custom event handling. The visible handle is `pointer-events-none`: it is a
+drawing of where the seam is, not the thing being dragged. The **before** layer
+is the clipped one, so Before sits on the side the language starts at and each
+layer carries the badge for the half it occupies.
+
+### Scroll chrome (both brand blue, both mounted once in the locale layout)
+
+- **Reading rail** (`ScrollProgress`) — a 3px hairline across the top of the
+  viewport that fills as the page is scrolled. It is a `scaleX` transform on a
+  full-width element, written from a rAF-throttled handler straight to the DOM;
+  never an animated `width`, never React state on a per-frame value. It is
+  `aria-hidden`: a live progressbar whose value changes every frame is an
+  announcement storm.
+- **Side arrow** (`BackToTop`) — a real `<button>`, pinned to the inline-end
+  edge, revealed past ~640px, `inert` until then so it can never be tabbed to
+  or clicked while invisible. Its white ring is load-bearing: the button is
+  brand blue and so is the footer, and without it a blue disc on blue
+  disappears.
+
+### Reveal animation, and one hazard it now handles
+
+`data-reveal` goes on headings, text blocks, cards and section wrappers — never
+on a hero (LCP) and never on a form someone came to complete. `ScrollReveal`
+observes at `threshold: 0.12`, which means *12% of the element*, not of the
+viewport — so an element more than ~8× the viewport's height (a full price
+list, a long legal document) could never satisfy it and stayed invisible
+forever. Such elements are now routed to a second observer at `threshold: 0`.
+This is handled in the component rather than by a rule about which elements may
+carry `data-reveal`, because it is not something an author can predict from
+markup.

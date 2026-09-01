@@ -3,10 +3,12 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { notFound } from "next/navigation";
 import { Container } from "@/components/layout/Container";
+import { PageHero } from "@/components/layout/PageHero";
 import { SectionTransition } from "@/components/layout/SectionTransition";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
 import { isLocale, type Locale } from "@/i18n/config";
 import { getRoute, href } from "@/lib/routing";
+import { resolvePageHeroImage } from "@/lib/feelstack/page-hero-media";
 import { features } from "@/config/features";
 import { medicalBotoxHub, medicalBotoxConditions } from "@/features/medical-services";
 import { getRouteMetadata } from "@/lib/seo/metadata";
@@ -36,19 +38,33 @@ export default async function MedicalBotoxHubPage({ params }: { params: Promise<
   const { locale: rawLocale } = await params;
   const locale: Locale = isLocale(rawLocale) ? rawLocale : "en";
   const medicalRoute = getRoute("medical-hub")!;
+  const hero = await resolvePageHeroImage(getRoute("medical-botox-hub")!.path.en, locale);
 
   return (
     <>
+      <PageHero
+        locale={locale}
+        title={medicalBotoxHub.title[locale]}
+        body={medicalBotoxHub.summary[locale]}
+        image={hero}
+        imageRole="service"
+        seed="medical-botox-hub"
+        measure="article"
+        imageAlt={{
+          en: "Medical Botox consultation at Blue Diamond Medical Clinic",
+          ar: "استشارة البوتوكس الطبي في عيادة بلو دايموند الطبية",
+        }}
+        breadcrumbs={
+          <Breadcrumbs
+            locale={locale}
+            items={[{ label: medicalRoute.title[locale], href: href("medical-hub", locale) }, { label: medicalBotoxHub.title[locale] }]}
+          />
+        }
+      />
+
       <section className="section-y">
       <Container className="max-w-3xl">
-        <Breadcrumbs
-          locale={locale}
-          items={[{ label: medicalRoute.title[locale], href: href("medical-hub", locale) }, { label: medicalBotoxHub.title[locale] }]}
-        />
-        <h1 className="mt-4 text-display-1 font-heading lg:text-display-1-lg">{medicalBotoxHub.title[locale]}</h1>
-        <p className="mt-4 text-body-lg text-text-secondary">{medicalBotoxHub.summary[locale]}</p>
-
-        <ul className="mt-8 flex flex-wrap gap-3">
+        <ul data-reveal="up" className="flex flex-wrap gap-3">
           {medicalBotoxConditions.map((condition) => {
             const route = getRoute(`medical-botox-${condition.id}`)!;
             return (
@@ -64,7 +80,7 @@ export default async function MedicalBotoxHubPage({ params }: { params: Promise<
           })}
         </ul>
 
-        <Link href={href("botox-hub", locale)} className="mt-8 inline-flex items-center gap-1 font-medium text-primary hover:text-primary-hover">
+        <Link data-reveal="up" href={href("botox-hub", locale)} className="mt-8 inline-flex items-center gap-1 font-medium text-primary hover:text-primary-hover">
           {locale === "ar" ? "عرض صفحة البوتوكس الكاملة" : "View the full Botox page"} <ArrowRight className="size-4 rtl:rotate-180" />
         </Link>
       </Container>

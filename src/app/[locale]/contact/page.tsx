@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Container } from "@/components/layout/Container";
+import { PageHero } from "@/components/layout/PageHero";
 import { SectionTransition } from "@/components/layout/SectionTransition";
 import { ImageKitImage } from "@/components/shared/ImageKitImage";
 import { ContactForm } from "@/features/contact";
@@ -19,6 +20,7 @@ const PAGE_DESCRIPTION = {
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
 import { PageSchema } from "@/components/shared/schema";
 import { getRoute } from "@/lib/routing";
+import { resolvePageHeroImage } from "@/lib/feelstack/page-hero-media";
 
 export async function generateMetadata({
   params,
@@ -80,6 +82,7 @@ export default async function ContactPage({
   const defaultMessage = product ? dict.messagePrefill(product.name[locale]) : isSkinMedicaTopic ? dict.skinMedicaPrefill : undefined;
 
   const ownRoute = getRoute("contact")!;
+  const hero = await resolvePageHeroImage(ownRoute.path.en, locale);
 
   return (
     <>
@@ -90,15 +93,31 @@ export default async function ContactPage({
         description={PAGE_DESCRIPTION[locale]}
         path={ownRoute.path[locale]}
       />
+      {/* Compact, and carrying the clinic's own exterior as its visual: this
+          is the page a visitor opens to find the building, so the picture is
+          part of the answer rather than decoration around it. `pageTitle`
+          still varies with the product/SkinMedica context the route can carry,
+          so the hero says what the page is for in every one of those cases. */}
+      <PageHero
+        locale={locale}
+        title={pageTitle}
+        body={PAGE_DESCRIPTION[locale]}
+        image={hero}
+        imageRole="location"
+        seed="contact"
+        imageAlt={{
+          en: "Blue Diamond Medical Clinic, West Springs, Calgary",
+          ar: "عيادة بلو دايموند الطبية، ويست سبرينغز، كالغاري",
+        }}
+        breadcrumbs={<Breadcrumbs locale={locale} items={[{ label: ownRoute.title[locale] }]} />}
+        size="compact"
+      />
+
       <section className="section-y">
       <Container className="grid gap-12 lg:grid-cols-[1fr_1.2fr]">
-        <div>
-          <Breadcrumbs locale={locale} items={[{ label: ownRoute.title[locale] }]} />
-
-          <h1 className="mt-4 text-display-1 font-heading lg:text-display-1-lg">{pageTitle}</h1>
-
+        <div data-reveal="up">
           {product ? (
-            <div className="mt-6 flex items-center gap-4 rounded-lg border border-border p-4">
+            <div className="flex items-center gap-4 rounded-lg border border-border p-4">
               {product.images[0] ? (
                 <div className="size-16 shrink-0 overflow-hidden rounded-md">
                   <ImageKitImage
@@ -125,7 +144,11 @@ export default async function ContactPage({
             <p className="mt-4 rounded-md border border-border bg-surface px-4 py-3 text-sm text-text-secondary">{dict.productContextNotice}</p>
           ) : null}
 
-          <h2 className="mt-8 text-h4 font-heading">{dict.detailsHeading}</h2>
+          {/* `first:mt-0` because the product-context card and notice above are
+              both conditional: with a product in context this heading needs the
+              gap, without one it is the column's first element and must not
+              start indented from the form beside it. */}
+          <h2 className="mt-8 text-h4 font-heading first:mt-0">{dict.detailsHeading}</h2>
           <dl className="mt-4 space-y-3 text-body">
             <div>
               <dt className="text-sm text-text-secondary">{locale === "ar" ? "العنوان" : "Address"}</dt>
@@ -155,7 +178,7 @@ export default async function ContactPage({
           </dl>
         </div>
 
-        <div>
+        <div data-reveal="up" data-reveal-delay="1">
           <h2 className="text-h4 font-heading">{dict.formHeading}</h2>
           <div className="mt-4">
             <ContactForm locale={locale} defaultMessage={defaultMessage} />

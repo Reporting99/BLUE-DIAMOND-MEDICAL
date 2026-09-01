@@ -16,6 +16,8 @@ const ar: Dictionary = {
     phone: "الهاتف",
     fax: "الفاكس",
     skipToContent: "الانتقال إلى المحتوى",
+    backToTop: "العودة إلى الأعلى",
+    scrollProgress: "مدى التقدم في الصفحة",
   },
   nav: {
     home: "الرئيسية",

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { Container } from "@/components/layout/Container";
+import { PageHero } from "@/components/layout/PageHero";
 import { SectionTransition } from "@/components/layout/SectionTransition";
 import { ImageKitImage } from "@/components/shared/ImageKitImage";
 import { isLocale, type Locale } from "@/i18n/config";
@@ -12,6 +13,7 @@ import { cacheTags } from "@/lib/feelstack/cache-tags";
 import { getRouteMetadata } from "@/lib/seo/metadata";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
 import { PageSchema } from "@/components/shared/schema";
+import { resolvePageHeroImage } from "@/lib/feelstack/page-hero-media";
 import { siteConfig } from "@/config/site";
 
 export async function generateMetadata({
@@ -55,6 +57,8 @@ export default async function DoctorsIndexPage({ params }: { params: Promise<{ l
     return route ? [{ name: doctor.name[locale], url: `${siteConfig.url}/${locale}${route.path[locale]}` }] : [];
   });
 
+  const hero = await resolvePageHeroImage(ownRoute.path.en, locale);
+
   return (
     <>
       <PageSchema
@@ -64,15 +68,30 @@ export default async function DoctorsIndexPage({ params }: { params: Promise<{ l
         path={ownRoute.path[locale]}
         items={items}
       />
+      {/* NOTE the `imageRole`: "location", not "doctor". This hero must never
+          resolve to, or stand in for, a portrait. Physician photography is
+          uploaded and approved by the clinic, and the one thing this build
+          will not do is put a generated or stock face on a doctors page --
+          docs/UI_UX_FOUNDATION.md §18. A clinic-context visual is the honest
+          backdrop for a page whose subjects are real people. */}
+      <PageHero
+        locale={locale}
+        title={heading}
+        body={intro}
+        image={hero}
+        imageRole="location"
+        seed="doctors-index"
+        imageAlt={{
+          en: "Blue Diamond Medical Clinic, West Springs, Calgary",
+          ar: "عيادة بلو دايموند الطبية، ويست سبرينغز، كالغاري",
+        }}
+        breadcrumbs={<Breadcrumbs locale={locale} items={[{ label: ownRoute.title[locale] }]} />}
+      />
+
       <section className="section-y">
       <Container>
-        <Breadcrumbs locale={locale} items={[{ label: ownRoute.title[locale] }]} />
-
-        <h1 className="mt-4 text-display-1 font-heading lg:text-display-1-lg">{heading}</h1>
-        <p className="mt-4 max-w-2xl text-body-lg text-text-secondary">{intro}</p>
-
-        <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-          {doctors.map((doctor) => {
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          {doctors.map((doctor, index) => {
             const route = getRoute(doctor.routeId)!;
             // photoDeclined / disabled still beat the assignment, evaluated in
             // the same central resolver the detail page uses.
@@ -86,8 +105,10 @@ export default async function DoctorsIndexPage({ params }: { params: Promise<{ l
             return (
               <Link
                 key={doctor.id}
+                data-reveal="up"
+                data-reveal-delay={String(index % 3)}
                 href={`/${locale}${route.path[locale]}`}
-                className="group block overflow-hidden rounded-lg border border-border"
+                className="group block overflow-hidden rounded-lg border border-border transition-[border-color,box-shadow] duration-[var(--motion-normal)] ease-[var(--motion-ease)] hover:border-primary hover:shadow-[0_10px_30px_rgba(29,86,120,0.10)]"
               >
                 <div className="facet-corner-sm relative aspect-[4/5] overflow-hidden">
                   <ImageKitImage
@@ -104,6 +125,7 @@ export default async function DoctorsIndexPage({ params }: { params: Promise<{ l
                     locale={locale}
                     width={480}
                     height={600}
+                    seed={doctor.id}
                     className="h-full w-full transition-transform duration-300 group-hover:scale-[1.03]"
                   />
                 </div>

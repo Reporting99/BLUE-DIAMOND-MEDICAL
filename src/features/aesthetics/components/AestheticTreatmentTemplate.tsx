@@ -4,9 +4,8 @@ import { MapPin } from "lucide-react";
 import { Container } from "@/components/layout/Container";
 import { SectionTransition } from "@/components/layout/SectionTransition";
 import { Button } from "@/components/ui/button";
+import { PageHero } from "@/components/layout/PageHero";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
-import { ImageKitImage } from "@/components/shared/ImageKitImage";
-import { cmsAlt } from "@/lib/feelstack/media-slots";
 import { MedicalWebPageSchema } from "@/components/shared/schema";
 import { FaqPageSchema } from "@/components/shared/schema";
 import { getBookingUrl } from "@/config/booking";
@@ -74,7 +73,7 @@ const labels = {
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <section className="mt-8">
+    <section data-reveal="up" className="mt-8">
       <h2 className="text-h4 font-heading">{title}</h2>
       <div className="mt-2 text-body text-text-secondary">{children}</div>
     </section>
@@ -150,43 +149,39 @@ export function AestheticTreatmentTemplate({
       {ownRoute ? (
         <MedicalWebPageSchema locale={locale} name={treatment.title[locale]} description={treatment.summary[locale]} path={ownRoute.path[locale]} />
       ) : null}
+      {/* The lead image is the hero now. It used to render as a rounded
+          aspect-video figure a screenful below the breadcrumbs, and only when
+          an assignment existed -- so a treatment whose photography has not
+          been shot opened on plain white text. PageHero renders the same
+          asset when there is one and the branded facet visual when there is
+          not, so the page has a top either way, and the caption travels with
+          the image rather than being lost in the promotion. */}
+      <PageHero
+        locale={locale}
+        title={treatment.title[locale]}
+        body={treatment.summary[locale]}
+        image={treatment.image}
+        imageRole="treatment"
+        seed={treatment.id}
+        measure="article"
+        imageAlt={{
+          en: treatment.title.en || treatment.id,
+          ar: treatment.title.ar || treatment.id,
+        }}
+        imageCaption={treatment.image?.caption}
+        breadcrumbs={
+          <Breadcrumbs
+            locale={locale}
+            items={[
+              { label: treatmentsHub.title[locale], href: href("aesthetics-treatments-hub", locale) },
+              { label: treatment.title[locale] },
+            ]}
+          />
+        }
+      />
+
       <article className="section-y">
       <Container className="max-w-3xl">
-        <Breadcrumbs
-          locale={locale}
-          items={[
-            { label: treatmentsHub.title[locale], href: href("aesthetics-treatments-hub", locale) },
-            { label: treatment.title[locale] },
-          ]}
-        />
-
-        <h1 className="mt-4 text-display-1 font-heading lg:text-display-1-lg">{treatment.title[locale]}</h1>
-        <p className="mt-4 text-body-lg text-text-secondary">{treatment.summary[locale]}</p>
-
-        {/* Lead image, present only when this entity has a real FeelStack
-            media assignment. ImageKitImage still decides, from the asset's own
-            status, whether real bytes or the FacetTile placeholder appear. */}
-        {treatment.image ? (
-          <ImageKitImage
-            path={treatment.image.path}
-            preset="treatment"
-            role={treatment.image.role}
-            status={treatment.image.status}
-            alt={
-              cmsAlt(treatment.image) ?? {
-                en: treatment.title.en || treatment.id,
-                ar: treatment.title.ar || treatment.id,
-              }
-            }
-            caption={treatment.image.caption}
-            locale={locale}
-            width={treatment.image.width}
-            height={treatment.image.height}
-            sizes="(min-width: 768px) 48rem, 100vw"
-            className="mt-8 aspect-video rounded-lg"
-          />
-        ) : null}
-
 
         {treatment.serviceLocationNote ? (
           <div className="mt-4 flex items-start gap-2.5 rounded-md border border-border bg-surface px-4 py-3 text-sm text-text-secondary">

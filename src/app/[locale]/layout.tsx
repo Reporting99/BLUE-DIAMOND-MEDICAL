@@ -9,6 +9,8 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { ScrollReveal } from "@/components/layout/ScrollReveal";
 import { RouteScrollManager } from "@/components/layout/RouteScrollManager";
+import { ScrollProgress } from "@/components/layout/ScrollProgress";
+import { BackToTop } from "@/components/layout/BackToTop";
 import "../globals.css";
 
 // This is the true root layout — see the note in the (removed) app/layout.tsx
@@ -80,6 +82,13 @@ export default async function LocaleLayout({
           <Footer locale={locale} />
           <ScrollReveal />
           <RouteScrollManager />
+          {/* Two pieces of global scroll chrome, both in brand blue and both
+              mounted once here rather than per page: the reading rail across
+              the top of the viewport, and the return-to-top arrow at its
+              inline-end edge. Neither renders anything until the page is
+              actually scrolled. */}
+          <ScrollProgress />
+          <BackToTop locale={locale} />
         </ImageKitProvider>
       </body>
     </html>

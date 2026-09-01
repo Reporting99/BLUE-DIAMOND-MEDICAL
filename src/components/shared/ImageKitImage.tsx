@@ -19,6 +19,13 @@ interface ImageKitImageProps {
   /** Replaces the deprecated `priority` prop — see Next.js 16 image API. */
   preload?: boolean;
   caption?: { en: string; ar: string };
+  /**
+   * Forwarded to the FacetTile fallback so a listing that renders several
+   * unphotographed entities draws a different facet composition per card
+   * rather than the same one repeated. Ignored once a real asset is
+   * approved — see FacetTile.
+   */
+  seed?: string | number;
 }
 
 /**
@@ -47,6 +54,7 @@ export function ImageKitImage({
   sizes,
   preload,
   caption,
+  seed,
 }: ImageKitImageProps) {
   const canRenderReal = imagekitIsConfigured && status === "approved";
   const altText = alt[locale];
@@ -66,7 +74,7 @@ export function ImageKitImage({
           className="h-full w-full object-cover"
         />
       ) : (
-        <FacetTile role={role} alt={altText} className="h-full w-full" />
+        <FacetTile role={role} alt={altText} seed={seed} className="h-full w-full" />
       )}
       {captionText ? (
         <figcaption className="mt-2 text-caption text-text-secondary">{captionText}</figcaption>

@@ -108,14 +108,18 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
 
   const findByNeedIcon = { stethoscope: Stethoscope, sparkles: Sparkles, search: Search, cpu: Cpu };
 
-  // Up to 6, one per treatment, so Home shows range rather than six views
-  // of the same procedure (§27).
+  // Up to 4, one per treatment, so Home shows range rather than four views
+  // of the same procedure (§27). Four rather than six because the gallery is
+  // now a four-across grid: six would fill one row and leave two cards
+  // stranded in a half-empty second one, and the "View all Before & After
+  // examples" link directly beneath already carries anyone who wants the
+  // other ten.
   const homeBeforeAfter = Object.values(
     publishableBeforeAfterPairs().reduce<Record<string, ReturnType<typeof publishableBeforeAfterPairs>[number]>>((acc, pair) => {
       acc[pair.treatmentId] ??= pair;
       return acc;
     }, {}),
-  ).slice(0, 6);
+  ).slice(0, 4);
 
   return (
     <>

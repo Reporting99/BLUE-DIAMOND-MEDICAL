@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Container } from "@/components/layout/Container";
+import { PageHero } from "@/components/layout/PageHero";
 import { SectionTransition } from "@/components/layout/SectionTransition";
 import { isLocale, type Locale } from "@/i18n/config";
 import { getRouteMetadata } from "@/lib/seo/metadata";
@@ -14,6 +15,7 @@ const PAGE_DESCRIPTION = {
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
 import { PageSchema } from "@/components/shared/schema";
 import { getRoute } from "@/lib/routing";
+import { resolvePageHeroImage } from "@/lib/feelstack/page-hero-media";
 
 const policies = {
   en: [
@@ -70,6 +72,7 @@ export default async function PatientResourcesPage({ params }: { params: Promise
   const title = locale === "ar" ? "موارد المرضى" : "Patient Resources";
 
   const ownRoute = getRoute("patient-resources-hub")!;
+  const hero = await resolvePageHeroImage(ownRoute.path.en, locale);
 
   return (
     <>
@@ -80,14 +83,29 @@ export default async function PatientResourcesPage({ params }: { params: Promise
         description={PAGE_DESCRIPTION[locale]}
         path={ownRoute.path[locale]}
       />
+      {/* The hero subtitle is PAGE_DESCRIPTION — the same sentence the
+          metadata uses. One string, two surfaces, so the page cannot describe
+          itself one way to a search engine and another to a reader. */}
+      <PageHero
+        locale={locale}
+        title={title}
+        body={PAGE_DESCRIPTION[locale]}
+        image={hero}
+        imageRole="service"
+        seed="patient-resources"
+        imageAlt={{
+          en: "The reception desk at Blue Diamond Medical Clinic",
+          ar: "مكتب الاستقبال في عيادة بلو دايموند الطبية",
+        }}
+        breadcrumbs={<Breadcrumbs locale={locale} items={[{ label: ownRoute.title[locale] }]} />}
+        size="compact"
+      />
+
       <section className="section-y">
       <Container>
-        <Breadcrumbs locale={locale} items={[{ label: ownRoute.title[locale] }]} />
-
-        <h1 className="mt-4 text-display-1 font-heading lg:text-display-1-lg">{title}</h1>
-        <div className="mt-10 divide-y divide-border border-y border-border">
+        <div className="divide-y divide-border border-y border-border">
           {policies[locale].map((policy) => (
-            <div key={policy.title} className="grid gap-2 py-6 lg:grid-cols-[280px_1fr] lg:gap-8">
+            <div key={policy.title} data-reveal="up" className="grid gap-2 py-6 lg:grid-cols-[280px_1fr] lg:gap-8">
               <h2 className="text-h4 font-heading">{policy.title}</h2>
               <p className="text-body text-text-secondary">{policy.body}</p>
             </div>
