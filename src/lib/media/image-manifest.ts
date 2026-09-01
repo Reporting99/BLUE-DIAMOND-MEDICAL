@@ -108,6 +108,69 @@ export const imageManifest: ImageKitAsset[] = [
     role: "treatment",
     status: "pending",
   },
+  /**
+   * The Our Team hero group photograph, supplied by the clinic for this page
+   * and imported through the sanctioned door (FeelStack
+   * `POST /admin/v1/projects/:id/media/import`, which put the bytes in
+   * ImageKit at exactly this path and recorded the MediaAsset row); sha256
+   * fcf6372a657914e7ba39ef1a41f57ac5dd85c332f5b48971915fca1c5fe54f42.
+   *
+   * The import left the CMS row `pending`, deliberately — see the header of
+   * scripts/import-before-after.mjs on why an importer never grants approval
+   * to its own upload. `approved` here is the separate, deliberate act
+   * docs/MEDIA.md § "Flipping an asset from placeholder to real" describes: a
+   * reviewable edit to the record that owns the asset, made on the clinic's
+   * explicit instruction to publish this photograph on this page. It is the
+   * FIRST approved entry in this manifest, which is why every other one still
+   * renders a FacetTile.
+   *
+   * It is a photograph of the actual team — not stock, not a generated face,
+   * which is the only thing docs/UI_UX_FOUNDATION.md §18 forbids on a page
+   * whose subjects are real people. That rule was always "no invented faces",
+   * never "no photograph".
+   *
+   * 600x451 is the supplied original, and nothing requests more than that —
+   * see the "team-group" preset in src/config/imagekit.ts.
+   */
+  {
+    id: "our-team-group",
+    path: `${MEDIA_ROOT}/shared/our-team-group.webp`,
+    width: 600,
+    height: 451,
+    aspectRatio: "4:3",
+    alt: {
+      en: "The Blue Diamond Medical team at the West Springs clinic",
+      ar: "فريق بلو دايموند الطبي في عيادة ويست سبرينغز",
+    },
+    role: "hero",
+    status: "approved",
+  },
+  /**
+   * Dr. Omaima Saeed's consent-protected identity card.
+   *
+   * Listed by hand because the generator below deliberately excludes every
+   * `photoDeclined` doctor — it generates PORTRAIT entries, and she has none.
+   * This is not a portrait: it is a designed card carrying her name, her
+   * title and the brand's facet geometry, with no likeness of any kind. It
+   * needs a manifest row all the same, because `tests/unit/image-usage.spec.ts`
+   * requires every rendered ImageKit path to be inventoried here, and because
+   * an asset nobody can find in the manifest is an asset nobody can audit.
+   *
+   * `role: "doctor"` is its slot on the page, not a claim about its content.
+   */
+  {
+    id: "doctor-omaima-saeed-identity",
+    path: `${MEDIA_ROOT}/team/blue-diamond-team-dr-omaima-saeed-identity.webp`,
+    width: 1280,
+    height: 1600,
+    aspectRatio: "4:5",
+    alt: {
+      en: "Identity card for Dr. Omaima Saeed, Family Physician, Blue Diamond Medical",
+      ar: "بطاقة تعريف للدكتورة أميمة سعيد، طبيبة أسرة، بلو دايموند الطبية",
+    },
+    role: "doctor",
+    status: "approved",
+  },
   // Doctor portraits — generated from the single source of truth in
   // src/features/doctors/data.ts so the two never drift.
   ...doctors
@@ -244,3 +307,26 @@ export const imageManifest: ImageKitAsset[] = [
     }),
   ),
 ];
+
+/**
+ * One manifest entry by id, for a page that renders a specific known asset.
+ *
+ * Until the Our Team hero, nothing read this file at runtime: it was an audit
+ * trail, and pages passed `path`/`width`/`status` to `ImageKitImage` as
+ * literals that `tests/unit/image-usage.spec.ts` then checked back against the
+ * manifest. That works while every entry is `pending` and the values are
+ * inert, but `status` is the approval gate — the one field that decides
+ * whether real bytes or a placeholder reach a visitor. Copied into a page it
+ * becomes a second source of truth, and a reviewer setting this entry back to
+ * `pending` would not take the photograph off the page.
+ *
+ * So the promotion decision is read from here rather than restated at the
+ * usage site. Throws rather than returning undefined: a page asking for an
+ * asset that is not inventoried is a build-time mistake, and failing loudly
+ * beats rendering a silent placeholder that looks like a missing photo.
+ */
+export function manifestAsset(id: string): ImageKitAsset {
+  const asset = imageManifest.find((a) => a.id === id);
+  if (!asset) throw new Error(`image-manifest.ts: no asset with id "${id}"`);
+  return asset;
+}

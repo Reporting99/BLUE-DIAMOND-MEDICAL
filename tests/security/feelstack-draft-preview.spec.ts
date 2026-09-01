@@ -38,8 +38,8 @@ const ROUTES: PreviewRoute[] = [
   { path: "/التجميل-الطبي/العلاجات/botox", locale: "ar", type: "content_entry", status: "draft" },
   { path: "/aesthetics/treatments/laser-hair-removal", locale: "en", type: "content_entry", status: "published" },
   { path: "/التجميل-الطبي/العلاجات/إزالة-الشعر-بالليزر", locale: "ar", type: "content_entry", status: "published" },
-  { path: "/doctors/mohamed-farhat", locale: "en", type: "person_profile", status: "published" },
-  { path: "/الأطباء/محمد-فرحات", locale: "ar", type: "person_profile", status: "published" },
+  { path: "/our-team/mohamed-farhat", locale: "en", type: "person_profile", status: "published" },
+  { path: "/فريقنا/محمد-فرحات", locale: "ar", type: "person_profile", status: "published" },
   { path: "/shop/lumivive-system-day-night", locale: "en", type: "content_entry", status: "draft" },
   { path: "/المتجر/lumivive-system-day-night", locale: "ar", type: "content_entry", status: "draft" },
 ];
@@ -60,9 +60,9 @@ const ALTERNATES: Record<string, { locale: string; path: string }[]> = {
     { locale: "en", path: "/aesthetics/treatments/laser-hair-removal" },
     { locale: "ar", path: "/التجميل-الطبي/العلاجات/إزالة-الشعر-بالليزر" },
   ],
-  "/doctors/mohamed-farhat": [
-    { locale: "en", path: "/doctors/mohamed-farhat" },
-    { locale: "ar", path: "/الأطباء/محمد-فرحات" },
+  "/our-team/mohamed-farhat": [
+    { locale: "en", path: "/our-team/mohamed-farhat" },
+    { locale: "ar", path: "/فريقنا/محمد-فرحات" },
   ],
   "/shop/lumivive-system-day-night": [
     { locale: "en", path: "/shop/lumivive-system-day-night" },
@@ -154,7 +154,7 @@ test.describe("every required target resolves in both locales", () => {
   const cases: Array<[string, string, string, string]> = [
     ["medical-service", "eye-screening", "/en/medical/eye-screening", "/ar/الرعاية-الطبية/فحص-العين"],
     ["aesthetic-treatment", "laser-hair-removal", "/en/aesthetics/treatments/laser-hair-removal", "/ar/التجميل-الطبي/العلاجات/إزالة-الشعر-بالليزر"],
-    ["doctor", "mohamed-farhat", "/en/doctors/mohamed-farhat", "/ar/الأطباء/محمد-فرحات"],
+    ["doctor", "mohamed-farhat", "/en/our-team/mohamed-farhat", "/ar/فريقنا/محمد-فرحات"],
     ["product", "lumivive-system-day-night", "/en/shop/lumivive-system-day-night", "/ar/المتجر/lumivive-system-day-night"],
   ];
 

@@ -13,8 +13,8 @@ const pages = [
   "/en/medical",
   "/en/aesthetics",
   "/en/botox",
-  "/en/doctors",
-  "/en/doctors/mohamed-farhat",
+  "/en/our-team",
+  "/en/our-team/mohamed-farhat",
   "/en/medical/eye-screening",
   "/en/medical/after-hours-care",
   "/en/medical/minor-procedures",
@@ -43,8 +43,8 @@ const pages = [
   // doctors grid.
   "/ar/تواصل-معنا",
   "/ar/حجز-موعد",
-  "/ar/الأطباء",
-  "/ar/الأطباء/محمد-فرحات",
+  "/ar/فريقنا",
+  "/ar/فريقنا/محمد-فرحات",
   "/ar/التجميل-الطبي/العلاجات/الإبر-الدقيقة-بالترددات-الراديوية",
   "/ar/التجميل-الطبي/الأسعار",
 ];

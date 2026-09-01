@@ -4,8 +4,11 @@ import { useState } from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { FacetTile } from "@/components/shared/FacetTile";
+import { ImageKitImage } from "@/components/shared/ImageKitImage";
+import { cmsAlt } from "@/lib/feelstack/media-slots";
 import { concerns } from "@/features/concerns/data";
 import { getRoute, href } from "@/lib/routing";
+import type { ImageKitAsset } from "@/types/media";
 import type { Locale } from "@/i18n/config";
 
 const copy = {
@@ -37,10 +40,24 @@ const copy = {
  * JavaScript has hydrated yet. Reused on the homepage and the concerns hub
  * itself, so both stay in sync automatically as concerns are added.
  */
-export function ConcernExplorer({ locale }: { locale: Locale }) {
+export function ConcernExplorer({
+  locale,
+  images = {},
+}: {
+  locale: Locale;
+  /**
+   * Each concern's canonical preview asset, keyed by concern id and resolved
+   * on the server by `features/concerns/media.ts`. A concern absent from the
+   * map has no publishable assignment and keeps its FacetTile; nothing here
+   * ever substitutes a different concern's picture, because the only key this
+   * component ever reads is the active concern's own id.
+   */
+  images?: Record<string, ImageKitAsset>;
+}) {
   const t = copy[locale];
   const [activeId, setActiveId] = useState(concerns[0]?.id);
   const active = concerns.find((c) => c.id === activeId) ?? concerns[0];
+  const activeImage = active ? images[active.id] : undefined;
 
   return (
     <div>
@@ -51,7 +68,29 @@ export function ConcernExplorer({ locale }: { locale: Locale }) {
       <div className="mt-8 grid gap-8 lg:grid-cols-[5fr_7fr] lg:items-start">
         {active ? (
           <div className="facet-corner relative aspect-square overflow-hidden rounded-lg lg:sticky lg:top-24">
-            <FacetTile role="concern" seed={active.id} alt={({ en: `${active.title.en} — Blue Diamond Medical Aesthetics`, ar: `${active.title.ar} — بلو دايموند للتجميل الطبي` })[locale]} className="h-full w-full" />
+            {activeImage ? (
+              /* The concern's own approved asset. `cmsAlt` is preferred over
+                 the entity-derived sentence below it because the media library
+                 records what the photograph actually SHOWS, in both locales,
+                 which is the description a screen-reader user needs — the
+                 title-based string is a label for the link, not the image, and
+                 is only used when the library supplied no alt text at all. */
+              <ImageKitImage
+                path={activeImage.path}
+                preset="concern"
+                role={activeImage.role}
+                status={activeImage.status}
+                alt={cmsAlt(activeImage) ?? { en: `${active.title.en} — Blue Diamond Medical Aesthetics`, ar: `${active.title.ar} — بلو دايموند للتجميل الطبي` }}
+                locale={locale}
+                width={activeImage.width}
+                height={activeImage.height}
+                seed={active.id}
+                sizes="(min-width: 1024px) 42vw, 100vw"
+                className="h-full w-full"
+              />
+            ) : (
+              <FacetTile role="concern" seed={active.id} alt={({ en: `${active.title.en} — Blue Diamond Medical Aesthetics`, ar: `${active.title.ar} — بلو دايموند للتجميل الطبي` })[locale]} className="h-full w-full" />
+            )}
             <div
               aria-hidden="true"
               className="absolute inset-x-0 bottom-0 p-6"

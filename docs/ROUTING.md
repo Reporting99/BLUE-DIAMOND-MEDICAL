@@ -67,7 +67,7 @@ Single source of truth is `src/config/routes.ts` — this document mirrors it in
 | `aesthetics-concerns-hub` + 9 concerns | `/aesthetics/concerns[/<slug>]` | `/التجميل-الطبي/المخاوف-الجمالية[/<slug>]` | hub + concern | — |
 | `aesthetics-technologies-hub` + 5 technologies | `/aesthetics/technologies[/<slug>]` | `/التجميل-الطبي/التقنيات[/<slug>]` | hub + technology | — |
 | `botox-hub` | `/botox` | `/بوتوكس` | hub | ✅ |
-| `doctors-index` + 6 doctors | `/doctors[/<slug>]` | `/الأطباء[/<slug>]` | hub + doctor-profile | ✅ (index only) |
+| `doctors-index` + 6 doctors | `/our-team[/<slug>]` | `/فريقنا[/<slug>]` | hub + doctor-profile | ✅ (index only) |
 | `patient-resources-hub` | `/patient-resources` | `/موارد-المرضى` | hub | ✅ |
 | `health-hub` | `/health-hub` | `/المركز-المعرفي` | hub | ✅ |
 | `about` | `/about` | `/من-نحن` | static | ✅ |
@@ -102,6 +102,43 @@ None of these appear in the sitemap, main navigation, or search results, and eve
 ## Route Decision Log
 
 Records every route-tree validation decision from the Part 1 audit, against the rules in the brief and the two owned legacy sites / approved DOCX. Classification scheme: `KEEP` / `MERGE` / `REDIRECT` / `GATE` / `DELETE` / `REQUIRES CLIENT APPROVAL`. Full per-route classification table is `docs/ROUTING.md`; this log is the *reasoning*, not the inventory.
+
+### 2026-09-01 — `/doctors` renamed to `/our-team` (whole family)
+
+`REDIRECT`. The index and all six member pages moved together:
+`/doctors[/<slug>]` -> `/our-team[/<slug>]`, `/الأطباء[/<slug>]` -> `/فريقنا[/<slug>]`.
+Member slugs are unchanged on both sides; only the parent segment moved.
+
+**Why the whole family, not just the index.** An index at `/our-team` with
+members still at `/doctors/<slug>` is two names for one section — it breaks the
+breadcrumb's own claim about where a member lives, and leaves the old noun in
+every physician's canonical URL. A partial rename was considered and rejected.
+
+**Arabic.** `فريقنا` is not a new coinage: it is already the project's Arabic
+for "Our Team" in `src/i18n/dictionaries/ar.ts` (`nav.ourTeam`). Member slugs
+stay exactly as the CMS authored them.
+
+**Both sides moved.** The six members are FeelStack `person_profile` entities,
+so the CMS is authoritative for their paths. They were repatched there
+(`routePrefix` only, leaving each stored slug untouched), then
+`src/config/localized-entity-routes.generated.ts` and
+`tests/fixtures/feelstack/cms-route-inventory.json` were regenerated from the
+updated CMS. Renaming only the repository would have failed
+`localized-route-parity.spec.ts`, which is exactly what that spec is for.
+
+**The route id stayed `doctors-index`.** It is an internal key referenced by
+nav, the footer, three templates, the FacetTile seed and
+`cacheTags.doctorsIndex` — whose CMS cache tag `feelstack-doctors:<site>:<locale>`
+is derived from it. Renaming it would churn all of that, and invalidate live
+cache keys, to change a string no visitor sees.
+
+**Redirects.** 28 exact-match 301s in `renamedRouteRedirects`
+(`src/lib/routing/legacy-redirects.ts`): 7 routes x 4 old URL forms (bare,
+`/en/...`, Latin-under-`/ar`, and the old Arabic canonical). Exact matching is
+load-bearing — 24 of the 28 sources sit underneath one of the 4 index sources,
+so a prefix rule would send every member page to the index. Covered per-row by
+`tests/redirects/renamed-route-redirects.spec.ts`, including a one-hop
+assertion, since a chain still lands correctly and would otherwise pass.
 
 ### Rule-by-rule validation
 

@@ -175,11 +175,11 @@ test.describe("the seo tag is real", () => {
       index: cacheTags.doctorsIndex,
       locale: "en",
       id: "mohamed-farhat",
-      path: "/doctors/mohamed-farhat",
+      path: "/our-team/mohamed-farhat",
     });
-    expect(tags).toContain(cacheTags.seo(BD_SITE_KEY, "en", "/doctors/mohamed-farhat"));
+    expect(tags).toContain(cacheTags.seo(BD_SITE_KEY, "en", "/our-team/mohamed-farhat"));
     // and still files the tags it always did
-    expect(tags).toContain(cacheTags.page(BD_SITE_KEY, "en", "/doctors/mohamed-farhat"));
+    expect(tags).toContain(cacheTags.page(BD_SITE_KEY, "en", "/our-team/mohamed-farhat"));
     expect(tags).toContain(cacheTags.doctor(BD_SITE_KEY, "en", "mohamed-farhat"));
     expect(tags).toContain(cacheTags.doctorsIndex(BD_SITE_KEY, "en"));
   });

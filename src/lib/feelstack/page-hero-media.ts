@@ -32,7 +32,7 @@ export async function resolvePageHeroImage(
   locale: Locale,
   tags: string[] = [],
 ): Promise<ImageKitAsset | undefined> {
-  const media = await resolveListingMedia([{ id: "page", englishPath }], locale, [
+  const media = await resolveListingMedia([{ id: "page", englishPath, routeKind: "page" }], locale, [
     // The page's own cache tag, so a publish of this page invalidates its hero
     // exactly as it invalidates its copy. Callers add entity-index tags on top
     // when the page also renders a listing.

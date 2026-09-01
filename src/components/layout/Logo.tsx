@@ -66,3 +66,49 @@ export function Logo({
     </Link>
   );
 }
+
+/**
+ * The same lock-up the header renders, at display scale.
+ *
+ * It is not a second logo and nothing here is redrawn: it is `DiamondMark`
+ * plus the same wordmark, in the same order, the same `--blue-3`, and the
+ * same proportions the header sets — mark width 1.648× the wordmark's font
+ * size (27.69/16.8), gap 0.595× (10/16.8). Those two ratios are the only
+ * reason this is a component rather than a `className` on `Logo`: scaling a
+ * lock-up whose parts are pinned in px (`h-9`, `gap-2.5`, `1.05rem`) means
+ * re-spacing it by hand at every size, and re-spacing the lock-up is exactly
+ * what docs/UI_UX_FOUNDATION.md §1.1 forbids. Driving all three off one width
+ * variable keeps the geometry identical at any size.
+ *
+ * Callers set `--bd-lockup` to the lock-up's *rendered* width; everything
+ * else follows from it, so `height` is never specified and the mark's 100:130
+ * viewBox ratio is what decides it. The three coefficients below are the two
+ * ratios above divided through by the wordmark's measured advance width
+ * (~10.1em in IBM Plex Sans SemiBold at `tracking-tight`), which is what makes
+ * the box come out at `--bd-lockup` rather than a tenth under it.
+ *
+ * NOT A LINK. The header's lock-up is the site's home affordance; a second,
+ * much larger one inside a page's own hero would be a 480px-wide link to a
+ * page the visitor is one click from anyway. This is a graphic — one image to
+ * assistive technology, named once by `aria-label`.
+ */
+export function BrandLockup({ locale, className }: { locale: Locale; className?: string }) {
+  return (
+    <div
+      role="img"
+      aria-label={locale === "ar" ? "بلو دايموند الطبية" : "Blue Diamond Medical"}
+      className={cn("flex items-center", className)}
+      style={{ gap: "calc(var(--bd-lockup) * 0.0493)" }}
+    >
+      <span className="block shrink-0" style={{ width: "calc(var(--bd-lockup) * 0.1367)" }}>
+        <DiamondMark className="block h-auto w-full" />
+      </span>
+      <span
+        className="font-semibold leading-tight tracking-tight whitespace-nowrap"
+        style={{ fontSize: "calc(var(--bd-lockup) * 0.0829)", color: "var(--blue-3)" }}
+      >
+        {locale === "ar" ? "بلو دايموند الطبية" : "Blue Diamond Medical"}
+      </span>
+    </div>
+  );
+}

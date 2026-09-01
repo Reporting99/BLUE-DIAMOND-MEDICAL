@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { defaultLocale, isLocale } from "@/i18n/config";
-import { legacyRedirects } from "@/lib/routing";
+import { legacyRedirects, renamedRouteRedirects } from "@/lib/routing";
 import { routes } from "@/lib/routing";
 import { localizedEntityRoutes } from "@/config/localized-entity-routes.generated";
 import { isSiteLaunched, PRE_LAUNCH_ROBOTS_HEADER } from "@/config/launch";
@@ -177,6 +177,25 @@ export function proxy(request: NextRequest) {
   const legacyTarget = legacyRedirects[decodedPathname] ?? legacyRedirects[pathname];
   if (legacyTarget) {
     const url = new URL(legacyTarget, request.url);
+    if (search) url.search = search;
+    return withIndexingGuard(NextResponse.redirect(url, 301));
+  }
+
+  // 1a. Canonical route renames this build made to its OWN URLs — currently
+  // the /doctors family becoming /our-team. Exact-match, checked before
+  // locale prefixing so a bare /doctors/<slug> reaches its destination in one
+  // hop rather than 301ing to /en/doctors/<slug> and 301ing again.
+  //
+  // Deliberately AFTER legacyRedirects: an old third-party URL that happens to
+  // collide with a path this build once served should resolve as the legacy
+  // table says, since that table is the migration contract with the old sites.
+  //
+  // Whole-pathname equality, never a prefix test. `/en/doctors` must not
+  // capture `/en/doctors/mohamed-farhat` — see the note on RENAMED_ROUTE_FAMILY.
+  const renamedTarget =
+    renamedRouteRedirects[decodedPathname] ?? renamedRouteRedirects[pathname];
+  if (renamedTarget) {
+    const url = new URL(renamedTarget, request.url);
     if (search) url.search = search;
     return withIndexingGuard(NextResponse.redirect(url, 301));
   }

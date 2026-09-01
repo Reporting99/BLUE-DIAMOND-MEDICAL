@@ -21,6 +21,7 @@ import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
 import { PageSchema } from "@/components/shared/schema";
 import { getRoute } from "@/lib/routing";
 import { resolvePageHeroImage } from "@/lib/feelstack/page-hero-media";
+import { productCardImage, resolveProductListingMedia } from "@/features/products/media";
 
 export async function generateMetadata({
   params,
@@ -83,6 +84,20 @@ export default async function ContactPage({
 
   const ownRoute = getRoute("contact")!;
   const hero = await resolvePageHeroImage(ownRoute.path.en, locale);
+  /* The product tile in the enquiry panel below. `?product=` makes this page
+     context-specific -- the heading, the prefilled message and this tile all
+     name one product -- so the tile showing the neutral FacetTile while that
+     product's own page showed its packshot made the context look broken at
+     exactly the moment the visitor is deciding to ask about it.
+
+     One entity, so this is `resolveProductListingMedia` over a single-element
+     list rather than a second resolver: same fan-out, same productsIndex tag,
+     same silent-failure rule. Skipped entirely when no product is in context,
+     which is the common case for /contact and costs nothing there. */
+  const productMedia = product
+    ? productCardImage(await resolveProductListingMedia([product], locale), product)
+    : undefined;
+  const productImage = productMedia ?? product?.images[0];
 
   return (
     <>
@@ -118,17 +133,18 @@ export default async function ContactPage({
         <div data-reveal="up">
           {product ? (
             <div className="flex items-center gap-4 rounded-lg border border-border p-4">
-              {product.images[0] ? (
+              {productImage ? (
                 <div className="size-16 shrink-0 overflow-hidden rounded-md">
                   <ImageKitImage
-                    path={product.images[0].path}
+                    path={productImage.path}
                     preset="thumbnail"
                     role="product"
-                    status={product.images[0].status}
-                    alt={product.images[0].alt}
+                    status={productImage.status}
+                    alt={productImage.alt}
                     locale={locale}
                     width={64}
                     height={64}
+                    seed={product.id}
                     className="h-full w-full"
                   />
                 </div>

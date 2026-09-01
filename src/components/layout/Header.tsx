@@ -33,10 +33,11 @@ const SCROLL_THRESHOLD = 48;
 /** Resting header height (px) — a little more breathing room, per the
  * navbar-motion brief §15. */
 const HEADER_HEIGHT_REST = 84;
-/** Settled/scrolled header height (px). The delta is deliberately 12px:
- * enough to read as "the header tightened up", small enough that nothing
- * visibly snaps (brief §15's "subtle, continuous, non-distracting"). */
-const HEADER_HEIGHT_SCROLLED = 72;
+/** Settled/scrolled header height (px). In the floating-capsule state the bar
+ * is slightly more compact than at rest — 64px sits in the middle of the
+ * 60-66px the floating-navbar brief asks for, and still clears the 44px nav
+ * row plus its padding, so nothing feels cramped. */
+const HEADER_HEIGHT_SCROLLED = 64;
 
 /**
  * Single authoritative global navigation — "FINAL MANDATORY NAVIGATION"
@@ -143,7 +144,14 @@ export function Header({ locale }: { locale: Locale }) {
     <>
     <header
       className={cn(
-        "fixed inset-x-0 top-0 z-50 transition-[background-color,box-shadow,border-color,height] duration-[420ms] ease-[cubic-bezier(0.22,1,0.36,1)]",
+        // `site-header` carries the transition; `navbar--scrolled` carries the
+        // floating-capsule geometry and glass. Both live in globals.css because
+        // the capsule needs a media query and a prefers-reduced-motion branch,
+        // neither of which belongs in a className string. The scrolled chrome is
+        // deliberately NOT expressed as Tailwind utilities any more: utilities
+        // sit in a cascade layer that would win over the class, and having two
+        // sources for one surface is how they drift apart.
+        "site-header fixed inset-x-0 top-0 z-50",
         atRest
           ? [
               "border-b",
@@ -157,7 +165,7 @@ export function Header({ locale }: { locale: Locale }) {
                 ? "border-transparent bg-transparent shadow-none"
                 : "border-transparent bg-background shadow-none",
             ]
-          : "border-b border-[rgba(29,86,120,0.10)] bg-[rgba(255,255,255,0.84)] shadow-[0_1px_16px_rgba(29,86,120,0.08)] backdrop-blur-[16px]",
+          : "navbar--scrolled",
       )}
       style={{ height: atRest ? HEADER_HEIGHT_REST : HEADER_HEIGHT_SCROLLED }}
     >

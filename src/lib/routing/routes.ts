@@ -57,3 +57,26 @@ export function cmsPathForLocale(englishPath: string, locale: Locale): string {
   const entity = localizedEntityRoutes.find((r) => r.en === englishPath);
   return entity ? entity.ar : englishPath;
 }
+
+/**
+ * The inverse of `cmsPathForLocale`: the English physical path for a path in
+ * any locale.
+ *
+ * An adapter receives `path` already localized — the Arabic entry's path is
+ * the Arabic pretty slug — and several of them need the ASCII English slug
+ * back out of it (see `entitySlug` in lib/feelstack/adapters.ts). Deriving it
+ * by transliteration is not possible and not permitted; the Arabic slugs were
+ * authored in the CMS, so the only correct answer is the same lookup table
+ * that produced them, read the other way round.
+ *
+ * Returns `path` unchanged when nothing matches, which is the right answer for
+ * an English path (it is already English) and the safe one for a route the
+ * registry has not caught up with yet.
+ */
+export function englishPathFor(path: string, locale: Locale): string {
+  if (locale === "en") return path;
+  const route = routes.find((r) => r.path[locale] === path);
+  if (route) return route.path.en;
+  const entity = localizedEntityRoutes.find((r) => r.ar === path);
+  return entity ? entity.en : path;
+}

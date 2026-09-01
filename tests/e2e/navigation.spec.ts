@@ -38,7 +38,7 @@ const REPRESENTATIVE_PAGES = [
   "/en/aesthetics",
   "/en/aesthetics/concerns/acne-scars",
   "/en/aesthetics/technologies/potenza",
-  "/en/doctors/mohamed-farhat",
+  "/en/our-team/mohamed-farhat",
   "/en/shop/tns-eye-repair",
   "/en/contact",
   "/en/book-appointment",
@@ -232,13 +232,23 @@ test.describe("Header transparent/scrolled states — homepage", () => {
     expect(bg).toMatch(/rgba?\(0, 0, 0, 0\)|transparent/);
   });
 
-  test("header becomes translucent white after scrolling past the threshold", async ({ page }) => {
+  test("header becomes a translucent light-blue glass capsule after scrolling past the threshold", async ({ page }) => {
     await page.goto("/en");
     await page.evaluate(() => window.scrollTo(0, 400));
     const header = page.locator("header");
     await expect(async () => {
       const bg = await header.evaluate((el) => getComputedStyle(el).backgroundColor);
-      expect(bg).toContain("rgba(255, 255, 255");
+      // The floating capsule is a light-blue frosted glass, not pure white:
+      // rgba(247, 252, 255, 0.94). Asserted as "very light, still translucent,
+      // and blue-leaning" rather than as one exact string, so a future tweak to
+      // the tint does not fail a test that is really about the surface reading
+      // as light glass.
+      const [r, g, b, a] = bg.match(/[\d.]+/g)!.map(Number);
+      expect(r, bg).toBeGreaterThan(235);
+      expect(b, bg).toBeGreaterThanOrEqual(g);
+      expect(g, bg).toBeGreaterThanOrEqual(r);
+      expect(a, bg).toBeGreaterThan(0.5);
+      expect(a, bg).toBeLessThan(1);
     }).toPass({ timeout: 2000 });
   });
 
@@ -251,8 +261,8 @@ test.describe("Header transparent/scrolled states — homepage", () => {
     await page.evaluate(() => window.scrollTo(0, 400));
     await expect(async () => {
       const h = await header.evaluate((el) => el.getBoundingClientRect().height);
-      expect(h).toBeGreaterThanOrEqual(68);
-      expect(h).toBeLessThanOrEqual(76);
+      expect(h).toBeGreaterThanOrEqual(60);
+      expect(h).toBeLessThanOrEqual(66);
     }).toPass({ timeout: 2000 });
   });
 

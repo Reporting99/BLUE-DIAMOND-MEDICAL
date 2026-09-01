@@ -31,8 +31,8 @@ const PREFIX_BY_TYPE: Readonly<Record<string, string>> = {
   "aesthetic-concern": "/aesthetics/concerns",
   technology: "/aesthetics/technologies",
   product: "/shop",
-  doctor: "/doctors",
-  person_profile: "/doctors",
+  doctor: "/our-team",
+  person_profile: "/our-team",
 };
 
 export const PREVIEW_TYPES = Object.keys(PREFIX_BY_TYPE);

@@ -7,6 +7,7 @@ import { SectionTransition } from "@/components/layout/SectionTransition";
 import { isLocale, type Locale } from "@/i18n/config";
 import { getRouteMetadata } from "@/lib/seo/metadata";
 import { getRoute, href } from "@/lib/routing";
+import { BrandLockup } from "@/components/layout/Logo";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
 import { PageSchema } from "@/components/shared/schema";
 import { resolvePageHeroImage } from "@/lib/feelstack/page-hero-media";
@@ -53,6 +54,25 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
     },
   }[locale];
 
+  /**
+   * The brand name, as one unwrappable unit for the hero headline only.
+   *
+   * The hero's copy column is a share of what the article-measure offset
+   * leaves, which is narrow enough that "About Blue Diamond Medical" wraps to
+   * three lines — fine in itself, except the break landed between "Blue" and
+   * "Diamond" and split the clinic's name down the middle. A U+00A0 is the
+   * whole fix: `PageHero`'s `title` is a `string`, so a `<span>` would mean
+   * widening that prop for all twenty-eight heroes, and a `nowrap` rule would
+   * have to be scoped to this one H1 anyway.
+   *
+   * Derived rather than written out a second time so it cannot drift from
+   * `copy.title`, and applied only here: `PageSchema` and the breadcrumb trail
+   * keep the plain string, because a hard space is a typesetting instruction
+   * and has no business in structured data.
+   */
+  const brand = { en: "Blue Diamond", ar: "بلو دايموند" }[locale];
+  const heroTitle = copy.title.replace(brand, brand.replace(" ", "\u00A0"));
+
   const ownRoute = getRoute("about")!;
   const hero = await resolvePageHeroImage(ownRoute.path.en, locale);
 
@@ -71,7 +91,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
           read the same thought twice before reaching anything new. */}
       <PageHero
         locale={locale}
-        title={copy.title}
+        title={heroTitle}
         image={hero}
         imageRole="location"
         seed="about"
@@ -81,6 +101,23 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
           ar: "عيادة بلو دايموند الطبية في ويست سبرينغز، كالغاري",
         }}
         breadcrumbs={<Breadcrumbs locale={locale} items={[{ label: ownRoute.title[locale] }]} />}
+        /* The brand lock-up as this hero's second element, balancing the
+           headline across the empty inline-end half. It is the mark itself, at
+           size, on the hero's own background — no plate, no card, no shadow
+           (docs/UI_UX_FOUNDATION.md §1.1 rules out drop shadows on the logo
+           outright) and full opacity, because a logo dimmed against its own
+           brand-coloured background reads as a watermark rather than as the
+           clinic signing its own page.
+
+           `--bd-lockup` is the lock-up's width and the only thing that
+           changes between breakpoints; mark, gap and wordmark all scale off
+           it, so the geometry is fixed and only the size moves. */
+        aside={
+          <BrandLockup
+            locale={locale}
+            className="[--bd-lockup:min(70vw,300px)] md:[--bd-lockup:clamp(240px,26vw,480px)] lg:[--bd-lockup:clamp(280px,26vw,480px)]"
+          />
+        }
       />
 
       <section className="section-y">

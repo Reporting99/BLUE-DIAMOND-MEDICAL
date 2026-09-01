@@ -229,10 +229,17 @@ export const routes: RouteEntry[] = [
     inNav: true,
   },
   {
+    // The id stays "doctors-index" while the path is /our-team, deliberately.
+    // A route id is an internal key: it is referenced from nav, the footer,
+    // three page templates, the FacetTile seed and cacheTags.doctorsIndex,
+    // and the CMS cache tag `feelstack-doctors:<site>:<locale>` is derived
+    // from it. Renaming it would churn all of that — and invalidate live
+    // cache keys — to change a string no visitor ever sees. Public naming is
+    // what moved; see docs/ROUTING.md § "Route Decision Log".
     id: "doctors-index",
     templateType: "hub",
-    path: { en: "/doctors", ar: "/الأطباء" },
-    title: { en: "Our Doctors", ar: "أطباؤنا" },
+    path: { en: "/our-team", ar: "/فريقنا" },
+    title: { en: "Our Team", ar: "فريقنا" },
     indexing: "index",
     inSitemap: true,
     inNav: true,
@@ -240,7 +247,7 @@ export const routes: RouteEntry[] = [
   {
     id: "doctor-farhat",
     templateType: "doctor-profile",
-    path: { en: "/doctors/mohamed-farhat", ar: "/الأطباء/محمد-فرحات" },
+    path: { en: "/our-team/mohamed-farhat", ar: "/فريقنا/محمد-فرحات" },
     title: { en: "Dr. Mohamed Farhat", ar: "د. محمد فرحات" },
     indexing: "index",
     inSitemap: true,
@@ -250,7 +257,7 @@ export const routes: RouteEntry[] = [
   {
     id: "doctor-saeed",
     templateType: "doctor-profile",
-    path: { en: "/doctors/omaima-saeed", ar: "/الأطباء/أميمة-سعيد" },
+    path: { en: "/our-team/omaima-saeed", ar: "/فريقنا/أميمة-سعيد" },
     title: { en: "Dr. Omaima Saeed", ar: "د. أميمة سعيد" },
     indexing: "index",
     inSitemap: true,
@@ -260,7 +267,7 @@ export const routes: RouteEntry[] = [
   {
     id: "doctor-hamdi",
     templateType: "doctor-profile",
-    path: { en: "/doctors/reem-hamdi", ar: "/الأطباء/ريم-حمدي" },
+    path: { en: "/our-team/reem-hamdi", ar: "/فريقنا/ريم-حمدي" },
     title: { en: "Dr. Reem Hamdi", ar: "د. ريم حمدي" },
     indexing: "index",
     inSitemap: true,
@@ -270,7 +277,7 @@ export const routes: RouteEntry[] = [
   {
     id: "doctor-omonijo",
     templateType: "doctor-profile",
-    path: { en: "/doctors/omonijo", ar: "/الأطباء/أومونيجو" },
+    path: { en: "/our-team/omonijo", ar: "/فريقنا/أومونيجو" },
     title: { en: "Dr. Omonijo", ar: "د. أومونيجو" },
     indexing: "index",
     inSitemap: true,
@@ -280,7 +287,7 @@ export const routes: RouteEntry[] = [
   {
     id: "doctor-bakare",
     templateType: "doctor-profile",
-    path: { en: "/doctors/bakare", ar: "/الأطباء/باكاري" },
+    path: { en: "/our-team/bakare", ar: "/فريقنا/باكاري" },
     title: { en: "Dr. Bakare", ar: "د. باكاري" },
     indexing: "index",
     inSitemap: true,
@@ -290,7 +297,7 @@ export const routes: RouteEntry[] = [
   {
     id: "doctor-gwea",
     templateType: "doctor-profile",
-    path: { en: "/doctors/ahmed-gwea", ar: "/الأطباء/أحمد-جويع" },
+    path: { en: "/our-team/ahmed-gwea", ar: "/فريقنا/أحمد-جويع" },
     title: { en: "Dr. Ahmed Gwea", ar: "د. أحمد جويع" },
     indexing: "index",
     inSitemap: true,

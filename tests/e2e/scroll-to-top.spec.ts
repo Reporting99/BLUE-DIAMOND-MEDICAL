@@ -48,7 +48,7 @@ test.describe("Every normal navigation starts the destination at the top", () =>
   const CROSS_PAGE: Array<[string, string, string]> = [
     ["/en", 'header a[href="/en/medical"]', "/en/medical"],
     ["/en", 'header a[href="/en/aesthetics"]', "/en/aesthetics"],
-    ["/en/medical", 'header a[href="/en/doctors"]', "/en/doctors"],
+    ["/en/medical", 'header a[href="/en/our-team"]', "/en/our-team"],
     ["/en/aesthetics", 'footer a[href="/en/contact"]', "/en/contact"],
   ];
 

@@ -9,6 +9,7 @@ import { features } from "@/config/features";
 import { availabilityNotice, productCategories, products } from "@/features/products";
 import { getRoute, href } from "@/lib/routing";
 import { resolvePageHeroImage } from "@/lib/feelstack/page-hero-media";
+import { productCardImage, resolveProductListingMedia } from "@/features/products/media";
 
 /** Feature-flagged off (`shopEnabled`) — see src/app/[locale]/shop/page.tsx. */
 export default async function ShopCategoryPage({
@@ -27,6 +28,11 @@ export default async function ShopCategoryPage({
   const shopRoute = getRoute("shop-hub")!;
   const ownRoute = getRoute(`shop-category-${category.id}`)!;
   const hero = await resolvePageHeroImage(ownRoute.path.en, locale);
+  // Catalogue media for the cards below. Without it every product in this
+  // category rendered the neutral FacetTile while the same product showed its
+  // real packshot on /shop and on its own detail page -- see
+  // src/features/products/media.ts.
+  const listingMedia = await resolveProductListingMedia(categoryProducts, locale);
 
   return (
     <>
@@ -57,7 +63,13 @@ export default async function ShopCategoryPage({
       <Container>
         <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {categoryProducts.map((product, i) => (
-            <ProductCard key={product.id} product={product} locale={locale} delay={i} />
+            <ProductCard
+              key={product.id}
+              product={product}
+              locale={locale}
+              delay={i}
+              resolved={productCardImage(listingMedia, product)}
+            />
           ))}
         </ul>
       </Container>

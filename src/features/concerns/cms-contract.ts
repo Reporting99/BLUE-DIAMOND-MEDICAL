@@ -1,6 +1,7 @@
 import { z } from "zod";
-import { defineEntityContract, localizedBilingual, adaptFaqs } from "@/lib/feelstack/adapters";
+import { defineEntityContract, localizedBilingual, adaptFaqs, entitySlug } from "@/lib/feelstack/adapters";
 import { resolveSlotImage, resolveSlotGallery } from "@/lib/feelstack/media-slots";
+import { CONCERN_FEATURE_SLOTS } from "./media-slots";
 import type { AestheticConcern } from "./types";
 
 /**
@@ -41,7 +42,7 @@ export const aestheticConcernCmsContract = defineEntityContract<ConcernFields, A
   adapt: ({ locale, title, fields: f, faqs, path, media }) => {
     const concern: AestheticConcern = {
       id: f.concern_id,
-      slug: path.replace(/^\/aesthetics\/concerns\//, ""),
+      slug: entitySlug(path, locale, "/aesthetics/concerns/"),
       // Arabic public URLs stay frontend-owned; the CMS slug is ASCII.
       slugAr: "",
       title: localizedBilingual(locale, title ?? ""),
@@ -59,10 +60,17 @@ export const aestheticConcernCmsContract = defineEntityContract<ConcernFields, A
     if (f.related_doctor_ids) concern.relatedDoctorIds = f.related_doctor_ids;
     if (f.corrected_from_source) concern.correctedFromSource = true;
     if (faqs.length) concern.faqs = adaptFaqs(locale, faqs);
-    // Imagery from this concern's real media assignments. `hero` is the lead;
-    // remaining `gallery` rows follow in CMS order. Nothing is synthesised —
-    // a concern with no assignment keeps rendering no imagery.
-    const lead = resolveSlotImage({ media, slot: ["hero", "gallery"] });
+    // Imagery from this concern's real media assignments; remaining `gallery`
+    // rows follow in CMS order. Nothing is synthesised — a concern with no
+    // assignment keeps rendering no imagery.
+    //
+    // The lead used to be read from `["hero", "gallery"]`, and every concern's
+    // photography was imported into `card` (with a `section` feature for Skin
+    // Laxity). Neither slot in that list existed, so nine approved, assigned,
+    // publishable assets were parsed out of the envelope and then discarded at
+    // this line, and every concern hero rendered the FacetTile. The shared
+    // order in ./media-slots is what the importer actually wrote.
+    const lead = resolveSlotImage({ media, slot: CONCERN_FEATURE_SLOTS });
     if (lead) concern.image = lead;
     const gallery = resolveSlotGallery(media, ["gallery"]).filter((m) => m.id !== lead?.id);
     if (gallery.length) concern.gallery = gallery;

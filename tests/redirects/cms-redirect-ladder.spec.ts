@@ -62,9 +62,9 @@ test.describe("the locale is always sent, and always scopes the answer", () => {
     let url = "";
     stubFetch(async (input) => {
       url = String(input);
-      return jsonResponse({ destination: "/الأطباء/جديد", enabled: true });
+      return jsonResponse({ destination: "/فريقنا/جديد", enabled: true });
     });
-    await resolveFeelstackRedirect("/ar/الأطباء/قديم", "ar");
+    await resolveFeelstackRedirect("/ar/فريقنا/قديم", "ar");
     expect(url).toContain("locale=ar");
   });
 
@@ -156,20 +156,20 @@ test.describe("no loops, no chains with the static alias map", () => {
   });
 
   test("a destination that IS a static Arabic alias source is collapsed, not chained", () => {
-    // proxy.ts 301s /ar/doctors -> /ar/<arabic>. A CMS destination of
-    // /doctors would otherwise be served as a 301 the proxy immediately 301s
+    // proxy.ts 301s /ar/our-team -> /ar/<arabic>. A CMS destination of
+    // /our-team would otherwise be served as a 301 the proxy immediately 301s
     // again: two hops for one move.
-    const collapsed = collapseStaticAlias("/doctors", "ar");
-    expect(collapsed).not.toBe("/doctors");
+    const collapsed = collapseStaticAlias("/our-team", "ar");
+    expect(collapsed).not.toBe("/our-team");
     expect(collapsed.startsWith("/")).toBe(true);
   });
 
   test("collapsing never applies to English", () => {
-    expect(collapseStaticAlias("/doctors", "en")).toBe("/doctors");
+    expect(collapseStaticAlias("/our-team", "en")).toBe("/our-team");
   });
 
   test("an Arabic CMS redirect lands on a path the proxy will not redirect again", async () => {
-    stubFetch(async () => jsonResponse({ destination: "/doctors", enabled: true }));
+    stubFetch(async () => jsonResponse({ destination: "/our-team", enabled: true }));
     const result = await resolveFeelstackRedirect("/ar/old-doctors", "ar");
     expect(result).not.toBeNull();
     // Whatever the proxy would 301, the resolver has already resolved.
@@ -300,7 +300,7 @@ test.describe("the ladder is wired, and in the right order", () => {
     expect(pathnameFrom("ar", ["%D8%B7%D8%A7%D8%B2%D8%AC-%D9%82%D8%AF%D9%8A%D9%85"])).toBe(
       "/ar/طازج-قديم",
     );
-    expect(pathnameFrom("ar", ["الأطباء", "أحمد"])).toBe("/ar/الأطباء/أحمد");
+    expect(pathnameFrom("ar", ["فريقنا", "أحمد"])).toBe("/ar/فريقنا/أحمد");
   });
 
   test("pathnameFrom survives a malformed percent sequence", () => {
@@ -317,7 +317,7 @@ test.describe("the ladder is wired, and in the right order", () => {
     expect(encodeLocation("/ar/طازج-جديد")).toBe(
       "/ar/%D8%B7%D8%A7%D8%B2%D8%AC-%D8%AC%D8%AF%D9%8A%D8%AF",
     );
-    expect(/^[\x00-\x7F]*$/.test(encodeLocation("/ar/الأطباء/أحمد"))).toBe(true);
+    expect(/^[\x00-\x7F]*$/.test(encodeLocation("/ar/فريقنا/أحمد"))).toBe(true);
   });
 
   test("encoding preserves separators and does not double-encode", () => {

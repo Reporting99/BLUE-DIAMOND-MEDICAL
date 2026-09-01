@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { defineEntityContract, localizedBilingual } from "@/lib/feelstack/adapters";
 import { resolveSlotImageRef } from "@/lib/feelstack/media-slots";
+import { getDoctor } from "./queries";
 import type { Doctor } from "./types";
 
 /**
@@ -80,15 +81,47 @@ export const doctorCmsContract = defineEntityContract<DoctorPersonFields, Doctor
       // reference when it does not. `photoDeclined` / `disabled` are passed as
       // the override so they beat any assignment outright -- a doctor who has
       // declined photography never acquires a portrait from an import.
-      image: {
-        ...resolveSlotImageRef({
-          media,
-          slot: "doctorPortrait",
-          override: { status: meta.imageStatus, ...(meta.photoDeclined ? { photoDeclined: true } : {}) },
-          fallback: { path: meta.imagePath, status: meta.imageStatus },
-        }),
-        ...(meta.photoDeclined ? { photoDeclined: true } : {}),
-      },
+      /**
+       * WHY THE FALLBACK CAN COME FROM THE REPOSITORY RECORD.
+       *
+       * For a doctor who has DECLINED photography, `resolveSlotImageRef`
+       * short-circuits on the override and renders `fallback` verbatim — no
+       * assignment can reach them, which is the consent guarantee and stays
+       * exactly as it was. But that made the CMS metadata the sole source of
+       * what is shown INSTEAD, and the CMS carries no such reference: it holds
+       * an empty `imagePath`, so the detail page fell through to the generic
+       * FacetTile while the team index and the homepage — which read the
+       * repository record directly — rendered Dr. Saeed's designed identity
+       * card. One person, three surfaces, two different answers.
+       *
+       * The repository record is already the authority on the refusal
+       * (`photoDeclined` lives in src/features/doctors/data.ts and is what
+       * `isHardOverride` consults), so it is the right authority on the
+       * consent-safe substitute too. Reading it here makes every surface agree
+       * and puts the substitute out of reach of a CMS edit — a metadata
+       * change cannot blank the card, and cannot replace it with a portrait.
+       *
+       * Scoped deliberately to the declined case. A doctor with ordinary
+       * photography keeps resolving exactly as before: assignment first,
+       * CMS metadata second, and the repository is never consulted.
+       */
+      image: (() => {
+        const declined = meta.photoDeclined === true;
+        const own = declined ? getDoctor(meta.doctorId) : undefined;
+        const fallback =
+          own && own.image.path
+            ? { path: own.image.path, status: own.image.status }
+            : { path: meta.imagePath, status: meta.imageStatus };
+        return {
+          ...resolveSlotImageRef({
+            media,
+            slot: "doctorPortrait",
+            override: { status: meta.imageStatus, ...(declined ? { photoDeclined: true } : {}) },
+            fallback,
+          }),
+          ...(declined ? { photoDeclined: true } : {}),
+        };
+      })(),
       bookingChannel: meta.bookingChannel,
     };
   },

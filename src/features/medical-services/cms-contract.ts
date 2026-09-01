@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { defineEntityContract, localizedBilingual, localizedBilingualList, adaptFaqs } from "@/lib/feelstack/adapters";
+import { defineEntityContract, localizedBilingual, localizedBilingualList, adaptFaqs, entitySlug } from "@/lib/feelstack/adapters";
 import { resolveSlotImage } from "@/lib/feelstack/media-slots";
 import type { BookingChannel } from "@/config/booking";
 import type { MedicalServiceContent } from "./types";
@@ -67,7 +67,7 @@ export const medicalServiceCmsContract = defineEntityContract<MedicalServiceFiel
       id: f.service_id,
       // The English slug is the canonical physical route; the Arabic pretty URL
       // is proxy-rewritten and owned by src/config/routes.ts, never the CMS.
-      slug: path.replace(/^\/medical\//, ""),
+      slug: entitySlug(path, locale, "/medical/"),
       slugAr: "",
       title: localizedBilingual(locale, title ?? ""),
       summary: localizedBilingual(locale, f.summary),

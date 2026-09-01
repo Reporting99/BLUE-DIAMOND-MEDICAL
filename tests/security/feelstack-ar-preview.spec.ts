@@ -26,7 +26,7 @@ const EN_ROUTES: PreviewRoute[] = [
   { path: "/medical/eye-screening", locale: "en", type: "content_entry", status: "published" },
   { path: "/aesthetics/treatments/botox", locale: "en", type: "content_entry", status: "draft" },
   { path: "/shop/lumivive-system-day-night", locale: "en", type: "content_entry", status: "draft" },
-  { path: "/doctors/mohamed-farhat", locale: "en", type: "person_profile", status: "published" },
+  { path: "/our-team/mohamed-farhat", locale: "en", type: "person_profile", status: "published" },
 ];
 
 /** What `previewRoutes("ar")` would return — deliberately NEVER passed to the resolver. */
@@ -34,7 +34,7 @@ const AR_ROUTES: PreviewRoute[] = [
   { path: "/", locale: "ar", type: "page", status: "published" },
   { path: "/الرعاية-الطبية/فحص-العين", locale: "ar", type: "content_entry", status: "published" },
   { path: "/التجميل-الطبي/العلاجات/botox", locale: "ar", type: "content_entry", status: "draft" },
-  { path: "/الأطباء/محمد-فرحات", locale: "ar", type: "person_profile", status: "published" },
+  { path: "/فريقنا/محمد-فرحات", locale: "ar", type: "person_profile", status: "published" },
 ];
 
 /** `route.alternates`, the only place FeelStack links the two locales. */
@@ -51,9 +51,9 @@ const ALTERNATES: Record<string, RouteAlternate[]> = {
     { locale: "en", path: "/shop/lumivive-system-day-night" },
     { locale: "ar", path: "/المتجر/lumivive-system-day-night" },
   ],
-  "/doctors/mohamed-farhat": [
-    { locale: "en", path: "/doctors/mohamed-farhat" },
-    { locale: "ar", path: "/الأطباء/محمد-فرحات" },
+  "/our-team/mohamed-farhat": [
+    { locale: "en", path: "/our-team/mohamed-farhat" },
+    { locale: "ar", path: "/فريقنا/محمد-فرحات" },
   ],
   "/our-team": [
     { locale: "en", path: "/our-team" },
@@ -106,7 +106,7 @@ test.describe("every required record resolves in EN and AR", () => {
     ["aesthetic-treatment", "botox", "/en/aesthetics/treatments/botox", "/ar/التجميل-الطبي/العلاجات/botox"],
     ["medical-service", "eye-screening", "/en/medical/eye-screening", "/ar/الرعاية-الطبية/فحص-العين"],
     ["product", "lumivive-system-day-night", "/en/shop/lumivive-system-day-night", "/ar/المتجر/lumivive-system-day-night"],
-    ["doctor", "mohamed-farhat", "/en/doctors/mohamed-farhat", "/ar/الأطباء/محمد-فرحات"],
+    ["doctor", "mohamed-farhat", "/en/our-team/mohamed-farhat", "/ar/فريقنا/محمد-فرحات"],
     ["page", "our-team", "/en/our-team", "/ar/our-team"],
   ];
 

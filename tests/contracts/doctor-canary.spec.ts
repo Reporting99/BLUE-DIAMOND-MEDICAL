@@ -12,7 +12,7 @@ import { doctors } from "../../src/features/doctors/data";
  *
  * These fixtures are not hand-written. They are the verbatim responses of
  * `GET https://feelstack.dfeelings.com/api/public/v1/sites/blue-diamond-medical
- *      /resolve?path=/doctors/mohamed-farhat&locale={en,ar}`
+ *      /resolve?path=/our-team/mohamed-farhat&locale={en,ar}`
  * captured immediately after the record was created, so this suite fails if the
  * live contract ever drifts from what the adapter expects.
  *

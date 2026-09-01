@@ -80,17 +80,26 @@ test.describe("Homepage header — transparent at top, floating after scroll", (
       }, { timeout: 3000 })
       .not.toBe("rgba(0, 0, 0, 0)");
 
-    const state = await getHeaderState(page);
     // Confirm it's a near-white, partially-transparent surface — not
     // fully opaque white and not the fully-transparent top state.
     // Tailwind v4 renders `bg-white/82` as an oklab()/color-mix() value
     // in newer Chromium rather than legacy rgba(), so check the alpha
     // component generically instead of matching one exact color format.
-    const alphaMatch = state!.backgroundColor.match(/([\d.]+)\)$/);
-    expect(alphaMatch, state!.backgroundColor).not.toBeNull();
-    const alpha = parseFloat(alphaMatch![1]);
-    expect(alpha).toBeGreaterThan(0.5);
-    expect(alpha).toBeLessThan(0.95);
+    //
+    // Polled to the SETTLED value rather than read once. The poll above
+    // returns on the first frame the background is no longer transparent,
+    // which is the START of the background-color transition, not its end —
+    // reading immediately after it samples a partway alpha (observed 0.408
+    // against a 0.94 target) and fails a header that is behaving correctly.
+    // The asserted range is unchanged; only when it is sampled is.
+    await expect(async () => {
+      const state = await getHeaderState(page);
+      const alphaMatch = state!.backgroundColor.match(/([\d.]+)\)$/);
+      expect(alphaMatch, state!.backgroundColor).not.toBeNull();
+      const alpha = parseFloat(alphaMatch![1]);
+      expect(alpha, state!.backgroundColor).toBeGreaterThan(0.5);
+      expect(alpha, state!.backgroundColor).toBeLessThan(0.95);
+    }).toPass({ timeout: 3000 });
   });
 
   test("no visible content jump when the header state changes (hero H1 stays in place)", async ({ page }) => {
@@ -144,7 +153,7 @@ test.describe("Header motion — nothing translates horizontally (brief §15)", 
       await page.waitForTimeout(200);
       const atTop = await getLogoAndBookingX(page);
       await page.evaluate(() => window.scrollTo(0, 300));
-      await expect.poll(async () => (await getHeaderState(page))?.height, { timeout: 5000 }).toBe(72);
+      await expect.poll(async () => (await getHeaderState(page))?.height, { timeout: 5000 }).toBe(64);
       const scrolled = await getLogoAndBookingX(page);
       expect(atTop.logoLeft).not.toBeNull();
       expect(scrolled.logoLeft).not.toBeNull();
@@ -154,7 +163,7 @@ test.describe("Header motion — nothing translates horizontally (brief §15)", 
     });
   }
 
-  test("the height change is subtle (12px) rather than a dramatic resize", async ({ page }) => {
+  test("the height change is subtle (20px) rather than a dramatic resize", async ({ page }) => {
     await page.goto("/en");
     await expect.poll(async () => (await getHeaderState(page))?.height, { timeout: 5000 }).toBe(84);
     await page.evaluate(() => window.scrollTo(0, 300));
@@ -163,7 +172,7 @@ test.describe("Header motion — nothing translates horizontally (brief §15)", 
     // loaded CI box under mobile emulation that chain has been observed to
     // take longer than a fixed 600ms sleep — which made this fail against a
     // header that was behaving correctly (verified directly at 412px).
-    await expect.poll(async () => (await getHeaderState(page))?.height, { timeout: 5000 }).toBe(72);
+    await expect.poll(async () => (await getHeaderState(page))?.height, { timeout: 5000 }).toBe(64);
   });
 });
 
@@ -174,7 +183,7 @@ test.describe("Header motion is global, not homepage-only (brief §16/§86)", ()
     "/en/aesthetics/treatments/rf-microneedling",
     "/en/aesthetics/concerns/acne-scars",
     "/en/aesthetics/technologies/potenza",
-    "/en/doctors",
+    "/en/our-team",
     "/en/about",
     "/en/contact",
     "/en/patient-resources",
@@ -196,7 +205,7 @@ test.describe("Header motion is global, not homepage-only (brief §16/§86)", ()
       );
 
       await page.evaluate(() => window.scrollTo(0, 300));
-      await expect.poll(async () => (await getHeaderState(page))?.height, { timeout: 5000 }).toBe(72);
+      await expect.poll(async () => (await getHeaderState(page))?.height, { timeout: 5000 }).toBe(64);
 
       await page.evaluate(() => window.scrollTo(0, 0));
       await page.waitForTimeout(600);

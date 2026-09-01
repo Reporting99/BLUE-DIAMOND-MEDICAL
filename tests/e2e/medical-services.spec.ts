@@ -24,7 +24,7 @@ test.describe("Medical service pages", () => {
   test("service page with a related doctor links to their profile", async ({ page }) => {
     await page.goto("/en/medical/minor-procedures");
     await page.getByRole("link", { name: /Dr\. Bakare/ }).click();
-    await expect(page).toHaveURL(/\/en\/doctors\/bakare\/?$/);
+    await expect(page).toHaveURL(/\/en\/our-team\/bakare\/?$/);
   });
 
   test("after-hours-care page links to external PCN partners", async ({ page }) => {

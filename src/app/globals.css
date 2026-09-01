@@ -33,6 +33,25 @@ html {
   --grey-3: #707070;
   --grey-4: #636363;
 
+  /* ---- Scrollbar (light cyan-blue glass) ----
+     Its own small family rather than the --blue-* primitives: the brief asks
+     for a light cyan-blue bar, and --blue-3/--blue-4 are the dark navy end of
+     the brand ramp that made the old bar read heavy.
+
+     WHY THE MID STOP IS #2f93c1 AND NOT THE #66c7ee THE BRIEF NAMED. The thumb
+     is a non-text UI control, so it owes WCAG 3:1 against what it sits on, and
+     tests/e2e/visual-system.spec.ts enforces exactly that. #66c7ee on this pale
+     track measures 1.81:1 — and no track can rescue it: a lighter track lowers
+     the ratio further, and the ratio only reaches 3 if the track goes darker
+     than the thumb, which is no longer a light bar at all. So the hue, the
+     gloss, the pill, the glow and the 11px/80px geometry are all exactly as
+     specified, and only the mid stop is deepened to the lightest cyan that
+     clears the gate (3.27:1). It is still unmistakably light cyan-blue and far
+     lighter than the navy it replaces. */
+  --scrollbar-blue: #2f93c1;
+  --scrollbar-blue-light: #7ec8e8;
+  --scrollbar-glow: rgba(102, 199, 238, 0.42);
+
   /* ---- 2. Semantic tokens ---- */
   --background: #ffffff;
   --foreground: #2b2e33;
@@ -369,15 +388,16 @@ html {
    * one, and no JavaScript scrollbar exists to fall back from.
    */
   ::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
+    width: 11px;
+    height: 11px;
   }
 
-  /* Barely-there tint of --blue-2 rather than a drawn channel: enough to seat
-     the thumb on light sections, and enough to lift the strip slightly where
-     it crosses the dark footer, without reading as a second UI element. */
+  /* A pale cyan wash rather than a drawn channel: enough to seat the thumb on
+     light sections without reading as a second UI element. Rounded to match the
+     thumb so the track reads as the same pill, not a square gutter behind it. */
   ::-webkit-scrollbar-track {
-    background: rgba(136, 185, 215, 0.18);
+    background: rgba(230, 246, 253, 0.55);
+    border-radius: 999px;
   }
 
   ::-webkit-scrollbar-corner {
@@ -385,67 +405,63 @@ html {
   }
 
   ::-webkit-scrollbar-thumb {
+    /* One rule, both axes. The vertical bar is lengthened by min-height and the
+       horizontal bar by min-width: min-height has no effect on a horizontal
+       thumb, so without the second line the two directions would not match. */
+    min-height: 80px;
+    min-width: 80px;
     border-radius: 999px;
+    /* The light stops are a gloss along the two edges, not half the bar: the
+       body has to stay on the AA-safe mid tone, so the mid holds 26%-74%. */
     background: linear-gradient(
-      180deg,
-      var(--blue-2) 0%,
-      var(--blue-1) 38%,
-      var(--blue-3) 100%
+      135deg,
+      var(--scrollbar-blue-light) 0%,
+      var(--scrollbar-blue) 26%,
+      var(--scrollbar-blue) 74%,
+      var(--scrollbar-blue-light) 100%
     );
-    /* Top line = the gloss. Bottom line = the shaded underside that stops the
-       gradient ending on a flat edge. Outer ring = the footer insurance
-       described above. */
+    border: 2px solid rgba(255, 255, 255, 0.65);
+    /* Inset line = the gloss. Outer = the soft glow. */
     box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.55),
-      inset 0 -1px 0 rgba(29, 86, 120, 0.35),
-      0 0 0 1px rgba(255, 255, 255, 0.3);
-    /* On a long page the proportional thumb can shrink to a few pixels, which
-       is a target nobody can grab. 44px is the WCAG 2.2 target minimum. */
-    min-height: 44px;
+      inset 0 1px 2px rgba(255, 255, 255, 0.85),
+      0 0 8px var(--scrollbar-glow);
   }
 
   ::-webkit-scrollbar-thumb:hover {
     background: linear-gradient(
-      180deg,
-      var(--blue-2) 0%,
-      var(--blue-1) 40%,
-      var(--blue-4) 100%
-    );
-  }
-
-  /* Deeper still while dragging, and the inner shading inverts so the thumb
-     reads as pressed. The crown stays light in both states: it is what the
-     thumb is seen by over the footer, so hover must never darken it away. */
-  ::-webkit-scrollbar-thumb:active {
-    background: linear-gradient(
-      180deg,
-      var(--blue-1) 0%,
-      var(--blue-3) 45%,
-      var(--blue-4) 100%
+      135deg,
+      #95d7f0 0%,
+      #3197c4 26%,
+      #3197c4 74%,
+      #95d7f0 100%
     );
     box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.4),
-      inset 0 2px 4px rgba(29, 86, 120, 0.3),
-      0 0 0 1px rgba(255, 255, 255, 0.3);
+      inset 0 1px 3px rgba(255, 255, 255, 0.95),
+      0 0 11px rgba(102, 199, 238, 0.55);
   }
 
-  /* Phones get 8px rather than 10px — still comfortably above the "too thin
-     to hit" line, and narrower next to a 375px-wide column. */
-  @media (width < 48rem) {
-    ::-webkit-scrollbar {
-      width: 8px;
-      height: 8px;
-    }
+  /* Pressed: the same light family, one step deeper, with the inner shading
+     inverted so it reads as pushed in. Never returns to the old navy. */
+  ::-webkit-scrollbar-thumb:active {
+    background: linear-gradient(
+      135deg,
+      #6bbfe2 0%,
+      #257fa9 26%,
+      #257fa9 74%,
+      #6bbfe2 100%
+    );
+    box-shadow:
+      inset 0 2px 4px rgba(31, 106, 140, 0.28),
+      0 0 9px var(--scrollbar-glow);
   }
 
   /*
-   * Firefox. Two properties, no gradients, so the compromise above has to be
-   * resolved in one colour: --blue-1 is the brand's medium blue and the only
-   * primitive that clears 3:1 on white (3.1:1) while staying clearly visible
-   * on the footer (2.5:1). `thin` is Firefox's ~8-9px bar, which is the same
-   * weight the WebKit rules ask for — not its hairline, and never `none`.
-   * scrollbar-color inherits, so the document scroller and every nested one
-   * are covered from here.
+   * Firefox. Two properties, no gradients, so the gradient above has to be
+   * resolved into one colour: --scrollbar-blue, the mid stop of the same
+   * light cyan-blue ramp, over the same pale track. `auto` is Firefox's
+   * full-width bar, matching the 11px the WebKit rules ask for — never
+   * `thin`, and never `none`. scrollbar-color inherits, so the document
+   * scroller and every nested one are covered from here.
    *
    * THE @supports IS NOT OPTIONAL, and this is the one thing about this block
    * that is easy to get wrong. Chromium has shipped the standard properties
@@ -460,10 +476,84 @@ html {
    * the gradient. (Safari, if it is old enough not to understand
    * `selector()`, also does not match — which is the right answer there too.)
    */
+  /*
+   * FLOATING NAVBAR (scrolled state).
+   *
+   * At rest the header is an ordinary full-bleed bar and nothing here applies —
+   * the resting appearance is untouched. Past the scroll threshold Header.tsx
+   * adds `.navbar--scrolled` and the bar detaches into a centred capsule.
+   *
+   * WHY margin-inline:auto AND NOT translateX(-50%). The header is `position:
+   * fixed` with `inset-inline: 0`; giving it a definite width and `auto` inline
+   * margins centres it in the viewport. A transform would do the same visually
+   * but creates a containing block for fixed/absolute descendants and adds a
+   * compositing layer over a backdrop-filter, and it is also the axis RTL is
+   * most likely to get wrong. `margin-inline` is logical, so LTR and RTL centre
+   * identically with no separate rule.
+   *
+   * WHY THE LOGO STILL DOES NOT MOVE SIDEWAYS. The inner row is a 1280px
+   * container centred inside the header. At rest it centres in the viewport; in
+   * the capsule it centres inside a capsule that is itself centred — the same
+   * absolute position, so nothing translates horizontally at any width where
+   * the capsule is wider than the row (>=1344px viewport). That invariant is
+   * what tests/e2e/header-scroll.spec.ts pins, and it survives unchanged.
+   *
+   * NO LAYOUT SHIFT. The header was already `fixed` on every route with a
+   * resting-height spacer below it, so it has never occupied flow space. It can
+   * therefore change width, height, radius and offset without moving a single
+   * pixel of page content.
+   */
+  .site-header {
+    transition:
+      width 320ms ease,
+      top 320ms ease,
+      border-radius 320ms ease,
+      background-color 320ms ease,
+      border-color 320ms ease,
+      box-shadow 320ms ease,
+      height 320ms ease;
+  }
+
+  .site-header.navbar--scrolled {
+    top: 16px;
+    width: calc(100% - 64px);
+    max-width: 1500px;
+    margin-inline: auto;
+    border-radius: 999px;
+    /* Frosted light-blue glass — the brand's own light surface, never a dark
+       pill. Falls back to the flat colour where backdrop-filter is absent. */
+    background-color: rgba(247, 252, 255, 0.94);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    backdrop-filter: blur(16px) saturate(140%);
+    border: 1px solid rgba(79, 157, 194, 0.16);
+    box-shadow:
+      0 8px 30px rgba(18, 63, 86, 0.1),
+      0 2px 8px rgba(18, 63, 86, 0.06);
+  }
+
+  /* Phones and small tablets: the same capsule, tucked closer to the edges so a
+     390px viewport keeps its usable width. Side inset 12px each, top 10px —
+     inside the 10-14px / 8-12px the brief asks for. */
+  @media (width < 48rem) {
+    .site-header.navbar--scrolled {
+      top: 10px;
+      width: calc(100% - 24px);
+      max-width: none;
+    }
+  }
+
+  /* Reduced motion: the capsule still forms — it is a state, not decoration —
+     but it arrives without the 320ms travel. */
+  @media (prefers-reduced-motion: reduce) {
+    .site-header {
+      transition: none;
+    }
+  }
+
   @supports not selector(::-webkit-scrollbar) {
     html {
-      scrollbar-width: thin;
-      scrollbar-color: var(--blue-1) rgba(136, 185, 215, 0.18);
+      scrollbar-width: auto;
+      scrollbar-color: var(--scrollbar-blue) rgba(230, 246, 253, 0.55);
     }
   }
 
