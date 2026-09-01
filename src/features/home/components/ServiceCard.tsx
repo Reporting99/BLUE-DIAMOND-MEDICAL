@@ -29,6 +29,7 @@ function ServiceCard({
   long,
   ctaLabel,
   routeId,
+  imageId,
   locale,
   delay,
   className = "",
@@ -65,10 +66,11 @@ function ServiceCard({
             width={resolved.width}
             height={resolved.height}
             sizes="(min-width: 1024px) 33vw, 100vw"
+            seed={imageId}
             className="h-full w-full transition-opacity duration-[380ms] lg:group-hover:opacity-0 lg:group-focus-within:opacity-0"
           />
         ) : (
-        <FacetTile role="service" alt={({ en: `${title.en} at Blue Diamond Medical`, ar: `${title.ar} في بلو دايموند الطبية` })[locale]} className="h-full w-full transition-opacity duration-[380ms] lg:group-hover:opacity-0 lg:group-focus-within:opacity-0" />
+        <FacetTile role="service" seed={imageId} alt={({ en: `${title.en} at Blue Diamond Medical`, ar: `${title.ar} في بلو دايموند الطبية` })[locale]} className="h-full w-full transition-opacity duration-[380ms] lg:group-hover:opacity-0 lg:group-focus-within:opacity-0" />
         )}
       </div>
 

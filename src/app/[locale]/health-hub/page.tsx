@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import { Container } from "@/components/layout/Container";
+import { PageHero } from "@/components/layout/PageHero";
 import { SectionTransition } from "@/components/layout/SectionTransition";
 import { isLocale, type Locale } from "@/i18n/config";
 import { getRouteMetadata } from "@/lib/seo/metadata";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
 import { PageSchema } from "@/components/shared/schema";
+import { resolvePageHeroImage } from "@/lib/feelstack/page-hero-media";
 import { getRoute } from "@/lib/routing";
 
 const categories = {
@@ -46,6 +48,8 @@ export default async function HealthHubPage({ params }: { params: Promise<{ loca
 
   const ownRoute = getRoute("health-hub")!;
 
+  const hero = await resolvePageHeroImage(ownRoute.path.en, locale);
+
   return (
     <>
       <PageSchema
@@ -54,16 +58,25 @@ export default async function HealthHubPage({ params }: { params: Promise<{ loca
         description={copy.intro}
         path={ownRoute.path[locale]}
       />
+      <PageHero
+        locale={locale}
+        title={copy.title}
+        body={copy.intro}
+        image={hero}
+        imageRole="article"
+        seed="health-hub"
+        imageAlt={{
+          en: "Health information and patient education at Blue Diamond Medical",
+          ar: "معلومات صحية وتثقيف للمرضى في بلو دايموند الطبية",
+        }}
+        breadcrumbs={<Breadcrumbs locale={locale} items={[{ label: ownRoute.title[locale] }]} />}
+      />
+
       <section className="section-y">
       <Container>
-        <Breadcrumbs locale={locale} items={[{ label: ownRoute.title[locale] }]} />
-
-        <h1 className="mt-4 text-display-1 font-heading lg:text-display-1-lg">{copy.title}</h1>
-        <p className="mt-4 max-w-2xl text-body-lg text-text-secondary">{copy.intro}</p>
-
-        <ul className="mt-10 flex flex-wrap gap-3">
-          {categories[locale].map((category) => (
-            <li key={category} className="rounded-full border border-border bg-surface px-4 py-2 text-sm">
+        <ul className="flex flex-wrap gap-3">
+          {categories[locale].map((category, i) => (
+            <li key={category} data-reveal="up" data-reveal-delay={String(i % 4)} className="rounded-full border border-border bg-surface px-4 py-2 text-sm">
               {category}
             </li>
           ))}

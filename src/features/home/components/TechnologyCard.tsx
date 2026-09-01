@@ -59,7 +59,7 @@ function TechnologyCard({
             className="h-full w-full"
           />
         ) : (
-        <FacetTile role="technology" alt={({ en: `${technology.title.en} device at Blue Diamond Medical`, ar: `جهاز ${technology.title.ar} في بلو دايموند الطبية` })[locale]} className="h-full w-full" />
+        <FacetTile role="technology" seed={technology.id} alt={({ en: `${technology.title.en} device at Blue Diamond Medical`, ar: `جهاز ${technology.title.ar} في بلو دايموند الطبية` })[locale]} className="h-full w-full" />
         )}
       </div>
       <div className={size === "small" ? "flex flex-1 items-center justify-between gap-3" : ""}>

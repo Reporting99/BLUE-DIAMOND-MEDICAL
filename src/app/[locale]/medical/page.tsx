@@ -2,13 +2,18 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Container } from "@/components/layout/Container";
+import { PageHero } from "@/components/layout/PageHero";
 import { SectionTransition } from "@/components/layout/SectionTransition";
+import { MediaCard } from "@/components/shared/MediaCard";
 import { Button } from "@/components/ui/button";
 import { isLocale, type Locale } from "@/i18n/config";
 import { getRouteMetadata } from "@/lib/seo/metadata";
 import { getBookingUrl } from "@/config/booking";
 import { getRoute, href } from "@/lib/routing";
 import { medicalServices } from "@/features/medical-services";
+import { resolveListingMedia } from "@/lib/feelstack/listing-media";
+import { heroFromListing } from "@/lib/feelstack/page-hero-media";
+import { cacheTags } from "@/lib/feelstack/cache-tags";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
 import { PageSchema } from "@/components/shared/schema";
 import { siteConfig } from "@/config/site";
@@ -66,6 +71,24 @@ export default async function MedicalHubPage({ params }: { params: Promise<{ loc
   }[locale];
 
   const ownRoute = getRoute("medical-hub")!;
+
+  // One batch for this page's own hero and for every service card on it. The
+  // hub used to render bordered text boxes for services whose detail pages one
+  // click away show a real photograph -- the same listing/detail split closed
+  // on /doctors and /shop, here at hub scale.
+  const media = await resolveListingMedia(
+    [
+      { id: "page", englishPath: "/medical" },
+      ...medicalServices.map((s) => ({ id: `service:${s.id}`, englishPath: `/medical/${s.id}` })),
+    ],
+    locale,
+    [cacheTags.medicalServicesIndex(process.env.FEELSTACK_SITE_KEY ?? "", locale)],
+  );
+  const hero = heroFromListing(media);
+  const detailsLabel = locale === "ar" ? "التفاصيل" : "Details";
+  const serviceImage = (id: string) =>
+    (media[`service:${id}`] ?? []).find((m) => m.slot === "hero" || m.slot === "card");
+
   // Built from the same array the grid below maps over, so the structured
   // list can never drift from what is visibly rendered.
   const listItems = medicalServices.map((s) => ({ name: s.title[locale], url: `${siteConfig.url}/${locale}${getRoute(`medical-${s.id}`)!.path[locale]}` }));
@@ -79,63 +102,76 @@ export default async function MedicalHubPage({ params }: { params: Promise<{ loc
         path={ownRoute.path[locale]}
         items={listItems}
       />
-      <section className="section-y">
-        <Container>
-          <Breadcrumbs locale={locale} items={[{ label: ownRoute.title[locale] }]} />
-
-          <h1 className="mt-4 text-display-1 font-heading lg:text-display-1-lg">{copy.title}</h1>
-          <p className="mt-4 max-w-2xl text-body-lg text-text-secondary">{copy.intro}</p>
-          <div className="mt-8 flex flex-wrap gap-4">
+      <PageHero
+        locale={locale}
+        title={copy.title}
+        body={copy.intro}
+        image={hero}
+        imageRole="service"
+        seed="medical-hub"
+        imageAlt={{
+          en: "A family physician with a patient in a consultation room at Blue Diamond Medical",
+          ar: "طبيب أسرة مع مريض في غرفة الاستشارات في بلو دايموند الطبية",
+        }}
+        breadcrumbs={<Breadcrumbs locale={locale} items={[{ label: ownRoute.title[locale] }]} />}
+        actions={
+          <>
             <Button size="lg" render={<a href={walkIn.href} target="_blank" rel="noopener noreferrer" />}>
               {copy.walkInCta}
             </Button>
             <Button size="lg" variant="outline" render={<a href={eye.href} target="_blank" rel="noopener noreferrer" />}>
               {copy.eyeCta}
             </Button>
-          </div>
-        </Container>
-      </section>
+          </>
+        }
+      />
 
       <SectionTransition from="var(--background)" to="var(--surface)" />
       <section className="section-y bg-surface">
         <Container>
-          <h2 className="text-display-2 font-heading">{copy.servicesHeading}</h2>
-          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {medicalServices.map((service) => {
+          <h2 data-reveal="up" className="text-display-2 font-heading">{copy.servicesHeading}</h2>
+          <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {medicalServices.map((service, i) => {
               const route = getRoute(`medical-${service.id}`)!;
               return (
-                <Link
+                <MediaCard
                   key={service.id}
                   href={`/${locale}${route.path[locale]}`}
-                  className="group flex flex-col justify-between rounded-lg border border-border bg-background p-5 transition-colors hover:border-primary"
-                >
-                  <div>
-                    <h3 className="font-heading text-h4">{service.title[locale]}</h3>
-                    <p className="mt-2 text-sm text-text-secondary">{service.summary[locale]}</p>
-                  </div>
-                  <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-primary">
-                    {locale === "ar" ? "التفاصيل" : "Details"} <ArrowRight className="size-3.5 rtl:rotate-180" />
-                  </span>
-                </Link>
+                  title={service.title[locale]}
+                  summary={service.summary[locale]}
+                  image={serviceImage(service.id)}
+                  imageRole="service"
+                  preset="service"
+                  seed={service.id}
+                  imageAlt={{
+                    en: `${service.title.en} at Blue Diamond Medical`,
+                    ar: `${service.title.ar} في بلو دايموند الطبية`,
+                  }}
+                  locale={locale}
+                  ctaLabel={detailsLabel}
+                  delay={i % 3}
+                />
               );
             })}
 
-            <Link
+            <MediaCard
               href={`/${locale}${botoxRoute.path[locale]}`}
-              className="group flex flex-col justify-between rounded-lg border border-border bg-background p-5 transition-colors hover:border-primary"
-            >
-              <div>
-                <h3 className="font-heading text-h4">{botoxRoute.title[locale]}</h3>
-                <p className="mt-2 text-sm text-text-secondary">
-                  {locale === "ar"
-                    ? "بعض إجراءات البوتوكس الطبي مشمولة بالتأمين الصحي — بما في ذلك الشقيقة وصرير الأسنان والتعرق الزائد."
-                    : "Some medical Botox procedures are AHS-insured — including migraine, bruxism, and hyperhidrosis."}
-                </p>
-              </div>
-              <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-primary">
-                {locale === "ar" ? "التفاصيل" : "Details"} <ArrowRight className="size-3.5 rtl:rotate-180" />
-              </span>
-            </Link>
+              title={botoxRoute.title[locale]}
+              summary={
+                locale === "ar"
+                  ? "بعض إجراءات البوتوكس الطبي مشمولة بالتأمين الصحي — بما في ذلك الشقيقة وصرير الأسنان والتعرق الزائد."
+                  : "Some medical Botox procedures are AHS-insured — including migraine, bruxism, and hyperhidrosis."
+              }
+              imageRole="treatment"
+              seed="medical-botox"
+              imageAlt={{
+                en: "Medical Botox treatment room at Blue Diamond Medical",
+                ar: "غرفة علاج البوتوكس الطبي في بلو دايموند الطبية",
+              }}
+              locale={locale}
+              ctaLabel={detailsLabel}
+              delay={medicalServices.length % 3}
+            />
           </div>
         </Container>
       </section>
@@ -143,23 +179,24 @@ export default async function MedicalHubPage({ params }: { params: Promise<{ loc
       <SectionTransition from="var(--surface)" to="var(--background)" />
       <section className="section-y">
         <Container>
-          <h2 className="text-display-2 font-heading">{copy.otherHeading}</h2>
+          <h2 data-reveal="up" className="text-display-2 font-heading">{copy.otherHeading}</h2>
           <ul className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {otherInsuredServices[locale].map((item) => (
-              <li key={item} className="rounded-md border border-border bg-surface px-4 py-3 text-sm">
+            {otherInsuredServices[locale].map((item, i) => (
+              <li key={item} data-reveal="up" data-reveal-delay={String(i % 3)} className="rounded-md border border-border bg-surface px-4 py-3 text-sm">
                 {item}
               </li>
             ))}
           </ul>
 
           <Link
+            data-reveal="up"
             href={`/${locale}${uninsuredRoute.path[locale]}`}
             className="mt-8 inline-flex items-center gap-1 font-medium text-primary hover:text-primary-hover"
           >
             {copy.uninsuredCta} <ArrowRight className="size-4 rtl:rotate-180" />
           </Link>
           <br />
-          <Link href={href("doctors-index", locale)} className="mt-3 inline-flex items-center gap-1 font-medium text-primary hover:text-primary-hover">
+          <Link data-reveal="up" href={href("doctors-index", locale)} className="mt-3 inline-flex items-center gap-1 font-medium text-primary hover:text-primary-hover">
             {locale === "ar" ? "تعرّف على فريقنا الطبي" : "Meet our physicians"} <ArrowRight className="size-4 rtl:rotate-180" />
           </Link>
         </Container>

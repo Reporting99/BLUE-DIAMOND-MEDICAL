@@ -1,12 +1,16 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { Container } from "@/components/layout/Container";
+import { PageHero } from "@/components/layout/PageHero";
 import { SectionTransition } from "@/components/layout/SectionTransition";
+import { MediaCard } from "@/components/shared/MediaCard";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
 import { isLocale, type Locale } from "@/i18n/config";
 import { getRoute, href } from "@/lib/routing";
 import { technologies } from "@/features/technologies";
 import { getRouteMetadata } from "@/lib/seo/metadata";
+import { resolveListingMedia } from "@/lib/feelstack/listing-media";
+import { heroFromListing } from "@/lib/feelstack/page-hero-media";
+import { cacheTags } from "@/lib/feelstack/cache-tags";
 
 /** Single source for this page's description: consumed by both generateMetadata
  * and the page's JSON-LD node, so the two can never drift apart (brief §9). */
@@ -39,6 +43,19 @@ export default async function TechnologiesHubPage({ params }: { params: Promise<
       : "Our clinic houses state-of-the-art, world-class equipment by Cynosure.";
 
   const ownRoute = getRoute("aesthetics-technologies-hub")!;
+
+  // Hero + one card image per device, resolved in a single fan-out.
+  const media = await resolveListingMedia(
+    [
+      { id: "page", englishPath: ownRoute.path.en },
+      ...technologies.map((t) => ({ id: t.id, englishPath: `/aesthetics/technologies/${t.slug}` })),
+    ],
+    locale,
+    [cacheTags.technologiesIndex(process.env.FEELSTACK_SITE_KEY ?? "", locale)],
+  );
+  const hero = heroFromListing(media);
+  const detailsLabel = locale === "ar" ? "التفاصيل" : "Details";
+
   // Same array this page renders, so the structured list cannot diverge.
   const listItems = technologies.flatMap((entity) => {
     const r = getRoute(`technology-${entity.id}`);
@@ -54,29 +71,45 @@ export default async function TechnologiesHubPage({ params }: { params: Promise<
         path={ownRoute.path[locale]}
         items={listItems}
       />
+      <PageHero
+        locale={locale}
+        title={title}
+        body={intro}
+        image={hero}
+        imageRole="technology"
+        seed="technologies-hub"
+        imageAlt={{
+          en: "Cynosure aesthetic treatment equipment at Blue Diamond Medical",
+          ar: "أجهزة العلاج التجميلي من Cynosure في بلو دايموند الطبية",
+        }}
+        breadcrumbs={<Breadcrumbs locale={locale} items={[{ label: aestheticsRoute.title[locale], href: href("aesthetics-hub", locale) }, { label: title }]} />}
+      />
+
       <section className="section-y">
       <Container>
-        <Breadcrumbs
-          locale={locale}
-          items={[{ label: aestheticsRoute.title[locale], href: href("aesthetics-hub", locale) }, { label: title }]}
-        />
-        <h1 className="mt-4 text-display-1 font-heading lg:text-display-1-lg">{title}</h1>
-        <p className="mt-4 max-w-2xl text-body-lg text-text-secondary">{intro}</p>
-
-        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {technologies.map((tech) => {
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {technologies.map((tech, i) => {
             const route = getRoute(`technology-${tech.id}`)!;
+            const image = (media[tech.id] ?? []).find((m) => m.slot === "hero" || m.slot === "card");
             return (
-              <Link
+              <MediaCard
                 key={tech.id}
                 href={`/${locale}${route.path[locale]}`}
-                className="group flex flex-col justify-between rounded-lg border border-border bg-surface p-5 transition-colors hover:border-primary"
-              >
-                <div>
-                  <h2 className="font-heading text-h4">{tech.title[locale]}</h2>
-                  <p className="mt-2 text-sm text-text-secondary">{tech.summary[locale]}</p>
-                </div>
-              </Link>
+                title={tech.title[locale]}
+                summary={tech.summary[locale]}
+                image={image}
+                imageRole="technology"
+                preset="technology"
+                seed={tech.id}
+                imageAlt={{
+                  en: `${tech.title.en} at Blue Diamond Medical Aesthetics`,
+                  ar: `${tech.title.ar} في بلو دايموند للتجميل الطبي`,
+                }}
+                locale={locale}
+                ctaLabel={detailsLabel}
+                headingLevel="h2"
+                delay={i % 3}
+              />
             );
           })}
         </div>

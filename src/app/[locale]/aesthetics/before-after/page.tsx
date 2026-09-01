@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Container } from "@/components/layout/Container";
+import { PageHero } from "@/components/layout/PageHero";
 import { SectionTransition } from "@/components/layout/SectionTransition";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
 import { BeforeAfterGallery } from "@/features/aesthetics";
@@ -9,6 +10,7 @@ import { getRoute, href } from "@/lib/routing";
 import { features } from "@/config/features";
 import { getBeforeAfterPairs } from "@/features/aesthetics";
 import { getRouteMetadata } from "@/lib/seo/metadata";
+import { resolvePageHeroImage } from "@/lib/feelstack/page-hero-media";
 
 /**
  * Feature-flagged off (`beforeAfterEnabled`) — no approved before/after
@@ -37,13 +39,40 @@ export default async function BeforeAfterPage({ params }: { params: Promise<{ lo
   const locale: Locale = isLocale(rawLocale) ? rawLocale : "en";
   const aestheticsRoute = getRoute("aesthetics-hub")!;
   const title = locale === "ar" ? "قبل وبعد" : "Before & After";
+  const intro =
+    locale === "ar"
+      ? "اسحبوا المؤشر على كل صورة للتنقّل بين حالة \"قبل\" و\"بعد\" في الإطار نفسه."
+      : "Drag the handle across any image to move between the before and after state within the same frame.";
+  const ownRoute = getRoute("aesthetics-before-after")!;
+  const hero = await resolvePageHeroImage(ownRoute.path.en, locale);
 
   return (
     <>
+      {/* The hero subtitle explains the interaction rather than the results:
+          a comparison slider is only obvious once you have used one, and this
+          is the page where every card on the screen is one. */}
+      <PageHero
+        locale={locale}
+        title={title}
+        body={intro}
+        image={hero}
+        /* "treatment", not "before-after": the before-after role's tint is
+           deliberately neutral grey so a comparison card's placeholder never
+           tints a clinical photograph's surroundings. As a full-bleed hero
+           that same grey reads as a page that failed to load rather than as
+           the brand. */
+        imageRole="treatment"
+        seed="before-after-hub"
+        imageAlt={{
+          en: "Medical aesthetics treatment room at Blue Diamond Medical",
+          ar: "غرفة علاجات التجميل الطبي في بلو دايموند الطبية",
+        }}
+        breadcrumbs={<Breadcrumbs locale={locale} items={[{ label: aestheticsRoute.title[locale], href: href("aesthetics-hub", locale) }, { label: title }]} />}
+        size="compact"
+      />
+
       <section className="section-y">
       <Container>
-        <Breadcrumbs locale={locale} items={[{ label: aestheticsRoute.title[locale], href: href("aesthetics-hub", locale) }, { label: title }]} />
-        <h1 className="mt-4 text-display-1 font-heading lg:text-display-1-lg">{title}</h1>
         <BeforeAfterGallery pairs={getBeforeAfterPairs()} locale={locale} renderEmptyState />
       </Container>
       </section>

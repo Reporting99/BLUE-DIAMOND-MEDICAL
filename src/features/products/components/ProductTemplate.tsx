@@ -59,7 +59,7 @@ const labels = {
 
 function DetailSection({ heading, children }: { heading: string; children: React.ReactNode }) {
   return (
-    <section className="mt-8">
+    <section data-reveal="up" className="mt-8">
       <h2 className="text-h5 font-heading">{heading}</h2>
       <div className="mt-2 text-body text-text-secondary">{children}</div>
     </section>
@@ -253,7 +253,7 @@ export function ProductTemplate({ product, locale }: { product: Product; locale:
           ) : null}
 
           {relatedProducts.length ? (
-            <section className="mt-8">
+            <section data-reveal="up" className="mt-8">
               <h2 className="text-h5 font-heading">{t.relatedProducts}</h2>
               <ul className="mt-3 flex flex-wrap gap-3">
                 {relatedProducts.map((rp) => (
@@ -271,7 +271,7 @@ export function ProductTemplate({ product, locale }: { product: Product; locale:
           ) : null}
 
           {detail.faqs.length ? (
-            <section className="mt-10 border-t border-border pt-8">
+            <section data-reveal="up" className="mt-10 border-t border-border pt-8">
               <h2 className="text-h4 font-heading">{t.faqsHeading}</h2>
               <dl className="mt-4 space-y-4">
                 {detail.faqs.map((faq) => (

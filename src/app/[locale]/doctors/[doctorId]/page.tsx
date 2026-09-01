@@ -122,6 +122,7 @@ export default async function DoctorProfilePage({
             locale={locale}
             width={640}
             height={800}
+            seed={doctor.id}
             className="h-full w-full"
           />
         </div>
@@ -155,7 +156,7 @@ export default async function DoctorProfilePage({
               the same pill-link treatment the service template already uses for
               its "Related physicians" list so nothing new is introduced visually. */}
           {relatedServices.length ? (
-            <section className="mt-10">
+            <section data-reveal="up" className="mt-10">
               <h2 className="text-h4 font-heading">{labels.relatedServices}</h2>
               <ul className="mt-3 flex flex-wrap gap-3">
                 {relatedServices.map((service) => {

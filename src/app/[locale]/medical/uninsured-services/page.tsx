@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import { Container } from "@/components/layout/Container";
+import { PageHero } from "@/components/layout/PageHero";
 import { SectionTransition } from "@/components/layout/SectionTransition";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
 import { FeeTable } from "@/features/medical-services";
 import { noShowFees, uninsuredFeeGroups } from "@/features/medical-services";
 import { isLocale, type Locale } from "@/i18n/config";
 import { getRoute, href } from "@/lib/routing";
+import { resolvePageHeroImage } from "@/lib/feelstack/page-hero-media";
 import { getRouteMetadata } from "@/lib/seo/metadata";
 
 export async function generateMetadata({
@@ -27,6 +29,7 @@ export default async function UninsuredServicesPage({ params }: { params: Promis
   const { locale: rawLocale } = await params;
   const locale: Locale = isLocale(rawLocale) ? rawLocale : "en";
   const medicalRoute = getRoute("medical-hub")!;
+  const hero = await resolvePageHeroImage(getRoute("medical-uninsured-services")!.path.en, locale);
 
   const copy = {
     en: {
@@ -42,16 +45,28 @@ export default async function UninsuredServicesPage({ params }: { params: Promis
 
   return (
     <>
+      <PageHero
+        locale={locale}
+        title={copy.title}
+        body={copy.intro}
+        image={hero}
+        imageRole="service"
+        seed="uninsured-services"
+        imageAlt={{
+          en: "Reception and administration at Blue Diamond Medical Clinic",
+          ar: "الاستقبال والإدارة في عيادة بلو دايموند الطبية",
+        }}
+        breadcrumbs={
+          <Breadcrumbs
+            locale={locale}
+            items={[{ label: medicalRoute.title[locale], href: href("medical-hub", locale) }, { label: copy.title }]}
+          />
+        }
+        size="compact"
+      />
+
       <article className="section-y">
       <Container>
-        <Breadcrumbs
-          locale={locale}
-          items={[{ label: medicalRoute.title[locale], href: href("medical-hub", locale) }, { label: copy.title }]}
-        />
-
-        <h1 className="mt-4 text-display-1 font-heading lg:text-display-1-lg">{copy.title}</h1>
-        <p className="mt-4 max-w-2xl text-body-lg text-text-secondary">{copy.intro}</p>
-
         <FeeTable group={noShowFees} locale={locale} />
         {uninsuredFeeGroups.map((group) => (
           <FeeTable key={group.heading.en} group={group} locale={locale} />

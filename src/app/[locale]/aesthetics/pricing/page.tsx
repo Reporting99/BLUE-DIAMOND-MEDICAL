@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Container } from "@/components/layout/Container";
+import { PageHero } from "@/components/layout/PageHero";
 import { SectionTransition } from "@/components/layout/SectionTransition";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
 import { isLocale, type Locale } from "@/i18n/config";
@@ -8,6 +9,7 @@ import { getRoute, href } from "@/lib/routing";
 import { features } from "@/config/features";
 import { aestheticsPricingGroups, PricingTable } from "@/features/aesthetics";
 import { getRouteMetadata } from "@/lib/seo/metadata";
+import { resolvePageHeroImage } from "@/lib/feelstack/page-hero-media";
 
 /**
  * The published aesthetic price list — every `publicDisplay` row of the
@@ -50,21 +52,36 @@ export default async function AestheticsPricingPage({ params }: { params: Promis
     locale === "ar"
       ? "تتوفر باقات علاجية مخصّصة حسب احتياجات كل عميل. يُرجى التواصل مع فريقنا للحصول على خطة علاجية وأسعار باقات مخصّصة."
       : "Customized treatment packages are available based on individual client needs. Please contact our team for a personalized treatment plan and package pricing.";
+  const ownRoute = getRoute("aesthetics-pricing")!;
+  const hero = await resolvePageHeroImage(ownRoute.path.en, locale);
 
   return (
     <>
+      {/* Compact: a price list is a reference document, and a full-height
+          hero above it puts the first row of prices below the fold. */}
+      <PageHero
+        locale={locale}
+        title={title}
+        body={intro}
+        image={hero}
+        imageRole="treatment"
+        seed="aesthetics-pricing"
+        imageAlt={{
+          en: "Consultation room at Blue Diamond Medical Aesthetics",
+          ar: "غرفة الاستشارات في بلو دايموند للتجميل الطبي",
+        }}
+        breadcrumbs={<Breadcrumbs locale={locale} items={[{ label: aestheticsRoute.title[locale], href: href("aesthetics-hub", locale) }, { label: title }]} />}
+        size="compact"
+      />
+
       <section className="section-y">
       <Container>
-        <Breadcrumbs locale={locale} items={[{ label: aestheticsRoute.title[locale], href: href("aesthetics-hub", locale) }, { label: title }]} />
-        <h1 className="mt-4 text-display-1 font-heading lg:text-display-1-lg">{title}</h1>
+        {/* Not reveal-animated: this is a 78-row reference table several
+            screens tall, and fading in a document someone came to read is
+            friction, not polish. */}
+        <PricingTable groups={aestheticsPricingGroups} locale={locale} headingLevel={2} />
 
-        <p className="mt-4 max-w-prose text-body text-text-secondary">{intro}</p>
-
-        <div className="mt-8">
-          <PricingTable groups={aestheticsPricingGroups} locale={locale} headingLevel={2} />
-        </div>
-
-        <p className="mt-8 max-w-prose text-sm text-text-secondary">{packagesNote}</p>
+        <p data-reveal="up" className="mt-8 max-w-prose text-sm text-text-secondary">{packagesNote}</p>
       </Container>
       </section>
       <SectionTransition from="var(--background)" to="var(--surface-dark)" />

@@ -38,6 +38,14 @@ const PATHS = [
   "/ar/doctors",
   "/en/contact",
   "/ar/contact",
+  // The two layout shapes introduced by the sitewide hero/card pass, added
+  // here because they are the ones whose widths are new: a MediaCard grid
+  // (three across, each with a fixed-ratio image band) and an article-measure
+  // hero sitting above a narrower prose column.
+  "/en/aesthetics/treatments",
+  "/ar/aesthetics/treatments",
+  "/en/aesthetics/treatments/rf-microneedling",
+  "/ar/aesthetics/treatments/rf-microneedling",
 ];
 
 for (const width of WIDTHS) {

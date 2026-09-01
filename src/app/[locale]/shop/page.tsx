@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Container } from "@/components/layout/Container";
+import { PageHero } from "@/components/layout/PageHero";
 import { SectionTransition } from "@/components/layout/SectionTransition";
 import { ProductCard } from "@/features/products";
 import { resolveListingMedia } from "@/lib/feelstack/listing-media";
@@ -14,6 +15,7 @@ import { availabilityNotice, productCategories, productConcerns, products } from
 import { getRouteMetadata } from "@/lib/seo/metadata";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
 import { PageSchema } from "@/components/shared/schema";
+import { heroFromListing } from "@/lib/feelstack/page-hero-media";
 import { siteConfig } from "@/config/site";
 
 const copy = {
@@ -84,15 +86,29 @@ export default async function ShopHubPage({ params }: { params: Promise<{ locale
         path={ownRoute.path[locale]}
         items={listItems}
       />
+      <PageHero
+        locale={locale}
+        title={title}
+        body={t.intro}
+        image={heroFromListing(listingMedia)}
+        /* "hero", not "product": the product role's tint is deliberately
+           neutral grey so a catalogue tile reads as packaging on a white
+           sweep. Stretched full-bleed behind a page title that grey is not a
+           backdrop, it is an absence. */
+        imageRole="hero"
+        seed="shop"
+        imageAlt={{
+          en: "SkinMedica physician-dispensed skincare at Blue Diamond Medical",
+          ar: "منتجات العناية بالبشرة سكين ميديكا المصروفة بإشراف طبي في بلو دايموند الطبية",
+        }}
+        breadcrumbs={<Breadcrumbs locale={locale} items={[{ label: ownRoute.title[locale] }]} />}
+        size="compact"
+      />
+
       <section className="section-y">
       <Container>
-        <Breadcrumbs locale={locale} items={[{ label: ownRoute.title[locale] }]} />
-
-        <h1 className="mt-4 text-display-1 font-heading lg:text-display-1-lg">{title}</h1>
-        <p className="mt-3 max-w-2xl text-body text-text-secondary">{t.intro}</p>
-
-        <div className="mt-8 grid gap-8 sm:grid-cols-2">
-          <div>
+        <div className="grid gap-8 sm:grid-cols-2">
+          <div data-reveal="up">
             <h2 className="text-h4 font-heading">{t.byCategory}</h2>
             <ul className="mt-3 flex flex-wrap gap-2">
               {productCategories.map((c) => {
@@ -107,7 +123,7 @@ export default async function ShopHubPage({ params }: { params: Promise<{ locale
               })}
             </ul>
           </div>
-          <div>
+          <div data-reveal="up" data-reveal-delay="1">
             <h2 className="text-h4 font-heading">{t.byConcern}</h2>
             <ul className="mt-3 flex flex-wrap gap-2">
               {productConcerns.map((c) => {
@@ -124,14 +140,15 @@ export default async function ShopHubPage({ params }: { params: Promise<{ locale
           </div>
         </div>
 
-        <h2 className="mt-14 text-h4 font-heading">{t.allProducts}</h2>
-        <p className="mt-2 text-sm text-text-secondary">{availabilityNotice[locale]}</p>
+        <h2 data-reveal="up" className="mt-14 text-h4 font-heading">{t.allProducts}</h2>
+        <p data-reveal="up" className="mt-2 text-sm text-text-secondary">{availabilityNotice[locale]}</p>
         <ul className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {products.map((product) => (
+          {products.map((product, i) => (
             <ProductCard
               key={product.id}
               product={product}
               locale={locale}
+              delay={i}
               resolved={(() => {
                 const m = (listingMedia[product.id] ?? []).find((x) => x.slot === "productPrimary");
                 if (!m) return undefined;

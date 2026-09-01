@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { ArrowUpRight, Phone } from "lucide-react";
 import { Container } from "@/components/layout/Container";
+import { PageHero } from "@/components/layout/PageHero";
 import { SectionTransition } from "@/components/layout/SectionTransition";
 import { isLocale, type Locale } from "@/i18n/config";
 import { getRouteMetadata } from "@/lib/seo/metadata";
@@ -15,6 +16,7 @@ const PAGE_DESCRIPTION = {
 
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
 import { PageSchema } from "@/components/shared/schema";
+import { resolvePageHeroImage } from "@/lib/feelstack/page-hero-media";
 import { getRoute } from "@/lib/routing";
 
 const options: { channel: BookingChannel; description: { en: string; ar: string } }[] = [
@@ -70,6 +72,8 @@ export default async function BookAppointmentPage({ params }: { params: Promise<
 
   const ownRoute = getRoute("book-appointment")!;
 
+  const hero = await resolvePageHeroImage(ownRoute.path.en, locale);
+
   return (
     <>
       <PageSchema
@@ -79,22 +83,38 @@ export default async function BookAppointmentPage({ params }: { params: Promise<
         description={PAGE_DESCRIPTION[locale]}
         path={ownRoute.path[locale]}
       />
+      {/* PAGE_DESCRIPTION as the subtitle: this page is a set of booking
+          channels, and the sentence the metadata already uses to describe it
+          is the one a visitor needs before choosing between them. */}
+      <PageHero
+        locale={locale}
+        title={title}
+        body={PAGE_DESCRIPTION[locale]}
+        image={hero}
+        imageRole="service"
+        seed="book-appointment"
+        imageAlt={{
+          en: "Reception at Blue Diamond Medical Clinic, West Springs",
+          ar: "الاستقبال في عيادة بلو دايموند الطبية، ويست سبرينغز",
+        }}
+        breadcrumbs={<Breadcrumbs locale={locale} items={[{ label: ownRoute.title[locale] }]} />}
+        size="compact"
+      />
+
       <section className="section-y">
       <Container>
-        <Breadcrumbs locale={locale} items={[{ label: ownRoute.title[locale] }]} />
-
-        <h1 className="mt-4 text-display-1 font-heading lg:text-display-1-lg">{title}</h1>
-
-        <div className="mt-10 grid gap-6 sm:grid-cols-2">
-          {options.map((option) => {
+        <div className="grid gap-6 sm:grid-cols-2">
+          {options.map((option, i) => {
             const booking = getBookingUrl(option.channel);
             return (
               <a
                 key={option.channel}
+                data-reveal="up"
+                data-reveal-delay={String(i % 2)}
                 href={booking.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group flex flex-col justify-between rounded-lg border border-border bg-surface p-6 transition-colors hover:border-primary"
+                className="group flex flex-col justify-between rounded-lg border border-border bg-surface p-6 transition-[border-color,box-shadow] duration-[var(--motion-normal)] ease-[var(--motion-ease)] hover:border-primary hover:shadow-[0_10px_30px_rgba(29,86,120,0.10)]"
               >
                 <div>
                   <h2 className="text-h4 font-heading">{booking.label[locale]}</h2>
@@ -108,7 +128,7 @@ export default async function BookAppointmentPage({ params }: { params: Promise<
           })}
         </div>
 
-        <div className="mt-8 flex items-center gap-3 rounded-lg border border-border bg-surface p-6">
+        <div data-reveal="up" className="mt-8 flex items-center gap-3 rounded-lg border border-border bg-surface p-6">
           <Phone className="size-5 shrink-0 text-primary" aria-hidden="true" />
           <div>
             <p className="text-sm">{botoxNote}</p>

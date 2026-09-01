@@ -8,6 +8,8 @@ export interface Dictionary {
     phone: string;
     fax: string;
     skipToContent: string;
+    backToTop: string;
+    scrollProgress: string;
   };
   nav: {
     home: string;
@@ -71,6 +73,8 @@ const en: Dictionary = {
     phone: "Phone",
     fax: "Fax",
     skipToContent: "Skip to content",
+    backToTop: "Back to top",
+    scrollProgress: "Reading progress",
   },
   nav: {
     // Nav labels are intentionally distinct from each destination page's own

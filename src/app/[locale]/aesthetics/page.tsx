@@ -3,6 +3,7 @@ import Link from "next/link";
 import { features } from "@/config/features";
 import { ArrowRight, Sparkles, Target, Cpu } from "lucide-react";
 import { Container } from "@/components/layout/Container";
+import { PageHero } from "@/components/layout/PageHero";
 import { SectionTransition } from "@/components/layout/SectionTransition";
 import { Button } from "@/components/ui/button";
 import { FacetTile } from "@/components/shared/FacetTile";
@@ -12,6 +13,7 @@ import { getBookingUrl } from "@/config/booking";
 import { getRoute, href } from "@/lib/routing";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
 import { PageSchema } from "@/components/shared/schema";
+import { resolvePageHeroImage } from "@/lib/feelstack/page-hero-media";
 
 export async function generateMetadata({
   params,
@@ -65,6 +67,7 @@ export default async function AestheticsHubPage({ params }: { params: Promise<{ 
   ];
 
   const ownRoute = getRoute("aesthetics-hub")!;
+  const hero = await resolvePageHeroImage("/aesthetics", locale);
 
   return (
     <>
@@ -74,47 +77,72 @@ export default async function AestheticsHubPage({ params }: { params: Promise<{ 
         description={copy.intro}
         path={ownRoute.path[locale]}
       />
-      <section className="section-y">
-        <Container className="grid gap-10 lg:grid-cols-[7fr_5fr] lg:items-center">
-          <div>
-            <Breadcrumbs locale={locale} items={[{ label: ownRoute.title[locale] }]} />
-
-            <h1 className="mt-4 text-display-1 font-heading lg:text-display-1-lg">{copy.title}</h1>
-            <p className="mt-4 max-w-xl text-body-lg text-text-secondary">{copy.intro}</p>
-            <Button size="lg" className="mt-8" render={<a href={consult.href} target="_blank" rel="noopener noreferrer" />}>
-              {consult.label[locale]}
-            </Button>
-          </div>
-          <div className="facet-corner aspect-[4/3] overflow-hidden rounded-lg">
-            <FacetTile role="treatment" alt={({ en: "Blue Diamond Medical Aesthetics", ar: "التجميل الطبي في بلو دايموند" })[locale]} className="h-full w-full" />
-          </div>
-        </Container>
-      </section>
+      {/* The hero used to be a two-column band: copy beside a FacetTile
+          clipped into a rounded card. That reads as a text block next to a
+          decorative box, not as a hero — the same composition the homepage
+          replaced. One full-bleed visual with the copy laid over its calm
+          side is the pattern now, sitewide. */}
+      <PageHero
+        locale={locale}
+        title={copy.title}
+        body={copy.intro}
+        image={hero}
+        imageRole="treatment"
+        seed="aesthetics-hub"
+        imageAlt={{
+          en: "Physician-led medical aesthetics treatment room at Blue Diamond Medical",
+          ar: "غرفة علاجات التجميل الطبي بإشراف طبي في بلو دايموند الطبية",
+        }}
+        breadcrumbs={<Breadcrumbs locale={locale} items={[{ label: ownRoute.title[locale] }]} />}
+        actions={
+          <Button size="lg" render={<a href={consult.href} target="_blank" rel="noopener noreferrer" />}>
+            {consult.label[locale]}
+          </Button>
+        }
+      />
 
       <SectionTransition from="var(--background)" to="var(--surface)" />
       <section className="section-y bg-surface">
         <Container>
-          <h2 className="text-display-2 font-heading">{copy.exploreHeading}</h2>
+          <h2 data-reveal="up" className="text-display-2 font-heading">{copy.exploreHeading}</h2>
+          {/* Three route-in cards. Each carries a facet visual band rather than
+              opening on flat card stock — the icon still names the route, but
+              the card now has something to look at above the words. */}
           <div className="mt-6 grid gap-6 sm:grid-cols-3">
-            {exploreCards.map((card) => (
+            {exploreCards.map((card, i) => (
               <Link
                 key={card.title}
+                data-reveal="up"
+                data-reveal-delay={String(i % 3)}
                 href={card.href}
-                className="group flex flex-col justify-between rounded-lg border border-border bg-background p-6 transition-colors hover:border-primary"
+                className="group flex flex-col overflow-hidden rounded-lg border border-border bg-background transition-[border-color,box-shadow] duration-[var(--motion-normal)] ease-[var(--motion-ease)] hover:border-primary hover:shadow-[0_10px_30px_rgba(29,86,120,0.10)] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus"
               >
-                <div>
-                  <card.icon className="size-7 text-primary" aria-hidden="true" />
-                  <h3 className="mt-3 font-heading text-h4">{card.title}</h3>
-                  <p className="mt-2 text-sm text-text-secondary">{card.body}</p>
+                <div className="relative aspect-[16/9] overflow-hidden">
+                  <FacetTile
+                    role="treatment"
+                    seed={card.title}
+                    decorative
+                    className="h-full w-full transition-transform duration-[600ms] ease-[var(--motion-ease)] group-hover:scale-[1.04]"
+                  />
+                  {/* The icon sits on the visual, in a solid disc, so it reads
+                      at any point of the facet composition behind it. */}
+                  <span className="absolute bottom-3 start-4 flex size-11 items-center justify-center rounded-full bg-background shadow-[0_2px_10px_rgba(29,86,120,0.18)]">
+                    <card.icon className="size-5 text-primary" aria-hidden="true" />
+                  </span>
                 </div>
-                <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-primary">
-                  <ArrowRight className="size-3.5 rtl:rotate-180" />
-                </span>
+                <div className="flex flex-1 flex-col p-6">
+                  <h3 className="font-heading text-h4">{card.title}</h3>
+                  <p className="mt-2 text-sm text-text-secondary">{card.body}</p>
+                  <span aria-hidden="true" className="mt-auto" />
+                  <span className="inline-flex items-center gap-1 pt-4 text-sm font-medium text-primary">
+                    <ArrowRight className="size-3.5 transition-transform duration-[var(--motion-normal)] group-hover:translate-x-0.5 rtl:rotate-180 rtl:group-hover:-translate-x-0.5" />
+                  </span>
+                </div>
               </Link>
             ))}
           </div>
 
-          <div className="mt-8 flex flex-wrap gap-x-8 gap-y-3">
+          <div data-reveal="up" className="mt-8 flex flex-wrap gap-x-8 gap-y-3">
             <Link href={href("botox-hub", locale)} className="inline-flex items-center gap-1 font-medium text-primary hover:text-primary-hover">
               {copy.botoxCta} <ArrowRight className="size-4 rtl:rotate-180" />
             </Link>

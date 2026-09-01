@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Container } from "@/components/layout/Container";
+import { PageHero } from "@/components/layout/PageHero";
 import { SectionTransition } from "@/components/layout/SectionTransition";
 import { Button } from "@/components/ui/button";
 import { isLocale, type Locale } from "@/i18n/config";
@@ -16,6 +17,7 @@ const PAGE_DESCRIPTION = {
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
 import { PageSchema } from "@/components/shared/schema";
 import { getRoute } from "@/lib/routing";
+import { resolvePageHeroImage } from "@/lib/feelstack/page-hero-media";
 
 const medicalConditions = {
   en: ["Migraine treatment", "Hyperhidrosis", "Bruxism (TMJ) & jaw pain"],
@@ -86,6 +88,7 @@ export default async function BotoxHubPage({ params }: { params: Promise<{ local
   }[locale];
 
   const ownRoute = getRoute("botox-hub")!;
+  const hero = await resolvePageHeroImage(ownRoute.path.en, locale);
 
   return (
     <>
@@ -96,22 +99,38 @@ export default async function BotoxHubPage({ params }: { params: Promise<{ local
         description={PAGE_DESCRIPTION[locale]}
         path={ownRoute.path[locale]}
       />
+      <PageHero
+        locale={locale}
+        title={copy.title}
+        body={copy.intro}
+        image={hero}
+        imageRole="treatment"
+        seed="botox-hub"
+        imageAlt={{
+          en: "Botox treatment room at Blue Diamond Medical Clinic",
+          ar: "غرفة علاج البوتوكس في عيادة بلو دايموند الطبية",
+        }}
+        breadcrumbs={<Breadcrumbs locale={locale} items={[{ label: ownRoute.title[locale] }]} />}
+        actions={
+          <Button size="lg" render={<a href={phone.href} />}>
+            {copy.cta}: <span className="ltr-run ms-1">825 413 1113</span>
+          </Button>
+        }
+      />
+
       <section className="section-y">
       <Container>
-        <Breadcrumbs locale={locale} items={[{ label: ownRoute.title[locale] }]} />
-
-        <h1 className="mt-4 text-display-1 font-heading lg:text-display-1-lg">{copy.title}</h1>
-        <p className="mt-4 max-w-2xl text-body-lg text-text-secondary">{copy.intro}</p>
-        <p className="mt-4 max-w-2xl rounded-md border border-border bg-surface p-4 text-sm text-text-secondary">
+        {/* The coverage note stays a page-body element rather than moving into
+            the hero: it is the sentence that tells an Albertan whether this
+            treatment costs them anything, and burying it in a wash over a
+            photograph is the wrong place for the one paragraph on this page
+            with money in it. */}
+        <p data-reveal="up" className="max-w-2xl rounded-md border border-border bg-surface p-4 text-sm text-text-secondary">
           {copy.coverageNote}
         </p>
 
-        <Button size="lg" className="mt-8" render={<a href={phone.href} />}>
-          {copy.cta}: <span className="ltr-run ms-1">825 413 1113</span>
-        </Button>
-
         <div className="mt-12 grid gap-8 sm:grid-cols-2">
-          <div>
+          <div data-reveal="up">
             <h2 className="text-h3 font-heading">{copy.medicalHeading}</h2>
             <ul className="mt-4 space-y-2">
               {medicalConditions[locale].map((item) => (
@@ -121,7 +140,7 @@ export default async function BotoxHubPage({ params }: { params: Promise<{ local
               ))}
             </ul>
           </div>
-          <div>
+          <div data-reveal="up" data-reveal-delay="1">
             <h2 className="text-h3 font-heading">{copy.cosmeticHeading}</h2>
             <ul className="mt-4 flex flex-wrap gap-2">
               {cosmeticAreas[locale].map((item) => (

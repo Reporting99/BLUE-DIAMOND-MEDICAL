@@ -3,9 +3,8 @@ import { ArrowRight } from "lucide-react";
 import { Container } from "@/components/layout/Container";
 import { SectionTransition } from "@/components/layout/SectionTransition";
 import { Button } from "@/components/ui/button";
+import { PageHero } from "@/components/layout/PageHero";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
-import { ImageKitImage } from "@/components/shared/ImageKitImage";
-import { cmsAlt } from "@/lib/feelstack/media-slots";
 import { MedicalWebPageSchema } from "@/components/shared/schema";
 import { FaqPageSchema } from "@/components/shared/schema";
 import { getBookingUrl } from "@/config/booking";
@@ -106,60 +105,57 @@ export function ConcernTemplate({ concern, locale }: { concern: AestheticConcern
       {ownRoute ? (
         <MedicalWebPageSchema locale={locale} name={concern.title[locale]} description={concern.summary[locale]} path={ownRoute.path[locale]} />
       ) : null}
+      {/* The lead image is the hero now. It used to render as a rounded
+          aspect-video figure a screenful below the breadcrumbs, and only when
+          an assignment existed -- so a treatment whose photography has not
+          been shot opened on plain white text. PageHero renders the same
+          asset when there is one and the branded facet visual when there is
+          not, so the page has a top either way, and the caption travels with
+          the image rather than being lost in the promotion. */}
+      <PageHero
+        locale={locale}
+        title={concern.title[locale]}
+        body={concern.summary[locale]}
+        image={concern.image}
+        imageRole="concern"
+        seed={concern.id}
+        measure="article"
+        imageAlt={{
+          en: concern.title.en || concern.id,
+          ar: concern.title.ar || concern.id,
+        }}
+        imageCaption={concern.image?.caption}
+        breadcrumbs={
+          <Breadcrumbs
+            locale={locale}
+            items={[{ label: concernsHub.title[locale], href: href("aesthetics-concerns-hub", locale) }, { label: concern.title[locale] }]}
+          />
+        }
+      />
+
       <article className="section-y">
       <Container className="max-w-3xl">
-        <Breadcrumbs
-          locale={locale}
-          items={[{ label: concernsHub.title[locale], href: href("aesthetics-concerns-hub", locale) }, { label: concern.title[locale] }]}
-        />
-        <h1 className="mt-4 text-display-1 font-heading lg:text-display-1-lg">{concern.title[locale]}</h1>
-        <p className="mt-4 text-body-lg text-text-secondary">{concern.summary[locale]}</p>
-
-        {/* Lead image, present only when this entity has a real FeelStack
-            media assignment. ImageKitImage still decides, from the asset's own
-            status, whether real bytes or the FacetTile placeholder appear. */}
-        {concern.image ? (
-          <ImageKitImage
-            path={concern.image.path}
-            preset="concern"
-            role={concern.image.role}
-            status={concern.image.status}
-            alt={
-              cmsAlt(concern.image) ?? {
-                en: concern.title.en || concern.id,
-                ar: concern.title.ar || concern.id,
-              }
-            }
-            caption={concern.image.caption}
-            locale={locale}
-            width={concern.image.width}
-            height={concern.image.height}
-            sizes="(min-width: 768px) 48rem, 100vw"
-            className="mt-8 aspect-video rounded-lg"
-          />
-        ) : null}
-
 
         <Button size="lg" className="mt-8" render={<a href={booking.href} target="_blank" rel="noopener noreferrer" />}>
           {t.consultCta}
         </Button>
 
         {concern.commonPresentations ? (
-          <section className="mt-10">
+          <section data-reveal="up" className="mt-10">
             <h2 className="text-h4 font-heading">{t.presentations}</h2>
             <p className="mt-2 text-body text-text-secondary">{concern.commonPresentations[locale]}</p>
           </section>
         ) : null}
 
         {concern.contributingFactors ? (
-          <section className="mt-10">
+          <section data-reveal="up" className="mt-10">
             <h2 className="text-h4 font-heading">{t.factors}</h2>
             <p className="mt-2 text-body text-text-secondary">{concern.contributingFactors[locale]}</p>
           </section>
         ) : null}
 
         {relatedTreatments.length ? (
-          <section className="mt-10">
+          <section data-reveal="up" className="mt-10">
             <h2 className="text-h4 font-heading">{t.relatedTreatments}</h2>
             <CrossLinkList items={relatedTreatments} locale={locale} getHref={(tr) => `/${locale}${getRoute(`treatment-${tr.id}`)!.path[locale]}`} />
           </section>
@@ -170,14 +166,14 @@ export function ConcernTemplate({ concern, locale }: { concern: AestheticConcern
         <BeforeAfterGallery pairs={getBeforeAfterPairsForConcern(concern.id)} locale={locale} />
 
         {relatedTechnologies.length ? (
-          <section className="mt-10">
+          <section data-reveal="up" className="mt-10">
             <h2 className="text-h4 font-heading">{t.relatedTechnologies}</h2>
             <CrossLinkList items={relatedTechnologies} locale={locale} getHref={(tech) => `/${locale}${getRoute(`technology-${tech.id}`)!.path[locale]}`} />
           </section>
         ) : null}
 
         {relatedDoctors.length ? (
-          <section className="mt-10">
+          <section data-reveal="up" className="mt-10">
             <h2 className="text-h4 font-heading">{t.relatedDoctors}</h2>
             <ul className="mt-3 flex flex-wrap gap-3">
               {relatedDoctors.map((doctor) => {
@@ -198,14 +194,14 @@ export function ConcernTemplate({ concern, locale }: { concern: AestheticConcern
         ) : null}
 
         {relatedConcerns.length ? (
-          <section className="mt-10">
+          <section data-reveal="up" className="mt-10">
             <h2 className="text-h4 font-heading">{t.relatedConcerns}</h2>
             <CrossLinkList items={relatedConcerns} locale={locale} getHref={(c) => `/${locale}${getRoute(`concern-${c.id}`)!.path[locale]}`} />
           </section>
         ) : null}
 
         {concern.faqs?.length ? (
-          <section className="mt-10">
+          <section data-reveal="up" className="mt-10">
             <h2 className="text-h4 font-heading">{t.faqs}</h2>
             <dl className="mt-3 space-y-4">
               {concern.faqs.map((faq) => (

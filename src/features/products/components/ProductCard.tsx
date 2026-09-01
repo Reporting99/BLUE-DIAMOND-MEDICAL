@@ -22,6 +22,7 @@ export function ProductCard({
   product,
   locale,
   resolved,
+  delay = 0,
 }: {
   product: Product;
   locale: Locale;
@@ -34,12 +35,18 @@ export function ProductCard({
    * a real photograph. Optional so every existing caller keeps working.
    */
   resolved?: { path: string; status: Product["images"][number]["status"]; alt: Product["images"][number]["alt"] };
+  /**
+   * Stagger index within its grid, for the scroll-reveal entrance. Callers
+   * pass the map index; it is taken modulo the column count by the CSS, so a
+   * long catalogue does not accumulate an ever-growing delay down the page.
+   */
+  delay?: number;
 }) {
   const image = resolved ?? product.images[0];
   const category = productCategories.find((c) => c.id === product.categoryIds[0]);
 
   return (
-    <li className="group">
+    <li className="group" data-reveal="up" data-reveal-delay={String(delay % 4)}>
       <Link
         href={href(`shop-product-${product.id}`, locale)}
         className="flex h-full flex-col rounded-lg border border-border p-4 transition-colors hover:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
@@ -55,6 +62,7 @@ export function ProductCard({
               locale={locale}
               width={400}
               height={400}
+              seed={product.id}
               // The card is one cell of a 1/2/3/4-column grid, so a browser
               // that is told nothing assumes full viewport width and picks a
               // needlessly large candidate for a ~300px box. Catalogue images
