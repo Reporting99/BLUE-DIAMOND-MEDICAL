@@ -109,9 +109,18 @@ async function scrollThroughAndSettle(page: Page) {
 // 1. HEROES
 // ---------------------------------------------------------------------------
 
+/**
+ * NOTE ON VIEWPORTS. Most of this file deliberately does NOT force a width.
+ * Playwright runs every spec under both the chromium-desktop and
+ * chromium-mobile projects, so leaving the viewport alone means each
+ * assertion is made twice — once at a desktop width and once on a phone —
+ * which is what "works on mobile and desktop" actually requires. Forcing
+ * 1440px inside the mobile project, as an earlier version of this file did,
+ * runs a desktop test wearing a mobile user-agent: twice the CI time for no
+ * additional coverage. The only tests that set a width are the ones whose
+ * subject IS the width — the Before/After column counts.
+ */
 test.describe("Heroes", () => {
-  test.use({ viewport: { width: 1440, height: 900 } });
-
   for (const locale of ["en", "ar"] as const) {
     test(`${locale}: the homepage hero is one full-background image, not a split composition`, async ({ page }) => {
       await page.goto(`/${locale}`);
@@ -123,6 +132,7 @@ test.describe("Heroes", () => {
       // section, rather than the previous two half-width panels clipped into
       // cards. A composition of two 50%-wide images would fail the width
       // assertion; a small decorative tile would fail the height one.
+      const width = page.viewportSize()!.width;
       const visuals = hero.locator(VISUAL);
       const boxes = await visuals.evaluateAll((els) =>
         els.map((el) => {
@@ -130,8 +140,11 @@ test.describe("Heroes", () => {
           return { w: r.width, h: r.height };
         }),
       );
-      const fullBleed = boxes.filter((b) => b.w >= 1440 * 0.98 && b.h >= heroBox!.height * 0.9);
-      expect(fullBleed.length, `expected one viewport-spanning hero visual, got boxes ${JSON.stringify(boxes)}`).toBeGreaterThanOrEqual(1);
+      const fullBleed = boxes.filter((b) => b.w >= width * 0.98 && b.h >= heroBox!.height * 0.9);
+      expect(
+        fullBleed.length,
+        `expected one viewport-spanning hero visual at ${width}px, got boxes ${JSON.stringify(boxes)}`,
+      ).toBeGreaterThanOrEqual(1);
 
       // And the copy sits over it, not beside it.
       const h1 = page.getByRole("heading", { level: 1 }).first();
@@ -151,16 +164,17 @@ test.describe("Heroes", () => {
         const heroBox = await hero.boundingBox();
         expect(heroBox, `${route.label} must open with a hero section`).toBeTruthy();
 
+        const width = page.viewportSize()!.width;
         const boxes = await hero.locator(VISUAL).evaluateAll((els) =>
           els.map((el) => {
             const r = el.getBoundingClientRect();
             return { w: r.width, h: r.height };
           }),
         );
-        const fullBleed = boxes.filter((b) => b.w >= 1440 * 0.98 && b.h >= heroBox!.height * 0.9);
+        const fullBleed = boxes.filter((b) => b.w >= width * 0.98 && b.h >= heroBox!.height * 0.9);
         expect(
           fullBleed.length,
-          `${route.label} (${locale}) has no viewport-spanning hero visual; boxes: ${JSON.stringify(boxes)}`,
+          `${route.label} (${locale}) has no viewport-spanning hero visual at ${width}px; boxes: ${JSON.stringify(boxes)}`,
         ).toBeGreaterThanOrEqual(1);
 
         // The hero owns the page's H1, and it is legible over the wash.
@@ -180,13 +194,14 @@ test.describe("Heroes", () => {
       // image-led, which is the whole justification for the exception. A
       // substantial visual (>= a quarter of the viewport wide) must render
       // above the fold alongside the heading.
+      const { width, height } = page.viewportSize()!;
       const boxes = await page.locator(`#main-content ${VISUAL}`).evaluateAll((els) =>
         els.map((el) => {
           const r = el.getBoundingClientRect();
           return { w: r.width, h: r.height, y: r.top };
         }),
       );
-      const substantial = boxes.filter((b) => b.w >= 1440 * 0.25 && b.h >= 200 && b.y < 900);
+      const substantial = boxes.filter((b) => b.w >= width * 0.25 && b.h >= 200 && b.y < height * 1.2);
       expect(
         substantial.length,
         `${exception.label} must stay image-led above the fold; boxes: ${JSON.stringify(boxes.slice(0, 6))}`,
@@ -200,8 +215,6 @@ test.describe("Heroes", () => {
 // ---------------------------------------------------------------------------
 
 test.describe("Listing cards carry imagery", () => {
-  test.use({ viewport: { width: 1440, height: 900 } });
-
   /**
    * `cards` is a per-listing selector rather than one clever heuristic.
    * The listings genuinely differ in markup — MediaCard is a link wrapping a
@@ -286,12 +299,15 @@ test.describe("Before & After", () => {
     });
   }
 
+  // These set their own widths, so running them again under the mobile
+  // project would repeat identical work at identical sizes. One pass.
   for (const [width, expected, label] of [
     [1440, 4, "desktop"],
     [820, 2, "tablet"],
     [390, 1, "mobile"],
   ] as const) {
-    test(`${label} (${width}px) lays the gallery out ${expected} across`, async ({ page }) => {
+    test(`${label} (${width}px) lays the gallery out ${expected} across`, async ({ page }, testInfo) => {
+      test.skip(testInfo.project.name !== "chromium-desktop", "width-owning test; one project is enough");
       await page.setViewportSize({ width, height: 900 });
       await page.goto(BA.en);
       await scrollThroughAndSettle(page);
@@ -301,7 +317,6 @@ test.describe("Before & After", () => {
 
   for (const locale of ["en", "ar"] as const) {
     test(`${locale}: both the Before and the After label are visible at the default handle position`, async ({ page }) => {
-      await page.setViewportSize({ width: 1440, height: 900 });
       await page.goto(BA[locale]);
       await scrollThroughAndSettle(page);
 
@@ -329,7 +344,6 @@ test.describe("Before & After", () => {
     });
 
     test(`${locale}: dragging the handle moves the reveal seam`, async ({ page }) => {
-      await page.setViewportSize({ width: 1440, height: 900 });
       await page.goto(BA[locale]);
       await scrollThroughAndSettle(page);
 
@@ -340,8 +354,12 @@ test.describe("Before & After", () => {
       // The control is the invisible range input stretched over the whole
       // picture, so the drag surface must BE the picture: a box only as wide
       // as a native range thumb means the stretch classes stopped applying.
-      expect(box.width, "the drag surface must span the whole comparison frame").toBeGreaterThan(180);
-      expect(box.height, "the drag surface must span the whole comparison frame").toBeGreaterThan(120);
+      const frame = (await page.locator("input[type='range']").first().evaluate((el) => {
+        const r = el.parentElement!.getBoundingClientRect();
+        return { w: r.width, h: r.height };
+      }))!;
+      expect(box.width, "the drag surface must span the whole comparison frame").toBeGreaterThan(frame.w * 0.9);
+      expect(box.height, "the drag surface must span the whole comparison frame").toBeGreaterThan(frame.h * 0.9);
 
       const startValue = Number(await input.inputValue());
       const clipBefore = await page.evaluate(() => {
@@ -365,7 +383,6 @@ test.describe("Before & After", () => {
     });
 
     test(`${locale}: the comparison is operable by keyboard`, async ({ page }) => {
-      await page.setViewportSize({ width: 1440, height: 900 });
       await page.goto(BA[locale]);
       await scrollThroughAndSettle(page);
 
@@ -593,8 +610,6 @@ test.describe("Back-to-top arrow", () => {
 // ---------------------------------------------------------------------------
 
 test.describe("Reduced motion", () => {
-  test.use({ viewport: { width: 1440, height: 900 } });
-
   for (const path of ["/en/aesthetics/before-after", "/en/aesthetics/treatments", "/en/shop"]) {
     test(`${path}: content is visible immediately and nothing animates`, async ({ page }) => {
       await page.emulateMedia({ reducedMotion: "reduce" });
