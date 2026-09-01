@@ -477,7 +477,7 @@ drawing of where the seam is, not the thing being dragged. The **before** layer
 is the clipped one, so Before sits on the side the language starts at and each
 layer carries the badge for the half it occupies.
 
-### Scroll chrome (both brand blue, both mounted once in the locale layout)
+### Scroll chrome (all brand blue)
 
 - **Reading rail** (`ScrollProgress`) — a 3px hairline across the top of the
   viewport that fills as the page is scrolled. It is a `scaleX` transform on a
@@ -490,6 +490,26 @@ layer carries the badge for the half it occupies.
   or clicked while invisible. Its white ring is load-bearing: the button is
   brand blue and so is the footer, and without it a blue disc on blue
   disappears.
+- **The scrollbar itself** (`src/app/globals.css`, base layer) — 10px, 8px
+  below `48rem`, with a thumb carrying the same light-to-dark facet gradient
+  as the rail (`--blue-2` → `--blue-1` → `--blue-3`), one inset white line for
+  gloss, and the same load-bearing white ring as the arrow, for the same
+  reason. It is CSS only: no scrollbar library, no substitute component, and
+  nothing that hides a scrollbar or changes scrolling behaviour.
+
+  Two things about it are easy to get wrong and are asserted in
+  `tests/e2e/visual-system.spec.ts`. **The Firefox fallback must stay behind
+  `@supports not selector(::-webkit-scrollbar)`.** Chromium implements the
+  standard `scrollbar-width`/`scrollbar-color` properties too and treats them
+  as an opt-out — once either applies to a scroller, every
+  `::-webkit-scrollbar` rule for it is dropped — so an unguarded two-line
+  Firefox fallback silently flattens the gradient in the browser most visitors
+  use. **And the gradient is not decoration.** On an overlay scrollbar the
+  thumb is drawn directly on the page, over white sections and over the
+  `--surface-dark` footer both, and no flat colour can clear 3:1 against
+  white *and* against `#1d5678` — the two demands are L ≤ 0.30 and L ≥ 0.35.
+  A gradient can: its body carries the light grounds, its light crown carries
+  the footer.
 
 ### Reveal animation, and one hazard it now handles
 

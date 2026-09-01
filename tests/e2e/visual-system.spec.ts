@@ -1,4 +1,4 @@
-import { test, expect, type Page } from "@playwright/test";
+import { test, expect, chromium, type Page } from "@playwright/test";
 
 /**
  * The sitewide visual system — heroes, card imagery, the branded fallback,
@@ -258,24 +258,104 @@ test.describe("Listing cards carry imagery", () => {
     });
   }
 
+  /**
+   * Every real ImageKit asset on a listing must actually have decoded.
+   *
+   * This is the assertion that GROWS as the FacetTile one shrinks. A listing
+   * gaining approved photography is the good outcome, but it also retires
+   * placeholders — and with them the diversity check below. Without something
+   * covering the images that replaced them, a page could go from "several
+   * distinct fallbacks" to "six broken <img> elements" and this suite would
+   * report an improvement. `complete && naturalWidth > 0` is the difference
+   * between an <img> that is in the DOM and one that is on the screen.
+   */
+  for (const listing of LISTINGS) {
+    test(`every real image on ${listing.label} decodes`, async ({ page }) => {
+      await page.goto(listing.path);
+      await scrollThroughAndSettle(page);
+
+      const images = await page.evaluate((cardSelector) => {
+        const cards = Array.from(document.querySelectorAll<HTMLElement>(cardSelector));
+        return cards
+          .flatMap((card) => Array.from(card.querySelectorAll("img")))
+          .map((img) => ({
+            src: (img.currentSrc || img.src || "").slice(0, 120),
+            ok: img.complete && img.naturalWidth > 0 && img.naturalHeight > 0,
+          }));
+      }, listing.cards);
+
+      // Zero real images is a legitimate state (nothing approved yet); the
+      // FacetTile path covers that page. What is never legitimate is an <img>
+      // that never resolved.
+      expect(
+        images.filter((img) => !img.ok).map((img) => img.src),
+        `these ${listing.label} images are in the DOM but never decoded`,
+      ).toEqual([]);
+    });
+  }
+
+  /**
+   * How many placeholders a listing must show before "they all look the same"
+   * is evidence of a bug rather than of a small sample.
+   *
+   * `facetTileVariants` holds four compositions and `facetTileVariantFor`
+   * picks one by hashing the entity's seed, so for n placeholders the chance
+   * that a healthy, well-distributed hash lands them all on one composition is
+   * 4 x (1/4)^n = 4^(1-n): 25% at two tiles, 6.3% at three, 1.6% at four. Four
+   * is where a single repeated composition stops being something a listing can
+   * do by accident and starts being the thing this test was written to catch —
+   * seeding broken, every tile falling back to the role default.
+   *
+   * Below that the tiles are still checked; they are just not asked to differ.
+   */
+  const FACET_DIVERSITY_MIN_SAMPLE = 4;
+
   test("the FacetTile fallback varies between sibling cards rather than repeating one composition", async ({ page }) => {
     await page.goto("/en/aesthetics/treatments");
     await scrollThroughAndSettle(page);
 
-    // Each FacetTile composition defines gradients keyed `facet-bg-<role>-<n>`
-    // where n is the variant index, so the set of distinct ids in a listing is
-    // the set of distinct compositions drawn. One id across a dozen cards is
-    // the "same missing image repeated" failure this system exists to prevent.
-    const variants = await page.evaluate(() => {
-      const ids = Array.from(document.querySelectorAll("linearGradient[id^='facet-bg-']")).map((el) => el.id);
-      return Array.from(new Set(ids));
-    });
+    // One rect per tile, painted with `url(#facet-bg-<role>-<n>)`, so this
+    // counts INSTANCES and reads each one's composition. The previous version
+    // collected distinct `<linearGradient>` ids instead, which cannot
+    // distinguish "one tile" from "nine tiles that agree" — it had no sample
+    // size, so it could not tell a real collapse from a listing that simply
+    // has few placeholders left now that most treatments carry real CMS
+    // photography.
+    const tiles = await page.evaluate(() =>
+      Array.from(document.querySelectorAll<SVGRectElement>('rect[fill^="url(#facet-bg-"]')).map((rect) => {
+        const box = rect.closest("svg")?.getBoundingClientRect();
+        return {
+          variant: (rect.getAttribute("fill") ?? "").replace(/^url\(#/, "").replace(/\)$/, ""),
+          drawn: !!box && box.width > 0 && box.height > 0,
+        };
+      }),
+    );
 
-    // Only meaningful while the tiles are still placeholders. Once real
-    // photography is approved there are no gradients to count, and the
-    // assertion above (every card has a visual) is the one that matters.
-    test.skip(variants.length === 0, "no FacetTile placeholders on this page — real imagery is approved");
-    expect(variants.length, `expected several facet compositions, saw: ${variants.join(", ")}`).toBeGreaterThanOrEqual(2);
+    // No placeholders at all: every treatment on this listing has approved
+    // photography. That is the destination, not a failure.
+    test.skip(tiles.length === 0, "no FacetTile placeholders on this page — real imagery is approved");
+
+    // Whatever the sample size, a placeholder that IS drawn must be a real
+    // laid-out tile and not a zero-box SVG.
+    expect(
+      tiles.filter((tile) => !tile.drawn).map((tile) => tile.variant),
+      "these FacetTile placeholders render with no geometry",
+    ).toEqual([]);
+
+    const variants = Array.from(new Set(tiles.map((tile) => tile.variant)));
+
+    if (tiles.length < FACET_DIVERSITY_MIN_SAMPLE) {
+      test.info().annotations.push({
+        type: "sample-too-small",
+        description: `${tiles.length} FacetTile placeholder(s) on this listing (${variants.join(", ")}); diversity needs at least ${FACET_DIVERSITY_MIN_SAMPLE} to mean anything.`,
+      });
+      return;
+    }
+
+    expect(
+      variants.length,
+      `${tiles.length} placeholders drew only: ${variants.join(", ")} — seeding has collapsed to one composition`,
+    ).toBeGreaterThanOrEqual(2);
   });
 });
 
@@ -603,6 +683,155 @@ test.describe("Back-to-top arrow", () => {
       );
     });
   }
+});
+
+test.describe("Scrollbar", () => {
+  /**
+   * The third piece of scroll chrome. Two things are asserted, and they fail
+   * in completely different ways.
+   *
+   * FIRST, the engine split. Chromium understands BOTH scrollbar mechanisms —
+   * the ::-webkit-scrollbar pseudo-elements and the standard
+   * scrollbar-width/scrollbar-color properties — and it treats the standard
+   * ones as an opt-out: the moment either applies to a scroller, every
+   * ::-webkit-scrollbar rule for it is ignored. So the Firefox fallback in
+   * globals.css sits behind `@supports not selector(::-webkit-scrollbar)`.
+   * Written without that guard, as the first draft of it was, the branded
+   * gradient silently degrades to a flat bar in the browser most visitors
+   * use, and nothing else in this suite notices. It is checked through the
+   * computed style rather than by reading the CSS text, because the question
+   * is which mechanism actually won, not which rules were shipped.
+   *
+   * SECOND, the pixels. None of the above proves the thumb is not still the
+   * default grey, so the bar is rendered and sampled.
+   */
+  test("the Firefox fallback does not disable the WebKit scrollbar in Chromium", async ({ page }) => {
+    await page.goto("/en");
+    await page.waitForLoadState("networkidle");
+
+    const applied = await page.evaluate(() => ({
+      guardMatchesHere: CSS.supports("not selector(::-webkit-scrollbar)"),
+      scrollbarColor: getComputedStyle(document.documentElement).scrollbarColor,
+      scrollbarWidth: getComputedStyle(document.documentElement).scrollbarWidth,
+    }));
+
+    expect(applied.guardMatchesHere, "Chromium supports ::-webkit-scrollbar, so it must not take the Firefox branch").toBe(false);
+    expect(applied.scrollbarColor, "a computed scrollbar-color other than `auto` switches Chromium off the ::-webkit-scrollbar path").toBe("auto");
+    expect(applied.scrollbarWidth, "a non-auto scrollbar-width does the same").toBe("auto");
+  });
+
+  /**
+   * Scrollbars are chrome, not content: headless Chromium hides them
+   * (`--hide-scrollbars`) and mobile emulation makes them overlays that take
+   * no layout space, so neither default can be measured. This block therefore
+   * asks for a browser that draws them, and runs only in the desktop project
+   * — at a phone width and a desktop one both, since the width IS the subject
+   * here.
+   */
+  test.describe("as rendered", () => {
+    test.skip(({ isMobile }) => !!isMobile, "mobile emulation draws an overlay scrollbar with no measurable geometry");
+
+    for (const { width, expected } of [
+      { width: 390, expected: 8 },
+      { width: 1440, expected: 10 },
+    ] as const) {
+      test(`${width}px: the bar is ${expected}px of brand blue, not the default grey`, async ({ baseURL }) => {
+        // A browser of this test's own, because the one Playwright supplies is
+        // launched with `--hide-scrollbars` and the scrollbar is the subject.
+        // `launchOptions` cannot be scoped to a describe block — Playwright
+        // rejects it, since it would force a new worker — so it is done by
+        // hand and closed in the `finally`.
+        const browser = await chromium.launch({ ignoreDefaultArgs: ["--hide-scrollbars"] });
+        try {
+          const page = await browser.newPage({ viewport: { width, height: 900 }, deviceScaleFactor: 1 });
+          await page.goto(`${baseURL}/en`);
+          await page.waitForLoadState("networkidle");
+
+          const gutter = await page.evaluate(() => window.innerWidth - document.documentElement.clientWidth);
+          expect(gutter, `the scrollbar must be visible and ${expected}px wide`).toBe(expected);
+
+          // Away from the top, so the thumb is somewhere samplable rather than
+          // flush into the corner.
+          await page.evaluate(() => window.scrollTo(0, 1200));
+          await page.waitForTimeout(300);
+          const shot = await page.screenshot({ type: "png" });
+
+          // The scrollbar is browser chrome and not in the DOM, so the only
+          // way to read it back is off the screenshot.
+          const bar = await page.evaluate(
+            async ({ b64, gutterPx }: { b64: string; gutterPx: number }) => {
+              const img = new Image();
+              img.src = `data:image/png;base64,${b64}`;
+              await img.decode();
+              const canvas = document.createElement("canvas");
+              canvas.width = img.width;
+              canvas.height = img.height;
+              const ctx = canvas.getContext("2d")!;
+              ctx.drawImage(img, 0, 0);
+              const column = Math.round(img.width - gutterPx / 2);
+              const pixels: Array<[number, number, number]> = [];
+              for (let y = 0; y < img.height; y += 1) {
+                const p = ctx.getImageData(column, y, 1, 1).data;
+                pixels.push([p[0], p[1], p[2]]);
+              }
+              return pixels;
+            },
+            { b64: shot.toString("base64"), gutterPx: gutter },
+          );
+
+          // Split the column into its two parts. The track is whatever colour
+          // most of the column is; the thumb is the contiguous run that is not
+          // that. Deliberately NOT "the darkest pixel" — a rounded thumb on a
+          // pale track has an antialiased rim several pixels deep at each end,
+          // and an earlier version of this test picked one of those rim
+          // pixels and reported the thumb as a colour it is nowhere.
+          const brightness = ([r, g, b]: [number, number, number]) => 0.2126 * r + 0.7152 * g + 0.0722 * b;
+          const tally = new Map<string, number>();
+          for (const px of bar) tally.set(px.join(","), (tally.get(px.join(",")) ?? 0) + 1);
+          const track = [...tally.entries()].sort((a, b) => b[1] - a[1])[0][0].split(",").map(Number) as [number, number, number];
+          const body = bar.filter((px) => px.reduce((d, c, i) => d + Math.abs(c - track[i]), 0) > 30).sort((a, b) => brightness(a) - brightness(b));
+          expect(body.length, "no thumb was found in the scrollbar column — is the scrollbar being drawn at all?").toBeGreaterThanOrEqual(30);
+          const thumb = body[Math.floor(body.length / 2)];
+
+          for (const [label, colour] of [
+            ["thumb", thumb],
+            ["track", track],
+          ] as const) {
+            const [r, g, b] = colour;
+            expect(b, `the ${label} must be blue, not grey or black: got rgb(${r}, ${g}, ${b})`).toBeGreaterThan(r + 12);
+            expect(b, `the ${label} must be blue, not grey or black: got rgb(${r}, ${g}, ${b})`).toBeGreaterThan(g);
+          }
+          expect(brightness(thumb), `the thumb must be a mid blue, not near-black: got rgb(${thumb.join(", ")})`).toBeGreaterThan(60);
+
+          // AA's 3:1 for a non-text UI component, measured against the thing
+          // the thumb actually sits on, which is the track.
+          const relative = ([r, g, b]: [number, number, number]) => {
+            const channel = (c: number) => {
+              const v = c / 255;
+              return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4;
+            };
+            return 0.2126 * channel(r) + 0.7152 * channel(g) + 0.0722 * channel(b);
+          };
+          const contrast = (relative(track) + 0.05) / (relative(thumb) + 0.05);
+          expect(contrast, `thumb rgb(${thumb.join(", ")}) on track rgb(${track.join(", ")}) must clear 3:1`).toBeGreaterThanOrEqual(3);
+
+          // Restyling the bar narrower than the platform default changes how
+          // much width the page is given. It must not have changed whether
+          // the page fits in it.
+          const draggable = await page.evaluate(() => {
+            const before = window.scrollX;
+            window.scrollTo(9999, 0);
+            const after = window.scrollX;
+            window.scrollTo(before, 0);
+            return Math.abs(after - before);
+          });
+          expect(draggable, `the ${expected}px bar must not have introduced horizontal scrolling`).toBe(0);
+        } finally {
+          await browser.close();
+        }
+      });
+    }
+  });
 });
 
 // ---------------------------------------------------------------------------
