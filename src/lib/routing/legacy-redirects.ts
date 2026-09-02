@@ -1,5 +1,3 @@
-import { routes } from "@/config/routes";
-
 /**
  * Direct 301 redirect map for every legacy URL — brief §33. Consumed by
  * src/proxy.ts. Kept as a flat exact-match table (no chains, no wildcard
@@ -94,71 +92,3 @@ export const legacyRedirects: Record<string, string> = {
   // editorial content; closest live equivalent is the shop catalogue.
   "/ols/products": "/en/shop",
 };
-
-
-/**
- * CANONICAL ROUTE RENAMES — distinct from the legacy table above, and kept
- * separate on purpose.
- *
- * `legacyRedirects` maps URLs from the *old third-party sites* onto this
- * build. This maps URLs this build itself used to serve. Both are exact-match
- * 301s, but they have different lifetimes and different review rules, and
- * `tests/redirects/legacy-redirects.spec.ts` asserts every row of the legacy
- * table lands on a pathname it can compare literally — which an Arabic
- * destination cannot satisfy, because `new URL(...).pathname` returns it
- * percent-encoded. Mixing the two would have meant weakening that assertion
- * for all forty-odd legacy rows to accommodate six Arabic ones.
- *
- * WHY EXACT MATCH IS LOAD-BEARING HERE. A prefix rule for `/doctors` would
- * swallow `/doctors/mohamed-farhat` and send all six member pages to the
- * index. Twenty-four of the twenty-eight keys below sit underneath one of the
- * four index keys, so this is the common case, not an edge case. Every lookup
- * against this table is a whole-pathname equality test.
- *
- * FOUR FORMS PER ROUTE, because a visitor can arrive at any of them:
- *   /doctors/x            bare, before proxy.ts prefixes a locale. Listed so
- *                         it resolves in ONE hop; without it the request 301s
- *                         to /en/doctors/x and then 301s again, and a chain is
- *                         the thing this table exists to avoid.
- *   /en/doctors/x         the English canonical this build used to publish.
- *   /ar/doctors/x         the Latin slug under /ar, which proxy.ts used to
- *                         redirect to the Arabic canonical.
- *   /ar/الأطباء/x         the Arabic canonical this build used to publish.
- *
- * The OLD paths are written out because they now exist nowhere else in the
- * repository. The NEW paths are read from the route registry rather than
- * repeated, so a later move of this family cannot leave the redirects behind.
- */
-const RENAMED_ROUTE_FAMILY: ReadonlyArray<{
-  routeId: string;
-  oldEn: string;
-  oldAr: string;
-}> = [
-  { routeId: "doctors-index", oldEn: "/doctors", oldAr: "/الأطباء" },
-  { routeId: "doctor-farhat", oldEn: "/doctors/mohamed-farhat", oldAr: "/الأطباء/محمد-فرحات" },
-  { routeId: "doctor-saeed", oldEn: "/doctors/omaima-saeed", oldAr: "/الأطباء/أميمة-سعيد" },
-  { routeId: "doctor-hamdi", oldEn: "/doctors/reem-hamdi", oldAr: "/الأطباء/ريم-حمدي" },
-  { routeId: "doctor-omonijo", oldEn: "/doctors/omonijo", oldAr: "/الأطباء/أومونيجو" },
-  { routeId: "doctor-bakare", oldEn: "/doctors/bakare", oldAr: "/الأطباء/باكاري" },
-  { routeId: "doctor-gwea", oldEn: "/doctors/ahmed-gwea", oldAr: "/الأطباء/أحمد-جويع" },
-];
-
-export const renamedRouteRedirects: Record<string, string> = Object.fromEntries(
-  RENAMED_ROUTE_FAMILY.flatMap(({ routeId, oldEn, oldAr }) => {
-    const route = routes.find((r) => r.id === routeId);
-    if (!route) {
-      // A rename row naming a route that no longer exists would silently stop
-      // redirecting. Fail the build instead — this module is imported by
-      // proxy.ts, so it is evaluated on every cold start.
-      throw new Error(`legacy-redirects.ts: RENAMED_ROUTE_FAMILY references unknown route id "${routeId}"`);
-    }
-    const en = `/en${route.path.en}`;
-    const ar = `/ar${route.path.ar}`;
-    return [
-      [oldEn, en],
-      [`/en${oldEn}`, en],
-      [`/ar${oldEn}`, ar],
-      [`/ar${oldAr}`, ar],
-    ] as const;
-  }),
-);

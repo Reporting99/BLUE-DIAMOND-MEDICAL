@@ -35,21 +35,6 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns,
   },
-  // Nav-alias redirect only — NOT a legacy-domain migration row (those all
-  // live in src/lib/seo/legacy-redirects.ts / docs/ROUTING.md § "Redirect Map").
-  // The "FINAL MANDATORY NAVIGATION" brief's Services-page example used
-  // "/en/services/" as an illustrative URL; the real canonical Medical
-  // Services hub is the existing, fully-built /en/medical/ (brief §4: "Use
-  // the existing canonical route map... do not invent duplicate routes").
-  // This alias exists purely so that literal URL still resolves to the
-  // real page instead of 404ing, without creating a second indexable page
-  // for the same content — see docs/ROUTING.md § "Route Decision Log".
-  async redirects() {
-    return [
-      { source: "/en/services", destination: "/en/medical", permanent: true },
-      { source: "/en/services/", destination: "/en/medical", permanent: true },
-    ];
-  },
 };
 
 export default nextConfig;

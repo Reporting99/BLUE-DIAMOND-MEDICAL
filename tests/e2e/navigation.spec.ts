@@ -346,10 +346,15 @@ test.describe("Services and legacy-alias resolution", () => {
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
   });
 
-  test("/en/services alias redirects to the real hub, not a duplicate page or 404", async ({ page }) => {
+  // NO_PRELAUNCH_ROUTE_ALIAS. /en/services was never published: it was an
+  // illustrative URL from the navigation brief, aliased to /en/medical so the
+  // literal string resolved. Nothing links to it, so at first launch it is
+  // simply not a route -- an alias would be a second address for the hub and
+  // exactly the duplicate this pass removes.
+  test("/en/services is not a route -- the Medical hub has one address", async ({ page }) => {
     const res = await page.goto("/en/services");
-    expect(res?.status()).toBe(200); // after following the 301
-    await expect(page).toHaveURL(/\/en\/medical$/);
+    expect(res?.status()).toBe(404);
+    await expect(page).toHaveURL(/\/en\/services$/); // no redirect, no alias
   });
 });
 

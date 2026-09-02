@@ -1,15 +1,15 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { defaultLocale, isLocale } from "@/i18n/config";
-import { legacyRedirects, renamedRouteRedirects } from "@/lib/routing";
+import { legacyRedirects } from "@/lib/routing";
 import { routes } from "@/lib/routing";
 import { localizedEntityRoutes } from "@/config/localized-entity-routes.generated";
 import { isSiteLaunched, PRE_LAUNCH_ROBOTS_HEADER } from "@/config/launch";
 
 /**
- * Arabic public URLs use meaningful Arabic slugs (e.g. /ar/الأطباء/...)
+ * Arabic public URLs use meaningful Arabic slugs (e.g. /ar/فريقنا/...)
  * that don't correspond to any physical folder on disk — only the English
- * slug does (app/[locale]/doctors/[doctorId]/...). This map rewrites the
+ * slug does (app/[locale]/our-team/[doctorId]/...). This map rewrites the
  * pretty Arabic path to its canonical English-slug path internally, on
  * the same "ar" locale, so the browser's address bar keeps the Arabic URL
  * while Next's file-system router resolves it against the English folder
@@ -19,7 +19,8 @@ const arabicToCanonicalPath = new Map<string, string>([
   ...routes
     .filter((r) => r.path.ar !== r.path.en)
     .map((r) => [r.path.ar, r.path.en] as const),
-  // Entity routes -- doctors, treatments, concerns, technologies, services,
+  // Entity routes -- team members, treatments, concerns, technologies,
+  // services,
   // products -- are created in the CMS, and their Arabic slugs are authored
   // there rather than here. Only 6 of them were ever hand-copied into
   // src/config/routes.ts, so 52 of 58 CMS routes had no entry in this map and
@@ -66,7 +67,7 @@ const englishSlugToArabicPath = new Map(
  *
  * The VALUE is a per-process nonce, not a constant. A constant marker is
  * client-controllable: anyone sending `x-bd-arabic-rewrite: 1` against
- * /ar/doctors was served 200 instead of the 301, resurrecting exactly the
+ * /ar/our-team was served 200 instead of the 301, resurrecting exactly the
  * duplicate Arabic URL this redirect exists to remove. The nonce is generated
  * at module load, never appears in any response, and is unguessable, so only
  * a rewrite this process itself issued can satisfy the check.
@@ -177,25 +178,6 @@ export function proxy(request: NextRequest) {
   const legacyTarget = legacyRedirects[decodedPathname] ?? legacyRedirects[pathname];
   if (legacyTarget) {
     const url = new URL(legacyTarget, request.url);
-    if (search) url.search = search;
-    return withIndexingGuard(NextResponse.redirect(url, 301));
-  }
-
-  // 1a. Canonical route renames this build made to its OWN URLs — currently
-  // the /doctors family becoming /our-team. Exact-match, checked before
-  // locale prefixing so a bare /doctors/<slug> reaches its destination in one
-  // hop rather than 301ing to /en/doctors/<slug> and 301ing again.
-  //
-  // Deliberately AFTER legacyRedirects: an old third-party URL that happens to
-  // collide with a path this build once served should resolve as the legacy
-  // table says, since that table is the migration contract with the old sites.
-  //
-  // Whole-pathname equality, never a prefix test. `/en/doctors` must not
-  // capture `/en/doctors/mohamed-farhat` — see the note on RENAMED_ROUTE_FAMILY.
-  const renamedTarget =
-    renamedRouteRedirects[decodedPathname] ?? renamedRouteRedirects[pathname];
-  if (renamedTarget) {
-    const url = new URL(renamedTarget, request.url);
     if (search) url.search = search;
     return withIndexingGuard(NextResponse.redirect(url, 301));
   }

@@ -378,7 +378,7 @@ export interface RevalidationTarget {
   siteKey: string;
   /** From `data.locale`, which is transmitted and authoritative. */
   locale?: BdLocale;
-  /** The CMS path from `data.path`, e.g. "/doctors/mohamed-farhat". */
+  /** The CMS path from `data.path`, e.g. "/our-team/mohamed-farhat". */
   cmsPath?: string;
   /** `data.previousPath` when a route moved. */
   previousCmsPath?: string;

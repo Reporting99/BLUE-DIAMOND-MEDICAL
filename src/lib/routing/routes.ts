@@ -28,11 +28,11 @@ export function href(id: string, locale: Locale): string {
  * The path to ask FeelStack for, for THIS locale.
  *
  * FeelStack registers one route per locale, and the Arabic route's path is the
- * Arabic pretty slug (`/الأطباء/محمد-فرحات`), not the English physical one. A
+ * Arabic pretty slug (`/فريقنا/محمد-فرحات`), not the English physical one. A
  * page whose Next.js segment is the English slug must therefore translate
  * before it asks the CMS, or it asks for a path that only exists in English.
  *
- * What happened when it did not: `resolve(path=/doctors/mohamed-farhat,
+ * What happened when it did not: `resolve(path=/our-team/mohamed-farhat,
  * locale=ar)` answers `resolvedLocale: "en", usedFallback: true` — the backend
  * correctly reporting "I have no Arabic route at that path, here is the English
  * one". `locale-integrity` then correctly refuses it, because rendering English

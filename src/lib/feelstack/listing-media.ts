@@ -34,14 +34,14 @@ import type { Locale } from "./contracts";
 export interface ListingEntity {
   /** Stable domain id — the key the caller will look results up by. */
   id: string;
-  /** English physical CMS path, e.g. `/doctors/mohamed-farhat`. */
+  /** English physical CMS path, e.g. `/our-team/mohamed-farhat`. */
   englishPath: string;
   /**
    * Which of FeelStack's two route families this is, because they are slugged
    * differently and asking the wrong way returns nothing.
    *
    *  - `"entity"` (default) — a CMS content entry. Its Arabic route carries the
-   *    Arabic pretty slug (`/الأطباء/محمد-فرحات`), so the request must be
+   *    Arabic pretty slug (`/فريقنا/محمد-فرحات`), so the request must be
    *    translated with `cmsPathForLocale` first.
    *
    *  - `"page"` — a CMS page. `UpdatePageDto.slugSegment` is constrained to
