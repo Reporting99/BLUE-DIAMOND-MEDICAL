@@ -69,8 +69,8 @@ export default async function CareersPage({ params }: { params: Promise<{ locale
         imageRole="location"
         seed="careers"
         imageAlt={{
-          en: "The clinical team at Blue Diamond Medical Clinic, West Springs",
-          ar: "الفريق الطبي في عيادة بلو دايموند الطبية، ويست سبرينغز",
+          en: "A clinical team reviewing notes together around a table",
+          ar: "فريق طبي يراجع الملاحظات معًا حول طاولة",
         }}
         breadcrumbs={<Breadcrumbs locale={locale} items={[{ label: ownRoute.title[locale] }]} />}
         actions={

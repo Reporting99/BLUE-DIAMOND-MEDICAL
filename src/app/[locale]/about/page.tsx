@@ -97,8 +97,8 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
         seed="about"
         measure="article"
         imageAlt={{
-          en: "Blue Diamond Medical Clinic in West Springs, Calgary",
-          ar: "عيادة بلو دايموند الطبية في ويست سبرينغز، كالغاري",
+          en: "A clinician's hands resting on a patient's hands during a consultation",
+          ar: "يدا أحد الأطباء تستندان على يدي مريض خلال استشارة",
         }}
         breadcrumbs={<Breadcrumbs locale={locale} items={[{ label: ownRoute.title[locale] }]} />}
         /* The brand lock-up as this hero's second element, balancing the

@@ -96,9 +96,34 @@ test.describe("hub pages own media, never content", () => {
     // The card must consume resolved media first. A FacetTile may still appear
     // in the file — as the fallback branch — but not as the sole visual.
     expect(homepage).toContain('featured("hub:aesthetics", "hero", "card")');
-    const cardBlock = homepage.slice(homepage.indexOf('href={href("aesthetics-hub", locale)}'));
+    /*
+     * Locate the pathway CARD, not merely the first link to the hub.
+     *
+     * The homepage links `aesthetics-hub` twice — once as a hero CTA in
+     * Section 1 and once as the pathway card in Section 2 — and it links
+     * `medical-hub` twice for the same reason, so neither "the first
+     * aesthetics href" nor "the first aesthetics href after the first medical
+     * href" identifies the card; both land in the hero. The card is the only
+     * one of them that is an image tile, so discriminate on that: its own
+     * `aspect-[4/3]` container class. The assertions themselves are unchanged.
+     */
+    const cardHref = 'href={href("aesthetics-hub", locale)}';
+    let cardStart = -1;
+    for (let i = homepage.indexOf(cardHref); i !== -1; i = homepage.indexOf(cardHref, i + 1)) {
+      if (homepage.slice(i, i + 300).includes("aspect-[4/3]")) {
+        cardStart = i;
+        break;
+      }
+    }
+    expect(cardStart, "the Aesthetics pathway card must be findable").toBeGreaterThan(-1);
+    const cardBlock = homepage.slice(cardStart);
     const upToGradient = cardBlock.slice(0, cardBlock.indexOf("linear-gradient"));
-    expect(upToGradient, "the card must render assigned media before falling back").toContain("aestheticsHubMedia ? (");
+    /*
+     * `aestheticsPathwayMedia` (was `aestheticsHubMedia`): the card now reads
+     * the published Home record's `pathwayMedicalAesthetics` slot first and
+     * keeps the hub-owned assignment as its fallback.
+     */
+    expect(upToGradient, "the card must render assigned media before falling back").toContain("aestheticsPathwayMedia ? (");
     expect(upToGradient).toContain("ImageKitImage");
   });
 

@@ -25,6 +25,15 @@ import type { Locale } from "@/i18n/config";
 /** Stable JSON-LD `@id` for the one clinic entity declared on the homepage. */
 export const clinicId = `${siteConfig.url}/#clinic`;
 
+/**
+ * Stable JSON-LD `@id` for the aesthetics arm. It is a separate node, not a
+ * second copy of the clinic: it operates from the same street address but
+ * publishes its own telephone line and its own opening hours
+ * (docs/SOURCE_CONFLICT_REGISTER.md CONF-001), and the homepage location
+ * card renders those, so the graph has to be able to name it.
+ */
+export const aestheticsId = `${siteConfig.url}/#aesthetics`;
+
 /** Stable JSON-LD `@id` for a doctor, so nodes can reference each other by id. */
 export function doctorEntityId(doctor: Pick<Doctor, "id">): string {
   return `${siteConfig.url}/#physician-${doctor.id}`;

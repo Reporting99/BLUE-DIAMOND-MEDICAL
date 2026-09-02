@@ -3,7 +3,7 @@ import { ArrowRight } from "lucide-react";
 import { Container } from "@/components/layout/Container";
 import { SectionTransition } from "@/components/layout/SectionTransition";
 import { Button } from "@/components/ui/button";
-import { PageHero } from "@/components/layout/PageHero";
+import { ConcernSplitHero } from "./ConcernSplitHero";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
 import { MedicalWebPageSchema } from "@/components/shared/schema";
 import { FaqPageSchema } from "@/components/shared/schema";
@@ -105,26 +105,48 @@ export function ConcernTemplate({ concern, locale }: { concern: AestheticConcern
       {ownRoute ? (
         <MedicalWebPageSchema locale={locale} name={concern.title[locale]} description={concern.summary[locale]} path={ownRoute.path[locale]} />
       ) : null}
-      {/* The lead image is the hero now. It used to render as a rounded
-          aspect-video figure a screenful below the breadcrumbs, and only when
-          an assignment existed -- so a treatment whose photography has not
-          been shot opened on plain white text. PageHero renders the same
-          asset when there is one and the branded facet visual when there is
-          not, so the page has a top either way, and the caption travels with
-          the image rather than being lost in the promotion. */}
-      <PageHero
+      {/* THE HERO. Photograph on the left, copy on the right, the brand's
+          facet planes as the transition between them — one composition shared
+          by every concern detail page, so no concern can drift into a hero of
+          its own.
+
+          It replaced a full-bleed PageHero whose copy sat OVER the photograph
+          behind a readability wash. These nine assets are portraits whose
+          subject fills the frame, and text laid across them veiled the one
+          thing the page exists to show.
+
+          WHY NOT PageHero's OWN `mediaLayout="split"`. That variant places the
+          picture by INLINE side, so `start` means left in English and right in
+          Arabic. This composition is a branded page pattern rather than a
+          reading-order one: the photograph stays on the PHYSICAL left in both
+          locales while the Arabic copy beside it still runs RTL. Expressing
+          that through PageHero would have meant a third axis on a component
+          twenty-one other routes render, for a case none of them use — so the
+          composition lives in its own component and PageHero is untouched.
+
+          The picture is whatever the shared slot order in ../media-slots
+          resolves for THIS concern (`concern.image`), which is why Skin
+          Laxity's purpose-shot `section` feature asset lands here while the
+          other eight land on their `card` asset, with no per-concern branch
+          anywhere in this file. */}
+      <ConcernSplitHero
         locale={locale}
         title={concern.title[locale]}
         body={concern.summary[locale]}
         image={concern.image}
-        imageRole="concern"
         seed={concern.id}
-        measure="article"
         imageAlt={{
           en: concern.title.en || concern.id,
           ar: concern.title.ar || concern.id,
         }}
         imageCaption={concern.image?.caption}
+        actions={
+          /* The same consultation CTA with the same destination, in the hero's
+             copy column rather than a screenful below it. */
+          <Button size="lg" render={<a href={booking.href} target="_blank" rel="noopener noreferrer" />}>
+            {t.consultCta}
+          </Button>
+        }
         breadcrumbs={
           <Breadcrumbs
             locale={locale}
@@ -135,10 +157,6 @@ export function ConcernTemplate({ concern, locale }: { concern: AestheticConcern
 
       <article className="section-y">
       <Container className="max-w-3xl">
-
-        <Button size="lg" className="mt-8" render={<a href={booking.href} target="_blank" rel="noopener noreferrer" />}>
-          {t.consultCta}
-        </Button>
 
         {concern.commonPresentations ? (
           <section data-reveal="up" className="mt-10">

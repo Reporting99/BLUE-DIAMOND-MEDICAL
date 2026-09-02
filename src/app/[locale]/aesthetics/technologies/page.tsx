@@ -47,7 +47,7 @@ export default async function TechnologiesHubPage({ params }: { params: Promise<
   // Hero + one card image per device, resolved in a single fan-out.
   const media = await resolveListingMedia(
     [
-      { id: "page", englishPath: ownRoute.path.en },
+      { id: "page", englishPath: ownRoute.path.en, routeKind: "page" as const },
       ...technologies.map((t) => ({ id: t.id, englishPath: `/aesthetics/technologies/${t.slug}` })),
     ],
     locale,
@@ -79,8 +79,8 @@ export default async function TechnologiesHubPage({ params }: { params: Promise<
         imageRole="technology"
         seed="technologies-hub"
         imageAlt={{
-          en: "Cynosure aesthetic treatment equipment at Blue Diamond Medical",
-          ar: "أجهزة العلاج التجميلي من Cynosure في بلو دايموند الطبية",
+          en: "An abstract blue diamond above concentric rings of light",
+          ar: "ماسة زرقاء مجردة فوق حلقات ضوئية متحدة المركز",
         }}
         breadcrumbs={<Breadcrumbs locale={locale} items={[{ label: aestheticsRoute.title[locale], href: href("aesthetics-hub", locale) }, { label: title }]} />}
       />

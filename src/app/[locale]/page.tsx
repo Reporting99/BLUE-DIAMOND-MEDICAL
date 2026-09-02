@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { ArrowRight, MapPin, Phone, Stethoscope, Sparkles, Search, Cpu } from "lucide-react";
+import { ArrowRight, MapPin, Phone, Printer, Stethoscope, Sparkles, Search, Cpu } from "lucide-react";
 import { Container } from "@/components/layout/Container";
 import { SectionTransition } from "@/components/layout/SectionTransition";
 import { SiteClosingExperience } from "@/components/layout/SiteClosingExperience";
@@ -33,7 +33,9 @@ import { publishableBeforeAfterPairs } from "@/features/aesthetics/data/before-a
 import { BeforeAfterGallery } from "@/features/aesthetics/components/BeforeAfterGallery";
 import { getBookingUrl } from "@/config/booking";
 import { siteConfig } from "@/config/site";
-import { getOpenStatus, statutoryHolidayNotice } from "@/config/clinic-hours";
+import { eliteIQLocation, mapDirectionsUrl, primaryLocation } from "@/config/locations";
+import { LocationMap } from "@/components/shared/LocationMap";
+import { aestheticsHours, getOpenStatus, statutoryHolidayNotice } from "@/config/clinic-hours";
 import { formatPrice } from "@/types/pricing";
 import { getRouteMetadata } from "@/lib/seo/metadata";
 
@@ -74,7 +76,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const dict = getDictionary(locale);
   const copy = homepageCopy[locale];
   const bookingHub = getRoute("book-appointment")!;
-  const status = getOpenStatus();
+  const status = getOpenStatus(aestheticsHours);
   const featuredDoctors = doctors.slice(0, 3);
 
   const { serviceCards, techShowcase, treatmentShowcase, productShowcase } = getHomeShowcases(locale);
@@ -125,10 +127,23 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   /** First asset in any of `slots` for a featured entity, or undefined. */
   const featured = (key: string, ...slots: string[]) =>
     (homeMedia[key] ?? []).find((m) => slots.includes(m.slot));
-  /* Hub media, resolved through the same slot precedence every other surface
-     uses. `undefined` when the hub has no approved assignment — the callers
-     below fall back to the facet tile rather than rendering an empty box. */
-  const aestheticsHubMedia = featured("hub:aesthetics", "hero", "card");
+  /* SECTION 2 PATHWAY CARDS.
+     The canonical owner of both cards' imagery is the published "/" page
+     record, which carries one shared assignment per card
+     (`localeMode: "shared"`), so EN and AR resolve the SAME MediaAsset id
+     rather than two locale copies of one photograph. The slot key — not the
+     card's position in the grid — is what binds an image to a card, which is
+     why RTL reversing the visual order cannot cross them over.
+
+     `/medical` and `/aesthetics` also have `page` records, but both are still
+     drafts in both locales, so their assignments never reach the public
+     resolver. `hub:aesthetics` is therefore kept below only as a fallback for
+     the day those pages are published — an ordered precedence, not a second
+     source of truth. */
+  const pathwaySlot = (slot: string) => (homeMedia.home ?? []).find((m) => m.slot === slot);
+  const medicalPathwayMedia = pathwaySlot("pathwayMedicalCare");
+  const aestheticsPathwayMedia =
+    pathwaySlot("pathwayMedicalAesthetics") ?? featured("hub:aesthetics", "hero", "card");
   /* Keyed by concern id, resolved through the shared slot order rather than by
      position in the grid — see features/concerns/media.ts on why a preference
      list cannot cross one concern's photograph onto another's card. */
@@ -321,11 +336,49 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
             {dict.home.pathwaysTitle}
           </h2>
           <div className="mt-8 grid gap-6 lg:grid-cols-[5fr_7fr]">
-            <div data-reveal="start" className="flex flex-col justify-center rounded-lg border border-border p-8">
-              <Stethoscope className="size-7 text-primary" aria-hidden="true" />
+            {/* MEDICAL CARE CARD. Mirrors the aesthetics card's treatment —
+                photograph, the same Blue Diamond overlay, white text — while
+                keeping this card's own structure (centred content, p-8, its
+                existing inner link). The overlay is a render-time layer so the
+                approved asset stays clean: nothing is baked into the source.
+                With no assignment the card falls back to its original bordered
+                panel rather than an empty box. */}
+            <div
+              data-reveal="start"
+              className={`relative isolate flex flex-col justify-center overflow-hidden rounded-lg p-8 ${
+                medicalPathwayMedia ? "text-white" : "border border-border"
+              }`}
+            >
+              {medicalPathwayMedia ? (
+                <>
+                  <ImageKitImage
+                    path={medicalPathwayMedia.path}
+                    preset="hero"
+                    role={medicalPathwayMedia.role}
+                    status={medicalPathwayMedia.status}
+                    alt={
+                      cmsAlt(medicalPathwayMedia) ?? {
+                        en: "Family medical consultation at Blue Diamond Medical",
+                        ar: "استشارة رعاية طبية عائلية في بلو دايموند الطبية",
+                      }
+                    }
+                    locale={locale}
+                    width={medicalPathwayMedia.width}
+                    height={medicalPathwayMedia.height}
+                    sizes="(min-width: 1024px) 42vw, 100vw"
+                    className="absolute inset-0 -z-20 h-full w-full"
+                  />
+                  <div
+                    aria-hidden="true"
+                    className="absolute inset-0 -z-10"
+                    style={{ background: "linear-gradient(0deg, rgba(41,101,137,0.92) 0%, rgba(41,101,137,0.5) 60%, rgba(41,101,137,0.08) 100%)" }}
+                  />
+                </>
+              ) : null}
+              <Stethoscope className={medicalPathwayMedia ? "size-7" : "size-7 text-primary"} aria-hidden="true" />
               <h3 className="mt-4 text-h3 font-heading">{dict.home.pathwaysMedicalTitle}</h3>
-              <p className="mt-3 text-body text-text-secondary">{dict.home.pathwaysMedicalBody}</p>
-              <Link href={href("medical-hub", locale)} className="mt-6 inline-flex items-center gap-1 text-sm font-semibold text-primary hover:text-primary-hover">
+              <p className={`mt-3 text-body ${medicalPathwayMedia ? "text-white/90" : "text-text-secondary"}`}>{dict.home.pathwaysMedicalBody}</p>
+              <Link href={href("medical-hub", locale)} className={`mt-6 inline-flex items-center gap-1 text-sm font-semibold ${medicalPathwayMedia ? "tracking-wide text-white hover:text-white/90" : "text-primary hover:text-primary-hover"}`}>
                 {copy.finalActions.explorMedical} <ArrowRight className="size-4 rtl:rotate-180" />
               </Link>
             </div>
@@ -339,21 +392,21 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                   the default. This used to be a hardcoded FacetTile, which meant
                   an approved photograph assigned to the Aesthetics hub could
                   never reach the card no matter what the CMS said. */}
-              {aestheticsHubMedia ? (
+              {aestheticsPathwayMedia ? (
                 <ImageKitImage
-                  path={aestheticsHubMedia.path}
+                  path={aestheticsPathwayMedia.path}
                   preset="hero"
-                  role={aestheticsHubMedia.role}
-                  status={aestheticsHubMedia.status}
+                  role={aestheticsPathwayMedia.role}
+                  status={aestheticsPathwayMedia.status}
                   alt={
-                    cmsAlt(aestheticsHubMedia) ?? {
+                    cmsAlt(aestheticsPathwayMedia) ?? {
                       en: "Medical aesthetics consultation room at Blue Diamond Medical",
                       ar: "غرفة استشارات التجميل الطبي في بلو دايموند الطبية",
                     }
                   }
                   locale={locale}
-                  width={aestheticsHubMedia.width}
-                  height={aestheticsHubMedia.height}
+                  width={aestheticsPathwayMedia.width}
+                  height={aestheticsPathwayMedia.height}
                   sizes="(min-width: 1024px) 58vw, 100vw"
                   className="absolute inset-0 -z-20 h-full w-full"
                 />
@@ -768,46 +821,145 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       <SectionTransition from="var(--background)" to="var(--surface)" />
 
       {/* ============ SECTION 15 — LOCATION AND CONTACT ============ */}
+      {/* Two-column composition unchanged: a large visual on one side, the
+          location content on the other. What changed is that the visual is
+          now a REAL interactive map instead of the FacetTile placeholder
+          (docs/MEDIA.md already flagged that row as "Consider an embedded map
+          instead of a static image"), and the card now presents the
+          aesthetics location entity.
+
+          Every fact below — name, address, phone, fax, map pin, directions
+          target — comes from `primaryLocation` / `eliteIQLocation` in
+          src/config/locations.ts. Nothing factual is written inline here and
+          nothing factual lives in the locale dictionaries, which is what
+          makes EN and AR structurally incapable of disagreeing.
+
+          On the phone number: this card is the AESTHETICS channel, so it
+          renders the (403) 247-1418 aesthetics line, not the (825) 413-1113
+          medical/walk-in line. Both are approved, published, and deliberately
+          distinct — see docs/SOURCE_CONFLICT_REGISTER.md CONF-001. Do not
+          "reconcile" them.
+
+          Hours status is computed from `aestheticsHours`, not the default
+          clinic schedule: this card is the aesthetics location and its
+          approved hours are 09:00-17:00, where the clinic's are 08:00-19:00.
+          "Open now" is never static text. */}
       <section className="section-y bg-surface" style={{ "--text-secondary": "var(--grey-4)" } as React.CSSProperties}>
         <Container className="grid gap-10 lg:grid-cols-2 lg:items-center">
-          <div data-reveal="start">
-            <p className="text-xs font-semibold tracking-[0.1em] text-primary uppercase">{copy.locationEyebrow}</p>
-            <h2 className="mt-3 text-display-2 font-heading lg:text-display-2-lg">{dict.home.locationTitle}</h2>
-            <p className="mt-4 text-body-lg text-text-secondary">{dict.home.locationBody}</p>
+          {/* Content is FIRST in the DOM so mobile stacks content-then-map
+              (the section's existing order) and so reading/tab order stays
+              logical. `lg:order-2` moves it to the right-hand column at
+              desktop, putting the map on the left. */}
+          <div data-reveal="end" className="lg:order-2">
+            <p className="text-xs font-semibold tracking-[0.1em] text-primary uppercase">{copy.location.eyebrow}</p>
+            <h2 className="mt-3 text-display-2 font-heading lg:text-display-2-lg">{copy.location.heading}</h2>
+            <p className="mt-4 text-body-lg text-text-secondary">{copy.location.body}</p>
 
-            <dl className="mt-6 space-y-3 text-body">
-              <div className="flex items-start gap-3">
-                <MapPin className="mt-0.5 size-5 shrink-0 text-primary" aria-hidden="true" />
-                <dd>
-                  {siteConfig.clinic.address.line1}, {siteConfig.clinic.address.city} {siteConfig.clinic.address.region} {siteConfig.clinic.address.postalCode}
+            <p className="mt-8 text-h4 font-heading">{primaryLocation.name}</p>
+
+            {/* The rows are a GRID, not a flex row wrapping an inner div.
+                `dl > div > div > dt` is invalid: axe's `only-dlitems` check
+                flattens a role-less `div` child of the `dl` and then requires
+                every screen-reader-visible node it finds to be a `dt`/`dd`,
+                and `dlitem` allows the pair's parent to be a `div` only when
+                THAT div's parent is the `dl`. Nesting a second div to stack
+                the label over the value therefore failed both rules on /en
+                and /ar (serious, 7 nodes). A two-row grid with the icon
+                spanning both rows keeps the identical visual — icon at the
+                inline-start, label above value — while leaving `dt` and `dd`
+                as direct children of the one `div`. The icons are
+                `aria-hidden`, which is what lets them sit in that div without
+                becoming disallowed children themselves. */}
+            <dl className="mt-4 space-y-4 text-body">
+              <div className="grid grid-cols-[auto_1fr] items-start gap-x-3">
+                <MapPin className="row-span-2 mt-0.5 size-5 shrink-0 text-primary" aria-hidden="true" />
+                <dt className="text-sm text-text-secondary">{copy.location.addressLabel}</dt>
+                {/* Two `ltr-run` spans rather than one: the address is Latin
+                    script inside an RTL paragraph, and isolating each line
+                    keeps "23-8" and the postal code from being reordered by
+                    the bidi algorithm. */}
+                <dd className="mt-0.5">
+                  <span className="ltr-run">{primaryLocation.displayLines[0]},</span>
+                  <br />
+                  <span className="ltr-run">{primaryLocation.displayLines[1]}</span>
                 </dd>
               </div>
-              <div className="flex items-start gap-3">
-                <Phone className="mt-0.5 size-5 shrink-0 text-primary" aria-hidden="true" />
-                <dd>
-                  <a className="ltr-run hover:text-primary" href={`tel:${siteConfig.clinic.phone}`}>
-                    {siteConfig.clinic.phoneDisplay}
+
+              <div className="grid grid-cols-[auto_1fr] items-start gap-x-3">
+                <Phone className="row-span-2 mt-0.5 size-5 shrink-0 text-primary" aria-hidden="true" />
+                <dt className="text-sm text-text-secondary">{copy.location.phoneLabel}</dt>
+                <dd className="mt-0.5">
+                  <a className="ltr-run hover:text-primary" href={`tel:${primaryLocation.phone}`}>
+                    {primaryLocation.phoneDisplay}
                   </a>
                 </dd>
               </div>
+
+              {/* Fax is deliberately not a link — it is reference information,
+                  never a contact action. */}
+              <div className="grid grid-cols-[auto_1fr] items-start gap-x-3">
+                <Printer className="row-span-2 mt-0.5 size-5 shrink-0 text-primary" aria-hidden="true" />
+                <dt className="text-sm text-text-secondary">{copy.location.faxLabel}</dt>
+                <dd className="ltr-run mt-0.5">{primaryLocation.faxDisplay}</dd>
+              </div>
             </dl>
 
-            <div className="mt-4 rounded-md border border-border bg-background px-4 py-3 text-sm">
+            <div className="mt-6 rounded-md border border-border bg-background px-4 py-3 text-sm">
               <span className="font-medium">{status.label[locale]}</span>
               <span className="mx-2 text-text-secondary">·</span>
               <span className="text-text-secondary">{statutoryHolidayNotice[locale]}</span>
             </div>
 
             <div className="mt-6 flex flex-wrap gap-4">
-              <Button variant="outline" render={<Link href={href("contact", locale)} />}>
-                {locale === "ar" ? "الحصول على الاتجاهات" : "Get directions"}
+              <Button
+                variant="outline"
+                render={
+                  <a href={mapDirectionsUrl(primaryLocation)} target="_blank" rel="noopener noreferrer" />
+                }
+              >
+                {copy.location.directions}
               </Button>
               <Button render={<Link href={`/${locale}${bookingHub.path[locale]}`} />}>{dict.common.bookAppointment}</Button>
             </div>
+
+            {/* SECONDARY location. Visually subordinate on purpose — a muted
+                bordered note, not a second address block of equal weight — so
+                Citizen Studio can never read as the main clinic. */}
+            <aside className="mt-8 rounded-lg border border-border bg-background/60 px-4 py-4">
+              <p className="text-xs font-semibold tracking-[0.08em] text-primary uppercase">{copy.location.eliteIQHeading}</p>
+              <p className="mt-2 text-sm text-text-secondary">{copy.location.eliteIQBody}</p>
+              <p className="mt-2 text-sm">
+                <span className="ltr-run">{eliteIQLocation.displayLines[0]},</span>
+                <br />
+                <span className="ltr-run">{eliteIQLocation.displayLines[1]}</span>
+              </p>
+              <a
+                href={mapDirectionsUrl(eliteIQLocation)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-3 inline-block text-sm font-medium text-primary underline underline-offset-4 hover:no-underline"
+              >
+                {copy.location.eliteIQDirections}
+              </a>
+            </aside>
           </div>
 
-          <div data-reveal="end" className="facet-corner aspect-[4/3] overflow-hidden rounded-lg lg:aspect-auto lg:self-stretch">
-            <FacetTile role="location" alt={({ en: "Map to Blue Diamond Medical Clinic", ar: "خريطة الوصول إلى عيادة بلو دايموند الطبية" })[locale]} className="h-full w-full" />
+          {/* MAP. Fills the visual container the FacetTile used to occupy.
+              Below `lg` the 4:3 ratio derives height from the column width, so
+              the box can never collapse to zero and needs no min-height — and
+              must not have one: `aspect-[4/3]` resolves against whichever axis
+              is constrained, so a `min-h` here made the ratio compute WIDTH
+              from that height (288px -> 384px) and pushed the map ~10px past a
+              390px viewport. At `lg` the ratio is dropped for `self-stretch`,
+              and the min-height is the floor that keeps the map from
+              collapsing when the content column is short.
+              `overflow-hidden` + `rounded-lg` clips the iframe to the Blue
+              Diamond corner radius. */}
+          <div
+            data-reveal="start"
+            className="aspect-[4/3] overflow-hidden rounded-lg border border-border lg:order-1 lg:aspect-auto lg:min-h-[28rem] lg:self-stretch"
+          >
+            <LocationMap location={primaryLocation} title={copy.location.mapTitle} />
           </div>
         </Container>
       </section>

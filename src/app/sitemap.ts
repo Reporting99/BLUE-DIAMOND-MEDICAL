@@ -24,7 +24,10 @@ export const dynamic = "force-dynamic";
  * briefly missing its CMS-only rows is recoverable, whereas a 500 on
  * /sitemap.xml makes Search Console drop the whole inventory.
  */
-async function cmsOnlyEntries(knownPaths: ReadonlySet<string>): Promise<MetadataRoute.Sitemap> {
+async function cmsOnlyEntries(
+  knownPaths: ReadonlySet<string>,
+  knownEnglishPaths: ReadonlySet<string>,
+): Promise<MetadataRoute.Sitemap> {
   if (getFeelstackContentMode() === "static") return [];
 
   // `sitemap.enabled` is an advisory SITE-level setting the CMS exposes and
@@ -44,6 +47,25 @@ async function cmsOnlyEntries(knownPaths: ReadonlySet<string>): Promise<Metadata
       const cmsRoutes = await listRoutes(locale);
       return cmsRoutes
         .filter((route) => !knownPaths.has(`${locale}:${route.path}`))
+        /*
+         * ...and not the SAME page under its ASCII CMS slug.
+         *
+         * `UpdatePageDto.slugSegment` is `^[a-z0-9]+(?:-[a-z0-9]+)*$`, so a
+         * FeelStack *page* record is stored at the English path in BOTH
+         * locales and disambiguated by `locale` — the Arabic /aesthetics page
+         * is `/aesthetics`, not `/التجميل-الطبي`. `knownPaths` is keyed by the
+         * app's own Arabic path, so it does not match, and publishing that
+         * record would add a second, non-canonical `/ar/aesthetics` row beside
+         * the canonical `/ar/التجميل-الطبي` one the registry already emits.
+         *
+         * Matching the English path across every locale closes that: a CMS
+         * route whose path is a local route's English path is that local
+         * route, whatever locale it is being listed for. CMS *content
+         * entries* are unaffected — they carry real Arabic paths, which never
+         * collide with an English one — so genuinely CMS-only rows still
+         * appear.
+         */
+        .filter((route) => !knownEnglishPaths.has(route.path))
         .map((route) => ({ url: `${siteConfig.url}/${locale}${route.path}` }));
     }),
   );
@@ -77,5 +99,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const knownPaths = new Set(published.flatMap((route) => [`en:${route.path.en}`, `ar:${route.path.ar}`]));
 
-  return [...localEntries, ...(await cmsOnlyEntries(knownPaths))];
+  const knownEnglishPaths = new Set(published.map((route) => route.path.en));
+
+  return [...localEntries, ...(await cmsOnlyEntries(knownPaths, knownEnglishPaths))];
 }
