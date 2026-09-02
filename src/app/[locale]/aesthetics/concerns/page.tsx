@@ -74,8 +74,8 @@ export default async function ConcernsHubPage({ params }: { params: Promise<{ lo
         imageRole="concern"
         seed="concerns-hub"
         imageAlt={{
-          en: "Skin assessment during an aesthetics consultation at Blue Diamond Medical",
-          ar: "تقييم البشرة خلال استشارة تجميلية في بلو دايموند الطبية",
+          en: "Three women of different ages in profile against a soft blue background",
+          ar: "ثلاث نساء من أعمار مختلفة بزاوية جانبية أمام خلفية زرقاء هادئة",
         }}
         breadcrumbs={<Breadcrumbs locale={locale} items={[{ label: aestheticsRoute.title[locale], href: href("aesthetics-hub", locale) }, { label: title }]} />}
       />

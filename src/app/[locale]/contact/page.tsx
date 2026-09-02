@@ -121,8 +121,8 @@ export default async function ContactPage({
         imageRole="location"
         seed="contact"
         imageAlt={{
-          en: "Blue Diamond Medical Clinic, West Springs, Calgary",
-          ar: "عيادة بلو دايموند الطبية، ويست سبرينغز، كالغاري",
+          en: "An illustrated map with a Blue Diamond marker on the clinic's location",
+          ar: "خريطة توضيحية مع علامة بلو دايموند على موقع العيادة",
         }}
         breadcrumbs={<Breadcrumbs locale={locale} items={[{ label: ownRoute.title[locale] }]} />}
         size="compact"

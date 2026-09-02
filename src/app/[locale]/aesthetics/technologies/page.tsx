@@ -79,8 +79,8 @@ export default async function TechnologiesHubPage({ params }: { params: Promise<
         imageRole="technology"
         seed="technologies-hub"
         imageAlt={{
-          en: "Cynosure aesthetic treatment equipment at Blue Diamond Medical",
-          ar: "أجهزة العلاج التجميلي من Cynosure في بلو دايموند الطبية",
+          en: "An abstract blue diamond above concentric rings of light",
+          ar: "ماسة زرقاء مجردة فوق حلقات ضوئية متحدة المركز",
         }}
         breadcrumbs={<Breadcrumbs locale={locale} items={[{ label: aestheticsRoute.title[locale], href: href("aesthetics-hub", locale) }, { label: title }]} />}
       />

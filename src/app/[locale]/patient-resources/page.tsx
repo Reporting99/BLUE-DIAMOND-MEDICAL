@@ -94,8 +94,8 @@ export default async function PatientResourcesPage({ params }: { params: Promise
         imageRole="service"
         seed="patient-resources"
         imageAlt={{
-          en: "The reception desk at Blue Diamond Medical Clinic",
-          ar: "مكتب الاستقبال في عيادة بلو دايموند الطبية",
+          en: "Clinic information materials on a desk: a clipboard, stethoscope, glasses and calculator",
+          ar: "مواد معلومات العيادة على مكتب: حافظة أوراق وسماعة طبية ونظارة وآلة حاسبة",
         }}
         breadcrumbs={<Breadcrumbs locale={locale} items={[{ label: ownRoute.title[locale] }]} />}
         size="compact"
