@@ -206,7 +206,7 @@ Source of truth: `src/lib/routing/legacy-redirects.ts`, consumed by `src/proxy.t
 |---|---|
 | `/appointment-1` | `/en/book-appointment` |
 | `/services` | `/en/medical` |
-| `/our-team` | `/en/doctors` |
+| `/our-team` | `/en/our-team` |
 | `/medical-aesthetics-1` | `/en/aesthetics` |
 | `/botox-1` | `/en/botox` |
 | `/eye-examining` | `/en/medical/eye-screening` |
@@ -242,7 +242,7 @@ This app's `src/proxy.ts` only runs for requests to `bluediamondmedical.ca`. Red
 | `/ultra-treatment` | `/en/aesthetics/treatments/ultra` |
 | `/prp-therapy` | `/en/aesthetics/treatments/prp-skin-rejuvenation` *(the legacy page covered both hair and skin PRP in one page; split per brief §15 into `prp-hair-restoration` and `prp-skin-rejuvenation` — this legacy path lands on the skin-rejuvenation half, which is closer to the original page's primary framing)* |
 | `/our-technologies` | `/en/aesthetics/technologies` |
-| `/our-team` | `/en/doctors` |
+| `/our-team` | `/en/our-team` |
 | `/acne-scar-removal` | `/en/aesthetics/concerns/acne-scars` |
 | `/rosacea-abatement` | `/en/aesthetics/concerns/rosacea-redness` |
 | `/dry-skin-remediation` | `/en/aesthetics/concerns/dry-skin` |
