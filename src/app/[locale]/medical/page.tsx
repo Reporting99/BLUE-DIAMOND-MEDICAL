@@ -78,7 +78,7 @@ export default async function MedicalHubPage({ params }: { params: Promise<{ loc
   // on /doctors and /shop, here at hub scale.
   const media = await resolveListingMedia(
     [
-      { id: "page", englishPath: "/medical" },
+      { id: "page", englishPath: "/medical", routeKind: "page" as const },
       ...medicalServices.map((s) => ({ id: `service:${s.id}`, englishPath: `/medical/${s.id}` })),
     ],
     locale,

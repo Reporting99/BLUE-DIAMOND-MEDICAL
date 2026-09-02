@@ -50,7 +50,7 @@ export default async function TreatmentsHubPage({ params }: { params: Promise<{ 
   // listing/detail gap this closes.
   const media = await resolveListingMedia(
     [
-      { id: "page", englishPath: ownRoute.path.en },
+      { id: "page", englishPath: ownRoute.path.en, routeKind: "page" as const },
       ...treatments.map((t) => ({ id: t.id, englishPath: `/aesthetics/treatments/${t.slug}` })),
     ],
     locale,

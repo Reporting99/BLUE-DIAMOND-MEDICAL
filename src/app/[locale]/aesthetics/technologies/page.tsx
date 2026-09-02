@@ -47,7 +47,7 @@ export default async function TechnologiesHubPage({ params }: { params: Promise<
   // Hero + one card image per device, resolved in a single fan-out.
   const media = await resolveListingMedia(
     [
-      { id: "page", englishPath: ownRoute.path.en },
+      { id: "page", englishPath: ownRoute.path.en, routeKind: "page" as const },
       ...technologies.map((t) => ({ id: t.id, englishPath: `/aesthetics/technologies/${t.slug}` })),
     ],
     locale,
