@@ -1,63 +1,110 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { ChevronUp } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 import { getDictionary, type Locale } from "@/i18n/config";
 import { cn } from "@/lib/utils";
 
-/** Pixels of scroll before the arrow is offered. Roughly one viewport on a
- *  laptop: far enough that returning to the top is a real journey, close
- *  enough that it is there when the hero has just left the screen. */
-const REVEAL_AFTER = 640;
+/** Pixels of scroll before the rail is offered. Short on purpose: this control
+ *  now reports position as well as offering the way back, and a position
+ *  readout that only appears after a full viewport has scrolled past is absent
+ *  for exactly the stretch where the reader first wonders how long the page is. */
+const REVEAL_AFTER = 100;
 
 /**
- * The blue side arrow — a scroll-to-top control pinned to the inline-end edge
- * of the viewport.
+ * The floating scroll rail — a miniature of the document scrollbar, pinned to
+ * the inline-end edge, that reports how far down the page the reader is and
+ * returns them to the top when pressed.
  *
- * WHY SCROLL-TO-TOP RATHER THAN A SECTION-STEPPER. Both were on the table.
- * A stepper that advances section by section has to know each page's section
- * boundaries, and this site's pages differ in structure — a treatment page,
- * the shop and a legal page share no rhythm — so it would either need
- * per-page configuration or would guess, and a navigation control that guesses
- * wrong is worse than none. Return-to-top is unambiguous on every page and
- * pairs with the reading rail above it: the rail says how far down you are,
- * the arrow undoes it.
+ * WHY IT LOOKS LIKE THE SCROLLBAR. It is drawn from the same four ingredients
+ * as the ::-webkit-scrollbar rules in globals.css — pale cyan track, the 135deg
+ * gloss ramp, the white hairline border, the soft glow — because it is doing
+ * the scrollbar's job in a place the scrollbar cannot always be seen: iOS
+ * Safari keeps its own overlay indicator and hides it between gestures, and an
+ * overlay scrollbar on any platform fades out while reading. A control that
+ * says "you are here" should look like the thing that says "you are here".
  *
- * IT IS A REAL BUTTON. Not a div with a click handler, not an `<a href="#top">`
- * — a `<button>`, so it is reachable by keyboard, announced as an action, and
- * activated by Enter and Space without a line of extra code. It is rendered
- * only once it becomes useful, so it never sits in the tab order of a page
- * that is not scrolled.
+ * IT IS STILL A REAL BUTTON. Not a div with a click handler — a `<button>`, so
+ * it is reachable by keyboard, announced as an action, and activated by Enter
+ * and Space without a line of extra code. The visible capsule is 12px wide;
+ * the pointer target is not. `.scroll-rail::before` inflates the hit area to
+ * roughly 48x124 without drawing anything, so the control can be slim and
+ * still be pressable — the alternative, widening the pill until it was easy to
+ * hit, would have turned it back into the round button it replaced.
+ *
+ * ONE SCROLL LISTENER, NOT TWO. Visibility and progress are read from the same
+ * rAF-throttled, passive handler this component already had. Progress is
+ * written straight to the DOM as a custom property rather than held in state:
+ * it changes on every scroll frame and nothing else reads it, so `useState`
+ * would re-render the component sixty times a second to produce one changed
+ * style string. `setVisible` is called only when the boolean actually flips —
+ * once per crossing of the threshold, not once per frame.
  *
  * MOTION. The scroll itself is smooth, except under `prefers-reduced-motion`,
- * where it jumps — the same rule RouteScrollManager already applies to
- * same-page Home clicks, kept consistent so the site has one answer to "how
- * does this page get back to the top".
+ * where it jumps — the same rule RouteScrollManager applies to same-page Home
+ * clicks, kept consistent so the site has one answer to "how does this page get
+ * back to the top". The thumb itself has no transition: it tracks the finger,
+ * and a position readout that eases arrives somewhere the reader no longer is.
  */
 export function BackToTop({ locale }: { locale: Locale }) {
   const [visible, setVisible] = useState(false);
+  const railRef = useRef<HTMLButtonElement>(null);
   const label = getDictionary(locale).common.backToTop;
+  const pathname = usePathname();
 
   useEffect(() => {
-    let ticking = false;
+    const rail = railRef.current;
+    if (!rail) return;
+
+    let frame = 0;
+    // Mirrors the rendered state so the effect can compare without reading
+    // `visible` from the closure, which would go stale between renders.
+    let shown = window.scrollY > REVEAL_AFTER;
+
     const update = () => {
-      ticking = false;
-      setVisible(window.scrollY > REVEAL_AFTER);
+      frame = 0;
+      const doc = document.documentElement;
+      // How much of the document is actually scrollable. On a short page this
+      // is 0 or negative; the thumb then stays parked at the top rather than
+      // jumping to the end on the first pixel of overscroll (a real artefact on
+      // iOS, where rubber-banding reports scrollY beyond the maximum).
+      const scrollable = doc.scrollHeight - window.innerHeight;
+      const progress = scrollable > 0 ? Math.min(Math.max(window.scrollY / scrollable, 0), 1) : 0;
+      rail.style.setProperty("--rail-p", String(progress));
+
+      const next = window.scrollY > REVEAL_AFTER;
+      if (next !== shown) {
+        shown = next;
+        setVisible(next);
+      }
     };
+
     const onScroll = () => {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(update);
+      if (frame) return;
+      frame = requestAnimationFrame(update);
     };
+
     // Correct on mount too — a reload landing mid-page, or a back/forward
     // restore, both arrive already scrolled.
     update();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+    // Resizing changes both terms of the ratio — a rotated phone or an opened
+    // devtools panel otherwise leaves the thumb reporting the old geometry.
+    window.addEventListener("resize", onScroll, { passive: true });
+
+    return () => {
+      if (frame) cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+    // Route changes swap the document's height underneath a component that does
+    // not remount (this lives in the persistent [locale] layout), so the ratio
+    // has to be recomputed against the new page.
+  }, [pathname]);
 
   return (
     <button
+      ref={railRef}
       type="button"
       data-back-to-top=""
       aria-label={label}
@@ -75,18 +122,16 @@ export function BackToTop({ locale }: { locale: Locale }) {
         window.scrollTo({ top: 0, left: 0, behavior: reduceMotion ? "auto" : "smooth" });
       }}
       className={cn(
-        "group fixed bottom-6 z-40 inline-flex size-11 items-center justify-center rounded-full bg-primary text-primary-foreground ring-2 ring-white/70 shadow-[0_6px_20px_rgba(29,86,120,0.28)] transition-[background-color,transform,box-shadow,opacity] duration-[var(--motion-normal)] ease-[var(--motion-ease)] hover:bg-primary-hover hover:-translate-y-0.5 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus lg:size-12",
+        /* No `overflow-hidden`: it would clip `.scroll-rail::before`, which is
+           the entire pointer target. */
+        "scroll-rail group fixed bottom-6 z-40 block p-0 transition-[transform,opacity] duration-[var(--motion-normal)] ease-[var(--motion-ease)] focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-focus",
         visible ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-2 opacity-0",
       )}
-      /* The white ring is what keeps this readable everywhere it can be
-         scrolled past. The button is brand blue, and so is the footer
-         (--surface-dark, one facet away from --primary), so over the footer a
-         blue disc on blue all but disappears. On every light section the ring
-         is white on white and invisible, costing nothing; over the footer it
-         is the edge that separates the control from its ground. */
+      /* Inline-end, so the rail sits against the edge the language ends at —
+         the right in English, the left in Arabic — without a second rule. */
       style={{ insetInlineEnd: "1rem" }}
     >
-      <ChevronUp className="size-5 transition-transform duration-[var(--motion-normal)] ease-[var(--motion-ease)] group-hover:-translate-y-0.5" aria-hidden="true" />
+      <span className="scroll-rail-thumb block" aria-hidden="true" />
     </button>
   );
 }
