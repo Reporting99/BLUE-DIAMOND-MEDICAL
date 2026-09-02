@@ -6,7 +6,7 @@ import { PageHero } from "@/components/layout/PageHero";
 import { SectionTransition } from "@/components/layout/SectionTransition";
 import { ProductCard } from "@/features/products";
 import { resolveListingMedia } from "@/lib/feelstack/listing-media";
-import { cmsAlt } from "@/lib/feelstack/media-slots";
+import { productCardImage } from "@/features/products/media";
 import { cacheTags } from "@/lib/feelstack/cache-tags";
 import { isLocale, type Locale } from "@/i18n/config";
 import { getRoute, href } from "@/lib/routing";
@@ -157,11 +157,11 @@ export default async function ShopHubPage({ params }: { params: Promise<{ locale
               product={product}
               locale={locale}
               delay={i}
-              resolved={(() => {
-                const m = (listingMedia[product.id] ?? []).find((x) => x.slot === "productPrimary");
-                if (!m) return undefined;
-                return { path: m.path, status: m.status, alt: cmsAlt(m) ?? product.images[0]?.alt ?? { en: "", ar: "" } };
-              })()}
+              // Same helper the category, concern and contact grids use. This
+              // page had the eight lines inline because it was written first;
+              // four callers agreeing by construction is the point of the
+              // module (src/features/products/media.ts).
+              resolved={productCardImage(listingMedia, product)}
             />
           ))}
         </ul>
