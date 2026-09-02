@@ -42,10 +42,14 @@ export const siteConfig = {
    * different phone number rather than merged away.
    */
   aesthetics: {
+    name: "Blue Diamond Medical Aesthetics",
     phone: "+14032471418",
     phoneDisplay: "(403) 247-1418",
     fax: "+15874430394",
-    faxDisplay: "+1 (587) 443-0394",
+    // Formatted as the approved aesthetics location card prints it — no "+1"
+    // prefix, matching phoneDisplay above. Same fax line as the medical
+    // clinic; only the presentation differs per card.
+    faxDisplay: "(587) 443-0394",
   },
 
   /** Elite iQ™ laser treatments are performed off-site, not at the main clinic. */

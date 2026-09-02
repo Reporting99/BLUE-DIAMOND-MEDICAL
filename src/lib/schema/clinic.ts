@@ -1,9 +1,9 @@
 import { siteConfig } from "@/config/site";
 import { doctors } from "@/features/doctors";
-import { clinicHours } from "@/config/clinic-hours";
+import { aestheticsHours, clinicHours, type DailyHours } from "@/config/clinic-hours";
 import { medicalServices } from "@/features/medical-services/data";
 import { getRoute } from "@/lib/routing";
-import { clinicId, doctorEntityId } from "@/lib/seo/entity-graph";
+import { aestheticsId, clinicId, doctorEntityId } from "@/lib/seo/entity-graph";
 import type { Locale } from "@/i18n/config";
 import { schemaLanguage, websiteId } from "./shared";
 import type { JsonLdNode } from "./types";
@@ -30,15 +30,14 @@ const SCHEMA_DAYS = [
  * requirement without a redundant duplicate entity carrying the same @id and
  * facts.
  */
-export function buildClinicGraph(locale: Locale): JsonLdNode {
-  // Only days the approved source actually confirms. src/config/clinic-hours.ts
-  // records Saturday/Sunday as `null` meaning "not confirmed, closed by
-  // default" — a UI default, not a verified fact. Emitting those as
-  // `opens/closes` closed days would assert a business fact the source never
-  // stated, and wrong hours in local search actively misdirect patients, so
-  // unconfirmed days are omitted rather than published as closed.
-  const openingHoursSpecification = clinicHours
-    .filter((entry): entry is typeof entry & { open: string; close: string } =>
+/**
+ * Days a schedule actually confirms, as OpeningHoursSpecification nodes.
+ * Unconfirmed days (`null` in src/config/clinic-hours.ts) are omitted rather
+ * than published as closed — see the note inside buildClinicGraph.
+ */
+function toOpeningHours(schedule: DailyHours[]) {
+  return schedule
+    .filter((entry): entry is DailyHours & { open: string; close: string } =>
       entry.open !== null && entry.close !== null,
     )
     .map((entry) => ({
@@ -47,6 +46,17 @@ export function buildClinicGraph(locale: Locale): JsonLdNode {
       opens: entry.open,
       closes: entry.close,
     }));
+}
+
+export function buildClinicGraph(locale: Locale): JsonLdNode {
+  // Only days the approved source actually confirms. src/config/clinic-hours.ts
+  // records Saturday/Sunday as `null` meaning "not confirmed, closed by
+  // default" — a UI default, not a verified fact. Emitting those as
+  // `opens/closes` closed days would assert a business fact the source never
+  // stated, and wrong hours in local search actively misdirect patients, so
+  // unconfirmed days are omitted rather than published as closed.
+  const openingHoursSpecification = toOpeningHours(clinicHours);
+  const aestheticsOpeningHours = toOpeningHours(aestheticsHours);
 
   // Services the clinic's own approved content already publishes a page for.
   const availableService = medicalServices.flatMap((service) => {
@@ -98,6 +108,33 @@ export function buildClinicGraph(locale: Locale): JsonLdNode {
         // (buildPhysicianSchema), so the two pages describe one entity rather
         // than two look-alike copies.
         employee: doctors.map((doctor) => ({ "@id": doctorEntityId(doctor) })),
+        // The homepage location card publishes the AESTHETICS arm's contact
+        // details: a different approved phone line from the medical/walk-in
+        // one and different hours (09:00-17:00 vs 08:00-19:00). Declaring it
+        // as a department gives that rendered NAP a node in the graph, so the
+        // visible number is backed by structured data instead of appearing to
+        // contradict the MedicalClinic node's telephone. Same street address,
+        // genuinely distinct line — docs/SOURCE_CONFLICT_REGISTER.md CONF-001.
+        department: {
+          "@type": "MedicalBusiness",
+          "@id": aestheticsId,
+          name: siteConfig.aesthetics.name,
+          url: siteConfig.url,
+          telephone: siteConfig.aesthetics.phoneDisplay,
+          faxNumber: siteConfig.aesthetics.faxDisplay,
+          address: {
+            "@type": "PostalAddress",
+            streetAddress: siteConfig.clinic.address.line1,
+            addressLocality: siteConfig.clinic.address.city,
+            addressRegion: siteConfig.clinic.address.region,
+            postalCode: siteConfig.clinic.address.postalCode,
+            addressCountry: siteConfig.clinic.address.country,
+          },
+          parentOrganization: { "@id": clinicId },
+          ...(aestheticsOpeningHours.length > 0
+            ? { openingHoursSpecification: aestheticsOpeningHours }
+            : {}),
+        },
       },
       // Physician entities are emitted for every doctor regardless of photo
       // availability — schema data and image status are independent. The @id

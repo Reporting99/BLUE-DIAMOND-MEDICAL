@@ -40,7 +40,7 @@ export const aestheticsHours: DailyHours[] = [
 ];
 
 export const statutoryHolidayNotice = {
-  en: "Closed all statutory holidays.",
+  en: "Closed on all statutory holidays.",
   ar: "مغلق في جميع العطلات الرسمية.",
 };
 
