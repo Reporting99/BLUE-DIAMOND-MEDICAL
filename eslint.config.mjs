@@ -19,6 +19,14 @@ const eslintConfig = defineConfig([
     // to run before Playwright.
     "playwright-report/**",
     "test-results/**",
+    // vinext's Cloudflare Worker build output (gitignored). Same problem as
+    // the Playwright directories above: `eslint .` walks it whenever a build
+    // has left it behind, and the bundles are large enough that ESLint's
+    // stylish formatter dies with "RangeError: Invalid string length" before
+    // it can print anything -- so the lint step fails on generated code that
+    // is not this repository's source.
+    "dist/**",
+    ".vinext/**",
   ]),
 ]);
 

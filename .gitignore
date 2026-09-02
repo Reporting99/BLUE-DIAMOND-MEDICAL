@@ -76,3 +76,8 @@ next-env.d.ts
 *.orig
 *.zip
 *.trace.zip
+/dist/
+.vinext/
+.wrangler/
+.dev.vars
+.dev.vars.*

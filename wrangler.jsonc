@@ -1,0 +1,41 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  // Client-preview Worker ONLY. Deliberately NOT the production name and with
+  // no `routes`/custom domain: this deploys to *.workers.dev and nothing else.
+  // The live site stays on its existing Blue/Green server deployment.
+  "name": "blue-diamond-client-preview",
+  "compatibility_date": "2026-09-02",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "main": "vinext/server/fetch-handler",
+  "assets": {
+    "directory": "dist/client",
+    "not_found_handling": "none",
+    "binding": "ASSETS"
+  },
+  "cache": {
+    "enabled": true
+  },
+  "version_metadata": {
+    "binding": "CF_VERSION_METADATA"
+  },
+  // Non-secret runtime configuration only. IMAGEKIT_PRIVATE_KEY,
+  // FEELSTACK_REVALIDATE_SECRET and CONTACT_DELIVERY_PROVIDER are deliberately
+  // absent: the preview must not hold credentials, must not accept revalidate
+  // webhooks, and must keep the contact form's documented fail-closed
+  // "please call us" behaviour.
+  //
+  // SITE_LAUNCHED is "false" so src/config/launch.ts keeps the preview
+  // noindex: Disallow: / in robots.txt, an empty sitemap, and
+  // X-Robots-Tag: noindex on every response.
+  "vars": {
+    "NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT": "https://ik.imagekit.io/oq92dh6zib",
+    "FEELSTACK_API_URL": "https://feelstack.dfeelings.com/api",
+    "FEELSTACK_SITE_KEY": "blue-diamond-medical",
+    "FEELSTACK_PROJECT_ID": "d1a870a4-a514-4719-bf71-6cff26b18dcb",
+    "FEELSTACK_CONTENT_MODE": "hybrid",
+    "NEXT_PUBLIC_SITE_URL": "https://bluediamondmedical.ca",
+    "SITE_LAUNCHED": "false"
+  }
+}

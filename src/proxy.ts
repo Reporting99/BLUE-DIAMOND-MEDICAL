@@ -75,9 +75,22 @@ const englishSlugToArabicPath = new Map(
  * It is set on the REQUEST headers of the rewrite only. No Server Component
  * reads it, so it cannot flip a statically prerendered route to dynamic the
  * way a headers() call in not-found.tsx did.
+ *
+ * It is generated LAZILY, on the first request that needs it, rather than at
+ * module load. Workers rejects a module that generates random values in global
+ * scope outright -- "Disallowed operation called within global scope" -- and
+ * the whole isolate fails to boot, so a top-level crypto.randomUUID() makes
+ * this proxy unrunnable on that runtime. Deferring costs one nullish check per
+ * rewrite and changes nothing else: the value is still generated once per
+ * process, still never appears in any response, and is still unguessable, so
+ * the client-controllable-marker hole stays closed.
  */
 const ARABIC_REWRITE_MARKER = "x-bd-arabic-rewrite";
-const ARABIC_REWRITE_NONCE = crypto.randomUUID();
+let cachedArabicRewriteNonce: string | undefined;
+
+function arabicRewriteNonce(): string {
+  return (cachedArabicRewriteNonce ??= crypto.randomUUID());
+}
 
 /**
  * Stamps the pre-launch noindex header on every response this proxy returns.
@@ -225,7 +238,7 @@ export function proxy(request: NextRequest) {
       // exactly such a path -- redirecting it would bounce straight back and
       // loop.
       const alreadyRewritten =
-        request.headers.get(ARABIC_REWRITE_MARKER) === ARABIC_REWRITE_NONCE;
+        request.headers.get(ARABIC_REWRITE_MARKER) === arabicRewriteNonce();
       const approvedArabic = alreadyRewritten
         ? undefined
         : englishSlugToArabicPath.get(withoutLocale);
@@ -240,7 +253,7 @@ export function proxy(request: NextRequest) {
         const url = new URL(`/ar${canonical}`, request.url);
         if (search) url.search = search;
         const headers = new Headers(request.headers);
-        headers.set(ARABIC_REWRITE_MARKER, ARABIC_REWRITE_NONCE);
+        headers.set(ARABIC_REWRITE_MARKER, arabicRewriteNonce());
         return withIndexingGuard(
           NextResponse.rewrite(url, { request: { headers } }),
         );

@@ -1,0 +1,4 @@
+{
+  "_comment": "Scopes the Playwright suite back to CommonJS. The repository root sets \"type\": \"module\" because Vite (and therefore vinext's Cloudflare Worker build) requires it. Playwright picks CJS or ESM per file from the nearest package.json, and under ESM its loader resolves bare specifiers with Node's ESM algorithm — which the `next` package cannot satisfy: it ships no `exports` map, so `next/navigation` only resolves through CommonJS directory lookup. Six suites import src modules that import it, and every one of them died with \"Cannot find module .../next/navigation\". This file restores the resolution the suite was written against without touching the root type, so the Next build, the Worker build and the tests can each have the module system they need.",
+  "type": "commonjs"
+}
