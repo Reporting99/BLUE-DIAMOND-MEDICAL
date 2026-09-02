@@ -77,9 +77,12 @@ const en: Dictionary = {
     scrollProgress: "Reading progress",
   },
   nav: {
-    // Nav labels are intentionally distinct from each destination page's own
-    // <title>/H1 (e.g. "Our Team" here vs. "Our Doctors" on the page itself)
-    // — see src/config/navigation.ts.
+    // Nav labels MAY differ from a destination page's own <title>/H1 — see
+    // src/config/navigation.ts. "Our Team" used to be the example: the nav
+    // said that while the page itself said "Our Doctors". They agree now, the
+    // page and route registry having been renamed to match the nav, so the
+    // divergence this note warns about no longer has an instance here. The
+    // mechanism remains — `NavMenuLink.label` still overrides a route title.
     home: "Home",
     services: "Services",
     treatments: "Treatments",

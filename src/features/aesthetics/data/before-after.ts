@@ -275,11 +275,11 @@ export const beforeAfterPairs: BeforeAfterPair[] = [
   },
   {
     pairId: "prp-skin-rejuvenation-01",
-    treatmentId: "prp-skin-rejuvenation",
-    description: { en: "Clinical example published on Blue Diamond’s original PRP Skin Rejuvenation page.", ar: "مثال سريري كان منشورًا على صفحة تجديد البشرة بالبلازما في موقع بلو دايموند الأصلي." },
+    treatmentId: "prp-hair-restoration",
+    description: { en: "Clinical example published on Blue Diamond’s original PRP therapy page.", ar: "مثال سريري كان منشورًا على صفحة العلاج بالبلازما في موقع بلو دايموند الأصلي." },
     before: {
       imagekitPath: "/blue-diamond/before-after/prp-skin-rejuvenation-01-before.png",
-      alt: { en: "Clinical example before PRP Skin Rejuvenation — before image", ar: "مثال سريري قبل تجديد البشرة بالبلازما" },
+      alt: { en: "Clinical example before PRP Hair Restoration — before image", ar: "مثال سريري قبل استعادة الشعر بالبلازما" },
       sourceUrl: "https://cdn.commoninja.com/asset/f2af09b9-a3fe-4176-832e-56c5144fdf97.png",
       originalFilename: "f2af09b9-a3fe-4176-832e-56c5144fdf97.png",
       width: 333,
@@ -288,7 +288,7 @@ export const beforeAfterPairs: BeforeAfterPair[] = [
     },
     after: {
       imagekitPath: "/blue-diamond/before-after/prp-skin-rejuvenation-01-after.png",
-      alt: { en: "Clinical example after PRP Skin Rejuvenation — after image", ar: "مثال سريري بعد تجديد البشرة بالبلازما" },
+      alt: { en: "Clinical example after PRP Hair Restoration — after image", ar: "مثال سريري بعد استعادة الشعر بالبلازما" },
       sourceUrl: "https://cdn.commoninja.com/asset/18243572-b4d7-4db9-b208-598570493a2e.PNG",
       originalFilename: "18243572-b4d7-4db9-b208-598570493a2e.PNG",
       width: 331,

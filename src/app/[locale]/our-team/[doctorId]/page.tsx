@@ -20,7 +20,7 @@ import { doctorCmsContract } from "@/features/doctors/cms-contract";
 
 /**
  * Canonical English-slug route for every doctor, in both locales — the
- * pretty Arabic URL (e.g. /ar/الأطباء/محمد-فرحات) is rewritten to this
+ * pretty Arabic URL (e.g. /ar/فريقنا/محمد-فرحات) is rewritten to this
  * physical path by src/proxy.ts. See docs/ROUTING.md.
  */
 export function generateStaticParams() {
@@ -40,7 +40,7 @@ export function generateStaticParams() {
 async function loadDoctor(id: string, locale: Locale) {
   // FeelStack registers the Arabic route under its Arabic slug, so ask
   // for THIS locale's path rather than the English one. See cmsPathForLocale.
-  const cmsPath = cmsPathForLocale(`/doctors/${id}`, locale);
+  const cmsPath = cmsPathForLocale(`/our-team/${id}`, locale);
   const resolution = await resolvePageContent({
     path: cmsPath,
     locale,
@@ -68,11 +68,18 @@ export async function generateMetadata({
   if (!doctor) return {};
 
   const route = getRoute(doctor.routeId);
-  const enUrl = `${siteConfig.url}/en${route?.path.en ?? `/doctors/${doctor.id}`}`;
+  const enUrl = `${siteConfig.url}/en${route?.path.en ?? `/our-team/${doctor.id}`}`;
   // Public Arabic URL uses the pretty slug — proxy.ts rewrites it to this
   // same canonical path internally, but the alternate link must point at
   // the address a visitor/crawler actually sees.
-  const arUrl = `${siteConfig.url}/ar${route?.path.ar ?? `/doctors/${doctor.id}`}`;
+  //
+  // Both fallbacks are unreachable for the six registered doctors and exist
+  // only so an unregistered one still yields a URL rather than "undefined".
+  // The Arabic one is a genuine last resort, not a correct answer: it emits a
+  // LATIN path under /ar, which proxy.ts 301s to the Arabic canonical — i.e. a
+  // canonical/hreflang target that redirects. The registry is the real source
+  // for both, which is why `route` is consulted first.
+  const arUrl = `${siteConfig.url}/ar${route?.path.ar ?? `/our-team/${doctor.id}`}`;
 
   return {
     title: doctor.name[locale],

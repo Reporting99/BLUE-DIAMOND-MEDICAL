@@ -25,7 +25,40 @@ export const doctors: Doctor[] = [
       ar: "الدكتورة أميمة سعيد طبيبة أسرة حاصلة على تدريب عالٍ في طب الأسرة من باكستان، وتمارس حاليًا في كالغاري. تقدّم رعاية شاملة تتمحور حول المريض لجميع الأعمار، وتهتم سريريًا بالطب الوقائي وصحة المرأة والدعم النفسي المتعاطف الخالي من الوصم.",
     },
     practicesAesthetics: false,
-    image: { path: "", status: "disabled", photoDeclined: true },
+    /**
+     * CONSENT-PROTECTED, NON-PHOTOGRAPHIC.
+     *
+     * `photoDeclined: true` is a recorded refusal of photography and it stays
+     * exactly as it was: `isHardOverride` (lib/feelstack/media-slots.ts) still
+     * treats this record as outranking the CMS, so no media assignment,
+     * importer or later pass can ever attach a portrait to Dr. Saeed. That is
+     * the guarantee, and nothing below weakens it.
+     *
+     * What changed is only WHAT IS SHOWN INSTEAD. The empty path rendered the
+     * generic FacetTile — the same abstract swatch used for any entity whose
+     * media has not arrived — so a deliberate, documented decision was
+     * presented to visitors as a missing image. This asset is a designed
+     * identity card carrying her name, her professional title (both in EN and
+     * AR, so one file serves both locales) and the brand's facet geometry.
+     *
+     * It contains NO likeness: no photograph, no silhouette, no generated or
+     * inferred portrait, no stock substitute. Anyone editing this record must
+     * keep it that way — replacing this path with a portrait would override a
+     * person's refusal, which is the one thing this whole pipeline exists to
+     * prevent (docs/CONTENT_MODEL.md, docs/UI_UX_FOUNDATION.md §18).
+     *
+     * `status: "approved"` because this is the record the three doctor
+     * surfaces read directly, and it is the ONLY control point for her tile —
+     * a CMS assignment can never reach her, so gating it on one would gate it
+     * on something with no effect. The same asset is registered in FeelStack
+     * (`/blue-diamond/team/blue-diamond-team-dr-omaima-saeed-identity.webp`)
+     * with its consent metadata for the media library's own audit trail.
+     */
+    image: {
+      path: `${MEDIA_ROOT}/team/blue-diamond-team-dr-omaima-saeed-identity.webp`,
+      status: "approved",
+      photoDeclined: true,
+    },
     bookingChannel: "family-doctor",
   },
   {

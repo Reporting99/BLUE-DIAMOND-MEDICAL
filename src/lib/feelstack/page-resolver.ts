@@ -106,7 +106,7 @@ export async function resolvePageContent<T, F = unknown>(
   // RETRY ON THE LOCALE'S OWN PATH.
   //
   // FeelStack registers one route per locale, and a localized route's path is
-  // that locale's slug -- `/الأطباء/محمد-فرحات`, not `/doctors/mohamed-farhat`.
+  // that locale's slug -- `/فريقنا/محمد-فرحات`, not `/our-team/mohamed-farhat`.
   // A page whose Next.js segment is the English slug therefore asks for a path
   // that only exists in English, and the backend answers with the English row
   // plus `usedFallback: true`. `checkLocaleIntegrity` correctly refuses that,

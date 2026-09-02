@@ -110,7 +110,7 @@ export function sanitizeDestination(raw: unknown): string | null {
   return value;
 }
 
-/** Splits "/ar/الأطباء/x" into its locale and the CMS-side, locale-free path. */
+/** Splits "/ar/فريقنا/x" into its locale and the CMS-side, locale-free path. */
 export function splitLocalePath(pathname: string): { locale: Locale | null; cmsPath: string } {
   const segments = pathname.split("/");
   const candidate = segments[1] ?? "";

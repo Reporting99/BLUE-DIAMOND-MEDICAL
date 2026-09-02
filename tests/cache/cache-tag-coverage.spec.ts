@@ -59,8 +59,8 @@ test.describe("Invalidation matrix — real FeelStack events", () => {
   test("a doctor publish invalidates the doctor, the index, and the sitemap", () => {
     const tags = tagsFor(
       "content.person_profile.published",
-      { status: "published", locale: "en", path: "/doctors/mohamed-farhat" },
-      { locale: "en", cmsPath: "/doctors/mohamed-farhat" },
+      { status: "published", locale: "en", path: "/our-team/mohamed-farhat" },
+      { locale: "en", cmsPath: "/our-team/mohamed-farhat" },
     );
     expect(tags).toContain(cacheTags.doctor(SITE, "en", "mohamed-farhat"));
     expect(tags).toContain(cacheTags.doctorsIndex(SITE, "en"));
@@ -71,8 +71,8 @@ test.describe("Invalidation matrix — real FeelStack events", () => {
     const uuid = "9b7c1a20-4f3e-4d5a-8b21-0c6e9f2a1d33";
     const tags = tagsFor(
       "content.person_profile.published",
-      { id: uuid, status: "published", locale: "en", path: "/doctors/mohamed-farhat" },
-      { locale: "en", cmsPath: "/doctors/mohamed-farhat" },
+      { id: uuid, status: "published", locale: "en", path: "/our-team/mohamed-farhat" },
+      { locale: "en", cmsPath: "/our-team/mohamed-farhat" },
     );
     expect(tags).toContain(cacheTags.doctor(SITE, "en", "mohamed-farhat"));
     expect(tags.some((t) => t.includes(uuid))).toBe(false);
@@ -90,8 +90,8 @@ test.describe("Invalidation matrix — real FeelStack events", () => {
   test("invalidation is per-locale — an Arabic event never touches English tags", () => {
     const tags = tagsFor(
       "content.person_profile.published",
-      { status: "published", locale: "ar", path: "/doctors/mohamed-farhat" },
-      { locale: "ar", cmsPath: "/doctors/mohamed-farhat" },
+      { status: "published", locale: "ar", path: "/our-team/mohamed-farhat" },
+      { locale: "ar", cmsPath: "/our-team/mohamed-farhat" },
     );
     expect(tags).toContain(cacheTags.doctor(SITE, "ar", "mohamed-farhat"));
     expect(tags).not.toContain(cacheTags.doctor(SITE, "en", "mohamed-farhat"));

@@ -129,6 +129,11 @@ const MEDIA_NAMESPACES = [
   "medical",
   "shared",
   "shop",
+  // The doctor/team namespace. Four approved portraits already live under
+  // /blue-diamond/team/ in the FeelStack media library, and Dr. Saeed's
+  // consent-protected identity card joined them; this list is a record of the
+  // directories the library actually has, and it had simply not caught up.
+  "team",
   "technologies",
   "treatments",
 ];

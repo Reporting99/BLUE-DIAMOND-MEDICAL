@@ -38,7 +38,7 @@ const REPRESENTATIVE_PAGES = [
   "/en/aesthetics",
   "/en/aesthetics/concerns/acne-scars",
   "/en/aesthetics/technologies/potenza",
-  "/en/doctors/mohamed-farhat",
+  "/en/our-team/mohamed-farhat",
   "/en/shop/tns-eye-repair",
   "/en/contact",
   "/en/book-appointment",
@@ -232,13 +232,23 @@ test.describe("Header transparent/scrolled states — homepage", () => {
     expect(bg).toMatch(/rgba?\(0, 0, 0, 0\)|transparent/);
   });
 
-  test("header becomes translucent white after scrolling past the threshold", async ({ page }) => {
+  test("header becomes a translucent light-blue glass capsule after scrolling past the threshold", async ({ page }) => {
     await page.goto("/en");
     await page.evaluate(() => window.scrollTo(0, 400));
     const header = page.locator("header");
     await expect(async () => {
       const bg = await header.evaluate((el) => getComputedStyle(el).backgroundColor);
-      expect(bg).toContain("rgba(255, 255, 255");
+      // The floating capsule is a light-blue frosted glass, not pure white:
+      // rgba(247, 252, 255, 0.94). Asserted as "very light, still translucent,
+      // and blue-leaning" rather than as one exact string, so a future tweak to
+      // the tint does not fail a test that is really about the surface reading
+      // as light glass.
+      const [r, g, b, a] = bg.match(/[\d.]+/g)!.map(Number);
+      expect(r, bg).toBeGreaterThan(235);
+      expect(b, bg).toBeGreaterThanOrEqual(g);
+      expect(g, bg).toBeGreaterThanOrEqual(r);
+      expect(a, bg).toBeGreaterThan(0.5);
+      expect(a, bg).toBeLessThan(1);
     }).toPass({ timeout: 2000 });
   });
 
@@ -251,8 +261,8 @@ test.describe("Header transparent/scrolled states — homepage", () => {
     await page.evaluate(() => window.scrollTo(0, 400));
     await expect(async () => {
       const h = await header.evaluate((el) => el.getBoundingClientRect().height);
-      expect(h).toBeGreaterThanOrEqual(68);
-      expect(h).toBeLessThanOrEqual(76);
+      expect(h).toBeGreaterThanOrEqual(60);
+      expect(h).toBeLessThanOrEqual(66);
     }).toPass({ timeout: 2000 });
   });
 
@@ -336,10 +346,15 @@ test.describe("Services and legacy-alias resolution", () => {
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
   });
 
-  test("/en/services alias redirects to the real hub, not a duplicate page or 404", async ({ page }) => {
+  // NO_PRELAUNCH_ROUTE_ALIAS. /en/services was never published: it was an
+  // illustrative URL from the navigation brief, aliased to /en/medical so the
+  // literal string resolved. Nothing links to it, so at first launch it is
+  // simply not a route -- an alias would be a second address for the hub and
+  // exactly the duplicate this pass removes.
+  test("/en/services is not a route -- the Medical hub has one address", async ({ page }) => {
     const res = await page.goto("/en/services");
-    expect(res?.status()).toBe(200); // after following the 301
-    await expect(page).toHaveURL(/\/en\/medical$/);
+    expect(res?.status()).toBe(404);
+    await expect(page).toHaveURL(/\/en\/services$/); // no redirect, no alias
   });
 });
 

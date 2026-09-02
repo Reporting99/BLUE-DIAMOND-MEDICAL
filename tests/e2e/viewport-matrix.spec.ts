@@ -34,8 +34,8 @@ const PATHS = [
   "/ar/aesthetics/pricing",
   "/en/aesthetics/before-after",
   "/ar/aesthetics/before-after",
-  "/en/doctors",
-  "/ar/doctors",
+  "/en/our-team",
+  "/ar/our-team",
   "/en/contact",
   "/ar/contact",
   // The two layout shapes introduced by the sitewide hero/card pass, added

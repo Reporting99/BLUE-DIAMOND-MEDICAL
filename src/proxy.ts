@@ -7,9 +7,9 @@ import { localizedEntityRoutes } from "@/config/localized-entity-routes.generate
 import { isSiteLaunched, PRE_LAUNCH_ROBOTS_HEADER } from "@/config/launch";
 
 /**
- * Arabic public URLs use meaningful Arabic slugs (e.g. /ar/الأطباء/...)
+ * Arabic public URLs use meaningful Arabic slugs (e.g. /ar/فريقنا/...)
  * that don't correspond to any physical folder on disk — only the English
- * slug does (app/[locale]/doctors/[doctorId]/...). This map rewrites the
+ * slug does (app/[locale]/our-team/[doctorId]/...). This map rewrites the
  * pretty Arabic path to its canonical English-slug path internally, on
  * the same "ar" locale, so the browser's address bar keeps the Arabic URL
  * while Next's file-system router resolves it against the English folder
@@ -19,7 +19,8 @@ const arabicToCanonicalPath = new Map<string, string>([
   ...routes
     .filter((r) => r.path.ar !== r.path.en)
     .map((r) => [r.path.ar, r.path.en] as const),
-  // Entity routes -- doctors, treatments, concerns, technologies, services,
+  // Entity routes -- team members, treatments, concerns, technologies,
+  // services,
   // products -- are created in the CMS, and their Arabic slugs are authored
   // there rather than here. Only 6 of them were ever hand-copied into
   // src/config/routes.ts, so 52 of 58 CMS routes had no entry in this map and
@@ -66,7 +67,7 @@ const englishSlugToArabicPath = new Map(
  *
  * The VALUE is a per-process nonce, not a constant. A constant marker is
  * client-controllable: anyone sending `x-bd-arabic-rewrite: 1` against
- * /ar/doctors was served 200 instead of the 301, resurrecting exactly the
+ * /ar/our-team was served 200 instead of the 301, resurrecting exactly the
  * duplicate Arabic URL this redirect exists to remove. The nonce is generated
  * at module load, never appears in any response, and is unguessable, so only
  * a rewrite this process itself issued can satisfy the check.

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { defineEntityContract, localizedBilingual, localizedBilingualList, adaptFaqs } from "@/lib/feelstack/adapters";
+import { defineEntityContract, localizedBilingual, localizedBilingualList, adaptFaqs, entitySlug } from "@/lib/feelstack/adapters";
 import { resolveSlotImage } from "@/lib/feelstack/media-slots";
 import type { AestheticTreatment } from "./types";
 
@@ -63,7 +63,7 @@ export const aestheticTreatmentCmsContract = defineEntityContract<TreatmentField
   adapt: ({ locale, title, fields: f, faqs, path, media }) => {
     const t: AestheticTreatment = {
       id: f.treatment_id,
-      slug: path.replace(/^\/aesthetics\/treatments\//, ""),
+      slug: entitySlug(path, locale, "/aesthetics/treatments/"),
       // Arabic public URLs are proxy-rewritten and owned by src/config/routes.ts,
       // never by the CMS — the entry slug is ASCII by FeelStack's own rule.
       slugAr: "",

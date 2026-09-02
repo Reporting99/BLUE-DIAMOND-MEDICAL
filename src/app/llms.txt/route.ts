@@ -19,7 +19,7 @@ Blue Diamond Medical Clinic opened July 4, 2022 in West Springs, Calgary, founde
 - Medical Care: ${siteConfig.url}/en/medical
 - Medical Aesthetics: ${siteConfig.url}/en/aesthetics
 - Botox: ${siteConfig.url}/en/botox
-- Our Doctors: ${siteConfig.url}/en/doctors
+- Our Team: ${siteConfig.url}/en/our-team
 - Patient Resources: ${siteConfig.url}/en/patient-resources
 - Health Hub: ${siteConfig.url}/en/health-hub
 - Book an Appointment: ${siteConfig.url}/en/book-appointment

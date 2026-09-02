@@ -45,7 +45,17 @@ export const imagePresets = {
   "doctor-card": { width: 480, quality: 85, format: "auto", focus: "face" },
   service: { width: 800, quality: 82, format: "auto" },
   treatment: { width: 800, quality: 82, format: "auto" },
-  concern: { width: 600, quality: 82, format: "auto" },
+  /**
+   * 900 rather than 600 because the concern imagery that now exists is
+   * 1448x1086, and the largest frame asking for this preset -- the concern
+   * explorer's preview panel -- is a ~540px CSS square that a high-DPR screen
+   * requests at roughly twice that. At 600 the preset capped the source below
+   * the frame's own pixel demand and ImageKit had to enlarge a 600px image to
+   * fill it; 900 stays comfortably inside the supplied original, so nothing is
+   * ever upscaled. The detail-page hero is unaffected -- PageHero asks for the
+   * "hero" preset.
+   */
+  concern: { width: 900, quality: 82, format: "auto" },
   technology: { width: 800, quality: 82, format: "auto" },
   product: { width: 600, quality: 85, format: "auto" },
   "product-gallery": { width: 1200, quality: 88, format: "auto" },
@@ -53,6 +63,17 @@ export const imagePresets = {
   "og-image": { width: 1200, height: 630, quality: 85, format: "jpg" },
   thumbnail: { width: 320, quality: 75, format: "auto" },
   "before-after": { width: 800, quality: 88, format: "auto" },
+  /**
+   * The Our Team hero group photograph.
+   *
+   * 600 is the asset's NATIVE width, not a design choice: the file the clinic
+   * supplied is 600x451, and asking ImageKit for anything wider makes it
+   * enlarge a 600px source rather than deliver a sharper one. The hero frame
+   * is capped to match (see our-team/page.tsx), so the picture is never
+   * upscaled in CSS either. Raise both together the day a higher-resolution
+   * original is supplied -- not one without the other.
+   */
+  "team-group": { width: 600, quality: 88, format: "auto" },
 } as const satisfies Record<string, Transformation>;
 
 export type ImagePresetKey = keyof typeof imagePresets;

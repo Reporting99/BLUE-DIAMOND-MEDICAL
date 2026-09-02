@@ -6,7 +6,7 @@ import { PageHero } from "@/components/layout/PageHero";
 import { SectionTransition } from "@/components/layout/SectionTransition";
 import { ProductCard } from "@/features/products";
 import { resolveListingMedia } from "@/lib/feelstack/listing-media";
-import { cmsAlt } from "@/lib/feelstack/media-slots";
+import { productCardImage } from "@/features/products/media";
 import { cacheTags } from "@/lib/feelstack/cache-tags";
 import { isLocale, type Locale } from "@/i18n/config";
 import { getRoute, href } from "@/lib/routing";
@@ -63,7 +63,15 @@ export default async function ShopHubPage({ params }: { params: Promise<{ locale
   // packshot. Tagged with productsIndex so a publish invalidates the catalogue
   // exactly as it invalidates the detail pages.
   const listingMedia = await resolveListingMedia(
-    products.map((p) => ({ id: p.id, englishPath: `/shop/${p.slug}` })),
+    [
+      // The catalogue's own page, resolved in the SAME fan-out as its products
+      // so its hero costs no extra round trip. It was missing entirely, which
+      // made `heroFromListing(listingMedia)` below dead code -- it looked up
+      // the key "page" in a map that could never contain it, so the shop hero
+      // could only ever render the FacetTile no matter what the CMS held.
+      { id: "page", englishPath: getRoute("shop-hub")!.path.en, routeKind: "page" as const },
+      ...products.map((p) => ({ id: p.id, englishPath: `/shop/${p.slug}` })),
+    ],
     locale,
     [cacheTags.productsIndex(process.env.FEELSTACK_SITE_KEY ?? "", locale)],
   );
@@ -149,11 +157,11 @@ export default async function ShopHubPage({ params }: { params: Promise<{ locale
               product={product}
               locale={locale}
               delay={i}
-              resolved={(() => {
-                const m = (listingMedia[product.id] ?? []).find((x) => x.slot === "productPrimary");
-                if (!m) return undefined;
-                return { path: m.path, status: m.status, alt: cmsAlt(m) ?? product.images[0]?.alt ?? { en: "", ar: "" } };
-              })()}
+              // Same helper the category, concern and contact grids use. This
+              // page had the eight lines inline because it was written first;
+              // four callers agreeing by construction is the point of the
+              // module (src/features/products/media.ts).
+              resolved={productCardImage(listingMedia, product)}
             />
           ))}
         </ul>

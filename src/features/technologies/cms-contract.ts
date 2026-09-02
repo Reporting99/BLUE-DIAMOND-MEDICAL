@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { defineEntityContract, localizedBilingual, adaptFaqs } from "@/lib/feelstack/adapters";
+import { defineEntityContract, localizedBilingual, adaptFaqs, entitySlug } from "@/lib/feelstack/adapters";
 import { resolveSlotImage } from "@/lib/feelstack/media-slots";
 import type { Technology } from "./types";
 
@@ -42,7 +42,7 @@ export const technologyCmsContract = defineEntityContract<TechnologyFields, Tech
   adapt: ({ locale, title, fields: f, faqs, path, media }) => {
     const tech: Technology = {
       id: f.technology_id,
-      slug: path.replace(/^\/aesthetics\/technologies\//, ""),
+      slug: entitySlug(path, locale, "/aesthetics/technologies/"),
       // Arabic public URLs stay frontend-owned; the CMS slug is ASCII.
       slugAr: "",
       title: localizedBilingual(locale, title ?? ""),

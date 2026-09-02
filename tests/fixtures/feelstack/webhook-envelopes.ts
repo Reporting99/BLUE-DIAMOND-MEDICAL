@@ -73,12 +73,12 @@ export function envelope(overrides: EnvelopeOverrides = {}): Record<string, unkn
       : ((overrides.data?.locale as string | undefined) ?? "en"),
     path: has(overrides, "path")
       ? overrides.path
-      : ((overrides.data?.path as string | undefined) ?? "/doctors/mohamed-farhat"),
+      : ((overrides.data?.path as string | undefined) ?? "/our-team/mohamed-farhat"),
     data: overrides.data ?? {
       id: "9b7c1a20-4f3e-4d5a-8b21-0c6e9f2a1d33",
       status: "published",
       locale: "en",
-      path: "/doctors/mohamed-farhat",
+      path: "/our-team/mohamed-farhat",
     },
   };
 }

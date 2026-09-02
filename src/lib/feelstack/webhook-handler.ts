@@ -35,9 +35,9 @@ const allowedPaths = new Set(routes.flatMap((r) => [`/en${r.path.en}`, `/ar${r.p
 /**
  * CMS path -> route entry.
  *
- * FeelStack's `data.path` is the CMS path (e.g. "/doctors/mohamed-farhat"),
- * which is a DIFFERENT namespace from the public URL ("/en/doctors/..." or
- * the Arabic "/ar/الأطباء/..."). Passing `data.path` straight to
+ * FeelStack's `data.path` is the CMS path (e.g. "/our-team/mohamed-farhat"),
+ * which is a DIFFERENT namespace from the public URL ("/en/our-team/..." or
+ * the Arabic "/ar/فريقنا/..."). Passing `data.path` straight to
  * `isAllowlistedPath` would reject every real event.
  *
  * Verified across all six entity families that the CMS path a page
@@ -47,7 +47,7 @@ const allowedPaths = new Set(routes.flatMap((r) => [`/en${r.path.en}`, `/ar${r.p
  *   /aesthetics/concerns/{slug}      <- concerns.map(...)
  *   /aesthetics/technologies/{slug}  <- technologies.map(...)
  *   /shop/{slug}                     <- products.map(...)
- *   /doctors/{id}                    <- literal entries; doctor.id IS the segment
+ *   /our-team/{id}                   <- literal entries; doctor.id IS the segment
  * so `route.path.en` is the correct join key, and resolving through the
  * registry (rather than string-munging a locale prefix on) is what keeps
  * the Arabic URL correct — Arabic paths are not transliterations.

@@ -67,7 +67,7 @@ Single source of truth is `src/config/routes.ts` — this document mirrors it in
 | `aesthetics-concerns-hub` + 9 concerns | `/aesthetics/concerns[/<slug>]` | `/التجميل-الطبي/المخاوف-الجمالية[/<slug>]` | hub + concern | — |
 | `aesthetics-technologies-hub` + 5 technologies | `/aesthetics/technologies[/<slug>]` | `/التجميل-الطبي/التقنيات[/<slug>]` | hub + technology | — |
 | `botox-hub` | `/botox` | `/بوتوكس` | hub | ✅ |
-| `doctors-index` + 6 doctors | `/doctors[/<slug>]` | `/الأطباء[/<slug>]` | hub + doctor-profile | ✅ (index only) |
+| `doctors-index` + 6 doctors | `/our-team[/<slug>]` | `/فريقنا[/<slug>]` | hub + doctor-profile | ✅ (index only) |
 | `patient-resources-hub` | `/patient-resources` | `/موارد-المرضى` | hub | ✅ |
 | `health-hub` | `/health-hub` | `/المركز-المعرفي` | hub | ✅ |
 | `about` | `/about` | `/من-نحن` | static | ✅ |
@@ -103,6 +103,50 @@ None of these appear in the sitemap, main navigation, or search results, and eve
 
 Records every route-tree validation decision from the Part 1 audit, against the rules in the brief and the two owned legacy sites / approved DOCX. Classification scheme: `KEEP` / `MERGE` / `REDIRECT` / `GATE` / `DELETE` / `REQUIRES CLIENT APPROVAL`. Full per-route classification table is `docs/ROUTING.md`; this log is the *reasoning*, not the inventory.
 
+### 2026-09-01 — `/doctors` renamed to `/our-team` (whole family)
+
+`REDIRECT`. The index and all six member pages moved together:
+`/doctors[/<slug>]` -> `/our-team[/<slug>]`, `/الأطباء[/<slug>]` -> `/فريقنا[/<slug>]`.
+Member slugs are unchanged on both sides; only the parent segment moved.
+
+**Why the whole family, not just the index.** An index at `/our-team` with
+members still at `/doctors/<slug>` is two names for one section — it breaks the
+breadcrumb's own claim about where a member lives, and leaves the old noun in
+every physician's canonical URL. A partial rename was considered and rejected.
+
+**Arabic.** `فريقنا` is not a new coinage: it is already the project's Arabic
+for "Our Team" in `src/i18n/dictionaries/ar.ts` (`nav.ourTeam`). Member slugs
+stay exactly as the CMS authored them.
+
+**Both sides moved.** The six members are FeelStack `person_profile` entities,
+so the CMS is authoritative for their paths. They were repatched there
+(`routePrefix` only, leaving each stored slug untouched), then
+`src/config/localized-entity-routes.generated.ts` and
+`tests/fixtures/feelstack/cms-route-inventory.json` were regenerated from the
+updated CMS. Renaming only the repository would have failed
+`localized-route-parity.spec.ts`, which is exactly what that spec is for.
+
+**The route id stayed `doctors-index`.** It is an internal key referenced by
+nav, the footer, three templates, the FacetTile seed and
+`cacheTags.doctorsIndex` — whose CMS cache tag `feelstack-doctors:<site>:<locale>`
+is derived from it. Renaming it would churn all of that, and invalidate live
+cache keys, to change a string no visitor sees.
+
+**Redirects: none, deliberately.** The rename briefly carried 28 exact-match
+301s in `renamedRouteRedirects`. They were removed in the pre-launch
+architecture pass. Blue Diamond has never been published on its production
+domain, so `/doctors` and `/الأطباء` have no inbound links, no index entry and
+no equity to preserve — a redirect for one only gives the team family a second
+address, which is the duplication this pass exists to remove. `/our-team` and
+`/فريقنا` are now the only addresses that have ever been public.
+
+This does NOT apply to `legacyRedirects` in the same file, which maps URLs from
+the two live third-party sites (bluediamondmedical.ca,
+bluediamondmedicalaesthetics.ca). Those URLs *are* published and *do* have
+inbound links; that table is a migration contract and stays. The invariant
+separating the two — a redirect source may never be a path this build itself
+served — is asserted in `tests/contracts/prelaunch-route-architecture.spec.ts`.
+
 ### Rule-by-rule validation
 
 | Rule | Checked against | Result |
@@ -134,7 +178,7 @@ Both fixes were verified: `npx playwright test tests/redirects` — 31/31 passin
 
 Two literal-text ambiguities between that brief and the existing, tested route tree, resolved using the brief's own stated priority ("use the existing canonical route map... do not invent duplicate routes when an approved canonical route already exists") rather than guessed silently:
 
-1. **"Services" nav item / `/en/services/`** — the brief's Services-page section uses `/en/services/` as its example URL, but the existing `/en/medical/` hub already satisfies every literal requirement listed there word-for-word (real, public, organized by category, non-gated, 200, linked from nav/homepage/footer) and is the brief's own mandatory Medical Services hub from an earlier pass in this same project. Creating a second `/en/services/` page with the same content would itself be the "duplicate route" the brief forbids. Resolution: the "Services" nav item links to `/en/medical/` (`src/config/navigation.ts`); a plain redirect alias `/en/services` → `/en/medical` was added (`next.config.ts`) so the literal URL still resolves rather than 404s, without creating a second indexable page.
+1. **"Services" nav item / `/en/services/`** — the brief's Services-page section uses `/en/services/` as its example URL, but the existing `/en/medical/` hub already satisfies every literal requirement listed there word-for-word (real, public, organized by category, non-gated, 200, linked from nav/homepage/footer) and is the brief's own mandatory Medical Services hub from an earlier pass in this same project. Creating a second `/en/services/` page with the same content would itself be the "duplicate route" the brief forbids. Resolution: the "Services" nav item links to `/en/medical/` (`src/config/navigation.ts`). An alias `/en/services` → `/en/medical` was added in `next.config.ts` at the time and has since been **removed** in the pre-launch architecture pass: nothing links to `/en/services`, it was never published, and an alias for it gave the Medical hub a second address no reader arrives at. `/en/services` is now simply not a route.
 2. **"Cosmetic Botox" and "Skin Tightening" in the Treatments dropdown** — both are on the brief's required treatment list, but each one's only approved source content already lives entirely on an existing live page (Cosmetic Botox's treatment-area list is the Botox hub's; "Skin Tightening" is Radio Frequency/TempSure's own stated function, not a distinct procedure) — exactly why both were gated in an earlier pass (see "Gate — fully built, feature-flagged off" below and `docs/CONTENT_MODEL.md`). The brief's own §7 rule — "never link to a gated page" — combined with the master brief's standing "do not create duplicate pages for the same intent" rules out both flipping the flag on a thin/duplicate page and inventing new unique content that doesn't exist in any approved source. Resolution: both appear in the Treatments dropdown with their approved display name (`src/features/aesthetics/data/treatments.ts` `gatedTreatments`, title only) but link to the real live page that already carries their approved content — `botox-hub` and `treatment-radio-frequency` respectively (`src/config/navigation.ts` `treatmentsMenuItems`). Two dropdown labels intentionally resolve to the same underlying page for Skin Tightening/Radio Frequency, which is documented here rather than hidden.
 
 ### Route classifications summary (full detail in `docs/ROUTING.md`)
@@ -243,8 +287,10 @@ Home · Medical ▾ · Aesthetics ▾ · Our Team · About · Contact
 **No route was renamed, added or removed by this change**, and nothing was
 dropped from the navigation: `Services` is now the Medical mega menu (which
 links to the same `/medical` hub the label used to), and `Treatments` is the
-first column of the Aesthetics mega menu. Existing redirects, including
-`/en/services → /en/medical`, are unaffected.
+first column of the Aesthetics mega menu. The old-site
+`legacyRedirects` table is unaffected. (The `/en/services → /en/medical` alias
+referenced by earlier revisions of this section no longer exists — see the
+"FINAL MANDATORY NAVIGATION" note above.)
 
 | Top-level item | Links to | Mega menu |
 |---|---|---|

@@ -9,6 +9,7 @@ import { features } from "@/config/features";
 import { availabilityNotice, productConcerns, products } from "@/features/products";
 import { getRoute, href } from "@/lib/routing";
 import { resolvePageHeroImage } from "@/lib/feelstack/page-hero-media";
+import { productCardImage, resolveProductListingMedia } from "@/features/products/media";
 
 /** Feature-flagged off (`shopEnabled`) — see src/app/[locale]/shop/page.tsx. */
 export default async function ShopConcernPage({
@@ -32,6 +33,8 @@ export default async function ShopConcernPage({
   const shopRoute = getRoute("shop-hub")!;
   const ownRoute = getRoute(`shop-concern-${concern.id}`)!;
   const hero = await resolvePageHeroImage(ownRoute.path.en, locale);
+  // Same omission the category page had: the grid asked the CMS for nothing.
+  const listingMedia = await resolveProductListingMedia(concernProducts, locale);
 
   return (
     <>
@@ -60,7 +63,13 @@ export default async function ShopConcernPage({
         <Container>
           <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {concernProducts.map((product, i) => (
-              <ProductCard key={product.id} product={product} locale={locale} delay={i} />
+              <ProductCard
+                key={product.id}
+                product={product}
+                locale={locale}
+                delay={i}
+                resolved={productCardImage(listingMedia, product)}
+              />
             ))}
           </ul>
         </Container>

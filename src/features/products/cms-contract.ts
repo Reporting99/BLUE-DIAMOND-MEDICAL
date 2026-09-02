@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { defineEntityContract, localizedBilingual, localizedBilingualList } from "@/lib/feelstack/adapters";
+import { defineEntityContract, localizedBilingual, localizedBilingualList, entitySlug } from "@/lib/feelstack/adapters";
 import { resolveSlotGallery } from "@/lib/feelstack/media-slots";
 import type { ImageStatus } from "@/types/media";
 import type { Product, ProductDetail, ProductFaq } from "./types";
@@ -117,7 +117,7 @@ export const productCmsContract = defineEntityContract<ProductFields, Product>({
 
     const product: Product = {
       id: f.product_id,
-      slug: path.replace(/^\/shop\//, ""),
+      slug: entitySlug(path, locale, "/shop/"),
       // Arabic public URLs stay frontend-owned; the CMS slug is ASCII.
       slugAr: "",
       name: localizedBilingual(locale, title ?? ""),

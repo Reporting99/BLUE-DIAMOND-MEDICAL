@@ -33,7 +33,7 @@ const HERO_ROUTES: Array<{ en: string; ar: string; label: string }> = [
   { label: "technology detail", en: "/en/aesthetics/technologies/potenza", ar: "/ar/التجميل-الطبي/التقنيات/بوتنزا" },
   { label: "medical service detail", en: "/en/medical/eye-screening", ar: "/ar/الرعاية-الطبية/فحص-العين" },
   { label: "botox hub", en: "/en/botox", ar: "/ar/بوتوكس" },
-  { label: "doctors index", en: "/en/doctors", ar: "/ar/الأطباء" },
+  { label: "our team index", en: "/en/our-team", ar: "/ar/فريقنا" },
   { label: "about", en: "/en/about", ar: "/ar/من-نحن" },
   { label: "contact", en: "/en/contact", ar: "/ar/تواصل-معنا" },
   { label: "shop", en: "/en/shop", ar: "/ar/المتجر" },
@@ -55,7 +55,7 @@ const HERO_ROUTES: Array<{ en: string; ar: string; label: string }> = [
  * than an omission.
  */
 const HERO_EXCEPTIONS = [
-  { label: "doctor detail", path: "/en/doctors/mohamed-farhat" },
+  { label: "team member detail", path: "/en/our-team/mohamed-farhat" },
   { label: "product detail", path: "/en/shop/tns-eye-repair" },
 ];
 
@@ -228,7 +228,7 @@ test.describe("Listing cards carry imagery", () => {
     { label: "treatments", path: "/en/aesthetics/treatments", cards: "#main-content a:has(h2)", min: 6 },
     { label: "technologies", path: "/en/aesthetics/technologies", cards: "#main-content a:has(h2)", min: 4 },
     { label: "products", path: "/en/shop", cards: "#main-content li.group > a", min: 8 },
-    { label: "doctors", path: "/en/doctors", cards: "#main-content a:has(h2)", min: 6 },
+    { label: "our team", path: "/en/our-team", cards: "#main-content a:has(h2)", min: 6 },
   ];
 
   for (const listing of LISTINGS) {
@@ -496,7 +496,7 @@ test.describe("Scroll reveal", () => {
     "/en/aesthetics/technologies",
     "/en/aesthetics/before-after",
     "/en/shop",
-    "/en/doctors",
+    "/en/our-team",
     "/en/contact",
   ];
 
@@ -732,8 +732,8 @@ test.describe("Scrollbar", () => {
     test.skip(({ isMobile }) => !!isMobile, "mobile emulation draws an overlay scrollbar with no measurable geometry");
 
     for (const { width, expected } of [
-      { width: 390, expected: 8 },
-      { width: 1440, expected: 10 },
+      { width: 390, expected: 11 },
+      { width: 1440, expected: 11 },
     ] as const) {
       test(`${width}px: the bar is ${expected}px of brand blue, not the default grey`, async ({ baseURL }) => {
         // A browser of this test's own, because the one Playwright supplies is

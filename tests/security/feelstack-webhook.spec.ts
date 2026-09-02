@@ -29,9 +29,9 @@ import {
  * not decoration. See "signature scheme prefix" below.
  */
 
-const DOCTOR_CMS_PATH = "/doctors/mohamed-farhat";
-const DOCTOR_EN_URL = "/en/doctors/mohamed-farhat";
-const DOCTOR_AR_URL = "/ar/الأطباء/محمد-فرحات";
+const DOCTOR_CMS_PATH = "/our-team/mohamed-farhat";
+const DOCTOR_EN_URL = "/en/our-team/mohamed-farhat";
+const DOCTOR_AR_URL = "/ar/فريقنا/محمد-فرحات";
 
 function effects() {
   const revalidatedTags: string[] = [];

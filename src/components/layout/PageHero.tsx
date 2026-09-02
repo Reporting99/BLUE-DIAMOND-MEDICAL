@@ -65,6 +65,34 @@ const measureClasses: Record<PageHeroMeasure, string> = {
   form: "max-w-xl",
 };
 
+/**
+ * Where a two-column hero's copy column starts.
+ *
+ * `measure` normally does this by capping the Container itself, which a
+ * two-column hero cannot do — it needs the full 1280px to have a second
+ * column at all. Without this the copy fell back to the container edge while
+ * the prose below it stayed in its own centred column: on /about that was the
+ * headline at x=104 above a first paragraph at x=360, which is precisely the
+ * two-different-left-margins bug the `measure` doc comment above describes.
+ *
+ * Both columns are centred in the viewport, so the gap between their
+ * inline-start edges is `(container - measure) / 2` — independent of viewport
+ * width, and 0 once the viewport is narrower than the measure. Expressed
+ * against the row's own containing block that is `(100% + 2×padding -
+ * measure) / 2`, which is why each entry carries the `px-4`/`lg:px-6` the
+ * Container is actually padded with. Percentage padding resolves against the
+ * containing block, so the columns' own percentages then divide what is left
+ * rather than the full container.
+ *
+ * `wide` gets nothing: its copy is already meant to sit at the container edge.
+ */
+const measureOffsetClasses: Record<PageHeroMeasure, string> = {
+  wide: "",
+  article: "md:ps-[calc((100%_+_2rem_-_48rem)/2)] lg:ps-[calc((100%_+_3rem_-_48rem)/2)]",
+  narrow: "md:ps-[calc((100%_+_2rem_-_42rem)/2)] lg:ps-[calc((100%_+_3rem_-_42rem)/2)]",
+  form: "md:ps-[calc((100%_+_2rem_-_36rem)/2)] lg:ps-[calc((100%_+_3rem_-_36rem)/2)]",
+};
+
 const sizeClasses: Record<PageHeroSize, string> = {
   // Utility and transactional routes — cart, checkout, legal, shipping. Enough
   // presence to be a hero, not so much that it delays the task.
@@ -98,6 +126,23 @@ export interface PageHeroProps {
   breadcrumbs?: React.ReactNode;
   /** Anything page-specific below the actions — fact chips, a phone line, a note. */
   children?: React.ReactNode;
+  /**
+   * A page-specific visual beside the copy, not below it.
+   *
+   * Opting in turns the hero into two columns from `md` up — the copy on the
+   * inline-start side, this centred in whatever the copy leaves, both
+   * vertically centred against each other — and stacks them (copy first, this
+   * centred underneath) below that. Leaving it undefined is not a variant of
+   * that layout: the single-column branch below is the original markup
+   * untouched, so the twenty-seven heroes that pass nothing render exactly as
+   * before.
+   *
+   * `measure` still applies, but as an offset rather than as a cap: a
+   * two-column hero needs the full container, so instead of narrowing it the
+   * measure moves the copy column's inline-start edge onto the same grid line
+   * the page's prose below starts on. See `measureOffsetClasses`.
+   */
+  aside?: React.ReactNode;
   /**
    * The picture's own caption, when the CMS supplied one.
    *
@@ -139,6 +184,7 @@ export function PageHero({
   actions,
   breadcrumbs,
   children,
+  aside,
   imageCaption,
   size = "standard",
   measure = "wide",
@@ -159,6 +205,36 @@ export function PageHero({
    * lets the picture through at both edges instead of one.
    */
   const symmetricWash = centered || measure !== "wide";
+
+  const copy = (
+    <>
+      {breadcrumbs ? <div className="mb-5">{breadcrumbs}</div> : null}
+      {/* The 600px cap applies only in the `wide` measure: it is what keeps
+          a headline from running the full 1280px container and colliding
+          with the bright side of the photograph. In the article/narrow
+          measures the column is already the constraint, and capping again
+          would pull the copy off the edge it was just aligned to. */}
+      <div className={cn(centered ? "max-w-2xl" : measure === "wide" && "max-w-[600px]")}>
+        {eyebrow ? (
+          <p className="text-sm font-semibold tracking-wide text-primary uppercase">{eyebrow}</p>
+        ) : null}
+        {/* No top margin without an eyebrow: the breadcrumb row above
+            already carries the gap, and adding a second one leaves the
+            headline sitting low in heroes that have no eyebrow (most). */}
+        <h1 className={cn("text-display-1 font-heading lg:text-display-1-lg", eyebrow && "mt-4")}>{title}</h1>
+        {body ? <p className="mt-5 text-body-lg text-text-secondary">{body}</p> : null}
+        {actions ? (
+          <div className={cn("mt-8 flex flex-wrap gap-3", centered && "justify-center")}>{actions}</div>
+        ) : null}
+        {children}
+      </div>
+      {imageCaption?.[locale] ? (
+        <p className={cn("mt-6 text-caption text-text-secondary", measure === "wide" && "max-w-[600px]", centered && "mx-auto")}>
+          {imageCaption[locale]}
+        </p>
+      ) : null}
+    </>
+  );
 
   return (
     <section className="relative isolate overflow-hidden border-b border-border">
@@ -207,35 +283,42 @@ export function PageHero({
         className={cn(
           "flex flex-col justify-center",
           sizeClasses[size],
-          measureClasses[measure],
-          centered && "items-center text-center",
+          !aside && measureClasses[measure],
+          centered && !aside && "items-center text-center",
         )}
       >
-        {breadcrumbs ? <div className="mb-5">{breadcrumbs}</div> : null}
-        {/* The 600px cap applies only in the `wide` measure: it is what keeps
-            a headline from running the full 1280px container and colliding
-            with the bright side of the photograph. In the article/narrow
-            measures the column is already the constraint, and capping again
-            would pull the copy off the edge it was just aligned to. */}
-        <div className={cn(centered ? "max-w-2xl" : measure === "wide" && "max-w-[600px]")}>
-          {eyebrow ? (
-            <p className="text-sm font-semibold tracking-wide text-primary uppercase">{eyebrow}</p>
-          ) : null}
-          {/* No top margin without an eyebrow: the breadcrumb row above
-              already carries the gap, and adding a second one leaves the
-              headline sitting low in heroes that have no eyebrow (most). */}
-          <h1 className={cn("text-display-1 font-heading lg:text-display-1-lg", eyebrow && "mt-4")}>{title}</h1>
-          {body ? <p className="mt-5 text-body-lg text-text-secondary">{body}</p> : null}
-          {actions ? (
-            <div className={cn("mt-8 flex flex-wrap gap-3", centered && "justify-center")}>{actions}</div>
-          ) : null}
-          {children}
-        </div>
-        {imageCaption?.[locale] ? (
-          <p className={cn("mt-6 text-caption text-text-secondary", measure === "wide" && "max-w-[600px]", centered && "mx-auto")}>
-            {imageCaption[locale]}
-          </p>
-        ) : null}
+        {aside ? (
+          <div
+            className={cn(
+              "flex flex-col gap-10 md:flex-row md:items-center md:gap-8 lg:gap-12",
+              measureOffsetClasses[measure],
+            )}
+          >
+            {/* The copy takes a fixed share of what the offset leaves and is
+                the only column allowed to shrink; the visual's column is
+                content-sized (`basis-auto` + `shrink-0`) and absorbs the rest
+                by growing. That ordering is what guarantees no overflow: if a
+                wide viewport's visual and this column ever cannot both fit,
+                the copy gives up the width rather than the visual spilling
+                past the container.
+
+                `min-w-min` is the floor on that shrinking — the column never
+                goes narrower than its own longest unbreakable run. Without it
+                a headline holding a non-breaking brand name overflowed its
+                column between `lg` and ~1150px, where the display size steps
+                up to 3.5rem while this column is still at its narrowest. The
+                visual's column absorbs the difference, which it has room for:
+                the floor only binds at widths where the lock-up is at its
+                smallest. */}
+            <div className="md:w-[42%] md:min-w-min">{copy}</div>
+            {/* Growing rather than a fixed percentage is what keeps the visual
+                centred in the leftover space instead of pinned beside the
+                copy or against the container's inline-end edge. */}
+            <div className="flex justify-center md:shrink-0 md:grow">{aside}</div>
+          </div>
+        ) : (
+          copy
+        )}
       </Container>
     </section>
   );

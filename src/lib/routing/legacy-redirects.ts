@@ -13,7 +13,7 @@ export const legacyRedirects: Record<string, string> = {
   // bluediamondmedical.ca (primary legacy site)
   "/appointment-1": "/en/book-appointment",
   "/services": "/en/medical",
-  "/our-team": "/en/doctors",
+  "/our-team": "/en/our-team",
   "/medical-aesthetics-1": "/en/aesthetics",
   "/botox-1": "/en/botox",
   "/eye-examining": "/en/medical/eye-screening",

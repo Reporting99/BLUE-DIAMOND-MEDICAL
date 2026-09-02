@@ -6,15 +6,15 @@ import { routes } from "@/lib/routing";
  * Arabic alias redirects, and the integrity of the internal rewrite marker.
  *
  * The proxy rewrites a pretty Arabic URL onto its English-slug folder
- * (/ar/الأطباء -> /ar/doctors) and redirects an English-slug path under /ar to
- * its Arabic canonical (/ar/doctors -> /ar/الأطباء). Those two are exact
+ * (/ar/فريقنا -> /ar/our-team) and redirects an English-slug path under /ar to
+ * its Arabic canonical (/ar/our-team -> /ar/فريقنا). Those two are exact
  * inverses, so the rewrite must be distinguishable from an external request or
  * every Arabic URL loops -- which is what CI #54 caught, 86 failures of
  * ERR_TOO_MANY_REDIRECTS.
  *
  * The marker that distinguishes them travels on a request header, and a
  * request header is client-controllable. A constant value was therefore
- * spoofable: sending it against /ar/doctors returned 200 instead of the 301,
+ * spoofable: sending it against /ar/our-team returned 200 instead of the 301,
  * resurrecting exactly the duplicate Arabic URL the redirect removes. The
  * value is now a per-process nonce that never appears in a response.
  */
@@ -23,7 +23,7 @@ const MARKER = "x-bd-arabic-rewrite";
 
 const localized = routes.filter((r) => r.path.ar !== r.path.en);
 /** A representative slice — one hub, one deep detail page, one doctor. */
-const SAMPLES = ["/doctors", "/aesthetics/concerns/acne-scars", "/medical"].filter((en) =>
+const SAMPLES = ["/our-team", "/aesthetics/concerns/acne-scars", "/medical"].filter((en) =>
   localized.some((r) => r.path.en === en),
 );
 
@@ -78,7 +78,7 @@ test.describe("Arabic alias redirects", () => {
   }
 
   test("the internal marker never leaks into a response", async ({ request }) => {
-    for (const path of ["/ar/doctors", `/ar${arabicFor("/doctors")}`, "/en/doctors"]) {
+    for (const path of ["/ar/our-team", `/ar${arabicFor("/our-team")}`, "/en/our-team"]) {
       const response = await request.get(path, { maxRedirects: 0 });
       expect(Object.keys(response.headers())).not.toContain(MARKER);
     }

@@ -87,7 +87,7 @@ test.describe("every CMS route has an Arabic mapping this build can resolve", ()
   });
 
   test("entity families that exist in the CMS are all represented", () => {
-    const families = ["/aesthetics/treatments/", "/aesthetics/concerns/", "/aesthetics/technologies/", "/medical/", "/shop/", "/doctors/"];
+    const families = ["/aesthetics/treatments/", "/aesthetics/concerns/", "/aesthetics/technologies/", "/medical/", "/shop/", "/our-team/"];
     for (const family of families) {
       const inCms = cmsRoutes.filter((r) => r.en.startsWith(family) && r.ar);
       if (inCms.length === 0) continue;

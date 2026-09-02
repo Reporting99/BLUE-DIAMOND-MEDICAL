@@ -583,7 +583,7 @@ test.describe("mass-404 guard", () => {
     // The live failure mode, end to end: unknown siteKey -> HTTP 404 carrying
     // SITE_NOT_FOUND. Before the flat-envelope fix this produced NOT_FOUND for
     // every path on the site.
-    for (const path of ["/", "/en", "/en/doctors", "/ar/الأطباء", "/en/medical/botox"]) {
+    for (const path of ["/", "/en", "/en/our-team", "/ar/فريقنا", "/en/medical/botox"]) {
       const verdict = classifyEnvelope(404, LIVE_SITE_NOT_FOUND);
       expect(verdict, `path ${path} would have 404'd`).toBe("INVALID_SITE");
     }

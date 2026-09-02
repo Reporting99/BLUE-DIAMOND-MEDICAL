@@ -127,36 +127,6 @@ export const localizedEntityRoutes: LocalizedEntityRoute[] = [
     "type": "content_entry"
   },
   {
-    "en": "/doctors/ahmed-gwea",
-    "ar": "/الأطباء/أحمد-جويع",
-    "type": "person_profile"
-  },
-  {
-    "en": "/doctors/bakare",
-    "ar": "/الأطباء/باكاري",
-    "type": "person_profile"
-  },
-  {
-    "en": "/doctors/mohamed-farhat",
-    "ar": "/الأطباء/محمد-فرحات",
-    "type": "person_profile"
-  },
-  {
-    "en": "/doctors/omaima-saeed",
-    "ar": "/الأطباء/أميمة-سعيد",
-    "type": "person_profile"
-  },
-  {
-    "en": "/doctors/omonijo",
-    "ar": "/الأطباء/أومونيجو",
-    "type": "person_profile"
-  },
-  {
-    "en": "/doctors/reem-hamdi",
-    "ar": "/الأطباء/ريم-حمدي",
-    "type": "person_profile"
-  },
-  {
     "en": "/medical/after-hours-care",
     "ar": "/الرعاية-الطبية/الرعاية-خارج-أوقات-الدوام",
     "type": "content_entry"
@@ -190,6 +160,36 @@ export const localizedEntityRoutes: LocalizedEntityRoute[] = [
     "en": "/medical/weight-management",
     "ar": "/الرعاية-الطبية/إدارة-الوزن",
     "type": "content_entry"
+  },
+  {
+    "en": "/our-team/ahmed-gwea",
+    "ar": "/فريقنا/أحمد-جويع",
+    "type": "person_profile"
+  },
+  {
+    "en": "/our-team/bakare",
+    "ar": "/فريقنا/باكاري",
+    "type": "person_profile"
+  },
+  {
+    "en": "/our-team/mohamed-farhat",
+    "ar": "/فريقنا/محمد-فرحات",
+    "type": "person_profile"
+  },
+  {
+    "en": "/our-team/omaima-saeed",
+    "ar": "/فريقنا/أميمة-سعيد",
+    "type": "person_profile"
+  },
+  {
+    "en": "/our-team/omonijo",
+    "ar": "/فريقنا/أومونيجو",
+    "type": "person_profile"
+  },
+  {
+    "en": "/our-team/reem-hamdi",
+    "ar": "/فريقنا/ريم-حمدي",
+    "type": "person_profile"
   },
   {
     "en": "/shop/aha-bha-cream",

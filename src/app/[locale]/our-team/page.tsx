@@ -14,6 +14,7 @@ import { getRouteMetadata } from "@/lib/seo/metadata";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
 import { PageSchema } from "@/components/shared/schema";
 import { resolvePageHeroImage } from "@/lib/feelstack/page-hero-media";
+import { manifestAsset } from "@/lib/media/image-manifest";
 import { siteConfig } from "@/config/site";
 
 export async function generateMetadata({
@@ -25,8 +26,8 @@ export async function generateMetadata({
   const safeLocale: Locale = isLocale(locale) ? locale : "en";
   return getRouteMetadata("doctors-index", safeLocale, {
     description: {
-      en: "Meet the six family physicians of Blue Diamond Medical Clinic in West Springs, Calgary.",
-      ar: "تعرّفوا على أطباء الأسرة الستة في عيادة بلو دايموند الطبية في ويست سبرينغز، كالغاري.",
+      en: "Meet the team behind Blue Diamond Medical Clinic in West Springs, Calgary — six family physicians providing comprehensive care.",
+      ar: "تعرّفوا على فريق عيادة بلو دايموند الطبية في ويست سبرينغز، كالغاري — ستة أطباء أسرة يقدّمون رعاية شاملة.",
     },
   });
 }
@@ -39,15 +40,15 @@ export default async function DoctorsIndexPage({ params }: { params: Promise<{ l
   // whose detail page one click away renders a real portrait -- same person,
   // same assignment, different consumer. See lib/feelstack/listing-media.ts.
   const listingMedia = await resolveListingMedia(
-    doctors.map((d) => ({ id: d.id, englishPath: `/doctors/${d.id}` })),
+    doctors.map((d) => ({ id: d.id, englishPath: `/our-team/${d.id}` })),
     locale,
     [cacheTags.doctorsIndex(process.env.FEELSTACK_SITE_KEY ?? "", locale)],
   );
-  const heading = locale === "ar" ? "أطباؤنا" : "Our Doctors";
+  const heading = locale === "ar" ? "فريقنا" : "Our Team";
   const intro =
     locale === "ar"
-      ? "ستة أطباء أسرة يقدّمون رعاية شاملة لعائلتكم، بعضهم يقدّم أيضًا خدمات التجميل الطبي وحقن البوتوكس."
-      : "Six family physicians providing comprehensive care for your family — several also deliver medical aesthetics and Botox.";
+      ? "تعرّفوا على فريق بلو دايموند الطبي — ستة أطباء أسرة يقدّمون رعاية شاملة لعائلتكم، ويقدّم بعضهم أيضًا خدمات التجميل الطبي وحقن البوتوكس."
+      : "Meet the team behind Blue Diamond Medical — six family physicians providing comprehensive care for your family, several also delivering medical aesthetics and Botox.";
 
   const ownRoute = getRoute("doctors-index")!;
   // Built from the same `doctors` array the grid below maps over, so the
@@ -58,6 +59,9 @@ export default async function DoctorsIndexPage({ params }: { params: Promise<{ l
   });
 
   const hero = await resolvePageHeroImage(ownRoute.path.en, locale);
+  // The team photograph the clinic supplied for this page. Read from the
+  // manifest so its `status` — the approval gate — has one source of truth.
+  const teamPhoto = manifestAsset("our-team-group");
 
   return (
     <>
@@ -68,12 +72,25 @@ export default async function DoctorsIndexPage({ params }: { params: Promise<{ l
         path={ownRoute.path[locale]}
         items={items}
       />
-      {/* NOTE the `imageRole`: "location", not "doctor". This hero must never
-          resolve to, or stand in for, a portrait. Physician photography is
-          uploaded and approved by the clinic, and the one thing this build
-          will not do is put a generated or stock face on a doctors page --
-          docs/UI_UX_FOUNDATION.md §18. A clinic-context visual is the honest
-          backdrop for a page whose subjects are real people. */}
+      {/* TWO VISUALS, AND THEY ARE NOT INTERCHANGEABLE.
+
+          The BACKDROP keeps `imageRole: "location"`, not "doctor", for the
+          reason it always had: whatever fills it must never stand in for a
+          portrait. When no clinic photograph is assigned it falls through to
+          a FacetTile, and a facet plane tinted "doctor" on a page whose
+          subjects are real people reads as a person-shaped placeholder. A
+          clinic-context visual is the honest backdrop.
+
+          The ASIDE is the opposite case and is why this page now passes one:
+          a real, clinic-supplied group photograph of the team. The rule in
+          docs/UI_UX_FOUNDATION.md §18 was never "no photograph on this page"
+          — it was "no generated or stock face", and this is neither. It sits
+          beside the copy rather than behind it because a full-bleed hero
+          would crop through its faces and lay the readability wash over them;
+          see the `aside` prop in PageHero.
+
+          `status` comes from the manifest rather than being restated here, so
+          the approval gate has exactly one control point (manifestAsset). */}
       <PageHero
         locale={locale}
         title={heading}
@@ -86,6 +103,36 @@ export default async function DoctorsIndexPage({ params }: { params: Promise<{ l
           ar: "عيادة بلو دايموند الطبية، ويست سبرينغز، كالغاري",
         }}
         breadcrumbs={<Breadcrumbs locale={locale} items={[{ label: ownRoute.title[locale] }]} />}
+        aside={
+          /* No width on this wrapper beyond a cap: PageHero's aside column
+             centres its content and absorbs the leftover width, so sizing it
+             here would fight that. The cap is 560px against a 600px original
+             — the picture is never asked to fill more than it has. */
+          <div className="w-full max-w-[560px] drop-shadow-[0_18px_40px_rgba(29,86,120,0.20)]">
+            {/* `facet-corner` is the same diamond cut the doctor portraits
+                carry, so the hero visual belongs to the page it opens rather
+                than floating above it as a plain rectangle. drop-shadow, not
+                box-shadow, sits on the wrapper: a box-shadow would be clipped
+                away by the facet's clip-path, while a filter follows it. */}
+            <div className="facet-corner relative aspect-[600/451] overflow-hidden rounded-lg">
+              <ImageKitImage
+                path={teamPhoto.path}
+                preset="team-group"
+                role={teamPhoto.role}
+                status={teamPhoto.status}
+                alt={teamPhoto.alt}
+                locale={locale}
+                width={teamPhoto.width}
+                height={teamPhoto.height}
+                /* Above the fold on this route, and the largest thing in the
+                   hero — the LCP candidate, so it is not lazy-loaded. */
+                preload
+                sizes="(min-width: 768px) 560px, 100vw"
+                className="h-full w-full"
+              />
+            </div>
+          </div>
+        }
       />
 
       <section className="section-y">

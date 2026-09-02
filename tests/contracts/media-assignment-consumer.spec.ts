@@ -123,11 +123,25 @@ test.describe("consent and withdrawal outrank any assignment", () => {
     expect(resolved.status).toBe("disabled");
   });
 
-  test("Dr. Omaima Saeed stays disabled even if an assignment is later attached", () => {
-    // Her CMS record is photoDeclined: true / imageStatus: "disabled" and today
-    // carries no assignment at all. This asserts the outcome does not change if
-    // an importer ever attaches one — the failure mode this guards is a person
+  test("Dr. Omaima Saeed never acquires a portrait, even if an assignment is later attached", () => {
+    // Her CMS record is photoDeclined: true / imageStatus: "disabled" and
+    // carries no assignment. This asserts the outcome does not change if an
+    // importer ever attaches one — the failure mode this guards is a person
     // acquiring a portrait she declined.
+    //
+    // WHAT THIS TEST ASSERTS, AND WHY IT NO LONGER ASSERTS `status: "disabled"`
+    // AND `path: ""`. Those two literals described the empty CMS `imagePath`
+    // that used to be the fallback, not the guarantee. They made a CORRECT
+    // change look like a consent failure: a declined doctor's fallback now
+    // comes from her repository record (src/features/doctors/data.ts), which
+    // carries a designed, non-photographic identity card, so the adapter
+    // legitimately returns that card at `approved` instead of an empty path.
+    //
+    // The guarantee has never been "she renders nothing". It is that NO
+    // ASSIGNMENT CAN REACH HER, and that what does render is not a likeness.
+    // Asserting that directly is both stronger and stable: the checks below
+    // would have passed before this change and after it, and will keep passing
+    // through the next one.
     const doctor = doctorCmsContract.adapt({
       locale: "en",
       id: "ce09aa53-0f1e-4d95-b5a9-3d2a7cfed4c4",
@@ -147,13 +161,23 @@ test.describe("consent and withdrawal outrank any assignment", () => {
       },
       faqs: [],
       relations: [],
-      path: "/doctors/omaima-saeed",
+      path: "/our-team/omaima-saeed",
       media: [assignment({ path: "/blue-diamond/shared/legacy/some-portrait.jpg" })],
     });
 
+    // 1. The refusal survives adaptation. Everything else depends on this.
     expect(doctor.image.photoDeclined).toBe(true);
-    expect(doctor.image.status).toBe("disabled");
-    expect(doctor.image.path).toBe("");
+    // 2. THE INVARIANT: the attached assignment did not win. Asserting the
+    //    negative is the point — whatever the fallback happens to be today,
+    //    a photograph handed to her record must never come back out of it.
+    expect(doctor.image.path).not.toBe("/blue-diamond/shared/legacy/some-portrait.jpg");
+    // 3. What she renders instead is pinned, so silently swapping the
+    //    consent-safe substitute for something else is also a failure. This
+    //    asset is a name-and-brand-geometry card with no likeness of any kind
+    //    (see src/features/doctors/data.ts and docs/MEDIA.md).
+    expect(doctor.image.path).toBe(
+      "/blue-diamond/team/blue-diamond-team-dr-omaima-saeed-identity.webp",
+    );
   });
 
   test("isHardOverride distinguishes refusal from not-ready", () => {
@@ -187,7 +211,7 @@ test.describe("a valid assignment outranks a hardcoded path", () => {
       },
       faqs: [],
       relations: [],
-      path: "/doctors/mohamed-farhat",
+      path: "/our-team/mohamed-farhat",
       media: [assignment()],
     });
 

@@ -2,7 +2,7 @@
   "type": "person_profile",
   "route": {
     "id": "0ebb6997-c729-46c2-a5f4-86ebb4b55b02",
-    "path": "/doctors/mohamed-farhat",
+    "path": "/our-team/mohamed-farhat",
     "locale": "ar",
     "requestedLocale": "ar",
     "resolvedLocale": "ar",
@@ -10,11 +10,11 @@
     "alternates": [
       {
         "locale": "ar",
-        "path": "/doctors/mohamed-farhat"
+        "path": "/our-team/mohamed-farhat"
       },
       {
         "locale": "en",
-        "path": "/doctors/mohamed-farhat"
+        "path": "/our-team/mohamed-farhat"
       }
     ],
     "sectionId": null,

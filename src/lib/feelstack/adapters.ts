@@ -3,6 +3,7 @@ import type { Locale } from "./contracts";
 import type { Bilingual } from "@/types/common";
 import type { FeelstackResolveEnvelope, FeelstackFaq, FeelstackRelation } from "./transport";
 import { primaryForSlot, type ResolvedMedia } from "./media";
+import { englishPathFor } from "@/lib/routing";
 
 /**
  * Transport -> domain adapter boundary.
@@ -142,4 +143,29 @@ export function toAdapterInput<F>(
     path: envelope.route.path,
     media,
   };
+}
+
+/**
+ * The ASCII entity slug for a CMS path, in either locale.
+ *
+ * Every entity adapter needs one, and until this existed each derived it with
+ * its own `path.replace(/^\/shop\//, "")`. That is correct in English and
+ * silently wrong in Arabic: the Arabic entry's `path` is the Arabic pretty URL
+ * (`/المتجر/مركب-الريتينول-٠٫٥`), which the English prefix never matches, so
+ * the replace was a no-op and `slug` came out holding a whole Arabic URL.
+ *
+ * It surfaced on the Arabic product page's "ask about this product" link:
+ * `?product=` carried that URL instead of `retinol-complex-0-5`, `getProduct`
+ * matched nothing, and the Arabic contact page dropped the product context
+ * altogether — no packshot in the enquiry panel, no product in the heading,
+ * while the English route two clicks away worked. Same class of bug in all
+ * five adapters, so it is fixed once here rather than five times.
+ *
+ * `prefix` stays a parameter rather than being inferred from the path: an
+ * entity family knows its own route prefix, and inferring one would guess at
+ * an unregistered path instead of failing visibly.
+ */
+export function entitySlug(path: string, locale: Locale, prefix: string): string {
+  const english = englishPathFor(path, locale);
+  return english.startsWith(prefix) ? english.slice(prefix.length) : english.replace(/^\//, "");
 }

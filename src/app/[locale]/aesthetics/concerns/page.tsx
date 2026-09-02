@@ -8,6 +8,7 @@ import { isLocale, type Locale } from "@/i18n/config";
 import { getRoute, href } from "@/lib/routing";
 import { getRouteMetadata } from "@/lib/seo/metadata";
 import { resolvePageHeroImage } from "@/lib/feelstack/page-hero-media";
+import { concernExplorerImages, resolveConcernListingMedia } from "@/features/concerns/media";
 
 /** Single source for this page's description: consumed by both generateMetadata
  * and the page's JSON-LD node, so the two can never drift apart (brief §9). */
@@ -38,6 +39,15 @@ export default async function ConcernsHubPage({ params }: { params: Promise<{ lo
 
   const ownRoute = getRoute("aesthetics-concerns-hub")!;
   const hero = await resolvePageHeroImage(ownRoute.path.en, locale);
+  /* The explorer's own imagery. The hub rendered a FacetTile for every concern
+     while each concern's detail page rendered its approved photograph — the
+     same listing/detail split closed on the doctors index and the shop, and
+     closed here through the same shared resolver the homepage uses, so the two
+     surfaces cannot answer differently. */
+  const concernImages = concernExplorerImages(
+    await resolveConcernListingMedia(concerns, locale),
+    concerns,
+  );
   // Same array this page renders, so the structured list cannot diverge.
   const listItems = concerns.flatMap((entity) => {
     const r = getRoute(`concern-${entity.id}`);
@@ -73,7 +83,7 @@ export default async function ConcernsHubPage({ params }: { params: Promise<{ lo
       <section className="section-y">
         <Container>
           <div data-reveal="up">
-            <ConcernExplorer locale={locale} />
+            <ConcernExplorer locale={locale} images={concernImages} />
           </div>
         </Container>
       </section>

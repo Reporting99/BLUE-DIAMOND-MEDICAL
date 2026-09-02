@@ -13,6 +13,8 @@ import { cmsAlt, resolveSlotImageRef } from "@/lib/feelstack/media-slots";
 import { ClinicSchema } from "@/components/shared/schema";
 import { FaqPageSchema } from "@/components/shared/schema";
 import { ConcernExplorer } from "@/features/concerns";
+import { concerns } from "@/features/concerns/data";
+import { concernExplorerImages, concernListingEntities } from "@/features/concerns/media";
 import { doctors } from "@/features/doctors";
 import { availabilityNotice } from "@/features/products";
 import {
@@ -101,8 +103,15 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
     ...serviceCards.map((c) => ({ id: `service:${c.id}`, englishPath: `/medical/${c.id}` })),
     ...treatmentShowcase.map((t) => ({ id: `treatment:${t.id}`, englishPath: `/aesthetics/treatments/${t.id}` })),
     ...techShowcase.map((t) => ({ id: `tech:${t.id}`, englishPath: `/aesthetics/technologies/${t.id}` })),
-    ...featuredDoctors.map((d) => ({ id: `doctor:${d.id}`, englishPath: `/doctors/${d.id}` })),
+    ...featuredDoctors.map((d) => ({ id: `doctor:${d.id}`, englishPath: `/our-team/${d.id}` })),
     ...productShowcase.map((pr) => ({ id: `product:${pr.id}`, englishPath: `/shop/${pr.slug}` })),
+    /* Section 6's concern explorer. It was the last listing on this page still
+       asking the CMS for nothing: nine concerns with approved, assigned
+       photography rendered the branded FacetTile here and on the concerns hub,
+       while the detail page one click away showed the real picture. Added to
+       THIS fan-out rather than a second one of its own so the section costs the
+       same round trips the rest of the page already makes. */
+    ...concernListingEntities(concerns),
   ];
   const homeMedia = await resolveListingMedia(homeEntities, locale, [
     cacheTags.doctorsIndex(process.env.FEELSTACK_SITE_KEY ?? "", locale),
@@ -110,6 +119,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
     cacheTags.aestheticTreatmentsIndex(process.env.FEELSTACK_SITE_KEY ?? "", locale),
     cacheTags.technologiesIndex(process.env.FEELSTACK_SITE_KEY ?? "", locale),
     cacheTags.productsIndex(process.env.FEELSTACK_SITE_KEY ?? "", locale),
+    cacheTags.concernsIndex(process.env.FEELSTACK_SITE_KEY ?? "", locale),
   ]);
   const homeHero = (homeMedia.home ?? []).find((m) => m.slot === "hero");
   /** First asset in any of `slots` for a featured entity, or undefined. */
@@ -119,6 +129,10 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
      uses. `undefined` when the hub has no approved assignment — the callers
      below fall back to the facet tile rather than rendering an empty box. */
   const aestheticsHubMedia = featured("hub:aesthetics", "hero", "card");
+  /* Keyed by concern id, resolved through the shared slot order rather than by
+     position in the grid — see features/concerns/media.ts on why a preference
+     list cannot cross one concern's photograph onto another's card. */
+  const concernImages = concernExplorerImages(homeMedia, concerns);
   const faqSchemaEntries = homeFaqSchemaEntries(locale);
 
   const findByNeedIcon = { stethoscope: Stethoscope, sparkles: Sparkles, search: Search, cpu: Cpu };
@@ -492,7 +506,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       {/* ============ SECTION 6 — EXPLORE BY CONCERN ============ */}
       <section className="section-y bg-background">
         <Container>
-          <ConcernExplorer locale={locale} />
+          <ConcernExplorer locale={locale} images={concernImages} />
         </Container>
       </section>
 
