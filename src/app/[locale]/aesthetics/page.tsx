@@ -89,9 +89,18 @@ export default async function AestheticsHubPage({ params }: { params: Promise<{ 
         image={hero}
         imageRole="treatment"
         seed="aesthetics-hub"
+        /* The one route on the site art-directed as two halves: the supplied
+           photograph on the inline-end side, the facet background holding the
+           other, the copy against the inline-start edge. In Arabic that is the
+           picture on the left with the Arabic copy on the right, which is the
+           approved composition; in English the same rule mirrors. Opt-in per
+           page (see PageHero) so the other twenty routes are untouched, and
+           self-disabling until this page's hero assignment is an approved
+           photograph. */
+        mediaLayout="split"
         imageAlt={{
-          en: "Physician-led medical aesthetics treatment room at Blue Diamond Medical",
-          ar: "غرفة علاجات التجميل الطبي بإشراف طبي في بلو دايموند الطبية",
+          en: "Medical aesthetics wellness portrait at Blue Diamond Medical",
+          ar: "صورة تعبيرية للتجميل الطبي والعناية بالبشرة في بلو دايموند الطبية",
         }}
         breadcrumbs={<Breadcrumbs locale={locale} items={[{ label: ownRoute.title[locale] }]} />}
         actions={

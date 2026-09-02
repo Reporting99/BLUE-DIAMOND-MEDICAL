@@ -57,6 +57,24 @@ type PageHeroSize = "compact" | "standard";
  */
 type PageHeroMeasure = "wide" | "article" | "narrow" | "form";
 
+/**
+ * Where the hero's picture goes.
+ *
+ * `bleed` is what every hero on this site does and what it has always done:
+ * one photograph behind the whole section, the copy laid over its calm side,
+ * a readability wash between them.
+ *
+ * `split` gives the picture a half of its own on the inline-END side and
+ * leaves the facet background holding the other half, with the copy on the
+ * inline-start side against it. In Arabic that lands the photograph on the
+ * LEFT with the copy on the right, which is the composition /aesthetics was
+ * art-directed to; in English the same rule mirrors to a photograph on the
+ * right, which is what keeps the copy on the inline-start edge every other
+ * hero on the site starts from. The asset is one file with no burnt-in text,
+ * so nothing about the picture itself is flipped — only which side it is on.
+ */
+type PageHeroMediaLayout = "bleed" | "split";
+
 const measureClasses: Record<PageHeroMeasure, string> = {
   wide: "",
   article: "max-w-3xl",
@@ -170,6 +188,34 @@ export interface PageHeroProps {
    * for hub pages whose hero is symmetric and whose copy is short.
    */
   align?: "start" | "center";
+  /**
+   * Opt in to the two-half composition described on `PageHeroMediaLayout`.
+   *
+   * Deliberately a per-page flag rather than a new default. Twenty-one routes
+   * render this component, and every one of them is art-directed around a
+   * full-bleed picture with copy over it; making `split` the default would
+   * silently recompose all of them. It also degrades rather than half-renders:
+   * `split` is honoured only when this page actually has an APPROVED
+   * photograph to put in the half, because a split hero whose picture slot
+   * holds a placeholder tile is a facet tile beside a facet tile with a seam
+   * down the middle. Without one the hero falls back to `bleed` and looks
+   * exactly as it does today.
+   */
+  mediaLayout?: PageHeroMediaLayout;
+  /**
+   * Which side of a `split` hero the photograph takes. Ignored otherwise.
+   *
+   * `end` (the default) is the composition the Aesthetics hub was art-directed
+   * around, and it stays the default so adopting `split` elsewhere cannot
+   * silently recompose that page.
+   *
+   * `start` is the concern-detail convention: the picture leads on the side
+   * the language starts at — left in English, right in Arabic — so the reader
+   * meets the subject before the words. Both sides resolve from
+   * `inset-inline`, so neither needs a locale branch and neither mirrors by
+   * accident.
+   */
+  mediaSide?: "start" | "end";
 }
 
 export function PageHero({
@@ -189,8 +235,17 @@ export function PageHero({
   size = "standard",
   measure = "wide",
   align = "start",
+  mediaLayout = "bleed",
+  mediaSide = "end",
 }: PageHeroProps) {
   const centered = align === "center";
+  /**
+   * See `mediaLayout`. The `approved` test is the whole of the degradation
+   * rule: `ImageKitImage` renders real bytes for an approved asset and its
+   * FacetTile stand-in for anything else, so an unapproved assignment would
+   * put a placeholder tile into the picture half rather than a picture.
+   */
+  const split = mediaLayout === "split" && image?.status === "approved";
   /**
    * Which wash the picture gets.
    *
@@ -236,13 +291,79 @@ export function PageHero({
     </>
   );
 
+  /**
+   * THE SPLIT HERO'S PICTURE.
+   *
+   * One element, two layouts, deliberately — not two elements behind
+   * breakpoint visibility classes. Rendering it twice would put two `<img>`
+   * carrying the same alt text into the accessibility tree, and preload two
+   * copies of the LCP image so the browser fetches both and shows one.
+   *
+   * Below `md` it is an ordinary block in the flow, stacked under the copy and
+   * broken out of the Container's `px-4` so it runs edge to edge. Its
+   * `aspect-[4/3]` is the asset's own ratio, so `object-cover` has nothing to
+   * crop and the subject survives the narrow viewport whole — the one thing a
+   * portrait hero cannot afford to get wrong on a phone.
+   *
+   * From `md` up it leaves the flow and takes the inline-end half of the
+   * section: `inset-y-0` is what makes it the hero's FULL height rather than
+   * the height of a picture sitting in a row, and `end-0` is what puts it on
+   * the left in Arabic and the right in English without a locale branch.
+   *
+   * The z-index puts it above the readability wash (-20) and below the wash
+   * under the fixed header (-10). Above the readability wash because that wash
+   * exists to protect text and there is no text over this half — leaving the
+   * picture under it would veil the photograph to hold up copy that is not
+   * there. Below the header wash because the nav still crosses the top of it.
+   */
+  const splitPhoto =
+    split && image ? (
+      <div
+        className={cn(
+          "hero-split-media relative -mx-4 aspect-[4/3] w-[calc(100%+2rem)] overflow-hidden",
+          "md:absolute md:inset-y-0 md:z-[-15] md:mx-0 md:aspect-auto md:w-[46%] lg:w-[48%]",
+          mediaSide === "start" ? "md:start-0" : "md:end-0",
+          /* Tells the mask which edge to dissolve. The class above only moves
+             the picture; without this the fade stays keyed to an inline-END
+             picture and eats the OUTER edge instead. */
+          mediaSide === "start" && "hero-split-media--start",
+        )}
+      >
+        <ImageKitImage
+          path={image.path}
+          preset="hero"
+          role={image.role}
+          status={image.status}
+          alt={cmsAlt(image) ?? imageAlt}
+          locale={locale}
+          width={image.width}
+          height={image.height}
+          /* Still this page's LCP image, so still preloaded — but it now
+             covers half the viewport rather than all of it, and a `100vw`
+             hint here would make the browser pick a candidate twice the size
+             it can ever paint. */
+          preload
+          sizes="(min-width: 768px) 50vw, 100vw"
+          className="h-full w-full"
+        />
+      </div>
+    ) : null;
+
   return (
     <section className="relative isolate overflow-hidden border-b border-border">
       {/* THE PICTURE. Full-bleed, behind everything, never clipped into a
           card — a hero image that sits in a rounded box beside the text is a
           figure, not a hero. */}
       <div className="absolute inset-0 -z-30">
-        {image ? (
+        {/* In the split layout this layer is the BACKGROUND, not the picture:
+            the facet composition keeps the whole section, the photograph is
+            laid over half of it by `splitPhoto`, and the mask dissolves the
+            join. Decorative here because the photograph carries the
+            accessible name — two elements naming the same subject would say
+            it twice. */}
+        {split ? (
+          <FacetTile role={imageRole} seed={seed} decorative className="h-full w-full" />
+        ) : image ? (
           <ImageKitImage
             path={image.path}
             preset="hero"
@@ -268,7 +389,26 @@ export function PageHero({
           directions when the copy sits against one edge, because that copy is
           stacked over the picture on narrow screens and beside it on wide
           ones; one symmetric wash whenever the copy sits in a centred column. */}
-      {symmetricWash ? (
+      {/* The split hero's copy sits against the inline-start edge at every
+          width where the two halves exist, so it wants the one-sided wash from
+          `md` rather than from `lg` — at `md` the ordinary hero is still
+          stacked and the symmetric/block wash is the right one, but this one
+          is already two columns. */}
+      {split ? (
+        <>
+          <div aria-hidden="true" className="hero-wash-block absolute inset-0 -z-20 md:hidden" />
+          {mediaSide === "start" ? (
+            /* Copy is on the inline-END half here, which the one-sided ramp
+               does not reach -- see .hero-wash-panel in globals.css. */
+            <div
+              aria-hidden="true"
+              className="hero-wash-panel absolute inset-y-0 end-0 -z-20 hidden md:block md:start-[46%] lg:start-[48%]"
+            />
+          ) : (
+            <div aria-hidden="true" className="hero-wash-inline absolute inset-0 -z-20 hidden md:block" />
+          )}
+        </>
+      ) : symmetricWash ? (
         <div aria-hidden="true" className="hero-wash-center absolute inset-0 -z-20" />
       ) : (
         <>
@@ -276,18 +416,52 @@ export function PageHero({
           <div aria-hidden="true" className="hero-wash-inline absolute inset-0 -z-20 hidden lg:block" />
         </>
       )}
-      <div aria-hidden="true" className="hero-wash-top absolute inset-x-0 top-0 -z-10 h-20" />
-      <div aria-hidden="true" className="hero-wash-bottom absolute inset-x-0 bottom-0 -z-10 h-20" />
+      {/* The top and bottom edge fades sit at -z-10, ABOVE the split hero's
+          picture at -z-15, so in a split layout they would lay a 62%-white
+          band across the top of the photograph and fade its foot into the page
+          -- a veil over the one thing the split composition exists to show.
+          From `md` up (where the picture has a half of its own) they are
+          therefore pulled back to the copy half. They still run edge to edge
+          in the `bleed` layout, where copy is over the picture and the fades
+          are what make that copy and the section seam readable, and below `md`
+          in split, where the picture is an in-flow block painting above them.
+
+          Nothing is lost at the top: only the homepage floats a transparent
+          header, and it does not use this component. Every route that does
+          rests the header on an opaque `bg-background` (Header.tsx), so the
+          nav needs no wash beneath it here. */}
+      <div
+        aria-hidden="true"
+        className={cn(
+          "hero-wash-top absolute inset-x-0 top-0 -z-10 h-20",
+          split && (mediaSide === "start" ? "md:start-[46%] lg:start-[48%]" : "md:end-[46%] lg:end-[48%]"),
+        )}
+      />
+      <div
+        aria-hidden="true"
+        className={cn(
+          "hero-wash-bottom absolute inset-x-0 bottom-0 -z-10 h-20",
+          split && (mediaSide === "start" ? "md:start-[46%] lg:start-[48%]" : "md:end-[46%] lg:end-[48%]"),
+        )}
+      />
 
       <Container
         className={cn(
           "flex flex-col justify-center",
           sizeClasses[size],
-          !aside && measureClasses[measure],
-          centered && !aside && "items-center text-center",
+          !aside && !split && measureClasses[measure],
+          centered && !aside && !split && "items-center text-center",
         )}
       >
-        {aside ? (
+        {split ? (
+          /* `md:block` rather than a second flex row: from `md` up the
+             picture is out of the flow, so the only thing left to lay out is
+             the copy column, and a flex row with one child would centre it. */
+          <div className="flex flex-col gap-10 md:block">
+            <div className={cn("md:w-[54%] lg:w-[52%]", mediaSide === "start" && "md:ms-auto")}>{copy}</div>
+            {splitPhoto}
+          </div>
+        ) : aside ? (
           <div
             className={cn(
               "flex flex-col gap-10 md:flex-row md:items-center md:gap-8 lg:gap-12",

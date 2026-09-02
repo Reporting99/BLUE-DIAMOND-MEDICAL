@@ -691,6 +691,112 @@ html {
   }
 
   /*
+   * THE FLOATING SCROLL RAIL — src/components/layout/BackToTop.tsx.
+   *
+   * A miniature of the document scrollbar, deliberately built from the same
+   * four ingredients as the ::-webkit-scrollbar rules above so the two read as
+   * one component in two places: the pale cyan track, the 135deg gloss ramp
+   * whose mid tone holds 26%-74%, the white hairline border, and the soft
+   * outer glow. It is not a second design; it is the same one, floated.
+   *
+   * WHY A CSS VARIABLE DRIVES THE THUMB. `--rail-p` is the normalised scroll
+   * position, written once per animation frame by the component. Travel is
+   * `p * (track - thumb)` resolved entirely in CSS, so the two heights live in
+   * one place and the breakpoints below change both the pill and the distance
+   * the thumb travels without the component knowing any pixel value. The thumb
+   * moves by `transform` only -- a compositor property -- so a scroll frame
+   * costs no layout and no paint.
+   */
+  .scroll-rail {
+    --rail-track-h: 96px;
+    --rail-thumb-h: 34px;
+    width: 12px;
+    height: var(--rail-track-h);
+    border-radius: 999px;
+    /* Explicit, and load-bearing. A `<button>` vertically centres its content
+       by default, which parked the thumb at (track - thumb) / 2 and made every
+       position off by that much -- at full scroll the thumb travelled the whole
+       track from an already-centred start and hung 34px out of the bottom of
+       the capsule. The thumb's offset must be the transform and nothing else,
+       so the flow position has to be the top. */
+    display: flex;
+    align-items: flex-start;
+    background: rgba(230, 246, 253, 0.55);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+    /* The 2px white ring first, for the same reason the scrollbar thumb and the
+       old arrow carried one: at the bottom of a page this control sits over the
+       --surface-dark footer, where a blue-on-blue pill has no edge. The glow and
+       the inner gloss follow it. */
+    box-shadow:
+      0 0 0 2px rgba(255, 255, 255, 0.7),
+      0 0 10px var(--scrollbar-glow),
+      inset 0 1px 2px rgba(255, 255, 255, 0.6);
+  }
+
+  /* The touch target, not the pill. The visible capsule stays 12px wide; this
+     pseudo-element extends the hit area to ~48x124 without drawing anything,
+     which is how the control satisfies pointer-target sizing without being
+     fattened into a button. */
+  .scroll-rail::before {
+    content: "";
+    position: absolute;
+    inset: -14px -18px;
+    border-radius: 999px;
+  }
+
+  .scroll-rail-thumb {
+    height: var(--rail-thumb-h);
+    border-radius: 999px;
+    background: linear-gradient(
+      135deg,
+      var(--scrollbar-blue-light) 0%,
+      var(--scrollbar-blue) 26%,
+      var(--scrollbar-blue) 74%,
+      var(--scrollbar-blue-light) 100%
+    );
+    border: 2px solid rgba(255, 255, 255, 0.65);
+    box-shadow:
+      inset 0 1px 2px rgba(255, 255, 255, 0.85),
+      0 0 8px var(--scrollbar-glow);
+    transform: translateY(calc(var(--rail-p, 0) * (var(--rail-track-h) - var(--rail-thumb-h))));
+    will-change: transform;
+  }
+
+  /* Hover and active mirror the scrollbar thumb's own two states, one step
+     lighter and one step deeper on the same ramp. Instant, like the scrollbar:
+     there is no transition here for reduced-motion to have to switch off. */
+  .scroll-rail:hover .scroll-rail-thumb {
+    background: linear-gradient(135deg, #95d7f0 0%, #3197c4 26%, #3197c4 74%, #95d7f0 100%);
+    box-shadow:
+      inset 0 1px 3px rgba(255, 255, 255, 0.95),
+      0 0 11px rgba(102, 199, 238, 0.55);
+  }
+
+  .scroll-rail:active .scroll-rail-thumb {
+    background: linear-gradient(135deg, #6bbfe2 0%, #257fa9 26%, #257fa9 74%, #6bbfe2 100%);
+    box-shadow:
+      inset 0 2px 4px rgba(31, 106, 140, 0.28),
+      0 0 9px var(--scrollbar-glow);
+  }
+
+  @media (min-width: 1024px) {
+    .scroll-rail {
+      --rail-track-h: 104px;
+      --rail-thumb-h: 36px;
+      width: 13px;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .scroll-rail {
+      --rail-track-h: 72px;
+      --rail-thumb-h: 26px;
+      width: 10px;
+    }
+  }
+
+  /*
    * PAGE HERO WASHES — src/components/layout/PageHero.tsx.
    *
    * Every hero on this site lays its copy over a photograph (or, until one is
@@ -752,6 +858,28 @@ html {
      width, which is exactly what `measure="article"` spans) and falls to
      ~0.4 at the outer edges, where the facet planes or the photograph get
      to show. */
+  /*
+   * The split hero's copy panel.
+   *
+   * `hero-wash-inline` cannot serve here: it is a one-sided ramp that starts
+   * at 0.97 on the INLINE-START edge and has decayed to ~0.06 by the far side.
+   * That is correct when the copy is on the start side, and exactly wrong when
+   * the picture takes that side and the copy moves opposite -- the copy then
+   * sits on the transparent tail of the ramp, over the facet background, with
+   * body text at roughly the contrast of the facet itself.
+   *
+   * So the split-with-media-at-start layout gets a panel instead of a ramp:
+   * near-uniform light across the copy half only, never crossing into the
+   * picture half, so the copy is readable at its top and its foot alike and
+   * the photograph stays untouched.
+   */
+  .hero-wash-panel {
+    background: linear-gradient(
+      to bottom,
+      rgba(250, 253, 255, 0.97) 0%,
+      rgba(250, 253, 255, 0.95) 100%
+    );
+  }
   .hero-wash-center {
     background:
       radial-gradient(78% 72% at 50% 45%, rgba(250, 253, 255, 0.96) 0%, rgba(250, 253, 255, 0.88) 42%, rgba(250, 253, 255, 0.5) 74%, rgba(250, 253, 255, 0.14) 100%),
@@ -766,6 +894,123 @@ html {
      seam without a visible edge. */
   .hero-wash-bottom {
     background: linear-gradient(to top, var(--background) 0%, rgba(255, 255, 255, 0) 100%);
+  }
+
+  /*
+   * THE SPLIT HERO'S PHOTOGRAPH — PageHero `mediaLayout="split"`.
+   *
+   * In the ordinary hero the picture is full-bleed, so every edge it has is
+   * also an edge of the section and there is no seam to hide. The split hero
+   * gives up that guarantee on purpose: the photograph holds one half and the
+   * facet background holds the other, which puts a vertical boundary in the
+   * middle of the section where nothing else can conceal it. A rectangle
+   * stopped there reads as a photo pasted onto a background, which is exactly
+   * what this layout must not look like.
+   *
+   * So the picture is masked rather than cropped — transparent at its inner
+   * edge and fully opaque only once it is past halfway across its own box, so
+   * what meets the facet planes is a gradient and not an edge. The fade is
+   * long (0 -> 1 over ~36% of the picture's width, ~250px at desktop), but no
+   * longer than that: the first ramp reached full opacity only at 62%, which
+   * put the subject's face inside the dissolve in Arabic — the picture is on
+   * the left there and the mask mirrors with it, while the subject stays put —
+   * and printed the facet composition's bright diagonal straight across her
+   * cheek at ~75% alpha. The fade has to end before the subject starts.
+   *
+   * MASKED, NOT WASHED. The equivalent gradient painted on top as an overlay
+   * would fade the photograph toward one flat colour, and the thing behind it
+   * here is not flat — it is the facet composition, with its own light
+   * direction. Masking lets those planes show through the dissolve instead of
+   * being covered by a veil the width of the fade.
+   *
+   * `md` and up ONLY. Below that the photograph is not beside the copy at all;
+   * it is a full-width block stacked under it, and its edges are the section's
+   * own again.
+   *
+   * Which edge dissolves is worked out just below, from the direction AND the
+   * side the picture was placed on. `to right` is a physical direction and
+   * does not flip on its own, so neither of those can be assumed.
+   */
+  /*
+   * Where the crop falls when the frame is not the asset's ratio.
+   *
+   * The supplied photograph is 4:3 with the subject's head high in the frame;
+   * every desktop and tablet split frame is taller or wider than that, so
+   * `object-cover` has to discard something. Centred, it discards it evenly
+   * and takes the top of the head with it. Biasing up the frame and slightly
+   * toward the subject keeps the face and shoulders whole at every width the
+   * two-column composition exists at, which is the whole reason a portrait was
+   * chosen for this hero. Below `md` the block is 4:3 too, so there is no crop
+   * and this is inert.
+   */
+  .hero-split-media img {
+    object-position: 58% 12%;
+  }
+
+  /*
+   * WHICH EDGE DISSOLVES — one angle, four cases.
+   *
+   * The edge that has to fade is the picture's INNER one, the edge facing the
+   * copy. Which physical edge that is depends on TWO things, not one: the
+   * document direction AND which side `mediaSide` put the picture on. The
+   * first version of this rule keyed on direction alone, which was right for
+   * an inline-END picture and silently wrong for an inline-START one — it
+   * dissolved the outer edge, against the section boundary where there was no
+   * seam to hide, and left a hard vertical edge facing the copy. Caught by
+   * root-0a on the Concern split hero before it shipped.
+   *
+   * The four combinations reduce to a single angle, so that is what varies;
+   * the ramp itself is written once. 90deg fades the LEFT edge, 270deg the
+   * right. Picture at inline-end: LTR puts it on the right, so the left edge
+   * goes. Picture at inline-start: LTR puts it on the left, so the right edge
+   * goes. Each flips again under RTL.
+   *
+   * Declared outside the media query on purpose. `linear-gradient(var(--x))`
+   * with `--x` unset is invalid at computed-value time, which throws the whole
+   * mask away and restores the very hard edge this exists to remove — so the
+   * angle must never be able to go missing while the mask is applied.
+   */
+  .hero-split-media {
+    --split-fade-angle: 90deg;
+  }
+  .hero-split-media:dir(rtl) {
+    --split-fade-angle: 270deg;
+  }
+  /* Equal specificity to the two rules above, so ORDER is what makes these
+     win. Keep them last. */
+  .hero-split-media--start {
+    --split-fade-angle: 270deg;
+  }
+  .hero-split-media--start:dir(rtl) {
+    --split-fade-angle: 90deg;
+  }
+
+  @media (min-width: 768px) {
+    .hero-split-media {
+      -webkit-mask-image: linear-gradient(
+        var(--split-fade-angle),
+        rgba(0, 0, 0, 0) 0%,
+        rgba(0, 0, 0, 0.32) 8%,
+        rgba(0, 0, 0, 0.72) 19%,
+        rgba(0, 0, 0, 0.95) 28%,
+        rgb(0, 0, 0) 36%
+      );
+      mask-image: linear-gradient(
+        var(--split-fade-angle),
+        rgba(0, 0, 0, 0) 0%,
+        rgba(0, 0, 0, 0.32) 8%,
+        rgba(0, 0, 0, 0.72) 19%,
+        rgba(0, 0, 0, 0.95) 28%,
+        rgb(0, 0, 0) 36%
+      );
+      /* Explicit, because the initial `mask-repeat: repeat` would tile a
+         gradient that has no intrinsic size the moment a browser resolves
+         `mask-size: auto` to anything but the box. */
+      -webkit-mask-size: 100% 100%;
+      mask-size: 100% 100%;
+      -webkit-mask-repeat: no-repeat;
+      mask-repeat: no-repeat;
+    }
   }
 
   /*
