@@ -20,7 +20,7 @@ into a gated (404) route.
 | bluediamondmedical.ca | `/` | `/en/` | — | Already the canonical homepage; locale prefix applied | Yes — root must land on `/en/` with no chain |
 | bluediamondmedical.ca | `/appointment-1` | `/en/book-appointment` | 301 (Live) | Booking hub carries the confirmation notice, no-show fees, and every booking channel | Yes |
 | bluediamondmedical.ca | `/services` | `/en/medical` | 301 (Live) | Legacy page mixed AHS services with uninsured fees; the hub is the honest landing point and links to the fee page | Yes |
-| bluediamondmedical.ca | `/our-team` | `/en/doctors` | 301 (Live) | Single canonical doctor index | Yes |
+| bluediamondmedical.ca | `/our-team` | `/en/our-team` | 301 (Live) | Single canonical doctor index | Yes |
 | bluediamondmedical.ca | `/medical-aesthetics-1` | `/en/aesthetics` | 301 (Live) | Aesthetics hub; the `-1` suffix never becomes canonical | Yes |
 | bluediamondmedical.ca | `/botox-1` | `/en/botox` | 301 (Live) | Educational Botox hub routing to medical and cosmetic pathways | Yes |
 | bluediamondmedical.ca | `/eye-examining` | `/en/medical/eye-screening` | 301 (Live) | Direct content match | Yes |
@@ -62,7 +62,7 @@ driven by the same table so the two never drift.
 | bluediamondmedicalaesthetics.ca | `/prp-therapy` | `/en/aesthetics/treatments/prp-skin-rejuvenation` | 301 (Live) | One legacy page split into two canonical treatments; skin rejuvenation is the broader landing point and cross-links to hair restoration | Yes — assert the hair-restoration page is reachable in one click from the target |
 | bluediamondmedicalaesthetics.ca | `/vitalia` | `/en/aesthetics/treatments/tempsure-vitalia` | 301 (Live) | Real pelvic-floor/RF content found by live crawl; matches the approved Vitalia treatment | Yes |
 | bluediamondmedicalaesthetics.ca | `/our-technologies` | `/en/aesthetics/technologies` | 301 (Live) | Technologies hub | Yes |
-| bluediamondmedicalaesthetics.ca | `/our-team` | `/en/doctors` | 301 **PROPOSED** | Cross-host equivalent of the Site A rule; the two duplicate biographies now live on the canonical doctor index | Yes |
+| bluediamondmedicalaesthetics.ca | `/our-team` | `/en/our-team` | 301 **PROPOSED** | Cross-host equivalent of the Site A rule; the two duplicate biographies now live on the canonical doctor index | Yes |
 | bluediamondmedicalaesthetics.ca | `/acne-scar-removal` | `/en/aesthetics/concerns/acne-scars` | 301 (Live) | Reclassified treatment → concern | Yes |
 | bluediamondmedicalaesthetics.ca | `/rosacea-abatement` | `/en/aesthetics/concerns/rosacea-redness` | 301 (Live) | Reclassified treatment → concern | Yes |
 | bluediamondmedicalaesthetics.ca | `/dry-skin-remediation` | `/en/aesthetics/concerns/dry-skin` | 301 (Live) | Reclassified treatment → concern | Yes |
@@ -82,7 +82,7 @@ driven by the same table so the two never drift.
 | A1 Home | Canonical page | `/en/` |
 | A2 Appointment | Redirect → hub | `/en/book-appointment` |
 | A3 Services | Redirect → hub (content split to hub + fee page) | `/en/medical` |
-| A4 Our Team | Redirect → hub | `/en/doctors` |
+| A4 Our Team | Redirect → hub | `/en/our-team` |
 | A5 Medical Aesthetics | Redirect → hub | `/en/aesthetics` |
 | A6 Botox | Redirect → hub | `/en/botox` |
 | A7 Eye Examining | Redirect → detail page | `/en/medical/eye-screening` |
@@ -101,7 +101,7 @@ driven by the same table so the two never drift.
 | B8 Ultra Treatment | Redirect → detail page | `/en/aesthetics/treatments/ultra` |
 | B9 PRP Therapy | Redirect → detail page (content split across 2) | `/en/aesthetics/treatments/prp-skin-rejuvenation` |
 | B10 Our Technologies | Redirect → hub | `/en/aesthetics/technologies` |
-| B11 Our Team | **Redirect-only** (duplicate content merged) | `/en/doctors` |
+| B11 Our Team | **Redirect-only** (duplicate content merged) | `/en/our-team` |
 | B12–B20 (9 concern pages) | Redirect → detail page | `/en/aesthetics/concerns/*` |
 | B21 Terms and Conditions | **Redirect-only, gated target** | `/en/terms` |
 | B22 Privacy Policy | **Redirect-only, gated target** | `/en/privacy-policy` |
