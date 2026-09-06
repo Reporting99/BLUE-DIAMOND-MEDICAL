@@ -75,9 +75,37 @@ next-env.d.ts
 *.old
 *.orig
 *.zip
+*.tar
+*.tar.gz
 *.trace.zip
 /dist/
-.vinext/
-.wrangler/
-.dev.vars
-.dev.vars.*
+/build/
+/.cache/
+/tmp/
+/temp/
+/logs/
+
+# OS and editor droppings.
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# One-off engineering verification harnesses and the JSON/PNG evidence they
+# produce. Written per change-request ticket, read once, then superseded by the
+# next build -- they are not part of the product and must not enter the source
+# history. Permanent checks belong in tests/ and scripts/ instead.
+/evidence/
+/aesthetics-audit.mjs
+/before-after-render-check.mjs
+/booking-destination-check.mjs
+/cl033-shots.mjs
+/responsive-check.mjs
+/route-health.mjs
+/section-gaps.mjs
+/stale-cms-probe.mjs
+
+# Raw client media staged for an ImageKit import run. The originals live with
+# the client and the delivered assets live in ImageKit; the staging folder is a
+# local workspace, not source.
+/_imagekit_import/

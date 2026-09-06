@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { features } from "@/config/features";
-import { ArrowRight, Sparkles, Target, Cpu } from "lucide-react";
+import { ArrowRight, Sparkles, Cpu } from "lucide-react";
 import { Container } from "@/components/layout/Container";
-import { PageHero } from "@/components/layout/PageHero";
+import { AestheticsHero } from "@/features/aesthetics/components/AestheticsHero";
 import { SectionTransition } from "@/components/layout/SectionTransition";
 import { Button } from "@/components/ui/button";
 import { FacetTile } from "@/components/shared/FacetTile";
@@ -38,11 +38,18 @@ export default async function AestheticsHubPage({ params }: { params: Promise<{ 
   const copy = {
     en: {
       title: "Medical Aesthetics",
+      /* CL-035 — the client-approved three-paragraph introduction, verbatim.
+         Paragraph 1 carries the hero (the split hero stays compact, CL-033);
+         paragraphs 2 and 3 continue in the introduction block immediately
+         below it, so the full approved copy is present once and in order. */
       intro:
-        "Every treatment at Blue Diamond Medical Aesthetics begins with a physician consultation. Our team specializes in RF micro-needling, laser treatments, and radio-frequency skin tightening, all delivered from the same clinic that manages your family's health.",
+        "At Blue Diamond Medical Aesthetics, we proudly offer a comprehensive range of medical aesthetic treatments designed to rejuvenate the skin, enhance natural beauty, and support hair restoration. Our services include RF microneedling, laser treatments, radio‑frequency procedures, and professional laser hair removal for smooth, long‑lasting results.",
+      introRest: [
+        "We also provide advanced PRP‑based treatments, including PRP hair restoration, PRP facial rejuvenation, and PRP injections under the eyes to improve dark circles and refresh the delicate under‑eye area. In addition, we offer Botox and dermal fillers to soften fine lines, restore volume, and achieve natural‑looking enhancements.",
+        "Our team is committed to delivering safe, effective, and personalized aesthetic care to help you look and feel your best.",
+      ] as readonly string[] | null,
       exploreHeading: "Find your way in",
-      byTreatment: { title: "By Treatment", body: "Browse every procedure we offer, from laser hair removal to PRP therapy." },
-      byConcern: { title: "By Concern", body: "Start from what's bothering you — acne scars, redness, fine lines — and see what treats it." },
+      byTreatment: { title: "Treatments", body: "Start from what you'd like to treat — acne scars, unwanted hair, fine lines — and see the options we offer for it." },
       byTechnology: { title: "Our Technologies", body: "The Cynosure equipment behind our treatments." },
       botoxCta: "Explore Botox services",
       pricingCta: "View aesthetics pricing",
@@ -51,18 +58,26 @@ export default async function AestheticsHubPage({ params }: { params: Promise<{ 
       title: "التجميل الطبي",
       intro:
         "يبدأ كل علاج في قسم التجميل الطبي لدى بلو دايموند باستشارة طبية. يتخصص فريقنا في الإبر الدقيقة بالترددات الراديوية، وعلاجات الليزر، وشدّ البشرة بالترددات الراديوية، وجميعها تُقدَّم من نفس العيادة التي تُدير صحة عائلتكم.",
+      /* CL-035 — no approved Arabic rendering of the new three-paragraph
+         introduction was supplied. The Arabic hub keeps its approved intro
+         and renders no continuation block rather than publish a machine
+         translation. CLIENT DEPENDENCY: approved AR copy for paragraphs 1-3. */
+      introRest: null as readonly string[] | null,
       exploreHeading: "من أين تبدأ",
-      byTreatment: { title: "حسب العلاج", body: "تصفّحوا جميع الإجراءات التي نقدّمها، من إزالة الشعر بالليزر إلى علاج البلازما." },
-      byConcern: { title: "حسب المخاوف", body: "ابدأوا مما يقلقكم — ندبات حب الشباب، الاحمرار، الخطوط الدقيقة — واكتشفوا العلاج المناسب." },
+      byTreatment: { title: "العلاجات", body: "ابدأوا مما ترغبون في علاجه — ندبات حب الشباب، الشعر غير المرغوب فيه، الخطوط الدقيقة — واطّلعوا على الخيارات المتاحة." },
       byTechnology: { title: "تقنياتنا", body: "معدات Cynosure التي تقف خلف علاجاتنا." },
       botoxCta: "تعرّف على خدمات البوتوكس",
       pricingCta: "اطّلع على أسعار التجميل الطبي",
     },
   }[locale];
 
+  /* Two ways in, not three. This used to offer "By Treatment" and "By
+     Concern" as separate cards — the same two competing catalogues the mega
+     menu carried, and the same guess it asked the visitor to make. Now the
+     concern list IS the treatments list, so a third card would be a second
+     link to the identical page. */
   const exploreCards = [
-    { icon: Target, ...copy.byTreatment, href: href("aesthetics-treatments-hub", locale) },
-    { icon: Sparkles, ...copy.byConcern, href: href("aesthetics-concerns-hub", locale) },
+    { icon: Sparkles, ...copy.byTreatment, href: href("aesthetics-treatments-hub", locale) },
     { icon: Cpu, ...copy.byTechnology, href: href("aesthetics-technologies-hub", locale) },
   ];
 
@@ -77,38 +92,40 @@ export default async function AestheticsHubPage({ params }: { params: Promise<{ 
         description={copy.intro}
         path={ownRoute.path[locale]}
       />
-      {/* The hero used to be a two-column band: copy beside a FacetTile
-          clipped into a rounded card. That reads as a text block next to a
-          decorative box, not as a hero — the same composition the homepage
-          replaced. One full-bleed visual with the copy laid over its calm
-          side is the pattern now, sitewide. */}
-      <PageHero
+      <AestheticsHero
         locale={locale}
         title={copy.title}
         body={copy.intro}
         image={hero}
         imageRole="treatment"
         seed="aesthetics-hub"
-        /* The one route on the site art-directed as two halves: the supplied
-           photograph on the inline-end side, the facet background holding the
-           other, the copy against the inline-start edge. In Arabic that is the
-           picture on the left with the Arabic copy on the right, which is the
-           approved composition; in English the same rule mirrors. Opt-in per
-           page (see PageHero) so the other twenty routes are untouched, and
-           self-disabling until this page's hero assignment is an approved
-           photograph. */
-        mediaLayout="split"
         imageAlt={{
           en: "Medical aesthetics wellness portrait at Blue Diamond Medical",
           ar: "صورة تعبيرية للتجميل الطبي والعناية بالبشرة في بلو دايموند الطبية",
         }}
         breadcrumbs={<Breadcrumbs locale={locale} items={[{ label: ownRoute.title[locale] }]} />}
         actions={
-          <Button size="lg" render={<a href={consult.href} target="_blank" rel="noopener noreferrer" />}>
+          <Button size="lg" render={<a href={consult.href!} target="_blank" rel="noopener noreferrer" />}>
             {consult.label[locale]}
           </Button>
         }
       />
+
+      {/* CL-035 — approved paragraphs 2 and 3, immediately adjacent to the
+          hero. `pt-0` keeps the hero-to-copy transition inside the CL-032
+          budget: this is a continuation of the hero's own text, not a new
+          section with its own leading band. */}
+      {copy.introRest ? (
+        <section className="section-y pt-0">
+          <Container>
+            <div data-reveal="up" className="max-w-[68ch] space-y-4 text-text-secondary">
+              {copy.introRest.map((paragraph) => (
+                <p key={paragraph.slice(0, 32)}>{paragraph}</p>
+              ))}
+            </div>
+          </Container>
+        </section>
+      ) : null}
 
       <SectionTransition from="var(--background)" to="var(--surface)" />
       <section className="section-y bg-surface">

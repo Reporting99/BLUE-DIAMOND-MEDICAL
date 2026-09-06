@@ -174,15 +174,17 @@ Dr. Ahmed Gwea additionally: per brief §12, must use the approved abstract tile
 
 | ImageKit path | Page | EN alt | AR alt | W×H | Aspect | Status |
 |---|---|---|---|---|---|---|
-| `/blue-diamond/concerns/acne-scars.jpg` | `/aesthetics/concerns/acne-scars` | Acne Scars — Blue Diamond Medical Aesthetics | ندبات حب الشباب — بلو دايموند للتجميل الطبي | 900×900 | 1:1 | pending |
-| `/blue-diamond/concerns/rosacea-redness.jpg` | `/aesthetics/concerns/rosacea-redness` | Rosacea & Redness — Blue Diamond Medical Aesthetics | الوردية والاحمرار — بلو دايموند للتجميل الطبي | 900×900 | 1:1 | pending |
-| `/blue-diamond/concerns/dry-skin.jpg` | `/aesthetics/concerns/dry-skin` | Dry Skin — Blue Diamond Medical Aesthetics | جفاف البشرة — بلو دايموند للتجميل الطبي | 900×900 | 1:1 | pending |
-| `/blue-diamond/concerns/fine-lines-wrinkles.jpg` | `/aesthetics/concerns/fine-lines-wrinkles` | Fine Lines & Wrinkles — Blue Diamond Medical Aesthetics | خطوط التجاعيد الدقيقة — بلو دايموند للتجميل الطبي | 900×900 | 1:1 | pending |
-| `/blue-diamond/concerns/skin-laxity.jpg` | `/aesthetics/concerns/skin-laxity` | Skin Laxity — Blue Diamond Medical Aesthetics | ترهل الجلد — بلو دايموند للتجميل الطبي | 900×900 | 1:1 | pending |
-| `/blue-diamond/concerns/spider-veins.jpg` | `/aesthetics/concerns/spider-veins` | Spider Veins — Blue Diamond Medical Aesthetics | الأوردة العنكبوتية — بلو دايموند للتجميل الطبي | 900×900 | 1:1 | pending |
-| `/blue-diamond/concerns/sun-damage-pigmentation.jpg` | `/aesthetics/concerns/sun-damage-pigmentation` | Sun Damage & Pigmentation — Blue Diamond Medical Aesthetics | ضرر الشمس والتصبغ — بلو دايموند للتجميل الطبي | 900×900 | 1:1 | pending |
-| `/blue-diamond/concerns/skin-revitalization.jpg` | `/aesthetics/concerns/skin-revitalization` | Skin Revitalization — Blue Diamond Medical Aesthetics | تجديد البشرة — بلو دايموند للتجميل الطبي | 900×900 | 1:1 | pending |
-| `/blue-diamond/concerns/razor-bumps.jpg` | `/aesthetics/concerns/razor-bumps` | Razor Bumps — Blue Diamond Medical Aesthetics | نتوءات الحلاقة — بلو دايموند للتجميل الطبي | 900×900 | 1:1 | pending |
+| `/blue-diamond/concerns/unwanted-hair.jpg` | `/aesthetics/treatments/unwanted-hair` | Unwanted Hair — Blue Diamond Medical Aesthetics | الشعر غير المرغوب فيه — بلو دايموند للتجميل الطبي | 900×900 | 1:1 | pending |
+| `/blue-diamond/concerns/hair-loss.jpg` | `/aesthetics/treatments/hair-loss` | Hair Loss — Blue Diamond Medical Aesthetics | تساقط الشعر — بلو دايموند للتجميل الطبي | 900×900 | 1:1 | pending |
+| `/blue-diamond/concerns/acne-scars.jpg` | `/aesthetics/treatments/acne-scars` | Acne Scars — Blue Diamond Medical Aesthetics | ندبات حب الشباب — بلو دايموند للتجميل الطبي | 900×900 | 1:1 | pending |
+| `/blue-diamond/concerns/rosacea-redness.jpg` | `/aesthetics/treatments/rosacea-redness` | Rosacea & Redness — Blue Diamond Medical Aesthetics | الوردية والاحمرار — بلو دايموند للتجميل الطبي | 900×900 | 1:1 | pending |
+| `/blue-diamond/concerns/dry-skin.jpg` | `/aesthetics/treatments/dry-skin` | Dry Skin — Blue Diamond Medical Aesthetics | جفاف البشرة — بلو دايموند للتجميل الطبي | 900×900 | 1:1 | pending |
+| `/blue-diamond/concerns/fine-lines-wrinkles.jpg` | `/aesthetics/treatments/fine-lines-wrinkles` | Fine Lines & Wrinkles — Blue Diamond Medical Aesthetics | خطوط التجاعيد الدقيقة — بلو دايموند للتجميل الطبي | 900×900 | 1:1 | pending |
+| `/blue-diamond/concerns/skin-laxity.jpg` | `/aesthetics/treatments/skin-laxity` | Skin Laxity — Blue Diamond Medical Aesthetics | ترهل الجلد — بلو دايموند للتجميل الطبي | 900×900 | 1:1 | pending |
+| `/blue-diamond/concerns/spider-veins.jpg` | `/aesthetics/treatments/spider-veins` | Spider Veins — Blue Diamond Medical Aesthetics | الأوردة العنكبوتية — بلو دايموند للتجميل الطبي | 900×900 | 1:1 | pending |
+| `/blue-diamond/concerns/sun-damage-pigmentation.jpg` | `/aesthetics/treatments/sun-damage-pigmentation` | Sun Damage & Pigmentation — Blue Diamond Medical Aesthetics | ضرر الشمس والتصبغ — بلو دايموند للتجميل الطبي | 900×900 | 1:1 | pending |
+| `/blue-diamond/concerns/skin-revitalization.jpg` | `/aesthetics/treatments/skin-revitalization` | Skin Revitalization — Blue Diamond Medical Aesthetics | تجديد البشرة — بلو دايموند للتجميل الطبي | 900×900 | 1:1 | pending |
+| `/blue-diamond/concerns/razor-bumps.jpg` | `/aesthetics/treatments/razor-bumps` | Razor Bumps — Blue Diamond Medical Aesthetics | نتوءات الحلاقة — بلو دايموند للتجميل الطبي | 900×900 | 1:1 | pending |
 
 ### Medical services (7 live + uninsured-services — `src/features/medical-services/data.ts`)
 
@@ -354,3 +356,61 @@ The approved ImageKit account/endpoint is `https://ik.imagekit.io/oq92dh6zib`, m
 ### Automated verification
 
 `tests/unit/image-usage.spec.ts` (built and passing, 4 tests): no component imports `next/image` directly (must go through `ImageKitImage`), no hardcoded `/images/...` local paths, no Unsplash/Pexels/Cloudinary references, every `ImageKitImage path=` used in a page has a matching `image-manifest.ts` entry. `public/` still contains only the unused Next.js default scaffold SVGs; `src/app/favicon.ico` is still the scaffold default and needs replacing with a Blue Diamond favicon derived from the approved mark before launch.
+
+## Client-supplied assets outstanding (CL-001, CL-039 – CL-041, CL-043)
+
+`BLOCKED_BY_CLIENT_ASSET`. The client change register supplies nine binaries —
+one logo and eight treatment/equipment photographs — by file path. **None of
+those paths exist in this implementation environment**, and none of the eight
+originals is present in the ImageKit archive or in FeelStack. Every path the
+register gives is rooted at `C:/Users/RAHME/Downloads/…`, a user profile that
+does not exist on the build machine; the secondary reference directory
+(`WhatsApp Unknown 2026-09-04 at 8.08.47 AM/incoming-2026-09-06/…`) is absent
+for the same reason.
+
+Nothing here was substituted, approximated, or sourced from the web. Per the
+register's own instruction, each missing original is reported by its exact
+filename below rather than guessed at.
+
+### What is missing, and where each file goes once supplied
+
+| ID | Expected original | Destination route | Slot | Notes |
+| --- | --- | --- | --- | --- |
+| CL-001 | `Blue Diamond Medical Clinic-logo2024-01-15_22-09-36-b10847c6-org-427.png` | global brand mark | `src/components/layout/Logo.tsx` | Replaces the inline `DiamondMark` SVG stand-in in `Logo` **and** `BrandLockup` (header, mobile nav, footer, hero lock-up). Preserve aspect ratio; alt text `Blue Diamond Medical Clinic`. |
+| CL-039 | `WhatsApp Image 2026-09-04 at 10.47.14 PM.jpeg` | `/aesthetics/treatments/rf-microneedling`, `/aesthetics/technologies/potenza` | `hero` | Current Potenza device/treatment. Supersedes the stale `potenza-device.jpg` candidate above. |
+| CL-039 | `WhatsApp Image 2026-09-04 at 10.47.14 PM (1).jpeg` | same | `gallery` | Supporting frame. **Not** a before/after — must not be labelled as a result. The route's existing before/after content is preserved unchanged. |
+| CL-040 | `WhatsApp Image 2026-09-04 at 10.48.46 PM.jpeg` | `/aesthetics/technologies/elite-iq`, `/aesthetics/treatments/laser-hair-removal` | `hero` | Elite iQ™ equipment. Supersedes `elite-iq-device.jpg`. |
+| CL-040 | `WhatsApp Image 2026-09-04 at 10.49.19 PM.jpeg` | same | `gallery` | **Requires a cleaned derivative** — see below. Keep the untouched source in the archive alongside it. |
+| CL-041 | `WhatsApp Image 2026-09-04 at 10.51.04 PM.jpeg` | `/aesthetics/treatments/radio-frequency`, `/aesthetics/technologies/tempsure` | `hero` | TempSure Envi. Do **not** map to Ultra. |
+| CL-041 | `WhatsApp Image 2026-09-04 at 10.51.05 PM.jpeg` | same | `gallery` | TempSure Envi. |
+| CL-041 | `WhatsApp Image 2026-09-04 at 10.51.34 PM.jpeg` | `/aesthetics/treatments/ultra`, `/aesthetics/technologies/ultra` | `hero` | LaseMD Ultra machine. |
+| CL-041 | `WhatsApp Image 2026-09-04 at 10.51.34 PM (1).jpeg` | `/aesthetics/treatments/ultra` | `gallery` / before-after | LaseMD Ultra before/after. Preserve its labels, ordering, privacy bars, attribution ("Courtesy of W. Loverme MD") and aspect ratio exactly. Never reverse Before/After, never retouch, never imply a guaranteed outcome. |
+
+### CL-040 cleaned derivative
+
+The `10.49.19 PM` original carries burnt-in promotional text (`ELITE iQ`,
+`TREAT ANY SKIN TYPE`, `Any Time of Year`) and a decorative rule frame. A clean
+derivative is required before publication, retaining the underlying
+laser-treatment scene and natural anatomy. Acceptance: no fragment of any of
+those three strings and no part of the frame remains at ANY rendered size; the
+image is not half-cropped through the wording, not blurred wholesale, and no
+treatment result is invented. Verify at the `treatment` preset's rendered sizes.
+Both files are kept — untouched source and cleaned derivative.
+
+### CL-043 consequence
+
+Because none of the eight originals is present, the audit of stale/duplicated
+equipment imagery across the Aesthetics routes could not be closed by
+replacement. No known-wrong device photograph is being shown in the meantime:
+the affected slots have no CMS assignment and render the seeded `FacetTile`
+brand fallback (`MediaCard`, `AestheticsHero`), which is a designed stand-in
+rather than an incorrect device.
+
+### How to complete once the files arrive
+
+No code change is required for CL-039 – CL-041 and CL-043 — media is a CMS
+concern (see "Import architecture" above). Upload each original to FeelStack,
+approve it, assign it to the route and slot in the table, and publish; the
+route picks it up on the next revalidation and the `FacetTile` fallback
+disappears on its own. CL-001 is the exception: it is a code change in
+`src/components/layout/Logo.tsx`.

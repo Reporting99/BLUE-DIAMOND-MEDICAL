@@ -23,7 +23,6 @@ import {
   primaryNavLinks,
 } from "@/config/navigation";
 import { getDictionary, type Locale } from "@/i18n/config";
-import { getBookingUrl } from "@/config/booking";
 import { cn } from "@/lib/utils";
 
 /** Pixels of scroll before the header settles from its resting state into
@@ -50,7 +49,6 @@ const HEADER_HEIGHT_SCROLLED = 64;
  */
 export function Header({ locale }: { locale: Locale }) {
   const dict = getDictionary(locale);
-  const booking = getBookingUrl("family-doctor");
 
   const pathname = usePathname();
   const isHomepage = pathname === `/${locale}` || pathname === `/${locale}/`;
@@ -241,20 +239,26 @@ export function Header({ locale }: { locale: Locale }) {
                     {dict.nav[link.labelKey]}
                   </NavigationMenuTrigger>
                   <NavigationMenuContent>
-                    <div
-                      className={cn(
-                        "grid w-[320px] gap-x-6 gap-y-1 p-3 sm:w-max sm:max-w-[min(92vw,860px)]",
-                        link.columns.length === 3
-                          ? "sm:grid-cols-3"
-                          : "sm:grid-cols-[minmax(0,1fr)_minmax(0,0.8fr)]",
-                      )}
-                    >
+                    {/* Both mega menus are two groups wide. Aesthetics used to
+                        be three — Treatments, Concerns, Technologies — until
+                        the concern list became the Treatments list; the space
+                        that freed is spent here on a roomier layout rather than
+                        left as a gap, and on splitting the one long group into
+                        two readable sub-columns (`column.split`). */}
+                    <div className="grid w-[320px] gap-x-8 gap-y-1 p-3 sm:w-max sm:max-w-[min(92vw,860px)] sm:grid-cols-[minmax(0,auto)_minmax(0,auto)]">
                       {link.columns.map((column) => (
                         <div key={column.id} className="min-w-[190px]">
                           <p className="px-2 pb-1.5 pt-1 text-[0.7rem] font-semibold uppercase tracking-[0.1em] text-text-muted">
                             {dict.nav[column.headingKey]}
                           </p>
-                          <ul className="flex flex-col gap-0.5">
+                          <ul
+                            className={cn(
+                              "gap-0.5",
+                              column.split
+                                ? "flex flex-col sm:grid sm:grid-cols-2 sm:gap-x-6"
+                                : "flex flex-col",
+                            )}
+                          >
                             {column.links.map((item) => (
                               <li key={item.id}>
                                 <NavigationMenuLink render={<Link href={navMenuLinkHref(item, locale)} />}>
@@ -263,7 +267,12 @@ export function Header({ locale }: { locale: Locale }) {
                               </li>
                             ))}
                             {column.viewAll ? (
-                              <li className="mt-1 border-t border-border pt-1">
+                              <li
+                                className={cn(
+                                  "mt-1 border-t border-border pt-1",
+                                  column.split && "sm:col-span-2",
+                                )}
+                              >
                                 <NavigationMenuLink
                                   render={<Link href={href(column.viewAll.routeId, locale)} />}
                                   className="font-medium text-primary hover:bg-transparent hover:underline"
@@ -302,10 +311,15 @@ export function Header({ locale }: { locale: Locale }) {
             inline-start in RTL. */}
         <div className="flex items-center gap-2">
           <LanguageSwitch locale={locale} />
-          <Button
-            className="hidden sm:inline-flex"
-            render={<a href={booking.href} target="_blank" rel="noopener noreferrer" />}
-          >
+          {/* CL-005 / CL-007 — "Book Appointment" is the one booking control on
+            the site whose visitor has NOT told us their patient type, so it must
+            not pick one for them. It used to open the tokenized Mikata link
+            directly, which is the REGISTERED-patient system: a new patient
+            clicking the site's most prominent booking button landed in a queue
+            that is not theirs. It now goes to the booking page, where the three
+            access routes are separated and labelled. Channel-specific CTAs
+            (walk-in, registered, aesthetics) still link straight out. */}
+          <Button className="hidden sm:inline-flex" render={<Link href={href("book-appointment", locale)} />}>
             {dict.common.bookAppointment}
           </Button>
           <MobileNav locale={locale} />

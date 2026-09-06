@@ -46,6 +46,10 @@ export const productCategories: ProductCategory[] = [
   { id: "eye-care", slug: "eye-care", slugAr: "العناية-بمحيط-العين", name: { en: "Eye Care", ar: "العناية بمحيط العين" } },
   { id: "scar-care", slug: "scar-care", slugAr: "العناية-بالندبات", name: { en: "Scar Care", ar: "العناية بالندبات" } },
   { id: "treatment-systems", slug: "treatment-systems", slugAr: "أنظمة-العلاج", name: { en: "Treatment Systems", ar: "أنظمة العلاج" } },
+  /* CL-036 - the client-supplied professional peels are not skincare
+     retail items and do not belong in any SkinMedica grouping above.
+     "Professional Peels" is an organisational label only. */
+  { id: "peels", slug: "peels", slugAr: "التقشير", name: { en: "Professional Peels", ar: "التقشير المهني" } },
 ];
 
 export const productConcerns: ProductConcern[] = [
@@ -884,6 +888,117 @@ export const products: Product[] = [
         { question: { en: "How do I confirm current price and availability?", ar: "كيف أتحقق من السعر والتوفر الحاليين؟" }, answer: { en: "Contact Blue Diamond Medical Clinic directly.", ar: "تواصلوا مباشرة مع عيادة بلو دايموند الطبية." } },
       ],
       sources: [{ url: "https://www.dermstore.com/p/skinmedica-ha5-rejuvenating-hydrator/11290631/", ...caRetailer("Dermstore") }, { url: "https://dermshop.ca/collections/skinmedica", ...caRetailer("Dermshop.ca") }],
+    },
+  },
+  // ============ PROFESSIONAL PEELS (CL-037, CL-038) ============
+  /**
+   * Client-supplied records. Every field below is verbatim from the client's
+   * own copy - no manufacturer research, no invented ingredient, benefit,
+   * indication or contraindication, and no borrowed price.
+   *
+   * BOTH are non-purchasable (`purchaseBlocked`): CL-037 is missing its
+   * approved packaging photograph, and CL-038 is missing both the photograph
+   * and the price. `images` is deliberately empty rather than pointed at one
+   * of the CL-039..CL-041 assets - a treatment/equipment photograph is not
+   * product packaging.
+   *
+   * ARABIC IS A CLIENT DEPENDENCY: no approved Arabic rendering of this
+   * product copy was supplied, so the `ar` fields repeat the approved
+   * English rather than carry a machine translation - the same rule the
+   * biography records follow.
+   */
+  {
+    id: "purifying-peeling",
+    slug: "the-purifying-peeling",
+    slugAr: "the-purifying-peeling",
+    name: { en: "THE PURIFYING PEELING", ar: "THE PURIFYING PEELING" },
+    subtitle: { en: "Decongestant and anti-inflammatory", ar: "Decongestant and anti-inflammatory" },
+    categoryIds: ["peels"],
+    concernIds: ["acne"],
+    // Published exactly as supplied: "188 + GST". The GST is displayed as
+    // given and never computed into a tax-inclusive total.
+    priceCents: 18800,
+    priceLabel: "188 + GST",
+    benefits: {
+      en: [
+        "Reduces skin inflammation.",
+        "Penetrates the sebaceous gland to reduce breakouts and stabilize sebum production.",
+        "Decongests pores and improves skin imperfections at their source.",
+      ],
+      ar: [
+        "Reduces skin inflammation.",
+        "Penetrates the sebaceous gland to reduce breakouts and stabilize sebum production.",
+        "Decongests pores and improves skin imperfections at their source.",
+      ],
+    },
+    keyFeatures: {
+      en: [
+        "Liposoluble anti-inflammatory formula.",
+        "Suitable for alternating use or as a prep with AHA-based products.",
+        "Recommended in a treatment course for long-term results.",
+      ],
+      ar: [
+        "Liposoluble anti-inflammatory formula.",
+        "Suitable for alternating use or as a prep with AHA-based products.",
+        "Recommended in a treatment course for long-term results.",
+      ],
+    },
+    images: [],
+    approvalStatus: "pending",
+    inStock: false,
+    purchaseBlocked: {
+      en: "This product is shown for information only. Its approved product photograph has not been supplied, so it is not yet available to purchase online \u2014 please ask the clinic about availability.",
+      ar: "يُعرَض هذا المنتج للاطّلاع فقط. لم تُورَّد صورة المنتج المعتمدة بعد، لذا لا يُمكن شراؤه عبر الإنترنت حتّى الآن — يرجى سؤال العيادة عن التوفر.",
+    },
+  },
+  {
+    id: "brightening-peeling",
+    slug: "the-brightening-peeling",
+    slugAr: "the-brightening-peeling",
+    /* CL-038 - the source pasted this title three ways ("HE BRIGHTENING
+       PEELING", a trailing "&#x20;" entity, and a duplicated adjacent
+       title). One canonical title is published. */
+    name: { en: "THE BRIGHTENING PEELING", ar: "THE BRIGHTENING PEELING" },
+    subtitle: { en: "Exfoliating and anti-aging", ar: "Exfoliating and anti-aging" },
+    categoryIds: ["peels"],
+    concernIds: ["anti-aging", "pigmentation"],
+    // CL-038 - NO PRICE SUPPLIED. Deliberately null: it is not the
+    // Purifying peel's 188, and it is not an estimate.
+    priceCents: null,
+    benefits: {
+      en: [
+        "Deeply exfoliates by eliminating dead skin cells.",
+        "Brightens the complexion and corrects skin irregularities for a uniform, radiant skin tone.",
+        "Stimulates natural production of elastin and collagen.",
+        "Improves the appearance of pigmentation spots.",
+        "Refines skin texture and reduces wrinkles and fine lines.",
+        "Tightens enlarged pores.",
+      ],
+      ar: [
+        "Deeply exfoliates by eliminating dead skin cells.",
+        "Brightens the complexion and corrects skin irregularities for a uniform, radiant skin tone.",
+        "Stimulates natural production of elastin and collagen.",
+        "Improves the appearance of pigmentation spots.",
+        "Refines skin texture and reduces wrinkles and fine lines.",
+        "Tightens enlarged pores.",
+      ],
+    },
+    keyFeatures: {
+      en: [
+        "It continues to work for 48 hours after neutralization in the treatment room to maximize cellular renewal.",
+        "Suitable for skin with imperfections, wrinkles and fine lines, as well as superficial dehydration.",
+      ],
+      ar: [
+        "It continues to work for 48 hours after neutralization in the treatment room to maximize cellular renewal.",
+        "Suitable for skin with imperfections, wrinkles and fine lines, as well as superficial dehydration.",
+      ],
+    },
+    images: [],
+    approvalStatus: "pending",
+    inStock: false,
+    purchaseBlocked: {
+      en: "This product is shown for information only. Its approved product photograph and price have not been supplied, so it is not yet available to purchase online \u2014 please ask the clinic about availability and pricing.",
+      ar: "يُعرَض هذا المنتج للاطّلاع فقط. لم تُورَّد صورة المنتج المعتمدة ولا سعره بعد، لذا لا يُمكن شراؤه عبر الإنترنت حتّى الآن — يرجى سؤال العيادة عن التوفر والسعر.",
     },
   },
 ];

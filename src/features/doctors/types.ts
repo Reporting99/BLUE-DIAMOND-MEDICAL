@@ -1,4 +1,4 @@
-import type { ImageStatus } from "@/types/media";
+import type { ImageStatus, Locale } from "@/types/media";
 
 export interface Doctor {
   id: string;
@@ -14,6 +14,16 @@ export interface Doctor {
     status: ImageStatus;
     /** true = subject has explicitly declined photography; never revisit. */
     photoDeclined?: boolean;
+    /**
+     * CL-025 — locales this asset may be shown in. Absent means "both",
+     * which is every doctor but one. Dr. Omaima Saeed's consent-protected
+     * identity card carries her name and title in Arabic as well as English,
+     * and displaying it on the ENGLISH card and profile implied she reads or
+     * speaks Arabic. Restricting it to `["ar"]` removes that implication from
+     * the English presentation without touching the consent guarantee or the
+     * legitimate Arabic layout.
+     */
+    locales?: Locale[];
   };
   bookingChannel: "family-doctor" | "phone-medical-botox";
 }

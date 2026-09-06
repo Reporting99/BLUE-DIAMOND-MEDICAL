@@ -18,8 +18,12 @@ test.describe("Booking allowlist", () => {
     for (const destination of Object.values(bookingDestinations)) {
       if (destination.type === "url") {
         expect(destination.href).toMatch(/^https:\/\//);
-      } else {
+      } else if (destination.type === "phone") {
         expect(destination.href).toMatch(/^tel:\+/);
+      } else {
+        // CL-007 — a "pending" channel carries no URL at all rather than a
+        // guessed one, and every surface renders its phone/in-person route.
+        expect(destination.href).toBeNull();
       }
     }
   });
@@ -31,7 +35,7 @@ test.describe("Booking allowlist", () => {
 
   test("isAllowedBookingHost accepts the real destinations", () => {
     for (const destination of Object.values(bookingDestinations)) {
-      if (destination.type === "url") {
+      if (destination.type === "url" && destination.href) {
         expect(isAllowedBookingHost(destination.href)).toBe(true);
       }
     }

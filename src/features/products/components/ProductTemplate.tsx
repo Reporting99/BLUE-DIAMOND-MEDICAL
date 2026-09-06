@@ -14,7 +14,7 @@ import { imagekitConfig, imagekitIsConfigured, imagePresets } from "@/config/ima
 // "Attempted to call buildSrc() from the server". Same reason
 // src/lib/seo/metadata.ts imports it this way.
 import { buildSrc } from "@imagekit/javascript";
-import { availabilityNotice, getProductById, productCategories } from "@/features/products/data";
+import { availabilityNotice, getProductById, productBrands, productCategories } from "@/features/products/data";
 import type { Product } from "@/features/products/types";
 import type { Locale } from "@/i18n/config";
 
@@ -36,6 +36,8 @@ const labels = {
     relatedProducts: "You may also like",
     faqsHeading: "Questions and Answers About This Product",
     askAboutThisProduct: "Ask About This Product",
+    benefits: "Benefits",
+    keyFeatures: "Key features",
   },
   ar: {
     whatItIs: "ما هو",
@@ -54,6 +56,8 @@ const labels = {
     relatedProducts: "قد يعجبك أيضًا",
     faqsHeading: "أسئلة وأجوبة حول هذا المنتج",
     askAboutThisProduct: "استفسري عن هذا المنتج",
+    benefits: "الفوائد",
+    keyFeatures: "الخصائص الأساسية",
   },
 };
 
@@ -92,6 +96,7 @@ export function ProductTemplate({ product, locale }: { product: Product; locale:
     .map(getProductById)
     .filter((p): p is Product => Boolean(p));
   const category = productCategories.find((c) => c.id === product.categoryIds[0]);
+  const brand = productBrands.find((b) => b.id === product.brandId);
   const askAboutHref = `${href("contact", locale)}?product=${encodeURIComponent(product.slug)}`;
 
   // Minimal, safe Product schema — name/image/description/brand/category
@@ -106,7 +111,10 @@ export function ProductTemplate({ product, locale }: { product: Product; locale:
     name: product.name[locale],
     description: detail?.overview[locale] ?? product.description?.[locale],
     category: category?.name[locale],
-    brand: { "@type": "Brand", name: "SkinMedica" },
+    // The brand node names THIS product's brand, and is omitted entirely
+    // for a record that has none (CL-036) - hardcoding "SkinMedica"
+    // published a false manufacturer for every non-SkinMedica product.
+    ...(brand ? { brand: { "@type": "Brand", name: brand.name } } : {}),
     // The image lives on ImageKit, not on the canonical domain. Concatenating
     // siteConfig.url with an ImageKit path produced
     // https://bluediamondmedical.ca/blue-diamond/shop/<file>.jpg for all 19
@@ -151,9 +159,31 @@ export function ProductTemplate({ product, locale }: { product: Product; locale:
         <div>
           {category ? <p className="text-xs font-semibold tracking-[0.08em] text-primary uppercase">{category.name[locale]}</p> : null}
           <h1 className="mt-2 text-display-1 font-heading lg:text-display-1-lg">{product.name[locale]}</h1>
-          <p className="mt-2 text-h4 font-heading text-primary">{formatPrice(product.priceCents)}</p>
+          {/* CL-037 / CL-038 - the supplied subtitle is its own line, not
+              folded into the title or the description. */}
+          {product.subtitle ? (
+            <p className="mt-1 text-h5 font-heading text-text-secondary">{product.subtitle[locale]}</p>
+          ) : null}
+          {/* CL-036 - `priceLabel` publishes the client's price string exactly
+              as supplied (e.g. "188 + GST"); the GST is shown, never added
+              into a total. A product with no supplied price shows no price
+              line at all rather than an em dash that reads as "free". */}
+          {product.priceLabel ? (
+            <p className="mt-2 text-h4 font-heading text-primary">{product.priceLabel}</p>
+          ) : product.priceCents !== null ? (
+            <p className="mt-2 text-h4 font-heading text-primary">{formatPrice(product.priceCents)}</p>
+          ) : null}
           {product.sizeLabel ? <p className="mt-1 text-sm text-text-secondary">{product.sizeLabel}</p> : null}
-          <p className="mt-3 text-sm text-text-secondary">{availabilityNotice[locale]}</p>
+          {/* CL-036 - a record missing an approved image or price states that
+              plainly and offers no purchase action. It never enters a
+              checkout path, and it makes no availability claim. */}
+          {product.purchaseBlocked ? (
+            <p className="mt-3 rounded-lg border border-border bg-surface p-4 text-sm text-text-secondary">
+              {product.purchaseBlocked[locale]}
+            </p>
+          ) : (
+            <p className="mt-3 text-sm text-text-secondary">{availabilityNotice[locale]}</p>
+          )}
 
           {variant ? (
             <p className="mt-3 text-sm">
@@ -177,6 +207,33 @@ export function ProductTemplate({ product, locale }: { product: Product; locale:
           </Button>
         </div>
       </Container>
+
+      {/* CL-037 / CL-038 - Benefits and Key features are structured lists,
+          never one concatenated paragraph. Rendered outside the `detail`
+          block because the peel records carry no SkinMedica-style research
+          `detail` and must not be given an invented one. */}
+      {product.benefits || product.keyFeatures ? (
+        <Container className="mt-4 max-w-3xl">
+          {product.benefits ? (
+            <DetailSection heading={t.benefits}>
+              <ul className="list-disc space-y-1 ps-5">
+                {product.benefits[locale].map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </DetailSection>
+          ) : null}
+          {product.keyFeatures ? (
+            <DetailSection heading={t.keyFeatures}>
+              <ul className="list-disc space-y-1 ps-5">
+                {product.keyFeatures[locale].map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </DetailSection>
+          ) : null}
+        </Container>
+      ) : null}
 
       {detail ? (
         <Container className="mt-4 max-w-3xl">

@@ -5,7 +5,9 @@ import { PageHero } from "@/components/layout/PageHero";
 import { SectionTransition } from "@/components/layout/SectionTransition";
 import { isLocale, type Locale } from "@/i18n/config";
 import { getRouteMetadata } from "@/lib/seo/metadata";
-import { getBookingUrl, type BookingChannel } from "@/config/booking";
+import { getBookingUrl, isBookable, type BookingChannel } from "@/config/booking";
+import { siteConfig } from "@/config/site";
+import { AccessOptions } from "@/components/shared/AccessOptions";
 
 /** Single source for this page's description: consumed by both generateMetadata
  * and the page's JSON-LD node, so the two can never drift apart (brief §9). */
@@ -23,15 +25,15 @@ const options: { channel: BookingChannel; description: { en: string; ar: string 
   {
     channel: "family-doctor",
     description: {
-      en: "Book with your registered family physician for a follow-up or ongoing care.",
-      ar: "احجز مع طبيب أسرتك المسجَّل لمتابعة أو رعاية مستمرة.",
+      en: "Registered and current patients — book online with your own family physician.",
+      ar: "المرضى المسجّلون والحاليون — احجزوا عبر الإنترنت مع طبيب أسرتكم.",
     },
   },
   {
     channel: "walk-in",
     description: {
-      en: "New to the clinic, or need to be seen without a standing appointment.",
-      ar: "جديد على العيادة، أو تحتاج لزيارة بدون موعد مسبق.",
+      en: "New patients and walk-ins — no standing appointment needed.",
+      ar: "المرضى الجدد والزيارات بدون موعد — لا حاجة لموعد مسبق.",
     },
   },
   {
@@ -44,8 +46,9 @@ const options: { channel: BookingChannel; description: { en: string; ar: string 
   {
     channel: "aesthetics-consultation",
     description: {
-      en: "Start with a physician consultation for any medical aesthetics treatment.",
-      ar: "ابدأوا باستشارة طبية لأي علاج تجميل طبي.",
+      // CL-008 — provider, duration and destination agree with the CTA label.
+      en: "For all aesthetic treatment appointments, book a 20-minute consultation with Dr. Farhat.",
+      ar: "تبدأ جميع مواعيد العلاجات التجميلية باستشارة مع الطبيب.",
     },
   },
 ];
@@ -64,11 +67,23 @@ export default async function BookAppointmentPage({ params }: { params: Promise<
   const { locale: rawLocale } = await params;
   const locale: Locale = isLocale(rawLocale) ? rawLocale : "en";
   const title = locale === "ar" ? "احجز موعدًا" : "Book an Appointment";
-  const botoxNote =
-    locale === "ar"
-      ? "لحجز البوتوكس الطبي (الشقيقة، صرير الأسنان، التعرق الزائد)، يرجى الاتصال بنا مباشرة."
-      : "To book medical Botox (migraine, bruxism, hyperhidrosis), please call us directly.";
-  const botoxPhone = getBookingUrl("phone-medical-botox");
+  /* The Botox-only phone callout that used to sit here has been removed.
+     It presented 825 413 1113 as though it were a Botox booking line, which
+     it is not: it is the general medical clinic number. The block below
+     states BOTH published lines with what each is actually for, so a visitor
+     can tell the medical desk from the aesthetics desk. */
+  const contactLines = [
+    {
+      label: locale === "ar" ? "العيادة الطبية" : "Medical Clinic",
+      display: siteConfig.clinic.phoneDisplay,
+      href: `tel:${siteConfig.clinic.phone}`,
+    },
+    {
+      label: locale === "ar" ? "عيادة التجميل" : "Aesthetic Clinic",
+      display: siteConfig.aesthetics.phoneDisplay,
+      href: `tel:${siteConfig.aesthetics.phone}`,
+    },
+  ];
 
   const ownRoute = getRoute("book-appointment")!;
 
@@ -104,8 +119,12 @@ export default async function BookAppointmentPage({ params }: { params: Promise<
       <section className="section-y">
       <Container>
         <div className="grid gap-6 sm:grid-cols-2">
+          {/* CL-007 — a channel whose online URL has not been supplied is not
+              drawn as a card that goes nowhere. The "How to book" block below
+              carries its phone and in-person route instead. */}
           {options.map((option, i) => {
             const booking = getBookingUrl(option.channel);
+            if (!isBookable(booking)) return null;
             return (
               <a
                 key={option.channel}
@@ -128,13 +147,32 @@ export default async function BookAppointmentPage({ params }: { params: Promise<
           })}
         </div>
 
-        <div data-reveal="up" className="mt-8 flex items-center gap-3 rounded-lg border border-border bg-surface p-6">
-          <Phone className="size-5 shrink-0 text-primary" aria-hidden="true" />
-          <div>
-            <p className="text-sm">{botoxNote}</p>
-            <a href={botoxPhone.href} className="ltr-run font-medium text-primary hover:text-primary-hover">
-              825 413 1113
-            </a>
+        {/* CL-005 — online, by phone, and in person, all three stated on the
+            page whose job is to explain how to get an appointment. */}
+        <AccessOptions
+          locale={locale}
+          className="mt-8"
+          channels={[
+            { channel: "family-doctor", audience: "registered" },
+            { channel: "walk-in", audience: "new-patient" },
+            { channel: "aesthetics-consultation", audience: "aesthetics" },
+          ]}
+        />
+
+        {/* Both published lines, each named for what it answers. Same card
+            shell, same spacing and icon as the block it replaces — this is a
+            content correction, not a layout change. */}
+        <div data-reveal="up" className="mt-8 flex items-start gap-3 rounded-lg border border-border bg-surface p-6">
+          <Phone className="mt-0.5 size-5 shrink-0 text-primary" aria-hidden="true" />
+          <div className="flex flex-col gap-3 sm:flex-row sm:gap-10">
+            {contactLines.map((line) => (
+              <div key={line.label}>
+                <p className="text-sm text-text-secondary">{line.label}</p>
+                <a href={line.href} className="ltr-run font-medium text-primary hover:text-primary-hover">
+                  {line.display}
+                </a>
+              </div>
+            ))}
           </div>
         </div>
       </Container>

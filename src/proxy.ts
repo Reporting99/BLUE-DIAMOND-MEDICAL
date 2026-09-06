@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { defaultLocale, isLocale } from "@/i18n/config";
-import { legacyRedirects } from "@/lib/routing";
+import { legacyRedirects, movedRoutes } from "@/lib/routing";
 import { routes } from "@/lib/routing";
 import { localizedEntityRoutes } from "@/config/localized-entity-routes.generated";
 import { isSiteLaunched, PRE_LAUNCH_ROBOTS_HEADER } from "@/config/launch";
@@ -77,13 +77,12 @@ const englishSlugToArabicPath = new Map(
  * way a headers() call in not-found.tsx did.
  *
  * It is generated LAZILY, on the first request that needs it, rather than at
- * module load. Workers rejects a module that generates random values in global
- * scope outright -- "Disallowed operation called within global scope" -- and
- * the whole isolate fails to boot, so a top-level crypto.randomUUID() makes
- * this proxy unrunnable on that runtime. Deferring costs one nullish check per
- * rewrite and changes nothing else: the value is still generated once per
- * process, still never appears in any response, and is still unguessable, so
- * the client-controllable-marker hole stays closed.
+ * module load. Some runtimes refuse to evaluate a module that draws randomness
+ * in global scope, and a top-level crypto.randomUUID() would make this proxy --
+ * and therefore the whole app -- unbootable there. Deferring costs one nullish
+ * check per rewrite and changes nothing else: the value is still generated once
+ * per process, still never appears in any response, and is still unguessable,
+ * so the client-controllable-marker hole stays closed.
  */
 const ARABIC_REWRITE_MARKER = "x-bd-arabic-rewrite";
 let cachedArabicRewriteNonce: string | undefined;
@@ -191,6 +190,19 @@ export function proxy(request: NextRequest) {
   const legacyTarget = legacyRedirects[decodedPathname] ?? legacyRedirects[pathname];
   if (legacyTarget) {
     const url = new URL(legacyTarget, request.url);
+    if (search) url.search = search;
+    return withIndexingGuard(NextResponse.redirect(url, 301));
+  }
+
+  // 1a. URLs this app itself used to serve and has since moved — currently
+  // the concern pages, which left /aesthetics/concerns when the Aesthetics IA
+  // became concern-first. Checked here, immediately after the legacy table and
+  // before locale handling, for the same reason: an old path must never
+  // round-trip through the Arabic rewrite, which would try to resolve it
+  // against a folder that no longer exists. Exact match, one hop, no chains.
+  const movedTarget = movedRoutes[decodedPathname] ?? movedRoutes[pathname];
+  if (movedTarget) {
+    const url = new URL(movedTarget, request.url);
     if (search) url.search = search;
     return withIndexingGuard(NextResponse.redirect(url, 301));
   }

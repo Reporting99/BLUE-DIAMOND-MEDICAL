@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
 import { Container } from "@/components/layout/Container";
 import { SectionTransition } from "@/components/layout/SectionTransition";
 import { ImageKitImage } from "@/components/shared/ImageKitImage";
@@ -9,11 +8,10 @@ import { Button } from "@/components/ui/button";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
 import { PhysicianSchema } from "@/components/shared/schema";
 import { isLocale, locales, type Locale } from "@/i18n/config";
-import { doctors, getDoctor } from "@/features/doctors";
-import { getBookingUrl } from "@/config/booking";
+import { doctors, getDoctor, portraitForLocale, DOCTOR_AVAILABILITY_NOTE } from "@/features/doctors";
+import { AccessOptions } from "@/components/shared/AccessOptions";
 import { siteConfig } from "@/config/site";
 import { getRoute, href, cmsPathForLocale } from "@/lib/routing";
-import { servicesForDoctor } from "@/lib/seo/entity-graph";
 import { resolvePageContent, entityCacheTags } from "@/lib/feelstack/page-resolver";
 import { cacheTags } from "@/lib/feelstack/cache-tags";
 import { doctorCmsContract } from "@/features/doctors/cms-contract";
@@ -101,18 +99,15 @@ export default async function DoctorProfilePage({
   const doctor = await loadDoctor(doctorId, locale);
   if (!doctor) notFound();
 
-  const booking = getBookingUrl(doctor.bookingChannel);
   const ownRoute = getRoute(doctor.routeId);
   const doctorsHub = getRoute("doctors-index")!;
-  // Only services whose own approved content names this doctor — see
-  // src/lib/seo/entity-graph.ts. Empty for doctors the source never links,
-  // in which case the section is omitted rather than filled.
-  const relatedServices = servicesForDoctor(doctor.id);
-
-  const labels = {
-    en: { relatedServices: "Services this physician provides" },
-    ar: { relatedServices: "الخدمات التي يقدمها هذا الطبيب" },
-  }[locale];
+  // CL-025 — a locale-restricted portrait resolves to the branded FacetTile
+  // here rather than being rendered in a locale it does not belong to.
+  const portrait = portraitForLocale(doctor, locale);
+  /* CL-028 — the approved biographies are multi-paragraph. The field is one
+     string with blank-line separators, so it is split at render time; every
+     single-paragraph biography yields exactly one paragraph and is unchanged. */
+  const bioParagraphs = doctor.bio[locale].split(/\n{2,}/).filter(Boolean);
 
   return (
     <>
@@ -121,10 +116,10 @@ export default async function DoctorProfilePage({
       <Container className="grid gap-10 lg:grid-cols-[5fr_7fr] lg:items-start">
         <div className="facet-corner aspect-[4/5] overflow-hidden rounded-lg lg:sticky lg:top-24">
           <ImageKitImage
-            path={doctor.image.path}
+            path={portrait.path}
             preset="doctor"
             role="doctor"
-            status={doctor.image.status}
+            status={portrait.status}
             alt={{ en: `Portrait of ${doctor.name.en}`, ar: `صورة ${doctor.name.ar}` }}
             locale={locale}
             width={640}
@@ -145,44 +140,50 @@ export default async function DoctorProfilePage({
 
           <h1 className="mt-4 text-display-1 font-heading lg:text-display-1-lg">{doctor.name[locale]}</h1>
           <p className="mt-2 text-body-lg text-primary">{doctor.credentials[locale]}</p>
-          <p className="mt-6 max-w-2xl text-body-lg text-text-secondary">{doctor.bio[locale]}</p>
+          <div className="mt-6 max-w-2xl space-y-4 text-body-lg text-text-secondary">
+            {bioParagraphs.map((paragraph, i) => (
+              <p key={i}>{paragraph}</p>
+            ))}
+          </div>
 
-          <div className="mt-8 flex flex-wrap gap-4">
-            <Button size="lg" render={<a href={booking.href} target="_blank" rel="noopener noreferrer" />}>
-              {booking.label[locale]}
-            </Button>
-            {doctor.practicesAesthetics ? (
+          {/* CL-027 — the availability line sits directly under the biography,
+              on every physician profile, from one shared constant. */}
+          <p className="mt-6 inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2.5 text-sm font-semibold text-white">
+            <span aria-hidden="true" className="size-2 shrink-0 rounded-full bg-white" />
+            {DOCTOR_AVAILABILITY_NOTE[locale]}
+          </p>
+
+          {/* CL-026 — the "Services this physician provides" block is gone.
+              It was populated from the services whose approved copy happened
+              to name a doctor, so a physician linked only from After-Hours
+              Care appeared to provide nothing else. Every family physician
+              here provides the full family-medicine list, and the Medical Care
+              hub is where that list lives; a per-doctor subset could only
+              understate it. The booking and aesthetics actions the block sat
+              beside are preserved below. */}
+
+          {/* CL-027 — online, phone and in-person access, with the correct
+              destination per patient type (CL-005/CL-006/CL-007). */}
+          <AccessOptions
+            locale={locale}
+            className="mt-8 max-w-2xl"
+            channels={[
+              { channel: "family-doctor", audience: "registered" },
+              { channel: "walk-in", audience: "new-patient" },
+              ...(doctor.practicesAesthetics
+                ? [{ channel: "aesthetics-consultation" as const, audience: "aesthetics" as const }]
+                : []),
+            ]}
+          />
+
+          {doctor.practicesAesthetics ? (
+            <div className="mt-6 flex flex-wrap gap-4">
               <Button size="lg" variant="outline" render={<Link href={href("aesthetics-hub", locale)} />}>
                 {locale === "ar" ? "خدمات التجميل الطبي" : "Medical aesthetics services"}
               </Button>
-            ) : null}
-          </div>
-
-          {/* Inverse of MedicalServiceContent.relatedDoctorIds — a real crawlable
-              edge back into the medical-service entity cluster (brief §13), using
-              the same pill-link treatment the service template already uses for
-              its "Related physicians" list so nothing new is introduced visually. */}
-          {relatedServices.length ? (
-            <section data-reveal="up" className="mt-10">
-              <h2 className="text-h4 font-heading">{labels.relatedServices}</h2>
-              <ul className="mt-3 flex flex-wrap gap-3">
-                {relatedServices.map((service) => {
-                  const route = getRoute(`medical-${service.id}`);
-                  if (!route) return null;
-                  return (
-                    <li key={service.id}>
-                      <Link
-                        href={`/${locale}${route.path[locale]}`}
-                        className="inline-flex items-center gap-1 rounded-full border border-border px-4 py-2 text-sm font-medium hover:border-primary hover:text-primary"
-                      >
-                        {service.title[locale]} <ArrowRight className="size-3.5 rtl:rotate-180" />
-                      </Link>
-                    </li>
-                  );
-                })}
-              </ul>
-            </section>
+            </div>
           ) : null}
+
         </div>
       </Container>
       </article>

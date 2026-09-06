@@ -42,7 +42,18 @@ export function ProductCard({
    */
   delay?: number;
 }) {
-  const image = resolved ?? product.images[0];
+  /* A card's picture slot is never empty. `resolved` is the CMS
+     assignment, `product.images[0]` the static record — and the
+     client-supplied peels (CL-037/CL-038) deliberately carry NEITHER,
+     because no approved packaging photograph exists and borrowing a
+     treatment photo would misrepresent the product. Without this
+     fallback those two cards rendered a blank frame. The synthetic
+     `pending` entry carries no path, so ImageKitImage requests no
+     bytes and draws the seeded FacetTile stand-in instead — the same
+     designed placeholder every unphotographed entity on the site
+     already uses, and not a stock photograph of somebody's product. */
+  const image = resolved ??
+    product.images[0] ?? { path: "", status: "pending" as const, alt: product.name };
   const category = productCategories.find((c) => c.id === product.categoryIds[0]);
 
   return (
@@ -77,12 +88,24 @@ export function ProductCard({
           <p className="mt-3 text-xs font-semibold tracking-[0.08em] text-primary uppercase">{category.name[locale]}</p>
         ) : null}
         <p className="mt-1 text-sm font-medium text-text-body group-hover:text-primary">{product.name[locale]}</p>
-        {product.detail ? (
+        {/* CL-037 / CL-038 - the supplied subtitle, on the card as on the
+            detail page. Falls back to the research overview for the
+            SkinMedica records, which have no subtitle. */}
+        {product.subtitle ? (
+          <p className="mt-1 text-sm text-text-secondary">{product.subtitle[locale]}</p>
+        ) : product.detail ? (
           <p className="mt-1 line-clamp-2 text-sm text-text-secondary">{product.detail.overview[locale]}</p>
         ) : null}
         <div className="mt-auto pt-3">
           {product.sizeLabel ? <p className="text-xs text-text-secondary">{product.sizeLabel}</p> : null}
-          <p className="mt-0.5 text-sm font-semibold text-text-body">{formatPrice(product.priceCents)}</p>
+          {/* CL-036 - exact supplied price string when there is one; nothing
+              at all when the client has not supplied a price. A card never
+              shows a price this catalogue does not actually have. */}
+          {product.priceLabel ? (
+            <p className="mt-0.5 text-sm font-semibold text-text-body">{product.priceLabel}</p>
+          ) : product.priceCents !== null ? (
+            <p className="mt-0.5 text-sm font-semibold text-text-body">{formatPrice(product.priceCents)}</p>
+          ) : null}
           <span className="mt-2 inline-flex items-center gap-1 text-sm font-medium text-primary">
             {viewDetailsLabel[locale]}
           </span>

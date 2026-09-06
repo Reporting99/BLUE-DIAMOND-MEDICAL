@@ -87,7 +87,23 @@ export interface Product {
   slug: string;
   slugAr: string;
   name: Bilingual;
-  brandId: string;
+  /**
+   * CL-036 — optional. The client-supplied professional-peel records name
+   * no brand, and inventing one to satisfy a required field would be a
+   * fabricated product attribute. Renderers omit the brand line and the
+   * schema's `brand` node entirely when this is absent.
+   */
+  brandId?: string;
+  /**
+   * CL-037 / CL-038 — the product's own subtitle line, exactly as supplied
+   * (e.g. "Decongestant and anti-inflammatory"). Distinct from
+   * `detail.overview`: a subtitle is a label, not a description.
+   */
+  subtitle?: Bilingual;
+  /** CL-037 / CL-038 — supplied "Benefits" list, one entry per bullet. */
+  benefits?: { en: string[]; ar: string[] };
+  /** CL-037 / CL-038 — supplied "Key features" list, one entry per bullet. */
+  keyFeatures?: { en: string[]; ar: string[] };
   categoryIds: string[];
   concernIds: string[];
   /**
@@ -96,8 +112,29 @@ export interface Product {
    */
   description?: Bilingual;
   detail?: ProductDetail;
-  /** Cents, CAD — see src/types/pricing.ts#formatPrice for display. */
-  priceCents: number;
+  /**
+   * Cents, CAD — see src/types/pricing.ts#formatPrice for display.
+   *
+   * CL-038 — `null` when the client has not supplied a price. It is never
+   * borrowed from a sibling product and never estimated; `formatPrice`
+   * already renders null as an em dash, and `purchaseBlocked` below is what
+   * keeps such a record out of any purchase path.
+   */
+  priceCents: number | null;
+  /**
+   * CL-037 — the price string exactly as the client supplied it, when that
+   * differs from the computed CAD formatting. "188 + GST" is published
+   * verbatim: the GST portion is displayed as given and is NOT calculated
+   * into a tax-inclusive total, because no approved tax logic exists.
+   */
+  priceLabel?: string;
+  /**
+   * CL-036 — set when a required input (approved packaging photograph,
+   * approved price) has not been supplied. While this is present the
+   * product renders as catalogue content only: no purchase action, no
+   * availability claim, and an explicit note saying what is outstanding.
+   */
+  purchaseBlocked?: Bilingual;
   sizeLabel?: string; // e.g. "56.7 g" — not translated, a measurement
   images: { path: string; status: ImageStatus; alt: Bilingual }[];
   approvalStatus: "approved" | "pending";

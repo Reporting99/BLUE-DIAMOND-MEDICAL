@@ -16,13 +16,13 @@ const copy = {
     eyebrow: "By concern",
     heading: "Explore information and treatment options",
     intro: "Browse by what you're noticing, and see the approved treatments and technologies that may be relevant — a starting point for your consultation, not a diagnosis.",
-    viewAll: "View all concerns",
+    viewAll: "View all treatments",
   },
   ar: {
     eyebrow: "حسب المخاوف",
     heading: "استكشفوا المعلومات وخيارات العلاج",
     intro: "تصفّحوا حسب ما تلاحظونه، واطّلعوا على العلاجات والتقنيات المعتمدة ذات الصلة — نقطة بداية لاستشارتكم، وليست تشخيصًا.",
-    viewAll: "عرض جميع المخاوف",
+    viewAll: "عرض جميع العلاجات",
   },
 };
 
@@ -43,8 +43,15 @@ const copy = {
 export function ConcernExplorer({
   locale,
   images = {},
+  showViewAll = true,
 }: {
   locale: Locale;
+  /**
+   * The Treatments hub renders this explorer as its entire body, so a "View
+   * all treatments" link there would point at the page the visitor is already
+   * on. Off there, on everywhere else.
+   */
+  showViewAll?: boolean;
   /**
    * Each concern's canonical preview asset, keyed by concern id and resolved
    * on the server by `features/concerns/media.ts`. A concern absent from the
@@ -129,9 +136,11 @@ export function ConcernExplorer({
         </ul>
       </div>
 
-      <Link href={href("aesthetics-concerns-hub", locale)} className="mt-8 inline-flex items-center gap-1 font-medium text-primary hover:text-primary-hover">
-        {t.viewAll} <ArrowRight className="size-4 rtl:rotate-180" aria-hidden="true" />
-      </Link>
+      {showViewAll ? (
+        <Link href={href("aesthetics-treatments-hub", locale)} className="mt-8 inline-flex items-center gap-1 font-medium text-primary hover:text-primary-hover">
+          {t.viewAll} <ArrowRight className="size-4 rtl:rotate-180" aria-hidden="true" />
+        </Link>
+      ) : null}
     </div>
   );
 }

@@ -23,17 +23,22 @@ export const homepageCopy = {
     // matches the brief's own recommended starting points (0, 0, 2000).
     trustStats: [
       { from: 0, to: 6, label: "Physicians" },
-      { from: 0, to: 28, suffix: "+", label: "Years of Family Medicine Experience" },
+      // CL-028 — the approved biography states "over 30 years"; this counter
+      // restates the same fact and is moved with it.
+      { from: 0, to: 30, suffix: "+", label: "Years of Family Medicine Experience" },
       { from: 2000, to: 2022, label: "Serving Calgary Since" },
     ],
     trustLine: ["West Springs, Calgary", "Family Medical Care", "Medical Aesthetics Consultation", "Potenza · Elite iQ™ · TempSure · Ultra"],
     findByNeedEyebrow: "START HERE",
     findByNeedHeading: "Find the right place to begin",
-    findByNeedIntro: "Explore care and treatment information by medical service, aesthetic treatment, skin concern, or technology.",
+    findByNeedIntro: "Explore care and treatment information by medical service, by what you'd like to treat, or by the technology behind it.",
     findByNeed: [
       { label: "Medical service", caption: "Family medicine, chronic care, and more", routeId: "medical-hub", icon: "stethoscope" as const },
-      { label: "Aesthetic treatment", caption: "RF micro-needling, laser, and more", routeId: "aesthetics-treatments-hub", icon: "sparkles" as const },
-      { label: "Skin concern", caption: "Browse by what you're noticing", routeId: "aesthetics-concerns-hub", icon: "search" as const },
+      // One aesthetics row, not two. "Aesthetic treatment" and "Skin concern"
+      // were separate entries pointing into two parallel catalogues; the
+      // Treatments hub IS the concern list now, so a second row would be a
+      // duplicate link under a different noun.
+      { label: "Aesthetic treatment", caption: "Browse by what you're noticing", routeId: "aesthetics-treatments-hub", icon: "sparkles" as const },
       { label: "Technology", caption: "The devices behind the treatments", routeId: "aesthetics-technologies-hub", icon: "cpu" as const },
     ],
     medicalDepthEyebrow: "MEDICAL CARE",
@@ -65,12 +70,13 @@ export const homepageCopy = {
       long: { en: "Care and paperwork that Alberta Health doesn't cover — travel and work forms, medical notes, and similar administrative requests — priced and listed on our uninsured-services page before your visit.", ar: "رعاية ومعاملات لا يغطيها التأمين الصحي لألبرتا — كنماذج السفر والعمل والمذكرات الطبية وطلبات إدارية مشابهة — مع أسعار معلنة على صفحة الخدمات غير المشمولة قبل زيارتكم." },
     },
     otherServiceFactsHeading: "Also included in every visit",
-    otherServiceFacts: ["General Family Medicine", "Walk-In Care", "Vaccination", "Onsite Pediatrician", "Mental Health", "Women's Health"],
+    // CL-023 — "Onsite Pediatrician" removed: it is not a current clinic service.
+    otherServiceFacts: ["General Family Medicine", "Walk-In Care", "Vaccination", "Mental Health", "Women's Health"],
     medicalGuidance: [
-      { label: "New patients", body: "Family-doctor and walk-in appointments are both available — book through the family-doctor or walk-in pathway below." },
-      { label: "Walk-in visitors", body: "Walk-ins have been welcomed consistently since the clinic opened in July 2022." },
-      { label: "Existing patients", body: "Book your next appointment through the same external booking system as always." },
-      { label: "External booking", body: "All booking is completed through Mika, Euclid, Jane, or by phone — never on this website." },
+      { label: "Registered patients", body: "Book online with your own family physician through Mikata, or call the clinic." },
+      { label: "New patients and walk-ins", body: "Call the clinic or come to reception — walk-ins have been welcomed consistently since the clinic opened in July 2022." },
+      { label: "Medical aesthetics", body: "For all aesthetic treatment appointments, book a 20-minute consultation with Dr. Farhat." },
+      { label: "Minor procedures", body: "Booked by phone or in person only — minor procedures cannot be booked online." },
     ],
     treatmentsEyebrow: "MEDICAL AESTHETICS",
     treatmentsHeading: "Featured aesthetic treatments.",
@@ -84,14 +90,14 @@ export const homepageCopy = {
     journeySteps: [
       { t: "Choose a service", d: "Medical care or medical aesthetics — or explore both." },
       { t: "Review information", d: "Read what the service or treatment involves before you book." },
-      { t: "Book through the approved system", d: "Mika, Euclid, Jane, or a phone call — never on this website." },
+      { t: "Book through the approved system", d: "Mikata, Skip the Waiting Room, Euclid, a phone call, or in person — never on this website." },
       { t: "Attend your consultation or appointment", d: "Every aesthetics treatment starts with a physician consultation." },
     ],
     doctorsEyebrow: "OUR PHYSICIANS",
     productsEyebrow: "SKINMEDICA",
     productsHeading: "Medical-grade skincare, recommended by your physician.",
     productsIntro: "Blue Diamond Medical carries SkinMedica, a professional skincare line. Availability and pricing are confirmed in person, not through online checkout.",
-    productsCta: "View All SkinMedica Products",
+    productsCta: "View All Products",
     resourcesEyebrow: "PATIENT RESOURCES",
     resourcesHeading: "Useful patient resources.",
     resources: [
@@ -118,7 +124,7 @@ export const homepageCopy = {
     },
     bookingHeading: "Find the right appointment.",
     bookingPaths: [
-      { channel: "family-doctor" as BookingChannel, label: "EXISTING PATIENT" },
+      { channel: "family-doctor" as BookingChannel, label: "REGISTERED / CURRENT PATIENT" },
       { channel: "walk-in" as BookingChannel, label: "NEW OR WALK-IN PATIENT" },
       { channel: "aesthetics-consultation" as BookingChannel, label: "MEDICAL AESTHETICS" },
     ],
@@ -128,9 +134,9 @@ export const homepageCopy = {
     faqs: [
       { q: "Do you accept walk-in patients?", a: "Yes. Blue Diamond Medical has consistently welcomed walk-in patients since opening in West Springs in July 2022, alongside scheduled family medicine appointments." },
       { q: "Where is the clinic located?", a: "23-8 Weston Drive SW, Calgary, Alberta T3H 5P2, in West Springs." },
-      { q: "What are your hours?", a: "Monday to Friday, 8:00 a.m. to 7:00 p.m. Closed all statutory holidays." },
-      { q: "Are bookings completed on this website?", a: "No. This website provides information only — every booking is completed through Mika, Euclid, Jane, or by calling the clinic directly." },
-      { q: "How do I book a medical aesthetics consultation?", a: "Every aesthetics treatment begins with a physician consultation — book through our aesthetics consultation pathway, or call the clinic directly." },
+      { q: "What are your hours?", a: "Monday to Saturday, 8:00 AM to 7:00 PM. Closed Sunday and on all statutory holidays." },
+      { q: "Are bookings completed on this website?", a: "No. This website provides information only — booking is completed through Mikata for registered patients, Skip the Waiting Room for new patients and walk-ins, Euclid for eye screening, by calling the clinic, or in person at reception." },
+      { q: "How do I book a medical aesthetics consultation?", a: "For all aesthetic treatment appointments, book a 20-minute consultation with Dr. Farhat — through our aesthetics consultation pathway, or call the clinic directly." },
       { q: "Where are Elite iQ™ treatments performed?", a: "At Citizen Studio, a separate address from the West Springs clinic — see the laser hair removal treatment page for details." },
       { q: "How can I ask about SkinMedica products?", a: "Contact the clinic directly. Product availability and current pricing are confirmed in person, not online." },
       { q: "Can SkinMedica products be purchased online?", a: "No. Online purchasing is not currently available." },
@@ -141,17 +147,16 @@ export const homepageCopy = {
   ar: {
     trustStats: [
       { from: 0, to: 6, label: "أطباء" },
-      { from: 0, to: 28, prefix: "+", label: "عامًا من خبرة طب الأسرة" },
+      { from: 0, to: 30, prefix: "+", label: "عامًا من خبرة طب الأسرة" },
       { from: 2000, to: 2022, label: "نخدم كالغاري منذ" },
     ],
     trustLine: ["ويست سبرينغز، كالغاري", "الرعاية الطبية للأسرة", "استشارة تجميل طبي", "بوتنزا · إيليت آي كيو™ · تمبشور · الترا"],
     findByNeedEyebrow: "ابدأوا من هنا",
     findByNeedHeading: "اعثروا على نقطة البداية المناسبة",
-    findByNeedIntro: "استكشفوا المعلومات والخيارات العلاجية حسب الخدمة الطبية، أو العلاج التجميلي، أو مخاوف البشرة، أو التقنية.",
+    findByNeedIntro: "استكشفوا المعلومات والخيارات العلاجية حسب الخدمة الطبية، أو حسب ما ترغبون في علاجه، أو حسب التقنية المستخدمة.",
     findByNeed: [
       { label: "خدمة طبية", caption: "طب الأسرة، الرعاية المزمنة، والمزيد", routeId: "medical-hub", icon: "stethoscope" as const },
-      { label: "علاج تجميلي", caption: "الإبر الدقيقة، الليزر، والمزيد", routeId: "aesthetics-treatments-hub", icon: "sparkles" as const },
-      { label: "مخاوف البشرة", caption: "تصفّحوا حسب ما تلاحظونه", routeId: "aesthetics-concerns-hub", icon: "search" as const },
+      { label: "علاج تجميلي", caption: "تصفّحوا حسب ما تلاحظونه", routeId: "aesthetics-treatments-hub", icon: "sparkles" as const },
       { label: "التقنية", caption: "الأجهزة المستخدمة في العلاجات", routeId: "aesthetics-technologies-hub", icon: "cpu" as const },
     ],
     medicalDepthEyebrow: "الرعاية الطبية",
@@ -174,12 +179,12 @@ export const homepageCopy = {
       long: { en: "Care and paperwork that Alberta Health doesn't cover — travel and work forms, medical notes, and similar administrative requests — priced and listed on our uninsured-services page before your visit.", ar: "رعاية ومعاملات لا يغطيها التأمين الصحي لألبرتا — كنماذج السفر والعمل والمذكرات الطبية وطلبات إدارية مشابهة — مع أسعار معلنة على صفحة الخدمات غير المشمولة قبل زيارتكم." },
     },
     otherServiceFactsHeading: "مشمول أيضًا في كل زيارة",
-    otherServiceFacts: ["طب الأسرة العام", "الرعاية بدون موعد", "التطعيمات", "طبيب أطفال في العيادة", "الصحة النفسية", "صحة المرأة"],
+    otherServiceFacts: ["طب الأسرة العام", "الرعاية بدون موعد", "التطعيمات", "الصحة النفسية", "صحة المرأة"],
     medicalGuidance: [
-      { label: "المرضى الجدد", body: "مواعيد طبيب الأسرة والزيارات بدون موعد متاحة كلاهما — احجزوا عبر مسار طبيب الأسرة أو بدون موعد أدناه." },
-      { label: "زوار بدون موعد", body: "يُرحَّب بالحالات بدون موعد مسبق باستمرار منذ افتتاح العيادة في يوليو 2022." },
-      { label: "المرضى الحاليون", body: "احجزوا موعدكم القادم عبر نفس نظام الحجز الخارجي المعتاد." },
-      { label: "الحجز الخارجي", body: "يتم الحجز بالكامل عبر Mika أو Euclid أو Jane أو الهاتف — وليس أبدًا عبر هذا الموقع." },
+      { label: "المرضى المسجّلون", body: "احجزوا عبر الإنترنت مع طبيب أسرتكم من خلال نظام Mikata، أو اتصلوا بالعيادة." },
+      { label: "المرضى الجدد والزيارات بدون موعد", body: "اتصلوا بالعيادة أو توجّهوا إلى الاستقبال — يُرحَّب بالحالات بدون موعد باستمرار منذ افتتاح العيادة في يوليو 2022." },
+      { label: "التجميل الطبي", body: "تبدأ جميع مواعيد العلاجات التجميلية باستشارة مدتها 20 دقيقة مع الطبيب." },
+      { label: "الإجراءات البسيطة", body: "تُحجز عبر الهاتف أو بالحضور شخصيًا فقط — ولا يمكن حجزها عبر الإنترنت." },
     ],
     treatmentsEyebrow: "التجميل الطبي",
     treatmentsHeading: "علاجات تجميلية مميزة.",
@@ -193,7 +198,7 @@ export const homepageCopy = {
     journeySteps: [
       { t: "اختاروا الخدمة", d: "الرعاية الطبية أو التجميل الطبي — أو استكشفوا كليهما." },
       { t: "اطّلعوا على المعلومات", d: "اقرأوا ما تتضمنه الخدمة أو العلاج قبل الحجز." },
-      { t: "احجزوا عبر النظام المعتمد", d: "Mika أو Euclid أو Jane أو اتصال هاتفي — وليس أبدًا عبر هذا الموقع." },
+      { t: "احجزوا عبر النظام المعتمد", d: "Mikata أو Skip the Waiting Room أو Euclid أو اتصال هاتفي أو الحضور شخصيًا — وليس أبدًا عبر هذا الموقع." },
       { t: "احضروا استشارتكم أو موعدكم", d: "يبدأ كل علاج تجميلي باستشارة طبية." },
     ],
     doctorsEyebrow: "أطباؤنا",
@@ -234,8 +239,8 @@ export const homepageCopy = {
     faqs: [
       { q: "هل تستقبلون مرضى بدون موعد مسبق؟", a: "نعم. تستقبل بلو دايموند الطبية مرضى بدون موعد مسبق باستمرار منذ افتتاحها في ويست سبرينغز في يوليو 2022، إلى جانب مواعيد طب الأسرة المحجوزة." },
       { q: "أين تقع العيادة؟", a: "23-8 Weston Drive SW، كالغاري، ألبرتا T3H 5P2، في حي ويست سبرينغز." },
-      { q: "ما هي ساعات العمل؟", a: "من الإثنين إلى الجمعة، من 8:00 صباحًا حتى 7:00 مساءً. مغلقون في جميع العطلات الرسمية." },
-      { q: "هل تتم عملية الحجز عبر هذا الموقع؟", a: "لا. يقدّم هذا الموقع معلومات فقط — ويتم كل حجز عبر Mika أو Euclid أو Jane، أو بالاتصال المباشر بالعيادة." },
+      { q: "ما هي ساعات العمل؟", a: "من الإثنين إلى السبت، من 8:00 صباحًا حتى 7:00 مساءً. مغلقون يوم الأحد وفي جميع العطلات الرسمية." },
+      { q: "هل تتم عملية الحجز عبر هذا الموقع؟", a: "لا. يقدّم هذا الموقع معلومات فقط — ويتم الحجز عبر Mikata للمرضى المسجّلين، وعبر Skip the Waiting Room للمرضى الجدد والزيارات بدون موعد، وعبر Euclid لفحص العين، أو بالاتصال المباشر بالعيادة، أو بالحضور إلى الاستقبال." },
       { q: "كيف أحجز استشارة تجميل طبي؟", a: "يبدأ كل علاج تجميلي باستشارة طبية — احجزوا عبر مسار استشارة التجميل الطبي، أو اتصلوا بالعيادة مباشرة." },
       { q: "أين تُجرى علاجات Elite iQ™؟", a: "في Citizen Studio، وهو عنوان منفصل عن عيادة ويست سبرينغز — راجعوا صفحة علاج إزالة الشعر بالليزر للتفاصيل." },
       { q: "كيف أسأل عن منتجات سكين ميديكا؟", a: "تواصلوا مع العيادة مباشرة. يتم تأكيد التوفر والسعر الحالي حضوريًا، وليس عبر الإنترنت." },

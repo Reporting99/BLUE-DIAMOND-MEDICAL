@@ -1,7 +1,7 @@
 import { Container } from "@/components/layout/Container";
 import { ImageKitImage } from "@/components/shared/ImageKitImage";
 import { FacetTile } from "@/components/shared/FacetTile";
-import { cmsAlt } from "@/lib/feelstack/media-slots";
+import { resolveAlt } from "@/lib/feelstack/media-slots";
 import type { ImageKitAsset, ImageRole } from "@/types/media";
 import type { Locale } from "@/i18n/config";
 import { cn } from "@/lib/utils";
@@ -111,12 +111,60 @@ const measureOffsetClasses: Record<PageHeroMeasure, string> = {
   form: "md:ps-[calc((100%_+_2rem_-_36rem)/2)] lg:ps-[calc((100%_+_3rem_-_36rem)/2)]",
 };
 
+/**
+ * CL-032 — hero block metrics.
+ *
+ * Two things were creating the blank band under every hero:
+ *
+ *  - a `min-height` (up to 460px) that the copy rarely filled, so the lower
+ *    half of the band was empty whenever the route had no hero photograph
+ *    assigned yet. The height is now driven by the content, and a hero WITH
+ *    an assigned photograph still gets its full picture because the image
+ *    layer sets its own aspect (see the media block below).
+ *  - 80px of bottom padding, which then sat on top of the next section's own
+ *    top padding.
+ *
+ * The padding is now asymmetric on purpose. The TOP keeps real clearance —
+ * the site header is fixed on the homepage and floats over the hero, so
+ * shrinking the top would push the H1 under it. The BOTTOM is trimmed to the
+ * 16px/12px that the section rhythm allows, so hero-bottom plus next-section-top
+ * lands inside the 32px desktop / 24px mobile cap. The bottom values are
+ * 12px/8px rather than 16px/12px because every hero also draws a 1px
+ * `border-b`, and the cap is measured across that line: 12 + 1 + 16 = 29px
+ * desktop, 8 + 1 + 12 = 21px mobile.
+ */
+/**
+ * CL-033 — where the split hero's picture is anchored when `object-fit: cover`
+ * has to crop it.
+ *
+ * A closed set of literal class strings rather than an arbitrary
+ * `object-position` value, because Tailwind generates utilities by scanning
+ * source text: a class built at runtime from a prop would never be emitted and
+ * the crop would silently fall back to centre. Each entry is therefore written
+ * out in full here and chosen by name at the call site.
+ *
+ * `center` is the default and is what most treatment and technology assets
+ * want. `right` exists for the nine concern portraits, whose subject runs to
+ * within a few percent of the frame's right edge — centring those crops the
+ * face off at a 4:3 column.
+ */
+export type PageHeroImageFocus = "center" | "top" | "bottom" | "left" | "right" | "top-right" | "top-left";
+
+const focusClasses: Record<PageHeroImageFocus, string> = {
+  center: "",
+  top: "[&>img]:object-top",
+  bottom: "[&>img]:object-bottom",
+  left: "[&>img]:object-left",
+  right: "[&>img]:object-right",
+  "top-right": "[&>img]:object-[85%_20%]",
+  "top-left": "[&>img]:object-[15%_20%]",
+};
+
 const sizeClasses: Record<PageHeroSize, string> = {
-  // Utility and transactional routes — cart, checkout, legal, shipping. Enough
-  // presence to be a hero, not so much that it delays the task.
-  compact: "min-h-[240px] py-10 sm:min-h-[280px] lg:min-h-[320px] lg:py-14",
+  // Utility and transactional routes — cart, checkout, legal, shipping.
+  compact: "pt-8 pb-2 lg:pt-10 lg:pb-3",
   // Every editorial and landing route.
-  standard: "min-h-[320px] py-12 sm:min-h-[380px] lg:min-h-[460px] lg:py-20",
+  standard: "pt-10 pb-2 lg:pt-14 lg:pb-3",
 };
 
 export interface PageHeroProps {
@@ -202,20 +250,8 @@ export interface PageHeroProps {
    * exactly as it does today.
    */
   mediaLayout?: PageHeroMediaLayout;
-  /**
-   * Which side of a `split` hero the photograph takes. Ignored otherwise.
-   *
-   * `end` (the default) is the composition the Aesthetics hub was art-directed
-   * around, and it stays the default so adopting `split` elsewhere cannot
-   * silently recompose that page.
-   *
-   * `start` is the concern-detail convention: the picture leads on the side
-   * the language starts at — left in English, right in Arabic — so the reader
-   * meets the subject before the words. Both sides resolve from
-   * `inset-inline`, so neither needs a locale branch and neither mirrors by
-   * accident.
-   */
-  mediaSide?: "start" | "end";
+  /** CL-033 — where a cover-cropped split image is anchored. Defaults to centre. */
+  imageFocus?: PageHeroImageFocus;
 }
 
 export function PageHero({
@@ -236,7 +272,7 @@ export function PageHero({
   measure = "wide",
   align = "start",
   mediaLayout = "bleed",
-  mediaSide = "end",
+  imageFocus = "center",
 }: PageHeroProps) {
   const centered = align === "center";
   /**
@@ -292,62 +328,92 @@ export function PageHero({
   );
 
   /**
-   * THE SPLIT HERO'S PICTURE.
+   * THE SPLIT HERO — CL-033.
    *
-   * One element, two layouts, deliberately — not two elements behind
-   * breakpoint visibility classes. Rendering it twice would put two `<img>`
-   * carrying the same alt text into the accessibility tree, and preload two
-   * copies of the LCP image so the browser fetches both and shows one.
+   * Two real grid tracks, not a picture lifted out of the flow. The previous
+   * implementation absolutely positioned the photograph over the inline-end
+   * half and let the copy run underneath it behind a mask; that produced the
+   * right picture in the right place but it was a composition the copy could
+   * be overrun by, it needed a bleed of negative margin on mobile, and its
+   * height came from a min-height rather than from its own content.
    *
-   * Below `md` it is an ordinary block in the flow, stacked under the copy and
-   * broken out of the Container's `px-4` so it runs edge to edge. Its
-   * `aspect-[4/3]` is the asset's own ratio, so `object-cover` has nothing to
-   * crop and the subject survives the narrow viewport whole — the one thing a
-   * portrait hero cannot afford to get wrong on a phone.
+   * As two grid tracks: nothing overlaps because nothing can, no text is ever
+   * laid over the image, both columns are the same row so they are vertically
+   * aligned by construction, and the picture fills its track with
+   * `object-fit: cover` at a controlled aspect. There is no negative margin
+   * and no absolute positioning anywhere in it.
    *
-   * From `md` up it leaves the flow and takes the inline-end half of the
-   * section: `inset-y-0` is what makes it the hero's FULL height rather than
-   * the height of a picture sitting in a row, and `end-0` is what puts it on
-   * the left in Arabic and the right in English without a locale branch.
+   * DIRECTION IS FREE. The copy is first in the DOM and the picture second, so
+   * a single grid gives all three required behaviours with no locale branch:
+   * English LTR puts the copy in the first (left) track, Arabic RTL puts it in
+   * the first (right) track, and the stacked mobile layout reads copy-then-
+   * picture in both. That is also the correct semantic order — the heading and
+   * its description precede the illustration of them.
    *
-   * The z-index puts it above the readability wash (-20) and below the wash
-   * under the fixed header (-10). Above the readability wash because that wash
-   * exists to protect text and there is no text over this half — leaving the
-   * picture under it would veil the photograph to hold up copy that is not
-   * there. Below the header wash because the nav still crosses the top of it.
+   * HEIGHT. `items-stretch` (the grid default) makes the picture track exactly
+   * as tall as the copy track, so the hero is one block whose height is its own
+   * content — no reserved band, which is what CL-032 requires. `md:min-h-*`
+   * only stops a very short copy column from producing a letterbox-thin
+   * picture; the image fills it, so it is never empty space.
    */
-  const splitPhoto =
+  const splitHero =
     split && image ? (
-      <div
-        className={cn(
-          "hero-split-media relative -mx-4 aspect-[4/3] w-[calc(100%+2rem)] overflow-hidden",
-          "md:absolute md:inset-y-0 md:z-[-15] md:mx-0 md:aspect-auto md:w-[46%] lg:w-[48%]",
-          mediaSide === "start" ? "md:start-0" : "md:end-0",
-          /* Tells the mask which edge to dissolve. The class above only moves
-             the picture; without this the fade stays keyed to an inline-END
-             picture and eats the OUTER edge instead. */
-          mediaSide === "start" && "hero-split-media--start",
-        )}
-      >
-        <ImageKitImage
-          path={image.path}
-          preset="hero"
-          role={image.role}
-          status={image.status}
-          alt={cmsAlt(image) ?? imageAlt}
-          locale={locale}
-          width={image.width}
-          height={image.height}
-          /* Still this page's LCP image, so still preloaded — but it now
-             covers half the viewport rather than all of it, and a `100vw`
-             hint here would make the browser pick a candidate twice the size
-             it can ever paint. */
-          preload
-          sizes="(min-width: 768px) 50vw, 100vw"
-          className="h-full w-full"
-        />
-      </div>
+      <section data-hero="split" className="relative isolate border-b border-border">
+        <Container
+          className={cn(
+            "grid items-stretch gap-5 md:grid-cols-2 md:gap-8 lg:gap-12",
+            sizeClasses[size],
+          )}
+        >
+          <div data-hero-col="copy" className="flex flex-col justify-center">
+            {breadcrumbs ? <div className="mb-4">{breadcrumbs}</div> : null}
+            {eyebrow ? (
+              <p className="text-sm font-semibold tracking-wide text-primary uppercase">{eyebrow}</p>
+            ) : null}
+            <h1 className={cn("text-display-1 font-heading lg:text-display-1-lg", eyebrow && "mt-3")}>
+              {title}
+            </h1>
+            {body ? (
+              <p data-hero-body className="mt-4 text-body-lg text-text-secondary">
+                {body}
+              </p>
+            ) : null}
+            {actions ? <div className="mt-6 flex flex-wrap gap-3">{actions}</div> : null}
+            {children}
+            {imageCaption?.[locale] ? (
+              <p className="mt-4 text-caption text-text-secondary">{imageCaption[locale]}</p>
+            ) : null}
+          </div>
+
+          <div
+            data-hero-col="media"
+            className="relative aspect-[4/3] w-full overflow-hidden rounded-lg md:aspect-auto md:min-h-[260px] lg:min-h-[300px]"
+          >
+            <ImageKitImage
+              path={image.path}
+              preset="hero"
+              role={image.role}
+              status={image.status}
+              /* The CMS alt wins, exactly as it does in the bleed layout; the
+                 page's own `imageAlt` is the fallback. The picture is the only
+                 element naming this subject here, so it is never decorative. */
+              alt={resolveAlt(image, imageAlt)}
+              locale={locale}
+              width={image.width}
+              height={image.height}
+              /* Still the LCP element on these routes, and it now occupies half
+                 the viewport from `md` up — so the candidate hint says half,
+                 not `100vw`, and the asset is still preloaded. */
+              preload
+              sizes="(min-width: 768px) 50vw, 100vw"
+              className={cn("h-full w-full", focusClasses[imageFocus])}
+            />
+          </div>
+        </Container>
+      </section>
     ) : null;
+
+  if (splitHero) return splitHero;
 
   return (
     <section className="relative isolate overflow-hidden border-b border-border">
@@ -361,15 +427,13 @@ export function PageHero({
             join. Decorative here because the photograph carries the
             accessible name — two elements naming the same subject would say
             it twice. */}
-        {split ? (
-          <FacetTile role={imageRole} seed={seed} decorative className="h-full w-full" />
-        ) : image ? (
+        {image ? (
           <ImageKitImage
             path={image.path}
             preset="hero"
             role={image.role}
             status={image.status}
-            alt={cmsAlt(image) ?? imageAlt}
+            alt={resolveAlt(image, imageAlt)}
             locale={locale}
             width={image.width}
             height={image.height}
@@ -394,21 +458,7 @@ export function PageHero({
           `md` rather than from `lg` — at `md` the ordinary hero is still
           stacked and the symmetric/block wash is the right one, but this one
           is already two columns. */}
-      {split ? (
-        <>
-          <div aria-hidden="true" className="hero-wash-block absolute inset-0 -z-20 md:hidden" />
-          {mediaSide === "start" ? (
-            /* Copy is on the inline-END half here, which the one-sided ramp
-               does not reach -- see .hero-wash-panel in globals.css. */
-            <div
-              aria-hidden="true"
-              className="hero-wash-panel absolute inset-y-0 end-0 -z-20 hidden md:block md:start-[46%] lg:start-[48%]"
-            />
-          ) : (
-            <div aria-hidden="true" className="hero-wash-inline absolute inset-0 -z-20 hidden md:block" />
-          )}
-        </>
-      ) : symmetricWash ? (
+      {symmetricWash ? (
         <div aria-hidden="true" className="hero-wash-center absolute inset-0 -z-20" />
       ) : (
         <>
@@ -432,36 +482,22 @@ export function PageHero({
           nav needs no wash beneath it here. */}
       <div
         aria-hidden="true"
-        className={cn(
-          "hero-wash-top absolute inset-x-0 top-0 -z-10 h-20",
-          split && (mediaSide === "start" ? "md:start-[46%] lg:start-[48%]" : "md:end-[46%] lg:end-[48%]"),
-        )}
+        className="hero-wash-top absolute inset-x-0 top-0 -z-10 h-20"
       />
       <div
         aria-hidden="true"
-        className={cn(
-          "hero-wash-bottom absolute inset-x-0 bottom-0 -z-10 h-20",
-          split && (mediaSide === "start" ? "md:start-[46%] lg:start-[48%]" : "md:end-[46%] lg:end-[48%]"),
-        )}
+        className="hero-wash-bottom absolute inset-x-0 bottom-0 -z-10 h-20"
       />
 
       <Container
         className={cn(
           "flex flex-col justify-center",
           sizeClasses[size],
-          !aside && !split && measureClasses[measure],
-          centered && !aside && !split && "items-center text-center",
+          !aside && measureClasses[measure],
+          centered && !aside && "items-center text-center",
         )}
       >
-        {split ? (
-          /* `md:block` rather than a second flex row: from `md` up the
-             picture is out of the flow, so the only thing left to lay out is
-             the copy column, and a flex row with one child would centre it. */
-          <div className="flex flex-col gap-10 md:block">
-            <div className={cn("md:w-[54%] lg:w-[52%]", mediaSide === "start" && "md:ms-auto")}>{copy}</div>
-            {splitPhoto}
-          </div>
-        ) : aside ? (
+        {aside ? (
           <div
             className={cn(
               "flex flex-col gap-10 md:flex-row md:items-center md:gap-8 lg:gap-12",

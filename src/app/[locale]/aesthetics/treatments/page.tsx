@@ -1,26 +1,48 @@
 import type { Metadata } from "next";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import { Container } from "@/components/layout/Container";
-import { PageHero } from "@/components/layout/PageHero";
+import { AestheticsHero } from "@/features/aesthetics/components/AestheticsHero";
+import { getBookingUrl } from "@/config/booking";
+import { Button } from "@/components/ui/button";
 import { SectionTransition } from "@/components/layout/SectionTransition";
-import { MediaCard } from "@/components/shared/MediaCard";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
+import { ConcernExplorer, concerns } from "@/features/concerns";
+import { gatedTreatments } from "@/features/aesthetics/data/treatments";
 import { isLocale, type Locale } from "@/i18n/config";
 import { getRoute, href } from "@/lib/routing";
-import { treatments } from "@/features/aesthetics";
 import { getRouteMetadata } from "@/lib/seo/metadata";
-import { resolveListingMedia } from "@/lib/feelstack/listing-media";
-import { heroFromListing } from "@/lib/feelstack/page-hero-media";
-import { cacheTags } from "@/lib/feelstack/cache-tags";
+import { resolvePageHeroImage } from "@/lib/feelstack/page-hero-media";
+import { concernExplorerImages, resolveConcernListingMedia } from "@/features/concerns/media";
+import { PageSchema } from "@/components/shared/schema";
+import { siteConfig } from "@/config/site";
+
+/**
+ * The Treatments hub IS the concern list.
+ *
+ * Aesthetics used to run two parallel catalogues — a Treatments index of
+ * devices and procedures, and a Concerns index of patient problems — and asked
+ * every visitor to guess which vocabulary the site wanted. It now runs one, in
+ * the vocabulary people actually arrive with: you pick what you want treated,
+ * and that page shows the treatment options Blue Diamond offers for it.
+ *
+ * So this page lists concerns, and the individual treatment pages
+ * (RF Micro-Needling, Laser Skin Treatments, PRP, …) are reached FROM them.
+ * Those pages are all still live and indexed at their own URLs — they left the
+ * navigation, not the site — and every one of them is linked from at least one
+ * concern page's "Treatment Options" section or from its technology page, so
+ * none is orphaned. See src/features/concerns/queries.ts for the mapping.
+ *
+ * Cosmetic Botox is the one standalone entry: it is not filed under any single
+ * concern, because the approved content does not put it under one.
+ */
 
 /** Single source for this page's description: consumed by both generateMetadata
  * and the page's JSON-LD node, so the two can never drift apart (brief §9). */
 const PAGE_DESCRIPTION = {
-      en: "Physician-led aesthetic treatments at Blue Diamond Medical — laser, radio frequency, RF micro-needling, PRP, and more.",
-      ar: "علاجات تجميل طبي بإشراف طبي في بلو دايموند — الليزر، والترددات الراديوية، والإبر الدقيقة، والبلازما، وغيرها.",
-    } as const;
-
-import { PageSchema } from "@/components/shared/schema";
-import { siteConfig } from "@/config/site";
+  en: "Choose what you'd like to treat — unwanted hair, hair loss, acne scars, redness, fine lines, skin laxity and more — and see the physician-led treatment options Blue Diamond Medical offers for it.",
+  ar: "اختاروا ما ترغبون في علاجه — الشعر غير المرغوب فيه، وتساقط الشعر، وندبات حب الشباب، والاحمرار، والخطوط الدقيقة، وترهل البشرة وغيرها — واطّلعوا على خيارات العلاج بإشراف طبي في بلو دايموند الطبية.",
+} as const;
 
 export async function generateMetadata({
   params,
@@ -35,35 +57,38 @@ export async function generateMetadata({
 export default async function TreatmentsHubPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale: rawLocale } = await params;
   const locale: Locale = isLocale(rawLocale) ? rawLocale : "en";
+  const consult = getBookingUrl("aesthetics-consultation");
   const aestheticsRoute = getRoute("aesthetics-hub")!;
-  const title = locale === "ar" ? "العلاجات" : "Treatments";
-  const intro =
-    locale === "ar"
-      ? "تبدأ جميع علاجاتنا باستشارة مع طبيب لمدة 20 دقيقة يستمع خلالها لمخاوفكم ويضع خطة علاج تناسب أهدافكم."
-      : "Every treatment starts with a 20-minute consultation with a physician, who listens to your concerns and prescribes a treatment plan that meets your goals.";
-
   const ownRoute = getRoute("aesthetics-treatments-hub")!;
+  const title = ownRoute.title[locale];
 
-  // This page's own hero and every treatment card on it, in one fan-out.
-  // Each treatment's detail page already renders its assigned photograph; the
-  // index rendering a bordered paragraph for the same treatment is the
-  // listing/detail gap this closes.
-  const media = await resolveListingMedia(
-    [
-      { id: "page", englishPath: ownRoute.path.en, routeKind: "page" as const },
-      ...treatments.map((t) => ({ id: t.id, englishPath: `/aesthetics/treatments/${t.slug}` })),
-    ],
-    locale,
-    [cacheTags.aestheticTreatmentsIndex(process.env.FEELSTACK_SITE_KEY ?? "", locale)],
+  const hero = await resolvePageHeroImage(ownRoute.path.en, locale);
+  /* The explorer's own imagery, through the same shared resolver the homepage
+     uses, so the two surfaces cannot answer differently about which picture a
+     concern owns. */
+  const concernImages = concernExplorerImages(
+    await resolveConcernListingMedia(concerns, locale),
+    concerns,
   );
-  const hero = heroFromListing(media);
-  const detailsLabel = locale === "ar" ? "التفاصيل" : "Details";
 
-  // Same array this page renders, so the structured list cannot diverge.
-  const listItems = treatments.flatMap((entity) => {
-    const r = getRoute(`treatment-${entity.id}`);
-    return r ? [{ name: entity.title[locale], url: `${siteConfig.url}/${locale}${r.path[locale]}` }] : [];
-  });
+  /* Cosmetic Botox stays a standalone row rather than being filed under Fine
+     Lines & Wrinkles or Skin Revitalization: no approved source assigns it to
+     one concern, and burying it under a guess would make it undiscoverable.
+     It points at the live Botox hub, which is where its approved content
+     actually is — see the `gatedTreatments` note in
+     src/features/aesthetics/data/treatments.ts. */
+  const botox = gatedTreatments.find((t) => t.id === "cosmetic-botox")!;
+  const botoxRoute = getRoute("botox-hub")!;
+  const standaloneLabel = locale === "ar" ? "علاج مستقل" : "Also available";
+
+  // Same entries this page renders, so the structured list cannot diverge.
+  const listItems = [
+    ...concerns.flatMap((entity) => {
+      const r = getRoute(`concern-${entity.id}`);
+      return r ? [{ name: entity.title[locale], url: `${siteConfig.url}/${locale}${r.path[locale]}` }] : [];
+    }),
+    { name: botox.title[locale], url: `${siteConfig.url}/${locale}${botoxRoute.path[locale]}` },
+  ];
 
   return (
     <>
@@ -74,13 +99,21 @@ export default async function TreatmentsHubPage({ params }: { params: Promise<{ 
         path={ownRoute.path[locale]}
         items={listItems}
       />
-      <PageHero
+      <AestheticsHero
         locale={locale}
         title={title}
-        body={intro}
+        body={PAGE_DESCRIPTION[locale]}
         image={hero}
         imageRole="treatment"
         seed="treatments-hub"
+        /* CL-033 — the same approved consultation CTA the parent Aesthetics
+           hub and every detail page already use. Nothing new is authored: the
+           label and destination both come from config/booking.ts. */
+        actions={
+          <Button size="lg" render={<a href={consult.href!} target="_blank" rel="noopener noreferrer" />}>
+            {consult.label[locale]}
+          </Button>
+        }
         imageAlt={{
           en: "A physician performing an aesthetic treatment at Blue Diamond Medical",
           ar: "طبيبة تُجري علاجًا تجميليًا في بلو دايموند الطبية",
@@ -89,34 +122,25 @@ export default async function TreatmentsHubPage({ params }: { params: Promise<{ 
       />
 
       <section className="section-y">
-      <Container>
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {treatments.map((t, i) => {
-            const route = getRoute(`treatment-${t.id}`)!;
-            const image = (media[t.id] ?? []).find((m) => m.slot === "hero" || m.slot === "card");
-            return (
-              <MediaCard
-                key={t.id}
-                href={`/${locale}${route.path[locale]}`}
-                title={t.title[locale]}
-                summary={t.summary[locale]}
-                image={image}
-                imageRole="treatment"
-                preset="treatment"
-                seed={t.id}
-                imageAlt={{
-                  en: `${t.title.en} at Blue Diamond Medical Aesthetics`,
-                  ar: `${t.title.ar} في بلو دايموند للتجميل الطبي`,
-                }}
-                locale={locale}
-                ctaLabel={detailsLabel}
-                headingLevel="h2"
-                delay={i % 3}
-              />
-            );
-          })}
-        </div>
-      </Container>
+        <Container>
+          <div data-reveal="up">
+            <ConcernExplorer locale={locale} images={concernImages} showViewAll={false} />
+          </div>
+
+          <div data-reveal="up" className="mt-12 border-t border-border pt-8">
+            <p className="text-xs font-semibold uppercase tracking-[0.1em] text-primary">{standaloneLabel}</p>
+            <Link
+              href={`/${locale}${botoxRoute.path[locale]}`}
+              className="group mt-4 flex max-w-2xl flex-col rounded-lg border border-border p-5 transition-colors hover:border-primary"
+            >
+              <h3 className="font-heading text-h4">{botox.title[locale]}</h3>
+              <p className="mt-2 text-sm text-text-secondary">{botox.summary[locale]}</p>
+              <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-primary">
+                <ArrowRight className="size-3.5 rtl:rotate-180" aria-hidden="true" />
+              </span>
+            </Link>
+          </div>
+        </Container>
       </section>
       <SectionTransition from="var(--background)" to="var(--surface-dark)" />
     </>

@@ -102,7 +102,17 @@ export function ImageKitImage({
           preload={preload}
           className={cn(
             "h-full w-full",
-            fit === "contain" ? "object-contain" : "object-cover",
+            /* Cover crops, and a centred crop is only right when the subject
+               happens to sit in the middle of the frame. Clinical and
+               aesthetic photography here is almost always a person, and a
+               person's face sits in the upper third — a plain `center` crop
+               on a wide photo squeezed into a shorter frame takes the chin
+               and hands and drops the eyes. Biasing the focal point above
+               centre keeps the subject of the picture in the picture at every
+               aspect ratio. Callers with a genuinely off-centre frame still
+               override this with their own `[&>img]:object-…` utility, which
+               is the more specific selector and therefore wins. */
+            fit === "contain" ? "object-contain" : "object-cover object-[50%_35%]",
           )}
         />
       ) : (

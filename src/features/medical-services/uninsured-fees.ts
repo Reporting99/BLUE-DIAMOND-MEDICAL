@@ -14,9 +14,7 @@ export const noShowFees: FeeGroup = {
   rows: [
     { item: { en: "Regular", ar: "عدم الحضور العادي" }, price: "$40" },
     { item: { en: "Full Medical (CPX)", ar: "الفحص الطبي الشامل (CPX)" }, price: "$100" },
-    { item: { en: "Paediatric Appointments Follow-up", ar: "متابعة مواعيد الأطفال" }, price: "$100" },
     { item: { en: "Driver's Medical", ar: "الفحص الطبي لرخصة القيادة" }, price: "$125" },
-    { item: { en: "Paediatric Appointments", ar: "مواعيد الأطفال" }, price: "$200" },
     { item: { en: "Euclid Eye Health Appointments", ar: "مواعيد فحص العين (Euclid)" }, price: "$50" },
   ],
 };
@@ -28,7 +26,9 @@ export const uninsuredFeeGroups: FeeGroup[] = [
       { item: { en: "Attending Physician Statement", ar: "إفادة الطبيب المعالج" }, price: "$50+ (billed to provider)" },
       { item: { en: "Short Term Disability", ar: "إعاقة قصيرة الأمد" }, price: "$50+" },
       { item: { en: "Certificates", ar: "الشهادات" }, price: "$50+" },
-      { item: { en: "Blue Cross Special Authorization", ar: "تفويض خاص من Blue Cross" }, price: "$35" },
+      // CL-022 — renamed from "Blue Cross Special Authorization": the fee is
+      // not specific to one insurer.
+      { item: { en: "Special Authorization", ar: "تفويض خاص" }, price: "$35" },
       { item: { en: "Long Term Disability", ar: "إعاقة طويلة الأمد" }, price: "$150" },
       { item: { en: "Handicap Parking Placard", ar: "بطاقة موقف ذوي الإعاقة" }, price: "$50" },
       { item: { en: "Medical Authorization Form", ar: "نموذج التفويض الطبي" }, price: "$35" },

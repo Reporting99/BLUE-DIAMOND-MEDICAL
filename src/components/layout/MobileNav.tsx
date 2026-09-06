@@ -22,7 +22,6 @@ import {
 } from "@/config/navigation";
 import { LanguageSwitch } from "@/components/layout/LanguageSwitch";
 import { getDictionary, type Locale } from "@/i18n/config";
-import { getBookingUrl } from "@/config/booking";
 
 /**
  * Mobile navigation — brief §20, §60, §91.
@@ -53,7 +52,6 @@ import { getBookingUrl } from "@/config/booking";
 export function MobileNav({ locale }: { locale: Locale }) {
   const [open, setOpen] = useState(false);
   const dict = getDictionary(locale);
-  const booking = getBookingUrl("family-doctor");
 
   const rowClass =
     "flex min-h-11 items-center rounded-md px-2 text-base font-medium !no-underline hover:bg-surface";
@@ -93,10 +91,14 @@ export function MobileNav({ locale }: { locale: Locale }) {
             close control off-screen. */}
         <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto overscroll-contain px-4 pb-6">
           <div className="flex items-center gap-2">
+            {/* CL-005 / CL-007 — same rule as the header: the drawer's generic
+                booking button does not choose a patient type on the visitor's
+                behalf. It opens the booking page, where registered patients,
+                new patients and walk-ins each get their own labelled route. */}
             <Button
               size="lg"
               className="min-h-11 flex-1"
-              render={<a href={booking.href} target="_blank" rel="noopener noreferrer" />}
+              render={<Link href={href("book-appointment", locale)} />}
             >
               {dict.common.bookAppointment}
             </Button>

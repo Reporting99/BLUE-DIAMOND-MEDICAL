@@ -38,8 +38,8 @@ export default defineConfig({
     // server shape production runs. CI has already built, so it skips the
     // build; a local run does it.
     command: process.env.CI
-      ? `scripts/serve-standalone.sh --no-build`
-      : `scripts/serve-standalone.sh`,
+      ? `bash scripts/serve-standalone.sh --no-build`
+      : `bash scripts/serve-standalone.sh`,
     url: TEST_SERVER_URL,
     // NEVER reuse whatever happens to be listening. This used to be
     // `!process.env.CI`, which on this shared VPS meant a local

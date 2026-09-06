@@ -503,7 +503,7 @@ export const gatedTreatments: (AestheticTreatment & { requiresFeature: string })
     slugAr: "بوتوكس-تجميلي",
     title: { en: "Cosmetic Botox", ar: "بوتوكس تجميلي" },
     summary: {
-      en: "Cosmetic Botox for frown lines, forehead lines, crow's feet, and more — administered by Dr. Farhat. See the full treatment-area list on our Botox page.",
+      en: "Cosmetic Botox for frown lines, forehead lines, crow's feet, and more — administered by Dr. Farhat and Dr. Hamdi. See the full treatment-area list on our Botox page.",
       ar: "بوتوكس تجميلي لخطوط العبوس والجبين وقدم الغراب وغيرها — يُجريه الدكتور فرحات. راجعوا القائمة الكاملة لمناطق العلاج في صفحة البوتوكس لدينا.",
     },
     relatedTreatmentIds: [],

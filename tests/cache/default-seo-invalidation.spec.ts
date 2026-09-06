@@ -144,10 +144,34 @@ test.describe("defaultSeo: locale isolation", () => {
       id: SETTINGS_EVENT.entityId,
       defaultSeo: { title: "Blue Diamond" },
     });
-    const en = tags.filter((t) => t.includes(":en:")).length;
-    const ar = tags.filter((t) => t.includes(":ar:")).length;
-    expect(en).toBe(routes.length);
-    expect(ar).toBe(routes.length);
+    const en = tags.filter((t) => t.includes(":en:"));
+    const ar = tags.filter((t) => t.includes(":ar:"));
+
+    // SYMMETRY is the subject of this test: whatever the handler decides to
+    // purge, it must decide identically for both locales. A site-wide
+    // defaultSeo edit that reached only English would serve stale Arabic SEO
+    // until TTL, silently.
+    expect(en.length).toBe(ar.length);
+
+    // COVERAGE: every registered route must be purged in both locales. This
+    // used to read `toBe(routes.length)` -- an equality against the registry's
+    // SIZE rather than its CONTENT. That held only while `routeByCmsPath` was
+    // built purely from `r.path.en`. The map now also carries the concern CMS
+    // paths, because concerns kept their /aesthetics/concerns registration in
+    // FeelStack after their public URL moved under /aesthetics/treatments, and
+    // their merged SEO inherits defaultSeo like everything else. Asserting the
+    // registry is COVERED (rather than that nothing else is) keeps the
+    // guarantee that matters -- no route silently misses a site-wide SEO purge
+    // -- without re-encoding the handler's internal path set here, where it
+    // would break again the next time a CMS path legitimately outlives a URL.
+    for (const route of routes) {
+      expect(en, `en must cover ${route.path.en}`).toContain(
+        cacheTags.seo(BD_SITE_KEY, "en", route.path.en),
+      );
+      expect(ar, `ar must cover ${route.path.en}`).toContain(
+        cacheTags.seo(BD_SITE_KEY, "ar", route.path.en),
+      );
+    }
   });
 
   test("a locale-scoped content event still never crosses into the other locale", async () => {

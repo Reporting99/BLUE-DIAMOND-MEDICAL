@@ -21,8 +21,7 @@ const pages = [
   "/en/medical/uninsured-services",
   "/en/aesthetics/treatments",
   "/en/aesthetics/treatments/rf-microneedling",
-  "/en/aesthetics/concerns",
-  "/en/aesthetics/concerns/acne-scars",
+  "/en/aesthetics/treatments/acne-scars",
   "/en/aesthetics/technologies",
   "/en/aesthetics/technologies/potenza",
   // Published price list (GAP-003 resolved) — a long two-column money

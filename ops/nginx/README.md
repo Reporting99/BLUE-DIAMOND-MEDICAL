@@ -32,6 +32,32 @@ sitemap. Canonical, hreflang and OG URLs continue to point at the real launch
 domain -- they are stable and correct, and nothing anywhere emits a temporary or
 runtime hostname.
 
+### TLS
+
+Certificates are obtained and renewed on the server; none is ever committed
+here. A `.pem`, `.key` or fullchain file in git is a private key published to
+every clone of the repository, and `.gitignore` refuses `*.pem` for that reason.
+
+The host already runs other tenants behind this nginx, so the certificate is
+issued with the webroot challenge rather than certbot's standalone mode --
+standalone binds :80 itself and would take every other site on the box down for
+the duration of the renewal:
+
+```
+certbot certonly --webroot -w /var/www/letsencrypt   -d bluediamondmedical.ca -d www.bluediamondmedical.ca
+```
+
+The canonical vhost then references `/etc/letsencrypt/live/bluediamondmedical.ca/`,
+redirects `:80` to `:443` apart from `/.well-known/acme-challenge/`, and enables
+HSTS only after the site has served correctly over HTTPS -- an HSTS header sent
+during a broken first launch pins that breakage into every visitor's browser for
+its `max-age`.
+
+Renewal is certbot's own systemd timer. Its deploy hook must reload nginx, not
+restart it: a restart drops in-flight connections, and a reload is enough for a
+new certificate. Renewal is independent of Blue/Green -- the certificate belongs
+to the host and the vhost, not to a release, so a slot switch never touches it.
+
 ### There is no temporary webhook hostname
 
 A `bd-hooks.dfeelings.com` vhost briefly existed here to give FeelStack somewhere

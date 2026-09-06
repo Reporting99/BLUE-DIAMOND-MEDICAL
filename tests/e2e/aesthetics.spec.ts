@@ -1,10 +1,17 @@
 import { test, expect } from "@playwright/test";
 
 test.describe("Aesthetics — treatments, concerns, technologies", () => {
-  test("hub links to the three sub-hubs", async ({ page }) => {
+  /* Two ways in, not three, and not "By Treatment"/"By Concern": the concern
+     list IS the treatments list now, so a third card would be a second link to
+     the same page. The cards are "Treatments" and "Our Technologies". */
+  test("hub links to both sub-hubs", async ({ page }) => {
     await page.goto("/en/aesthetics");
-    await page.getByRole("link", { name: /By Treatment/ }).click();
+    await page.getByRole("link", { name: "Treatments" }).first().click();
     await expect(page).toHaveURL(/\/en\/aesthetics\/treatments\/?$/);
+
+    await page.goto("/en/aesthetics");
+    await page.getByRole("link", { name: "Our Technologies" }).first().click();
+    await expect(page).toHaveURL(/\/en\/aesthetics\/technologies\/?$/);
   });
 
   test("treatment detail page renders rich content and FAQs", async ({ page }) => {
@@ -20,10 +27,34 @@ test.describe("Aesthetics — treatments, concerns, technologies", () => {
     await expect(page).toHaveURL(/\/en\/aesthetics\/technologies\/potenza\/?$/);
   });
 
-  test("concern page links to a related treatment", async ({ page }) => {
-    await page.goto("/en/aesthetics/concerns/acne-scars");
-    await page.getByRole("link", { name: "RF Micro-Needling" }).click();
-    await expect(page).toHaveURL(/\/en\/aesthetics\/treatments\/rf-microneedling\/?$/);
+  /**
+   * The concern page is the entry point the navigation now sends people to,
+   * so "Treatment Options at Blue Diamond" is the section that has to work:
+   * it names each option and links onward to that treatment's full page.
+   */
+  test("concern page surfaces its treatment options and links to one", async ({ page }) => {
+    await page.goto("/en/aesthetics/treatments/acne-scars");
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Acne Scars");
+    const options = page.getByRole("heading", { name: "Treatment options at Blue Diamond" });
+    await expect(options).toBeVisible();
+    // Scoped to the options list: the treatment name also appears as the
+    // eyebrow on its card, so an unscoped lookup is ambiguous.
+    await expect(
+      page.getByRole("listitem").filter({ hasText: "RF Micro-Needling" }).first(),
+    ).toBeVisible();
+    await page.getByRole("link", { name: "Read the full treatment page" }).first().click();
+    await expect(page).toHaveURL(/\/en\/aesthetics\/treatments\/[a-z-]+\/?$/);
+  });
+
+  /**
+   * The reverse edge. A treatment page is no longer in the navigation, so its
+   * link back into the concern-first journey is the only route a visitor who
+   * lands there from search has onward.
+   */
+  test("treatment page links back to a concern that recommends it", async ({ page }) => {
+    await page.goto("/en/aesthetics/treatments/rf-microneedling");
+    await page.getByRole("link", { name: "Acne Scars" }).click();
+    await expect(page).toHaveURL(/\/en\/aesthetics\/treatments\/acne-scars\/?$/);
   });
 
   test("pretty Arabic treatments-hub URL resolves", async ({ page }) => {
@@ -40,7 +71,7 @@ test.describe("Aesthetics — treatments, concerns, technologies", () => {
   // concern stays a real, always-rendered <Link> the whole time.
   test.describe("Concern explorer preview", () => {
     test("keyboard-tabbing to a concern link updates the preview image path", async ({ page }) => {
-      await page.goto("/en/aesthetics/concerns");
+      await page.goto("/en/aesthetics/treatments");
       const secondConcernLink = page.locator("main ul li a").nth(1);
       const secondConcernHref = await secondConcernLink.getAttribute("href");
       await secondConcernLink.focus();
@@ -55,12 +86,12 @@ test.describe("Aesthetics — treatments, concerns, technologies", () => {
     });
 
     test("every concern remains a real link even before any interaction", async ({ page }) => {
-      await page.goto("/en/aesthetics/concerns");
+      await page.goto("/en/aesthetics/treatments");
       const links = page.locator("main ul li a");
       const count = await links.count();
-      expect(count).toBeGreaterThanOrEqual(9);
+      expect(count).toBeGreaterThanOrEqual(11);
       for (let i = 0; i < count; i++) {
-        await expect(links.nth(i)).toHaveAttribute("href", /\/en\/aesthetics\/concerns\//);
+        await expect(links.nth(i)).toHaveAttribute("href", /\/en\/aesthetics\/treatments\//);
       }
     });
   });

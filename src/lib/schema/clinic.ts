@@ -1,6 +1,6 @@
 import { siteConfig } from "@/config/site";
 import { doctors } from "@/features/doctors";
-import { aestheticsHours, clinicHours, type DailyHours } from "@/config/clinic-hours";
+import { aestheticsHours, clinicHours, holidayExceptions, type DailyHours } from "@/config/clinic-hours";
 import { medicalServices } from "@/features/medical-services/data";
 import { getRoute } from "@/lib/routing";
 import { aestheticsId, clinicId, doctorEntityId } from "@/lib/seo/entity-graph";
@@ -31,9 +31,9 @@ const SCHEMA_DAYS = [
  * facts.
  */
 /**
- * Days a schedule actually confirms, as OpeningHoursSpecification nodes.
- * Unconfirmed days (`null` in src/config/clinic-hours.ts) are omitted rather
- * than published as closed — see the note inside buildClinicGraph.
+ * The schedule as OpeningHoursSpecification nodes. Days the clinic is closed
+ * (`null` in src/config/clinic-hours.ts) carry no opens/closes pair, which is
+ * how schema.org expresses "not open that day" — CL-009.
  */
 function toOpeningHours(schedule: DailyHours[]) {
   return schedule
@@ -49,13 +49,20 @@ function toOpeningHours(schedule: DailyHours[]) {
 }
 
 export function buildClinicGraph(locale: Locale): JsonLdNode {
-  // Only days the approved source actually confirms. src/config/clinic-hours.ts
-  // records Saturday/Sunday as `null` meaning "not confirmed, closed by
-  // default" — a UI default, not a verified fact. Emitting those as
-  // `opens/closes` closed days would assert a business fact the source never
-  // stated, and wrong hours in local search actively misdirect patients, so
-  // unconfirmed days are omitted rather than published as closed.
+  // CL-009 — the client-approved schedule: Monday–Saturday 08:00–19:00,
+  // Sunday closed. Sunday is omitted rather than emitted with a zero-length
+  // window, which is how schema.org expresses a closed day; the visible
+  // hours block on Contact and in the footer states "Sunday — Closed"
+  // explicitly, so nothing is left to inference for a human reader.
   const openingHoursSpecification = toOpeningHours(clinicHours);
+  // CL-010 — dated exceptions override the weekly pattern for search
+  // engines the same way they do on the page.
+  const specialOpeningHoursSpecification = holidayExceptions.map((h) => ({
+    "@type": "OpeningHoursSpecification",
+    validFrom: h.date,
+    validThrough: h.date,
+    ...(h.open && h.close ? { opens: h.open, closes: h.close } : { opens: "00:00", closes: "00:00" }),
+  }));
   const aestheticsOpeningHours = toOpeningHours(aestheticsHours);
 
   // Services the clinic's own approved content already publishes a page for.
@@ -102,6 +109,7 @@ export function buildClinicGraph(locale: Locale): JsonLdNode {
           },
         },
         ...(openingHoursSpecification.length > 0 ? { openingHoursSpecification } : {}),
+        ...(specialOpeningHoursSpecification.length > 0 ? { specialOpeningHoursSpecification } : {}),
         ...(availableService.length > 0 ? { availableService } : {}),
         // Closes the clinic -> physician direction of the graph. Each entry is a
         // reference to the same @id the doctor's own profile page emits

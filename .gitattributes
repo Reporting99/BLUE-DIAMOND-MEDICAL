@@ -1,0 +1,33 @@
+# Line endings are a deployment concern here, not a style preference.
+#
+# The release artifact carries shell scripts that root executes on the Linux
+# host -- ops/deploy/deploy-blue-diamond and scripts/*.sh. A CRLF shebang makes
+# `#!/usr/bin/env bash` into `bash`, which the kernel reports as a missing
+# interpreter, so a single contributor with the wrong core.autocrlf could ship a
+# deploy script the server cannot run at all.
+#
+# Several contract tests also assert byte identity -- the FeelStack media
+# fixture is pinned by SHA-256 on both sides of the integration. Those hashes
+# are computed over LF content, so a CRLF working tree fails them locally while
+# CI passes, which trains people to ignore a real class of failure.
+#
+# `eol=lf` (not just `text=auto`) is deliberate: it normalizes the WORKING TREE
+# too, so a Windows checkout is byte-identical to what CI and the server see.
+
+* text=auto eol=lf
+
+# Explicitly binary -- never transformed, never diffed as text.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.avif binary
+*.ico binary
+*.pdf binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.otf binary
+*.zip binary
+*.gz binary

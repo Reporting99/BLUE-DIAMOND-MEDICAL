@@ -53,10 +53,10 @@ for (const [label, path] of MALFORMED) {
 const VALID = [
   ["English locale root", "/en", 200],
   ["Arabic locale root", "/ar", 200],
-  ["English canonical page", "/en/aesthetics/concerns/acne-scars", 200],
+  ["English canonical page", "/en/aesthetics/treatments/acne-scars", 200],
   [
     "percent-encoded Arabic canonical",
-    "/ar/%D8%A7%D9%84%D8%AA%D8%AC%D9%85%D9%8A%D9%84-%D8%A7%D9%84%D8%B7%D8%A8%D9%8A/%D8%A7%D9%84%D9%85%D8%AE%D8%A7%D9%88%D9%81-%D8%A7%D9%84%D8%AC%D9%85%D8%A7%D9%84%D9%8A%D8%A9/%D9%86%D8%AF%D8%A8%D8%A7%D8%AA-%D8%AD%D8%A8-%D8%A7%D9%84%D8%B4%D8%A8%D8%A7%D8%A8",
+    "/ar/%D8%A7%D9%84%D8%AA%D8%AC%D9%85%D9%8A%D9%84-%D8%A7%D9%84%D8%B7%D8%A8%D9%8A/%D8%A7%D9%84%D8%B9%D9%84%D8%A7%D8%AC%D8%A7%D8%AA/%D9%86%D8%AF%D8%A8%D8%A7%D8%AA-%D8%AD%D8%A8-%D8%A7%D9%84%D8%B4%D8%A8%D8%A7%D8%A8",
     200,
   ],
   ["unknown path is still a real 404", "/en/genuinely-not-a-page", 404],
@@ -75,7 +75,7 @@ test("a Latin Arabic alias still redirects in exactly one hop", async ({
 }) => {
   // The guard sits above the legacy/alias lookup, so a regression there
   // would silently disable every Arabic alias redirect.
-  const response = await request.get("/ar/aesthetics/concerns/acne-scars", {
+  const response = await request.get("/ar/aesthetics/treatments/acne-scars", {
     maxRedirects: 0,
   });
 

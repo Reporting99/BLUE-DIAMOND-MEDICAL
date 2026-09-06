@@ -41,8 +41,23 @@ async function getLogoAndBookingX(page: Page) {
   return page.evaluate(() => {
     const header = document.querySelector("header");
     const logo = header?.querySelector("a[aria-label*='Home'], a[aria-label*='الرئيسية']");
-    // The booking CTA is the only external link in the header.
-    const booking = header?.querySelector("a[target='_blank']");
+    // The booking CTA is located by DESTINATION, not by `target="_blank"`.
+    //
+    // It used to be the header's only external link, so `a[target='_blank']`
+    // found it. CL-005 / CL-007 changed that on purpose: the header's "Book
+    // Appointment" is the one booking control whose visitor has not declared a
+    // patient type, so it no longer opens the tokenized Mikata link (the
+    // REGISTERED-patient queue) and instead points at the in-app booking page,
+    // where the three access routes are separated. The header therefore has no
+    // external link left, and the old selector silently matched nothing --
+    // `Math.abs(null - null)` is 0, so the horizontal-travel assertion below
+    // would have passed against an element that was never measured. Matching
+    // the booking path in either locale keeps this test measuring a real
+    // element; the external branch stays as a fallback in case a
+    // channel-specific CTA (walk-in, aesthetics) is ever placed here again.
+    const booking =
+      header?.querySelector("a[href*='book-appointment'], a[href*='حجز-موعد']") ??
+      header?.querySelector("a[target='_blank']");
     const logoRect = logo?.getBoundingClientRect();
     const ctaRect = booking?.getBoundingClientRect();
     return {
@@ -181,7 +196,7 @@ test.describe("Header motion is global, not homepage-only (brief §16/§86)", ()
     "/en/medical",
     "/en/aesthetics",
     "/en/aesthetics/treatments/rf-microneedling",
-    "/en/aesthetics/concerns/acne-scars",
+    "/en/aesthetics/treatments/acne-scars",
     "/en/aesthetics/technologies/potenza",
     "/en/our-team",
     "/en/about",

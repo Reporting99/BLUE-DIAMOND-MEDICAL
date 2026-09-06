@@ -4,6 +4,7 @@ import { resolveSlotImage } from "@/lib/feelstack/media-slots";
 import type { Locale } from "@/lib/feelstack/contracts";
 import type { ImageKitAsset } from "@/types/media";
 import { CONCERN_FEATURE_SLOTS } from "./media-slots";
+import { concernCmsPath } from "./cms-contract";
 import type { AestheticConcern } from "./types";
 
 /**
@@ -41,7 +42,7 @@ export function concernListingEntities(
 ): ListingEntity[] {
   return list.map((concern) => ({
     id: concernMediaKey(concern.id),
-    englishPath: `/aesthetics/concerns/${concern.id}`,
+    englishPath: concernCmsPath(concern.id),
   }));
 }
 

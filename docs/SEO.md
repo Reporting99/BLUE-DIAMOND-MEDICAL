@@ -93,13 +93,13 @@ Maps real search wording (English and Arabic) to the site's actual indexable rou
 
 | Route | Primary EN query | Primary AR query |
 |---|---|---|
-| `/aesthetics/concerns/acne-scars` | acne scar treatment Calgary | علاج آثار حب الشباب في كالغاري |
-| `/aesthetics/concerns/rosacea-redness` | rosacea treatment Calgary / facial redness treatment Calgary | علاج الوردية واحمرار الوجه |
-| `/aesthetics/concerns/sun-damage-pigmentation` | pigmentation treatment Calgary / sun damage treatment Calgary | علاج التصبغات وأضرار الشمس |
-| `/aesthetics/concerns/spider-veins` | spider vein treatment Calgary | — |
-| `/aesthetics/concerns/fine-lines-wrinkles` | fine lines treatment Calgary | — |
-| `/aesthetics/concerns/skin-laxity` | skin laxity treatment Calgary | — |
-| `/aesthetics/concerns/razor-bumps` | razor bumps treatment Calgary | — |
+| `/aesthetics/treatments/acne-scars` | acne scar treatment Calgary | علاج آثار حب الشباب في كالغاري |
+| `/aesthetics/treatments/rosacea-redness` | rosacea treatment Calgary / facial redness treatment Calgary | علاج الوردية واحمرار الوجه |
+| `/aesthetics/treatments/sun-damage-pigmentation` | pigmentation treatment Calgary / sun damage treatment Calgary | علاج التصبغات وأضرار الشمس |
+| `/aesthetics/treatments/spider-veins` | spider vein treatment Calgary | — |
+| `/aesthetics/treatments/fine-lines-wrinkles` | fine lines treatment Calgary | — |
+| `/aesthetics/treatments/skin-laxity` | skin laxity treatment Calgary | — |
+| `/aesthetics/treatments/razor-bumps` | razor bumps treatment Calgary | — |
 | *(no route — see gap note)* | hair loss treatment Calgary | علاج تساقط الشعر بالبلازما |
 
 **Gap note**: "hair loss treatment Calgary" doesn't have a dedicated *concern* page — it currently only surfaces via the `prp-hair-restoration` *treatment* page. Given PRP hair restoration is the only approved hair-loss-relevant treatment in the source, a genuinely new "Hair Loss" concern page would either duplicate that treatment page's content or need additional approved source material to be non-thin. Recorded here as a candidate for a future concern page **if** more source content becomes available — not created now to avoid the brief's own "no duplicate pages targeting similar keywords" rule.

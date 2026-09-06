@@ -3,12 +3,13 @@ import { ArrowRight } from "lucide-react";
 import { Container } from "@/components/layout/Container";
 import { SectionTransition } from "@/components/layout/SectionTransition";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
-import { PageHero } from "@/components/layout/PageHero";
+import { AestheticsHero } from "@/features/aesthetics/components/AestheticsHero";
 import { MedicalWebPageSchema } from "@/components/shared/schema";
 import { FaqPageSchema } from "@/components/shared/schema";
 import { getRoute, href } from "@/lib/routing";
 import { getTreatment } from "@/features/aesthetics/data/treatments";
 import { concerns, getConcern } from "@/features/concerns/data";
+import { getTreatmentsForConcern } from "@/features/concerns/queries";
 import { getBeforeAfterPairsForTechnology } from "@/features/aesthetics/data/before-after";
 import { BeforeAfterGallery } from "@/features/aesthetics/components/BeforeAfterGallery";
 import { doctors } from "@/features/doctors";
@@ -24,7 +25,6 @@ const labels = {
     doctors: "Relevant physicians",
     faqs: "Frequently asked questions",
     steps: {
-      whatItIs: "What it is",
       howItWorks: "How it works",
       whatItAddresses: "What it may address",
       appointment: "What the appointment involves",
@@ -38,7 +38,6 @@ const labels = {
     doctors: "الأطباء المعنيون",
     faqs: "الأسئلة الشائعة",
     steps: {
-      whatItIs: "ما هي هذه التقنية",
       howItWorks: "كيف تعمل",
       whatItAddresses: "ما الذي قد تعالجه",
       appointment: "ماذا يتضمن الموعد",
@@ -56,8 +55,10 @@ const labels = {
  * source material still reads as honest and complete rather than padded.
  */
 function NumberedStep({ index, label, body }: { index: number; label: string; body: string }) {
+  // CL-032: the first row keeps its rule-free treatment but no longer adds a
+  // 40px leading offset on top of the article's own padding.
   return (
-    <div className="mt-8 flex gap-4 border-t border-border pt-8 first:mt-10 first:border-t-0 first:pt-0">
+    <div className="mt-8 flex gap-4 border-t border-border pt-8 first:mt-0 first:border-t-0 first:pt-0">
       {/* Solid --primary, not a low-opacity tint: axe's contrast check
           still evaluates aria-hidden decorative text (aria-hidden only
           exempts it from assistive-tech reading, not from being a
@@ -83,14 +84,17 @@ export function TechnologyTemplate({ technology, locale }: { technology: Technol
   /**
    * Technology -> Concern (brief §12/§30), mirroring the derivation on the
    * concern page. An authored `relatedConcernIds` wins; otherwise the list
-   * is the concerns that already recommend one of THIS technology's own
-   * treatments — walked through authored data
-   * (`concern.relatedTreatmentIds` -> `technology.relatedTreatmentIds`),
-   * never inferred from what a device looks like it should treat, which
-   * §46 explicitly forbids.
+   * is the concerns whose own Treatment Options already include one of THIS
+   * technology's treatments — walked through authored data
+   * (`getTreatmentsForConcern` -> `technology.relatedTreatmentIds`), never
+   * inferred from what a device looks like it should treat, which §46
+   * explicitly forbids. Sharing the concern-page helper is what keeps this
+   * page's answer identical to the one the concern page gives.
    */
   const derivedConcerns = concerns.filter((concern) =>
-    concern.relatedTreatmentIds.some((treatmentId) => technology.relatedTreatmentIds.includes(treatmentId)),
+    getTreatmentsForConcern(concern.id).some((treatment) =>
+      technology.relatedTreatmentIds.includes(treatment.id),
+    ),
   );
   const relatedConcerns = (
     technology.relatedConcernIds?.length
@@ -116,21 +120,18 @@ export function TechnologyTemplate({ technology, locale }: { technology: Technol
           device page with no photograph opened on a bare heading. The
           manufacturer line moves into the hero with it -- on a technology page
           "who makes this" belongs beside the name, not below a picture. */}
-      <PageHero
+      <AestheticsHero
         locale={locale}
         title={technology.title[locale]}
-        /* No `body`, deliberately. This page's own step 01 IS the summary
-           ("What it is", rendered from `technology.summary` a screen below),
-           and unlike the treatment/concern/service templates this one never
-           carried a summary paragraph in its header. Passing it here would
-           make the reader read the same sentence twice before reaching
-           anything new. The manufacturer line below fills the hero instead —
-           on a device page, who makes it is the fact that belongs next to the
-           name. */
+        /* CL-033 requires every Aesthetics hero to carry its page's
+           introductory copy beside the image, so the summary moves UP into the
+           hero. It used to be rendered only as numbered step 01 ("What it is")
+           a screen below; that step is dropped rather than duplicated, and the
+           remaining walkthrough renumbers itself from the steps array. */
+        body={technology.summary[locale]}
         image={technology.image}
         imageRole="technology"
         seed={technology.id}
-        measure="article"
         imageAlt={{ en: technology.title.en, ar: technology.title.ar }}
         imageCaption={technology.image?.caption}
         breadcrumbs={
@@ -145,14 +146,15 @@ export function TechnologyTemplate({ technology, locale }: { technology: Technol
             {t.manufacturer}: <span className="font-medium text-text-body">{technology.manufacturer}</span>
           </p>
         ) : null}
-      </PageHero>
+      </AestheticsHero>
 
       <article className="section-y">
       <Container className="max-w-3xl">
 
-        <NumberedStep index={1} label={t.steps.whatItIs} body={technology.summary[locale]} />
+        {/* CL-033: "What it is" now opens the page in the hero, so the
+            walkthrough starts at how the device works. */}
         {steps.map((step, i) =>
-          step.body ? <NumberedStep key={step.label} index={i + 2} label={step.label} body={step.body[locale]} /> : null,
+          step.body ? <NumberedStep key={step.label} index={i + 1} label={step.label} body={step.body[locale]} /> : null,
         )}
 
         {relatedTreatments.length ? (
@@ -182,7 +184,7 @@ export function TechnologyTemplate({ technology, locale }: { technology: Technol
         <BeforeAfterGallery pairs={getBeforeAfterPairsForTechnology(technology.id)} locale={locale} />
 
         {relatedConcerns.length ? (
-          <section data-reveal="up" className="mt-10">
+          <section data-reveal="up" className="mt-10 first:mt-0">
             <h2 className="text-h4 font-heading">{t.concerns}</h2>
             <ul className="mt-3 flex flex-wrap gap-3">
               {relatedConcerns.map((concern) => {
@@ -203,7 +205,7 @@ export function TechnologyTemplate({ technology, locale }: { technology: Technol
         ) : null}
 
         {relatedDoctors.length ? (
-          <section data-reveal="up" className="mt-10">
+          <section data-reveal="up" className="mt-10 first:mt-0">
             <h2 className="text-h4 font-heading">{t.doctors}</h2>
             <ul className="mt-3 flex flex-wrap gap-3">
               {relatedDoctors.map((doctor) => {
@@ -224,7 +226,7 @@ export function TechnologyTemplate({ technology, locale }: { technology: Technol
         ) : null}
 
         {technology.faqs?.length ? (
-          <section data-reveal="up" className="mt-10">
+          <section data-reveal="up" className="mt-10 first:mt-0">
             <h2 className="text-h4 font-heading">{t.faqs}</h2>
             <dl className="mt-3 space-y-4">
               {technology.faqs.map((faq) => (

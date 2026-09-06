@@ -55,7 +55,7 @@ export const legacyRedirects: Record<string, string> = {
   // configuration in docs/DEPLOYMENT.md. Listed here too so
   // the same table can drive that documentation and stay in sync.
   "/treatments": "/en/aesthetics/treatments",
-  "/area-concern": "/en/aesthetics/concerns",
+  "/area-concern": "/en/aesthetics/treatments",
   "/laser-hair-removal": "/en/aesthetics/treatments/laser-hair-removal",
   "/laser-treatment-1": "/en/aesthetics/treatments/laser-skin-treatments",
   "/radio-frequency": "/en/aesthetics/treatments/radio-frequency",
@@ -63,15 +63,21 @@ export const legacyRedirects: Record<string, string> = {
   "/ultra-treatment": "/en/aesthetics/treatments/ultra",
   "/prp-therapy": "/en/aesthetics/treatments/prp-skin-rejuvenation",
   "/our-technologies": "/en/aesthetics/technologies",
-  "/acne-scar-removal": "/en/aesthetics/concerns/acne-scars",
-  "/rosacea-abatement": "/en/aesthetics/concerns/rosacea-redness",
-  "/dry-skin-remediation": "/en/aesthetics/concerns/dry-skin",
-  "/fineline-and-wrinkle": "/en/aesthetics/concerns/fine-lines-wrinkles",
-  "/non-invasive-skin": "/en/aesthetics/concerns/skin-laxity",
-  "/spider-vein": "/en/aesthetics/concerns/spider-veins",
-  "/sun-damage": "/en/aesthetics/concerns/sun-damage-pigmentation",
-  "/skin-revitalization": "/en/aesthetics/concerns/skin-revitalization",
-  "/razor-bumps": "/en/aesthetics/concerns/razor-bumps",
+  // The legacy concern pages point INTO /aesthetics/treatments, not
+  // /aesthetics/concerns: skin concerns became the Treatments entry points
+  // themselves when the Aesthetics IA turned concern-first. Re-pointed at the
+  // new URL rather than left aimed at the old one, so these stay single-hop —
+  // src/lib/routing/moved-routes.ts explains the move and catches anyone still
+  // arriving at the in-app URL these used to target.
+  "/acne-scar-removal": "/en/aesthetics/treatments/acne-scars",
+  "/rosacea-abatement": "/en/aesthetics/treatments/rosacea-redness",
+  "/dry-skin-remediation": "/en/aesthetics/treatments/dry-skin",
+  "/fineline-and-wrinkle": "/en/aesthetics/treatments/fine-lines-wrinkles",
+  "/non-invasive-skin": "/en/aesthetics/treatments/skin-laxity",
+  "/spider-vein": "/en/aesthetics/treatments/spider-veins",
+  "/sun-damage": "/en/aesthetics/treatments/sun-damage-pigmentation",
+  "/skin-revitalization": "/en/aesthetics/treatments/skin-revitalization",
+  "/razor-bumps": "/en/aesthetics/treatments/razor-bumps",
   // Point at the real final canonical route, not an unrelated live page.
   // Both still resolve through the gated-route 404 boundary until
   // legalPagesEnabled flips true (real copy withheld — see

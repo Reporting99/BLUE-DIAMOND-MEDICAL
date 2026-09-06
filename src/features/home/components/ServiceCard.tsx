@@ -78,10 +78,38 @@ function ServiceCard({
         <div
           aria-hidden="true"
           className="hidden lg:absolute lg:inset-0 lg:-z-10 lg:block"
-          style={{ background: "linear-gradient(0deg, rgba(29,86,120,0.88) 0%, rgba(29,86,120,0.55) 55%, rgba(29,86,120,0.05) 100%)" }}
+          /* The wash is CONCENTRATED, not uniform: heavy where the text sits
+             and gone by the top third, so the card reads as a photograph with
+             a caption rather than a blue rectangle.
+
+             The previous ramp (0.95/0.86/0.55/0.30) never dropped below 0.30
+             anywhere, which tinted the whole picture — the "blue highlight"
+             complaint. It went that far because the ramp BEFORE it put the
+             summary at ~0.6 alpha and failed AA on a light photograph, so the
+             fix must not simply lighten everything again.
+
+             0.80 at 32% is the floor that keeps that fix intact. White on
+             0.80 × #1D5678 over a pure-white image — the worst case in the
+             manifest — computes to 4.6:1, still clear of AA, and the title and
+             summary both sit below that stop. Above it the wash falls away
+             fast and is fully clear by 88%. Do not raise the 32% stop or lower
+             its alpha without re-running that contrast check. */
+          style={{ background: "linear-gradient(0deg, rgba(29,86,120,0.94) 0%, rgba(29,86,120,0.80) 32%, rgba(29,86,120,0.34) 62%, rgba(29,86,120,0) 88%)" }}
         />
-        <h3 className="font-heading text-h5">{title[locale]}</h3>
-        <p className="text-sm text-text-secondary lg:text-white/90">{short[locale]}</p>
+        {/* `lg:text-white` sits on the heading ITSELF, not just on the wrapper.
+            globals.css colours every h1/h2/h3 with --text-primary in the base
+            layer, and a direct rule on the element beats a colour inherited
+            from an ancestor — so the wrapper's `lg:text-white` never reached
+            this title, and it rendered dark blue on a dark blue wash, which is
+            what made it invisible on the medical cards.
+
+            The shadow is a second, independent guard: it holds the glyph edges
+            apart from whatever detail sits directly behind them, which a flat
+            overlay alone cannot do on a busy image. */}
+        <h3 className="font-heading text-h5 lg:text-white lg:[text-shadow:0_1px_3px_rgba(9,32,48,0.55)]">{title[locale]}</h3>
+        <p className="text-sm text-text-secondary lg:text-white lg:[text-shadow:0_1px_3px_rgba(9,32,48,0.55)]">
+          {short[locale]}
+        </p>
       </div>
 
       {/* Desktop-only explanation overlay. Hidden (display:none) below
@@ -89,7 +117,11 @@ function ServiceCard({
           (brief's "preferred approach" — no hover on touch). */}
       <div className="pointer-events-none absolute inset-0 z-20 hidden translate-y-2 flex-col justify-between bg-primary p-5 text-white opacity-0 transition-[opacity,transform] duration-[380ms] lg:flex lg:group-hover:pointer-events-auto lg:group-hover:translate-y-0 lg:group-hover:opacity-100 lg:group-focus-within:pointer-events-auto lg:group-focus-within:translate-y-0 lg:group-focus-within:opacity-100">
         <div>
-          <h3 className="font-heading text-h5">{title[locale]}</h3>
+          {/* Same reason as the default-state title above: the base-layer
+              h1/h2/h3 colour rule overrides the `text-white` inherited from
+              this panel, so it has to be set on the heading itself — here it
+              was dark blue on solid --primary. */}
+          <h3 className="font-heading text-h5 text-white">{title[locale]}</h3>
           <p className="mt-2 text-sm text-white/90">{long[locale]}</p>
         </div>
         <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold">

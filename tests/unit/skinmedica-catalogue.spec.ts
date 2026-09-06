@@ -58,18 +58,44 @@ const approvedCatalogue: { id: string; priceCents: number; sizeLabel: string; gr
   { id: "ha5-rejuvenative-hydrator", priceCents: 19600, sizeLabel: "56.7 g", group: "rejuvenation" },
 ];
 
+/**
+ * CL-036 / CL-037 / CL-038 — the catalogue is no longer SkinMedica-only.
+ *
+ * The client supplied two professional peels with their own content shape:
+ * a subtitle, Benefits and Key features lists, and NO manufacturer research
+ * block (no `detail`, no `sources`, no 6-10 FAQs) — because inventing that
+ * research is exactly what this repository refuses to do. Both are also
+ * deliberately incomplete: CL-037 has no approved packaging photograph and
+ * CL-038 has neither a photograph nor a price.
+ *
+ * So the SkinMedica contract below is unchanged and still exact — 23 records,
+ * every price and size verbatim, every one carrying full research detail —
+ * and the client-supplied records are held to their own, separate contract.
+ * Widening the SkinMedica assertions to accommodate them would have retired a
+ * real guard; this keeps both.
+ */
+const CLIENT_SUPPLIED_IDS = ["purifying-peeling", "brightening-peeling"] as const;
+const skinMedicaProducts = products.filter(
+  (p) => !(CLIENT_SUPPLIED_IDS as readonly string[]).includes(p.id),
+);
+const clientSuppliedProducts = products.filter((p) =>
+  (CLIENT_SUPPLIED_IDS as readonly string[]).includes(p.id),
+);
+
 test("exactly 23 approved catalogue records are published", () => {
   expect(approvedCatalogue.length).toBe(23);
-  expect(products.length).toBe(23);
+  expect(skinMedicaProducts.length).toBe(23);
 });
 
 test("no unapproved product exists and no approved product is missing", () => {
   const approvedIds = new Set(approvedCatalogue.map((p) => p.id));
-  const publishedIds = new Set(products.map((p) => p.id));
+  const publishedIds = new Set(skinMedicaProducts.map((p) => p.id));
   const unapproved = [...publishedIds].filter((id) => !approvedIds.has(id));
   const missing = [...approvedIds].filter((id) => !publishedIds.has(id));
   expect(unapproved, `Published products not in the approved catalogue: ${unapproved.join(", ")}`).toEqual([]);
   expect(missing, `Approved products missing from the published catalogue: ${missing.join(", ")}`).toEqual([]);
+  // The only non-SkinMedica records permitted are the two the client supplied.
+  expect(clientSuppliedProducts.map((p) => p.id).sort()).toEqual([...CLIENT_SUPPLIED_IDS].sort());
 });
 
 test("no duplicate ids, slugs, or Arabic slugs", () => {
@@ -119,9 +145,9 @@ test("factor-group counts match the approved catalogue (3/2/5/3/5/2/3 = 23)", ()
   expect(total).toBe(23);
 });
 
-test("every product has a name, category, price, size, unique slug, and image", () => {
+test("every SkinMedica product has a name, category, price, size, unique slug, and image", () => {
   const missing: string[] = [];
-  for (const p of products) {
+  for (const p of skinMedicaProducts) {
     if (!p.name?.en || !p.name?.ar) missing.push(`${p.id}: missing bilingual name`);
     if (!p.categoryIds?.length) missing.push(`${p.id}: missing categoryIds`);
     if (typeof p.priceCents !== "number" || p.priceCents <= 0) missing.push(`${p.id}: invalid priceCents`);
@@ -132,9 +158,9 @@ test("every product has a name, category, price, size, unique slug, and image", 
   expect(missing, missing.join("\n")).toEqual([]);
 });
 
-test("every product has real bilingual detail content: overview, whatItIs, howToUse, sources, and 6-10 product-specific FAQs", () => {
+test("every SkinMedica product has real bilingual detail content: overview, whatItIs, howToUse, sources, and 6-10 product-specific FAQs", () => {
   const problems: string[] = [];
-  for (const p of products) {
+  for (const p of skinMedicaProducts) {
     if (!p.detail) {
       problems.push(`${p.id}: missing detail block entirely`);
       continue;
@@ -195,6 +221,64 @@ test("no product carries an Offer/InStock claim beyond the typed inStock boolean
   // approvalStatus must be "approved" per the brief (all 23 records are
   // client-approved); inStock is a plain boolean the template never
   // renders as structured data while shopEnabled is false.
-  const bad = products.filter((p) => p.approvalStatus !== "approved");
+  const bad = skinMedicaProducts.filter((p) => p.approvalStatus !== "approved");
   expect(bad.map((p) => p.id)).toEqual([]);
+});
+
+/* ---------- CL-036 / CL-037 / CL-038 — client-supplied peel records ---------- */
+
+test("CL-037/CL-038: both peels carry structured Benefits and Key features, never one concatenated paragraph", () => {
+  const problems: string[] = [];
+  for (const p of clientSuppliedProducts) {
+    if (!p.subtitle?.en) problems.push(`${p.id}: missing subtitle`);
+    if (!p.benefits?.en?.length) problems.push(`${p.id}: missing benefits list`);
+    if (!p.keyFeatures?.en?.length) problems.push(`${p.id}: missing keyFeatures list`);
+    // A single-entry list is the shape a concatenated paragraph would take.
+    if ((p.benefits?.en.length ?? 0) < 2) problems.push(`${p.id}: benefits look concatenated`);
+  }
+  expect(problems, problems.join("\n")).toEqual([]);
+
+  const purifying = products.find((p) => p.id === "purifying-peeling")!;
+  expect(purifying.name.en).toBe("THE PURIFYING PEELING");
+  expect(purifying.subtitle!.en).toBe("Decongestant and anti-inflammatory");
+  expect(purifying.benefits!.en).toHaveLength(3);
+  expect(purifying.keyFeatures!.en).toHaveLength(3);
+
+  const brightening = products.find((p) => p.id === "brightening-peeling")!;
+  // CL-038 — one canonical title; the pasted "HE BRIGHTENING PEELING" and the
+  // trailing "&#x20;" entity must not survive into published content.
+  expect(brightening.name.en).toBe("THE BRIGHTENING PEELING");
+  expect(brightening.subtitle!.en).toBe("Exfoliating and anti-aging");
+  expect(brightening.benefits!.en).toHaveLength(6);
+  expect(brightening.keyFeatures!.en).toHaveLength(2);
+});
+
+test("CL-037: the Purifying peel publishes its supplied price string verbatim, GST shown and never computed in", () => {
+  const purifying = products.find((p) => p.id === "purifying-peeling")!;
+  expect(purifying.priceLabel).toBe("188 + GST");
+  // 188 exactly — not a tax-inclusive total derived from it.
+  expect(purifying.priceCents).toBe(18800);
+});
+
+test("CL-038: the Brightening peel has NO price — the Purifying peel's is never borrowed and none is estimated", () => {
+  const brightening = products.find((p) => p.id === "brightening-peeling")!;
+  expect(brightening.priceCents).toBeNull();
+  expect(brightening.priceLabel).toBeUndefined();
+});
+
+test("CL-036: a record missing its approved image or price is not purchasable and claims no availability", () => {
+  for (const p of clientSuppliedProducts) {
+    expect(p.purchaseBlocked?.en, `${p.id} must state why it cannot be purchased`).toBeTruthy();
+    expect(p.inStock, `${p.id} must not claim stock`).toBe(false);
+    expect(p.approvalStatus, `${p.id} is not fully approved yet`).toBe("pending");
+  }
+});
+
+test("CL-037/CL-038/CL-039-041: no treatment or equipment photograph is reused as product packaging", () => {
+  // The peels have no supplied packaging photo. `images` must stay EMPTY —
+  // borrowing one of the CL-039..CL-041 device/treatment assets would present
+  // a laser handpiece as a bottle of peel.
+  for (const p of clientSuppliedProducts) {
+    expect(p.images, `${p.id} must not borrow an image`).toEqual([]);
+  }
 });

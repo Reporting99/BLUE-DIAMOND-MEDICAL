@@ -16,9 +16,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Read from .nvmrc rather than a literal, so the pin cannot drift from
+      # package.json `engines`, ops/deploy/deploy-blue-diamond and the systemd
+      # unit. This said "20" while every other pin said 20.19.5, which meant CI
+      # could validate a release on a Node minor the production host never runs
+      # -- exactly the mismatch docs/DEPLOYMENT.md claims does not exist.
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version-file: ".nvmrc"
           cache: "npm"
 
       - name: Install dependencies

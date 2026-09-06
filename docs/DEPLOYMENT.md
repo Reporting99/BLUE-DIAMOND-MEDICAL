@@ -20,6 +20,39 @@ npm run start
 npx playwright test
 ```
 
+## 1a. What the production host must provide
+
+The application is a plain Node process behind nginx. There is no serverless
+runtime, no edge platform and no vendor-specific adapter in the build: `npm run
+build` emits `.next/standalone`, and the unit starts it with `node server.js`.
+Anything below that is not listed is not required.
+
+| | |
+|---|---|
+| Runtime | Node.js **20.19.5** — pinned identically in `package.json` `engines`, `.nvmrc`, CI, `ops/deploy/deploy-blue-diamond` and the systemd unit. A release built on one major and run under another fails only at runtime. |
+| Package manager | npm (`package-lock.json` is the lockfile; `npm ci` on CI, never on the host) |
+| Build command | `npm run build` (needs `NEXT_PUBLIC_SITE_URL`) |
+| Start command | `node server.js`, from the release root, via `blue-diamond@{blue,green}.service` |
+| Ports | BLUE `127.0.0.1:3030`, GREEN `127.0.0.1:3031` — loopback only; nginx is the sole public listener |
+| Reverse proxy | nginx — `ops/nginx/` |
+| Process manager | systemd — `ops/systemd/blue-diamond@.service` |
+| Database | none |
+| Redis / cache service | none. ISR writes to the release's own prerender cache on disk (§2 "ISR prerender-cache grant") |
+| Migrations | none — there is no schema to migrate, so a release has no data step and a rollback cannot leave data ahead of code |
+| Media storage | ImageKit (remote CDN). No user uploads and no writable media directory on the host |
+| Health check | `GET /api/version` — returns the release SHA on disk, not merely 200 (§2 "Why `/api/version`") |
+| Secrets | `/home/blue-diamond/shared/.env.production`, symlinked into each release as `.env`. Never inside a release artifact, never in git |
+| Per-slot runtime env | `/home/blue-diamond/shared/{blue,green}-runtime.env` — see `ops/systemd/*-runtime.env.example` |
+
+Environment variables and what each one gates: `.env.example` documents every
+name, its default, and the behaviour when it is unset. Every credential-backed
+path is designed to fail closed, which is why CI builds green with none of them.
+
+Deployment does not run on the host: it is `git push` → GitHub → CI green for
+that SHA → the manual `Deploy Production` workflow, which builds, packages and
+uploads the artifact. The host never clones the repository and never runs
+`npm install`.
+
 ## 2. Release model — Blue/Green
 
 Two permanent slots, **BLUE `127.0.0.1:3030`** and **GREEN `127.0.0.1:3031`**.

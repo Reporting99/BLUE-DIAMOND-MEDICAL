@@ -101,21 +101,50 @@ export const medicalServices: MedicalServiceContent[] = [
       en: "This referral pathway is for urgent, non-emergency needs only — it is not a substitute for calling 911 in a true emergency.",
       ar: "مسار الإحالة هذا مخصص للاحتياجات العاجلة غير الطارئة فقط — وهو لا يُغني عن الاتصال بالرقم 911 في حال وجود طارئ حقيقي.",
     },
-    relatedDoctorIds: ["reem-hamdi", "mohamed-farhat"],
+    // CL-012 — derived from the maintained roster, so a physician joining or
+    // leaving cannot leave a stale two-name list behind.
+    relatedDoctorIds: [],
+    relatedDoctorScope: "all-family-physicians",
     bookingChannel: "family-doctor",
+    // CL-011 — Dr. Hamdi's patients go to Mosaic; patients of every OTHER
+    // current Blue Diamond family physician go to Calgary West Central. The
+    // second note previously named Dr. Farhat only, which left the other four
+    // physicians' patients with no stated pathway.
+    //
+    // This is no longer an inference. Blue-Diamond-Medical-Website-Content-
+    // Extraction_1(5).docx (Primary Care Network page) states the membership
+    // at CLINIC level -- "As a member of the Calgary West Central Primary Care
+    // Network (CWC PCN), our doctors and our clinic work collaboratively with
+    // CWC PCN team members" -- while the Services page records the ONE
+    // documented exception, Mosaic for Dr. Hamdi's patients. Clinic-wide
+    // default plus one named exception is exactly the shape published here.
     externalPartners: [
       {
         name: "Mosaic Primary Care Network",
         url: "https://mosaicpcn.ca",
-        note: { en: "For Dr. Hamdi's patients.", ar: "لمرضى الدكتورة حمدي." },
+        note: { en: "For Dr. Reem Hamdi's patients.", ar: "لمرضى الدكتورة ريم حمدي." },
       },
       {
         name: "Calgary West Central Primary Care Network",
         url: "https://cwcpcn.com",
-        note: { en: "For Dr. Farhat's patients.", ar: "لمرضى الدكتور فرحات." },
+        note: {
+          en: "For patients of all other Blue Diamond family physicians.",
+          ar: "لمرضى جميع أطباء الأسرة الآخرين في بلو دايموند.",
+        },
       },
     ],
     faqs: [
+      /**
+       * CL-014 - CLIENT_CLARIFICATION_REQUIRED.
+       *
+       * The client asked for a NEW fifth sentence to follow the sentence
+       * ending "emergency department, not this pathway." below, and did not
+       * supply its wording. Nothing is invented or paraphrased here: the
+       * answer is published as approved, and the new sentence is appended to
+       * the `en` string at that exact point once the client supplies it
+       * (with its approved Arabic, or the `ar` string stays as-is - see the
+       * Arabic-translation rule in features/doctors/data.ts).
+       */
       {
         question: { en: "What counts as an urgent, non-emergency need?", ar: "ما الذي يُعدّ حاجة عاجلة غير طارئة؟" },
         answer: {
@@ -126,15 +155,15 @@ export const medicalServices: MedicalServiceContent[] = [
       {
         question: { en: "Which Primary Care Network do I contact?", ar: "بأي شبكة رعاية أولية أتواصل؟" },
         answer: {
-          en: "It depends on your family doctor: Dr. Hamdi's patients are referred to Mosaic Primary Care Network, and Dr. Farhat's patients to Calgary West Central Primary Care Network.",
-          ar: "يعتمد ذلك على طبيب أسرتكم: يُحال مرضى الدكتورة حمدي إلى شبكة Mosaic للرعاية الأولية، بينما يُحال مرضى الدكتور فرحات إلى شبكة Calgary West Central للرعاية الأولية.",
+          en: "It depends on your family doctor: Dr. Reem Hamdi's patients are referred to Mosaic Primary Care Network, and patients of all other Blue Diamond family physicians are referred to Calgary West Central Primary Care Network.",
+          ar: "يعتمد ذلك على طبيب أسرتكم: يُحال مرضى الدكتورة ريم حمدي إلى شبكة Mosaic للرعاية الأولية، بينما يُحال مرضى جميع أطباء الأسرة الآخرين في بلو دايموند إلى شبكة Calgary West Central للرعاية الأولية.",
         },
       },
       {
         question: { en: "Does this apply to every patient at the clinic?", ar: "هل ينطبق هذا على جميع مرضى العيادة؟" },
         answer: {
-          en: "The after-hours pathway described here is documented for patients of Dr. Hamdi and Dr. Farhat specifically. If your family doctor is someone else, ask at your next visit which after-hours option applies to you.",
-          ar: "المسار الموضّح هنا موثّق لمرضى الدكتورة حمدي والدكتور فرحات تحديدًا. إذا كان طبيب أسرتكم غير ذلك، يُرجى الاستفسار في زيارتكم القادمة عن خيار الرعاية خارج أوقات الدوام الخاص بكم.",
+          en: "Yes. Every Blue Diamond patient has an after-hours pathway: Dr. Reem Hamdi's patients are referred to Mosaic Primary Care Network, and patients of all other Blue Diamond family physicians are referred to Calgary West Central Primary Care Network.",
+          ar: "نعم. لكل مريض في بلو دايموند مسار للرعاية خارج أوقات الدوام: يُحال مرضى الدكتورة ريم حمدي إلى شبكة Mosaic للرعاية الأولية، ويُحال مرضى جميع أطباء الأسرة الآخرين في بلو دايموند إلى شبكة Calgary West Central للرعاية الأولية.",
         },
       },
       {
@@ -160,14 +189,16 @@ export const medicalServices: MedicalServiceContent[] = [
     slugAr: "إدارة-الأمراض-المزمنة",
     title: { en: "Chronic Disease Management", ar: "إدارة الأمراض المزمنة" },
     summary: {
-      en: "AHS-insured, ongoing management of chronic conditions through your family physician, with Dr. Bakare's particular focus on chronic disease management and palliative care.",
-      ar: "إدارة مستمرة للأمراض المزمنة مشمولة بالتأمين الصحي عبر طبيب أسرتكم، مع تركيز خاص من الدكتور باكاري على إدارة الأمراض المزمنة والرعاية التلطيفية.",
+      en: "AHS-insured, ongoing management of chronic conditions through your family physician. Any Blue Diamond family physician can provide chronic-disease management.",
+      ar: "إدارة مستمرة للأمراض المزمنة مشمولة بالتأمين الصحي عبر طبيب أسرتكم. ويمكن لأي من أطباء الأسرة في بلو دايموند تقديم إدارة الأمراض المزمنة.",
     },
     whoItsFor: {
       en: "Patients living with an ongoing health condition that needs regular monitoring and a coordinated care plan.",
       ar: "المرضى الذين يعانون من حالة صحية مستمرة تتطلب متابعة منتظمة وخطة رعاية منسقة.",
     },
-    relatedDoctorIds: ["bakare"],
+    // CL-015 — provider-neutral: every family physician here provides this.
+    relatedDoctorIds: [],
+    relatedDoctorScope: "all-family-physicians",
     bookingChannel: "family-doctor",
     faqs: [
       {
@@ -185,10 +216,10 @@ export const medicalServices: MedicalServiceContent[] = [
         },
       },
       {
-        question: { en: "Does Dr. Bakare only see patients for chronic disease management?", ar: "هل يستقبل الدكتور باكاري مرضى إدارة الأمراض المزمنة فقط؟" },
+        question: { en: "Do I need to see a particular physician for chronic disease management?", ar: "هل أحتاج إلى مراجعة طبيب معيّن لإدارة الأمراض المزمنة؟" },
         answer: {
-          en: "No — chronic disease management is one of Dr. Bakare's particular clinical interests, alongside palliative care, but any of our family physicians can provide this care.",
-          ar: "لا — إدارة الأمراض المزمنة هي أحد اهتمامات الدكتور باكاري السريرية الخاصة، إلى جانب الرعاية التلطيفية، لكن أيًا من أطباء الأسرة لدينا يمكنه تقديم هذه الرعاية.",
+          en: "No — every Blue Diamond family physician provides chronic-disease management as part of general family medicine. See whichever of our family physicians you are registered with.",
+          ar: "لا — يقدّم جميع أطباء الأسرة في بلو دايموند إدارة الأمراض المزمنة كجزء من طب الأسرة العام. راجعوا الطبيب المسجّلين لديه من أطباء الأسرة في العيادة.",
         },
       },
       {
@@ -201,8 +232,8 @@ export const medicalServices: MedicalServiceContent[] = [
       {
         question: { en: "How do I book a chronic disease management visit?", ar: "كيف أحجز موعدًا لإدارة مرض مزمن؟" },
         answer: {
-          en: "Book with your family doctor through Mika, the same system used for all family-medicine appointments at our clinic.",
-          ar: "احجزوا مع طبيب أسرتكم عبر نظام Mika، وهو النظام نفسه المستخدم لجميع مواعيد طب الأسرة في عيادتنا.",
+          en: "If you are already registered with one of our family physicians, book with your doctor through Mikata. New patients and walk-ins can book online through Skip the Waiting Room, call the clinic, or come in — walk-ins are welcome.",
+          ar: "إذا كنتم مسجّلين بالفعل لدى أحد أطباء الأسرة لدينا، فاحجزوا مع طبيبكم عبر نظام Mikata. ويمكن للمرضى الجدد والزيارات بدون موعد الحجز عبر الإنترنت من خلال Skip the Waiting Room، أو الاتصال بالعيادة، أو الحضور مباشرة — الزيارات بدون موعد مُرحَّب بها.",
         },
       },
     ],
@@ -218,8 +249,8 @@ export const medicalServices: MedicalServiceContent[] = [
       ar: '"الوقاية خير من العلاج" هو جوهر أسلوبنا في الممارسة الطبية — من التطعيمات إلى تركيز الدكتورة سعيد السريري على الطب الوقائي والتدخل المبكر.',
     },
     whatsIncluded: {
-      en: ["Vaccination", "Preventive medicine and early-intervention care (Dr. Saeed)", "Referral for AHS-covered eye disease screening"],
-      ar: ["التطعيمات", "الطب الوقائي والرعاية بالتدخل المبكر (الدكتورة سعيد)", "الإحالة لفحص أمراض العين المشمول بالتأمين الصحي"],
+      en: ["Vaccination", "Preventive medicine and early-intervention care", "Referral for AHS-covered eye disease screening"],
+      ar: ["التطعيمات", "الطب الوقائي والرعاية بالتدخل المبكر", "الإحالة لفحص أمراض العين المشمول بالتأمين الصحي"],
     },
     relatedDoctorIds: ["omaima-saeed"],
     bookingChannel: "family-doctor",
@@ -255,8 +286,8 @@ export const medicalServices: MedicalServiceContent[] = [
       {
         question: { en: "How do I book a preventive care visit?", ar: "كيف أحجز موعدًا للرعاية الوقائية؟" },
         answer: {
-          en: "Book with your family doctor through Mika.",
-          ar: "احجزوا مع طبيب أسرتكم عبر نظام Mika.",
+          en: "If you are registered with one of our family physicians, book with your doctor through Mikata. New patients and walk-ins can book online through Skip the Waiting Room, call the clinic, or come in.",
+          ar: "إذا كنتم مسجّلين لدى أحد أطباء الأسرة لدينا، فاحجزوا مع طبيبكم عبر نظام Mikata. ويمكن للمرضى الجدد والزيارات بدون موعد الحجز عبر الإنترنت من خلال Skip the Waiting Room، أو الاتصال بالعيادة، أو الحضور مباشرة.",
         },
       },
     ],
@@ -298,8 +329,8 @@ export const medicalServices: MedicalServiceContent[] = [
       {
         question: { en: "How do I book this appointment?", ar: "كيف أحجز هذا الموعد؟" },
         answer: {
-          en: "Book with your family doctor through Mika.",
-          ar: "احجزوا مع طبيب أسرتكم عبر نظام Mika.",
+          en: "If you are registered with one of our family physicians, book with your doctor through Mikata. New patients and walk-ins can book online through Skip the Waiting Room, call the clinic, or come in.",
+          ar: "إذا كنتم مسجّلين لدى أحد أطباء الأسرة لدينا، فاحجزوا مع طبيبكم عبر نظام Mikata. ويمكن للمرضى الجدد والزيارات بدون موعد الحجز عبر الإنترنت من خلال Skip the Waiting Room، أو الاتصال بالعيادة، أو الحضور مباشرة.",
         },
       },
     ],
@@ -334,15 +365,15 @@ export const medicalServices: MedicalServiceContent[] = [
       {
         question: { en: "For minor in-clinic procedures related to pain, like joint injections, who provides those?", ar: "من يقدّم الإجراءات البسيطة داخل العيادة المتعلقة بالألم، مثل الحقن المفصلية؟" },
         answer: {
-          en: "Dr. Bakare offers intra-articular injections for degenerative knee, shoulder, and ankle conditions in-house — see the Minor Procedures page for detail.",
-          ar: "يقدّم الدكتور باكاري حقنًا مفصلية لحالات تنكس الركبة والكتف والكاحل داخل العيادة — راجعوا صفحة الإجراءات البسيطة للتفاصيل.",
+          en: "Our family physicians perform intra-articular injections for degenerative knee, shoulder, and ankle conditions in-house — see the Minor Procedures page for detail. These are booked by phone or in person, not online.",
+          ar: "يُجري أطباء الأسرة لدينا حقنًا مفصلية لحالات تنكس الركبة والكتف والكاحل داخل العيادة — راجعوا صفحة الإجراءات البسيطة للتفاصيل. وتُحجز هذه الإجراءات عبر الهاتف أو بالحضور شخصيًا، وليس عبر الإنترنت.",
         },
       },
       {
         question: { en: "How do I book a pain management appointment?", ar: "كيف أحجز موعدًا لإدارة الألم؟" },
         answer: {
-          en: "Book with your family doctor through Mika.",
-          ar: "احجزوا مع طبيب أسرتكم عبر نظام Mika.",
+          en: "If you are registered with one of our family physicians, book with your doctor through Mikata. New patients and walk-ins can book online through Skip the Waiting Room, call the clinic, or come in.",
+          ar: "إذا كنتم مسجّلين لدى أحد أطباء الأسرة لدينا، فاحجزوا مع طبيبكم عبر نظام Mikata. ويمكن للمرضى الجدد والزيارات بدون موعد الحجز عبر الإنترنت من خلال Skip the Waiting Room، أو الاتصال بالعيادة، أو الحضور مباشرة.",
         },
       },
     ],
@@ -354,23 +385,26 @@ export const medicalServices: MedicalServiceContent[] = [
     slugAr: "الإجراءات-البسيطة",
     title: { en: "Minor Procedures", ar: "الإجراءات البسيطة" },
     summary: {
-      en: "AHS-insured minor procedures including suture removal and application, with Dr. Bakare additionally offering in-house minor skin lesion excision and joint injections.",
-      ar: "إجراءات بسيطة مشمولة بالتأمين الصحي تشمل إزالة الغرز وتركيبها، إضافةً إلى استئصال الآفات الجلدية البسيطة والحقن المفصلية داخل العيادة مع الدكتور باكاري.",
+      en: "AHS-insured minor procedures performed in-house — suture removal and application, minor skin lesion excision, and joint injections. All of our family physicians provide these procedures. Minor procedures are booked by phone or in person, not online.",
+      ar: "إجراءات بسيطة مشمولة بالتأمين الصحي تُجرى داخل العيادة — إزالة الغرز وتركيبها، واستئصال الآفات الجلدية البسيطة، والحقن المفصلية. ويقدّم جميع أطباء الأسرة لدينا هذه الإجراءات. تُحجز الإجراءات البسيطة عبر الهاتف أو بالحضور شخصيًا، وليس عبر الإنترنت.",
     },
     whatsIncluded: {
       en: [
         "Suture removal and application",
-        "Minor skin lesion excision (Dr. Bakare)",
-        "Intra-articular injections for degenerative knee, shoulder, and ankle conditions (Dr. Bakare)",
+        "Minor skin lesion excision",
+        "Intra-articular injections for degenerative knee, shoulder, and ankle conditions",
       ],
       ar: [
         "إزالة الغرز وتركيبها",
-        "استئصال الآفات الجلدية البسيطة (الدكتور باكاري)",
-        "حقن مفصلية لحالات تنكس الركبة والكتف والكاحل (الدكتور باكاري)",
+        "استئصال الآفات الجلدية البسيطة",
+        "حقن مفصلية لحالات تنكس الركبة والكتف والكاحل",
       ],
     },
-    relatedDoctorIds: ["bakare"],
-    bookingChannel: "family-doctor",
+    // CL-016 — every clinic family physician provides these procedures.
+    relatedDoctorIds: [],
+    relatedDoctorScope: "all-family-physicians",
+    // CL-018 — phone or in person only; this route offers no online booking.
+    bookingChannel: "minor-procedures",
     faqs: [
       {
         question: { en: "Are minor procedures covered by Alberta Health?", ar: "هل الإجراءات البسيطة مشمولة بالتأمين الصحي لألبرتا؟" },
@@ -382,29 +416,22 @@ export const medicalServices: MedicalServiceContent[] = [
       {
         question: { en: "What minor procedures are available?", ar: "ما الإجراءات البسيطة المتوفرة؟" },
         answer: {
-          en: "Suture removal and application are available generally, and Dr. Bakare additionally offers minor skin lesion excision and intra-articular injections for degenerative knee, shoulder, and ankle conditions.",
-          ar: "إزالة الغرز وتركيبها متاحة بشكل عام، ويقدّم الدكتور باكاري إضافةً إلى ذلك استئصال الآفات الجلدية البسيطة والحقن المفصلية لحالات تنكس الركبة والكتف والكاحل.",
-        },
-      },
-      {
-        question: { en: "Do I need to see Dr. Bakare specifically?", ar: "هل يجب أن أراجع الدكتور باكاري تحديدًا؟" },
-        answer: {
-          en: "For skin lesion excision and joint injections, yes — these are offered by Dr. Bakare in-house. Suture care is available more generally; ask at booking.",
-          ar: "بالنسبة لاستئصال الآفات الجلدية والحقن المفصلية، نعم — يقدّمها الدكتور باكاري داخل العيادة. أما رعاية الغرز فمتاحة بشكل أعم؛ يُرجى الاستفسار عند الحجز.",
+          en: "Suture removal and application, minor skin lesion excision, and intra-articular injections for degenerative knee, shoulder, and ankle conditions. All of our family physicians provide these.",
+          ar: "إزالة الغرز وتركيبها، واستئصال الآفات الجلدية البسيطة، والحقن المفصلية لحالات تنكس الركبة والكتف والكاحل. ويقدّمها جميع أطباء الأسرة لدينا.",
         },
       },
       {
         question: { en: "How do I book a minor procedure?", ar: "كيف أحجز موعدًا لإجراء بسيط؟" },
         answer: {
-          en: "Book through Mika. If you specifically need Dr. Bakare for a skin lesion or joint injection, mention that when booking.",
-          ar: "احجزوا عبر نظام Mika. وإذا كنتم بحاجة تحديدًا إلى الدكتور باكاري لآفة جلدية أو حقنة مفصلية، يُرجى ذكر ذلك عند الحجز.",
+          en: "Minor procedures cannot be booked online. Call the clinic or come in to reception, and we will schedule the procedure with one of our family physicians.",
+          ar: "لا يمكن حجز الإجراءات البسيطة عبر الإنترنت. اتصلوا بالعيادة أو توجّهوا إلى الاستقبال، وسنحدد لكم موعد الإجراء مع أحد أطباء الأسرة لدينا.",
         },
       },
       {
         question: { en: "Is this the same as a walk-in visit?", ar: "هل هذا مماثل لزيارة بدون موعد مسبق؟" },
         answer: {
-          en: "Minor procedures are typically booked as scheduled appointments rather than handled as a walk-in — book ahead through Mika.",
-          ar: "عادةً ما تُحجز الإجراءات البسيطة كمواعيد مجدولة وليس كزيارة بدون موعد مسبق — يُرجى الحجز مسبقًا عبر نظام Mika.",
+          en: "No — minor procedures are scheduled appointments rather than walk-in visits. Arrange one by calling the clinic or asking at reception.",
+          ar: "لا — الإجراءات البسيطة مواعيد مجدولة وليست زيارات بدون موعد. رتّبوا موعدًا بالاتصال بالعيادة أو بالاستفسار في الاستقبال.",
         },
       },
     ],

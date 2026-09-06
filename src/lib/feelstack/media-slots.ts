@@ -189,6 +189,32 @@ export function cmsAlt(asset: { alt?: { en: string; ar: string } } | undefined) 
   return alt.en.trim() || alt.ar.trim() ? alt : undefined;
 }
 
+/**
+ * The alt text to render, merged PER LOCALE.
+ *
+ * `cmsAlt` answers "did the CMS supply any alt at all", which is the right
+ * question when the choice is between the asset's own text and the page's
+ * fallback wholesale. It is the wrong question when an assignment carries alt
+ * text in ONE locale: the object passes the "any" test, the empty side is then
+ * rendered verbatim, and the page ships an `alt=""` on an image that is the
+ * subject of its own hero. Found by the CL-033 route audit on the Arabic
+ * technologies and concerns hubs, whose assignments carry English alt only.
+ *
+ * Merging per locale keeps whatever the editor did write and falls back to the
+ * page's own description only for the side they did not.
+ */
+export function resolveAlt(
+  asset: { alt?: { en: string; ar: string } } | undefined,
+  fallback: { en: string; ar: string },
+): { en: string; ar: string } {
+  const alt = cmsAlt(asset);
+  if (!alt) return fallback;
+  return {
+    en: alt.en.trim() || fallback.en,
+    ar: alt.ar.trim() || fallback.ar,
+  };
+}
+
 /** First assignment matching any of `slot`, in the order given. */
 function firstAssigned(
   media: readonly ResolvedMedia[],

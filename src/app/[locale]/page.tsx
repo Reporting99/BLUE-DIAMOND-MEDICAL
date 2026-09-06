@@ -15,7 +15,10 @@ import { FaqPageSchema } from "@/components/shared/schema";
 import { ConcernExplorer } from "@/features/concerns";
 import { concerns } from "@/features/concerns/data";
 import { concernExplorerImages, concernListingEntities } from "@/features/concerns/media";
-import { doctors } from "@/features/doctors";
+import { doctors, portraitForLocale } from "@/features/doctors";
+import { NewPatientNotice } from "@/components/shared/NewPatientNotice";
+import { AccessOptions } from "@/components/shared/AccessOptions";
+import { ScrollCue } from "@/components/layout/ScrollCue";
 import { availabilityNotice } from "@/features/products";
 import {
   concernForTreatment,
@@ -31,7 +34,7 @@ import { getDictionary, isLocale, type Locale } from "@/i18n/config";
 import { getRoute, href } from "@/lib/routing";
 import { publishableBeforeAfterPairs } from "@/features/aesthetics/data/before-after";
 import { BeforeAfterGallery } from "@/features/aesthetics/components/BeforeAfterGallery";
-import { getBookingUrl } from "@/config/booking";
+import { getBookingUrl, isBookable } from "@/config/booking";
 import { siteConfig } from "@/config/site";
 import { eliteIQLocation, mapDirectionsUrl, primaryLocation } from "@/config/locations";
 import { LocationMap } from "@/components/shared/LocationMap";
@@ -180,7 +183,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           image are above the fold and must render immediately, per the
           brief's "do not animate hero H1, hero CTA, LCP image, critical
           booking information" rule. */}
-      <section className="relative isolate overflow-hidden border-b border-border">
+      <section className="relative isolate overflow-hidden">
         {/* THE PHOTOGRAPH. Still the FeelStack `hero` assignment resolved
             server-side above — swapping it stays a CMS action (upload,
             approve, assign `hero`, publish), never a code change. When no
@@ -281,7 +284,18 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
             it no longer reserves any space in normal flow — this
             replaces that reserved space so the H1 doesn't render behind
             the floating header. */}
-        <Container className="flex min-h-[580px] flex-col justify-center pt-28 pb-12 sm:min-h-[600px] lg:min-h-[620px] lg:pt-32 lg:pb-16 xl:min-h-[640px]">
+          {/* CL-003 — the hero used to occupy the whole first viewport at every
+              size, so the page looked finished before it started. The minimum
+              heights below are reduced by ~80px and the bottom padding
+              tightened, which lifts the trust strip's top edge into view on a
+              375px screen and on a 1440px one; the ScrollCue at the hero's
+              foot names what that edge is. */}
+        {/* CL-032 — the min-heights are gone. They reserved up to 560px whether
+            or not the copy filled it, and on this route the hero photograph is
+            a background layer, so the reserved remainder rendered as blank
+            page. Top padding is unchanged: the header is `fixed` here and
+            reserves no flow space, so this is what keeps the H1 clear of it. */}
+        <Container className="relative flex flex-col justify-center pt-28 pb-3 lg:pt-32 lg:pb-4">
           <div className="max-w-[560px]">
             <p className="text-sm font-semibold uppercase tracking-wide text-primary">{dict.home.heroEyebrow}</p>
             <h1 className="mt-4 text-display-1 font-heading lg:text-display-1-lg">{dict.home.heroTitle}</h1>
@@ -311,14 +325,33 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
               ))}
             </p>
           </div>
+          {/* CL-032 — back into normal flow at a 12px offset. The absolute
+              variant was pinned to the hero's bottom edge, which only read
+              correctly while the hero reserved a tall min-height; with the
+              hero sized to its content it would have sat on top of the trust
+              line. Absolute positioning here would also be exactly the kind
+              of overlap hack the requirement rules out. */}
+          <ScrollCue locale={locale} className="mt-3" />
         </Container>
       </section>
+
+      {/* CL-002 — the new-patient / walk-in fact, now a full-bleed ticker
+          strip sitting immediately under the hero rather than a block inside
+          the hero's copy column. Still above the fold at every breakpoint, and
+          the travel is what carries the "unmissable" job the static filled
+          band was doing before. */}
+      <NewPatientNotice locale={locale} />
 
       <SectionTransition from="var(--background)" to="var(--surface-blue-soft)" />
 
       {/* TRUST STRIP — verified stats only, animated (StatsCounters). */}
-      <section className="bg-surface-blue-soft">
-        <Container className="py-14 lg:py-16">
+      {/* The band's blue is softened here rather than in the shared
+          `--surface-blue-soft` token: the token is used across the site and
+          only this strip sits directly under the hero, where the full tint
+          reads as a hard block against the hero's near-white wash. */}
+      <section style={{ backgroundColor: "#f5f9fb" }}>
+        {/* CL-032 — 56/64px of band padding reduced to the shared rhythm. */}
+        <Container className="py-3 lg:py-4">
           <StatsCounters stats={copy.trustStats} />
         </Container>
       </section>
@@ -569,7 +602,13 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       {/* Dark editorial atmosphere. One large featured (Potenza, "01") +
           an asymmetric supporting grid for 02-05 — never a flat row of
           five identical machine cards. */}
-      <section className="relative overflow-hidden bg-blue-4 px-4 py-[clamp(4.5rem,9vw,7.5rem)] lg:px-6">
+      {/* CL-032 — this band carried 72-120px of its own vertical padding, which
+          made it the single largest remaining gap on the homepage on both of
+          its edges (136px above, 176px below at 1440px). Brought onto the same
+          rhythm as .section-y; the band keeps its colour and full-bleed
+          treatment, it simply no longer reserves an empty margin around its
+          content. */}
+      <section className="relative overflow-hidden bg-blue-4 px-4 py-[clamp(0.75rem,1.5vw,1rem)] lg:px-6">
         <span aria-hidden="true" className="pointer-events-none absolute -top-16 end-[-4rem] size-56 rotate-45 bg-white/5 lg:size-72" />
         <span aria-hidden="true" className="pointer-events-none absolute bottom-[-6rem] start-[-3rem] size-64 rotate-45 bg-white/5" />
         <Container>
@@ -670,8 +709,8 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                         resolveSlotImageRef({
                           media: homeMedia[`doctor:${doctor.id}`] ?? [],
                           slot: "doctorPortrait",
-                          override: doctor.image,
-                          fallback: doctor.image,
+                          override: portraitForLocale(doctor, locale),
+                          fallback: portraitForLocale(doctor, locale),
                         }).path
                       }
                       preset="doctor-card"
@@ -680,8 +719,8 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                         resolveSlotImageRef({
                           media: homeMedia[`doctor:${doctor.id}`] ?? [],
                           slot: "doctorPortrait",
-                          override: doctor.image,
-                          fallback: doctor.image,
+                          override: portraitForLocale(doctor, locale),
+                          fallback: portraitForLocale(doctor, locale),
                         }).status
                       }
                       alt={
@@ -973,8 +1012,13 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
             {copy.bookingHeading}
           </h2>
           <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {/* CL-007 — a channel whose online destination has not been
+                supplied is not rendered as a card here. It would be a button
+                that goes nowhere; the AccessOptions block below states the
+                phone and in-person route for exactly that patient type. */}
             {copy.bookingPaths.map((path, i) => {
               const dest = getBookingUrl(path.channel);
+              if (!isBookable(dest)) return null;
               return (
                 <a
                   key={path.channel}
@@ -1000,6 +1044,18 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
               <span className="ltr-run mt-auto text-h4 font-heading">{copy.callCard.value}</span>
             </a>
           </div>
+
+          {/* CL-005 — online, by phone, and in person, with the registered /
+              new-patient distinction stated rather than implied. */}
+          <AccessOptions
+            locale={locale}
+            className="mt-8"
+            channels={[
+              { channel: "family-doctor", audience: "registered" },
+              { channel: "walk-in", audience: "new-patient" },
+              { channel: "aesthetics-consultation", audience: "aesthetics" },
+            ]}
+          />
         </Container>
       </section>
 

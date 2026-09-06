@@ -104,6 +104,22 @@ html {
      footer it disappears, so hairlines get slightly more presence. */
   --surface-dark-border: rgba(255, 255, 255, 0.18);
 
+  /* ---- Aesthetics hero atmosphere ----------------------------------------
+     The /aesthetics section is art-directed warm: a cream ground with pale
+     beige/taupe geometric planes over it, so its photography (warm brown and
+     tan skin tones, soft golden light) sits in air of the same temperature
+     instead of on the cool blue-white the clinical routes use.
+
+     Scope is the whole point. These four values are consumed by exactly one
+     component — AestheticsHero.tsx — and by nothing else, so the Medical and
+     Family Clinic routes are untouched, and NO brand colour moves: headings,
+     the logo, the CTA button, the navbar and every link keep --primary and
+     the blue ramp above. Only the hero's own background surfaces are warm. */
+  --aesthetics-hero-bg: #fbf7f1;
+  --aesthetics-facet-1: #f0e6d8;
+  --aesthetics-facet-2: #e4d3bd;
+  --aesthetics-facet-3: #d6c0a4;
+
   /* ---- Closing-experience tokens ("SEAMLESS CLOSING SECTION AND FOOTER
      COLOR REDESIGN" pass) — used only by SiteClosingExperience.tsx and
      Footer.tsx's own internal gradient, never scattered as raw hex
@@ -159,8 +175,15 @@ html {
   --radius: 0.5rem;
 
   /* ---- 3. Spacing rhythm (4px base) ---- */
-  --space-section: 6rem; /* 96px desktop */
-  --space-section-mobile: 3.5rem; /* 56px mobile */
+  /* CL-032 — section rhythm.
+     These are the padding on EVERY .section-y block, so two adjacent
+     sections put 2x this between the last content of one and the first
+     heading of the next. The client's cap is 32px desktop / 24px mobile,
+     which is what 1rem / 0.75rem produce exactly. Raising either value
+     re-opens the defect on every page at once, which is the point of
+     keeping it a token. */
+  --space-section: 1rem; /* 16px desktop -> 32px between sections */
+  --space-section-mobile: 0.75rem; /* 12px mobile -> 24px between sections */
 
   /* ---- 4. Motion ---- */
   --motion-fast: 150ms;
@@ -574,6 +597,30 @@ html {
   .section-y {
     padding-block: var(--space-section-mobile);
   }
+
+  /*
+   * CL-032 — a section's FIRST content block adds no leading margin.
+   *
+   * Several templates give every one of their sub-blocks a `mt-8`/`mt-10`
+   * rhythm. That rhythm is correct BETWEEN blocks and is left alone; on the
+   * first block it is pure leading space that stacks on top of the section's
+   * own padding, and it was still putting 40-56px between a hero and the
+   * first heading on the technology, treatment, before/after and uninsured-fee
+   * routes after the padding tokens were brought down.
+   *
+   * A first child has no preceding sibling, so its top margin can only ever be
+   * leading space -- there is nothing for it to separate the block from. Two
+   * levels are covered because most sections wrap their content in a
+   * Container. Specificity (two compound selectors) beats a Tailwind `mt-*`
+   * utility without needing `!important`, so a block that genuinely needs a
+   * top offset can still opt out with an inline style or a more specific rule.
+   */
+  main > section > :first-child,
+  main > article > :first-child,
+  main > section > * > :first-child,
+  main > article > * > :first-child {
+    margin-block-start: 0;
+  }
   @media (min-width: 1024px) {
     .section-y {
       padding-block: var(--space-section);
@@ -610,9 +657,17 @@ html {
    * margin overlaps both neighboring sections by a sub-pixel amount so no
    * rendering gap/seam appears at their shared edge.
    */
+  /* CL-032 — the seam no longer occupies layout space.
+     It was a 56-180px gradient strip standing between every pair of
+     sections, and it was the single largest contributor to the blank
+     bands the client reported: on /medical it alone was 118px of the
+     ~214px band above "Explore our services". SectionTransition now
+     renders nothing, so adjacent section backgrounds meet directly with
+     margin-block: 0 and no empty strip remains. This rule is kept so any
+     seam element that survives in a cached bundle collapses too. */
   .section-seam {
-    height: clamp(3.5rem, 6vw + 2rem, 11.25rem);
-    margin-block: -1px;
+    height: 0;
+    margin-block: 0;
     pointer-events: none;
   }
 
@@ -858,29 +913,7 @@ html {
      width, which is exactly what `measure="article"` spans) and falls to
      ~0.4 at the outer edges, where the facet planes or the photograph get
      to show. */
-  /*
-   * The split hero's copy panel.
-   *
-   * `hero-wash-inline` cannot serve here: it is a one-sided ramp that starts
-   * at 0.97 on the INLINE-START edge and has decayed to ~0.06 by the far side.
-   * That is correct when the copy is on the start side, and exactly wrong when
-   * the picture takes that side and the copy moves opposite -- the copy then
-   * sits on the transparent tail of the ramp, over the facet background, with
-   * body text at roughly the contrast of the facet itself.
-   *
-   * So the split-with-media-at-start layout gets a panel instead of a ramp:
-   * near-uniform light across the copy half only, never crossing into the
-   * picture half, so the copy is readable at its top and its foot alike and
-   * the photograph stays untouched.
-   */
-  .hero-wash-panel {
-    background: linear-gradient(
-      to bottom,
-      rgba(250, 253, 255, 0.97) 0%,
-      rgba(250, 253, 255, 0.95) 100%
-    );
-  }
-  .hero-wash-center {
+    .hero-wash-center {
     background:
       radial-gradient(78% 72% at 50% 45%, rgba(250, 253, 255, 0.96) 0%, rgba(250, 253, 255, 0.88) 42%, rgba(250, 253, 255, 0.5) 74%, rgba(250, 253, 255, 0.14) 100%),
       linear-gradient(to bottom, rgba(250, 253, 255, 0.38) 0%, rgba(250, 253, 255, 0.1) 40%, rgba(250, 253, 255, 0.3) 100%);
@@ -896,122 +929,14 @@ html {
     background: linear-gradient(to top, var(--background) 0%, rgba(255, 255, 255, 0) 100%);
   }
 
-  /*
-   * THE SPLIT HERO'S PHOTOGRAPH — PageHero `mediaLayout="split"`.
-   *
-   * In the ordinary hero the picture is full-bleed, so every edge it has is
-   * also an edge of the section and there is no seam to hide. The split hero
-   * gives up that guarantee on purpose: the photograph holds one half and the
-   * facet background holds the other, which puts a vertical boundary in the
-   * middle of the section where nothing else can conceal it. A rectangle
-   * stopped there reads as a photo pasted onto a background, which is exactly
-   * what this layout must not look like.
-   *
-   * So the picture is masked rather than cropped — transparent at its inner
-   * edge and fully opaque only once it is past halfway across its own box, so
-   * what meets the facet planes is a gradient and not an edge. The fade is
-   * long (0 -> 1 over ~36% of the picture's width, ~250px at desktop), but no
-   * longer than that: the first ramp reached full opacity only at 62%, which
-   * put the subject's face inside the dissolve in Arabic — the picture is on
-   * the left there and the mask mirrors with it, while the subject stays put —
-   * and printed the facet composition's bright diagonal straight across her
-   * cheek at ~75% alpha. The fade has to end before the subject starts.
-   *
-   * MASKED, NOT WASHED. The equivalent gradient painted on top as an overlay
-   * would fade the photograph toward one flat colour, and the thing behind it
-   * here is not flat — it is the facet composition, with its own light
-   * direction. Masking lets those planes show through the dissolve instead of
-   * being covered by a veil the width of the fade.
-   *
-   * `md` and up ONLY. Below that the photograph is not beside the copy at all;
-   * it is a full-width block stacked under it, and its edges are the section's
-   * own again.
-   *
-   * Which edge dissolves is worked out just below, from the direction AND the
-   * side the picture was placed on. `to right` is a physical direction and
-   * does not flip on its own, so neither of those can be assumed.
-   */
-  /*
-   * Where the crop falls when the frame is not the asset's ratio.
-   *
-   * The supplied photograph is 4:3 with the subject's head high in the frame;
-   * every desktop and tablet split frame is taller or wider than that, so
-   * `object-cover` has to discard something. Centred, it discards it evenly
-   * and takes the top of the head with it. Biasing up the frame and slightly
-   * toward the subject keeps the face and shoulders whole at every width the
-   * two-column composition exists at, which is the whole reason a portrait was
-   * chosen for this hero. Below `md` the block is 4:3 too, so there is no crop
-   * and this is inert.
-   */
-  .hero-split-media img {
-    object-position: 58% 12%;
-  }
+  /* CL-033 retired `.hero-split-media` and `.hero-wash-panel`.
+     The split hero is now two real grid tracks (PageHero), so the
+     photograph has its own column instead of being absolutely
+     positioned over half the section. With no overlap there is no inner
+     edge to dissolve and no copy laid over the picture to protect, so
+     the edge mask, its four direction cases and the copy-half wash all
+     went with it. */
 
-  /*
-   * WHICH EDGE DISSOLVES — one angle, four cases.
-   *
-   * The edge that has to fade is the picture's INNER one, the edge facing the
-   * copy. Which physical edge that is depends on TWO things, not one: the
-   * document direction AND which side `mediaSide` put the picture on. The
-   * first version of this rule keyed on direction alone, which was right for
-   * an inline-END picture and silently wrong for an inline-START one — it
-   * dissolved the outer edge, against the section boundary where there was no
-   * seam to hide, and left a hard vertical edge facing the copy. Caught by
-   * root-0a on the Concern split hero before it shipped.
-   *
-   * The four combinations reduce to a single angle, so that is what varies;
-   * the ramp itself is written once. 90deg fades the LEFT edge, 270deg the
-   * right. Picture at inline-end: LTR puts it on the right, so the left edge
-   * goes. Picture at inline-start: LTR puts it on the left, so the right edge
-   * goes. Each flips again under RTL.
-   *
-   * Declared outside the media query on purpose. `linear-gradient(var(--x))`
-   * with `--x` unset is invalid at computed-value time, which throws the whole
-   * mask away and restores the very hard edge this exists to remove — so the
-   * angle must never be able to go missing while the mask is applied.
-   */
-  .hero-split-media {
-    --split-fade-angle: 90deg;
-  }
-  .hero-split-media:dir(rtl) {
-    --split-fade-angle: 270deg;
-  }
-  /* Equal specificity to the two rules above, so ORDER is what makes these
-     win. Keep them last. */
-  .hero-split-media--start {
-    --split-fade-angle: 270deg;
-  }
-  .hero-split-media--start:dir(rtl) {
-    --split-fade-angle: 90deg;
-  }
-
-  @media (min-width: 768px) {
-    .hero-split-media {
-      -webkit-mask-image: linear-gradient(
-        var(--split-fade-angle),
-        rgba(0, 0, 0, 0) 0%,
-        rgba(0, 0, 0, 0.32) 8%,
-        rgba(0, 0, 0, 0.72) 19%,
-        rgba(0, 0, 0, 0.95) 28%,
-        rgb(0, 0, 0) 36%
-      );
-      mask-image: linear-gradient(
-        var(--split-fade-angle),
-        rgba(0, 0, 0, 0) 0%,
-        rgba(0, 0, 0, 0.32) 8%,
-        rgba(0, 0, 0, 0.72) 19%,
-        rgba(0, 0, 0, 0.95) 28%,
-        rgb(0, 0, 0) 36%
-      );
-      /* Explicit, because the initial `mask-repeat: repeat` would tile a
-         gradient that has no intrinsic size the moment a browser resolves
-         `mask-size: auto` to anything but the box. */
-      -webkit-mask-size: 100% 100%;
-      mask-size: 100% 100%;
-      -webkit-mask-repeat: no-repeat;
-      mask-repeat: no-repeat;
-    }
-  }
 
   /*
    * Global scroll-reveal system — docs/UI_UX_FOUNDATION.md §9-10.
@@ -1097,6 +1022,62 @@ html {
       opacity: 1 !important;
       transform: none !important;
       transition: none !important;
+    }
+  }
+
+  /*
+   * NEW-PATIENT NOTICE TICKER — the "breaking news" strip.
+   *
+   * The track holds two identical copies of the sentence sequence and slides
+   * by exactly half its own width, so the moment the first copy leaves the
+   * viewport the second is sitting exactly where it started: a seamless loop
+   * with no gap and no reset flash. The duration is deliberately slow (the
+   * sentence is clinical information, not a stock ticker) and the animation
+   * pauses on hover/focus so a reader can finish it, and while the tab is
+   * inactive the browser stops it for free.
+   *
+   * RTL slides the other way: the track is laid out right-to-left, so the
+   * second copy sits to the left of the first and the travel must be positive.
+   */
+  @keyframes notice-ticker {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  @keyframes notice-ticker-rtl {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(50%);
+    }
+  }
+
+  .notice-ticker-track {
+    animation: notice-ticker 34s linear infinite;
+  }
+
+  .notice-ticker-track:dir(rtl) {
+    animation-name: notice-ticker-rtl;
+  }
+
+  .notice-ticker:hover .notice-ticker-track,
+  .notice-ticker:focus-within .notice-ticker-track {
+    animation-play-state: paused;
+  }
+
+  /* The global reduced-motion rule collapses every animation to 0.01ms and one
+     iteration, which for a ticker would land it mid-slide. Switch it off
+     outright instead: the first copy of the sentence is already in place at
+     rest, so the strip reads exactly like the static band it replaces. */
+  @media (prefers-reduced-motion: reduce) {
+    .notice-ticker-track {
+      animation: none !important;
+      transform: none !important;
     }
   }
 }

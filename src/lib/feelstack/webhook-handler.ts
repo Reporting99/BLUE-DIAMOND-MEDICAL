@@ -6,6 +6,8 @@
 // which the framework never bundles for the client.
 import { verifyHmacSignature } from "@/lib/security/hmac";
 import { routes } from "@/lib/routing";
+import { concerns } from "@/features/concerns/data";
+import { concernCmsPath } from "@/features/concerns/cms-contract";
 import { feelstackContentEventDataSchema, feelstackWebhookEnvelopeSchema } from "./schemas";
 import {
   classifyEvent,
@@ -44,15 +46,29 @@ const allowedPaths = new Set(routes.flatMap((r) => [`/en${r.path.en}`, `/ar${r.p
  * resolves with is exactly that route's English path:
  *   /medical/{slug}                  <- medicalServices.map(...path.en)
  *   /aesthetics/treatments/{slug}    <- treatments.map(...)
- *   /aesthetics/concerns/{slug}      <- concerns.map(...)
  *   /aesthetics/technologies/{slug}  <- technologies.map(...)
  *   /shop/{slug}                     <- products.map(...)
  *   /our-team/{id}                   <- literal entries; doctor.id IS the segment
  * so `route.path.en` is the correct join key, and resolving through the
  * registry (rather than string-munging a locale prefix on) is what keeps
  * the Arabic URL correct — Arabic paths are not transliterations.
+ *
+ * CONCERNS ARE THE ONE EXCEPTION, and they are keyed explicitly below.
+ * Their public URL moved into /aesthetics/treatments when the Aesthetics IA
+ * turned concern-first, while FeelStack kept them registered under
+ * /aesthetics/concerns — so `route.path.en` stopped being their CMS path.
+ * Left to the generic rule, every concern publish event would find no route,
+ * revalidate nothing, and serve stale content indefinitely with no error
+ * anywhere. The entry maps the CMS path to the route that now owns the URL,
+ * so the correct page (and its Arabic twin) is what gets invalidated.
  */
-const routeByCmsPath = new Map(routes.map((r) => [r.path.en, r]));
+const routeByCmsPath = new Map([
+  ...routes.map((r) => [r.path.en, r] as const),
+  ...concerns.flatMap((c) => {
+    const route = routes.find((r) => r.id === `concern-${c.id}`);
+    return route ? [[concernCmsPath(c.id), route] as const] : [];
+  }),
+]);
 
 /**
  * Single-instance replay guard — brief §9 "Replay protection" as a
@@ -420,9 +436,15 @@ export async function processRevalidationRequest(
     family: resolvedFamily,
     // Only `site-config` needs the full path set, and only this module can
     // supply it -- `revalidation.ts` is kept free of registry knowledge. The
-    // keys of `routeByCmsPath` ARE the CMS paths (the map is built from
-    // `r.path.en`), so this is the same registry every other path in this
-    // handler is validated against, not a second source of truth.
+    // keys of `routeByCmsPath` ARE the CMS paths, so this is the same source
+    // every other path in this handler is validated against, not a second
+    // source of truth.
+    //
+    // Note it is deliberately WIDER than `routes.map(r => r.path.en)`: the map
+    // also carries the concern CMS paths, which outlived the URLs they used to
+    // publish under (see the map's own note above). A defaultSeo edit is
+    // inherited by those entries too, so their `seo` tags must be purged with
+    // everything else -- purging by URL alone would leave them stale.
     allCmsPaths:
       disposition.kind === "site-config"
         ? Array.from(routeByCmsPath.keys())

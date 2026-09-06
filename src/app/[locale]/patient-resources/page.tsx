@@ -29,7 +29,7 @@ const policies = {
     },
     {
       title: "Prescription refills",
-      body: "New medications require an in-person visit. To renew an existing prescription, ask your pharmacy to fax a renewal request to +1 (587) 443-0394 — allow 2 business days.",
+      body: "New medications require an in-person visit. To renew an existing prescription, ask your pharmacy to fax a renewal request to +1 (587) 443-0394 — allow 2 business days, at the doctor's discretion. If you run out before the renewal comes through, ask your pharmacy for an extension (a 2–3 day supply).",
     },
     {
       title: "Confidentiality",
@@ -47,7 +47,7 @@ const policies = {
     },
     {
       title: "تجديد الوصفات الطبية",
-      body: "تتطلب الأدوية الجديدة زيارة حضورية. لتجديد وصفة قائمة، اطلبوا من الصيدلية إرسال طلب تجديد عبر الفاكس إلى 443-0394 (587) 1+ — يستغرق الأمر يومي عمل.",
+      body: "تتطلب الأدوية الجديدة زيارة حضورية. لتجديد وصفة قائمة، اطلبوا من الصيدلية إرسال طلب تجديد عبر الفاكس إلى 443-0394 (587) 1+ — يستغرق الأمر يومي عمل، ويتم وفق تقدير الطبيب. وإذا نفد الدواء قبل صدور التجديد، اطلبوا من الصيدلية تمديدًا يغطي كمية 2–3 أيام.",
     },
     {
       title: "السرّية",

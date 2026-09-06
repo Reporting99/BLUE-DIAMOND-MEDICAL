@@ -4,6 +4,12 @@ Bilingual (English/Arabic) Next.js site for Blue Diamond Medical Clinic — fami
 
 **Status:** the full route inventory (81 registered routes — 50 live/public, 31 built but feature-flagged off pending real content) plus templates, the ImageKit and FeelStack adapters, and the test suite are complete. See `docs/ROUTING.md` for the full route table and `docs/CONTENT_MODEL.md` for what's gated and why.
 
+## Prerequisites
+
+- **Node.js 20.19.5** — pinned in `.nvmrc` and `package.json` `engines`. A different major is not supported; the build and the production server are verified only on 20.x.
+- **npm** — `package-lock.json` is the lockfile. Do not add a second one (yarn/pnpm).
+- No database, cache service or platform SDK is required. The build emits a standalone Node server (`.next/standalone/server.js`) and runs on any Node-compatible host.
+
 ## Quick start
 
 ```bash
@@ -24,7 +30,45 @@ Visit `http://localhost:3000` — it redirects to `/en`. Arabic lives at `/ar`.
 | `npm run typecheck` | `tsc --noEmit` |
 | `npm run lint` | ESLint |
 | `npm run test:e2e` | Playwright (`tests/e2e` + `tests/accessibility`) |
-| `npm run validate` | typecheck + lint + build, in order |
+| `npm run validate:secrets` | Repository secret scan (`scripts/validate-no-secrets.mjs`) |
+| `npm run validate` | typecheck + lint + secret scan + build, in order |
+
+## Environment variables
+
+Copy `.env.example` to `.env.local` for development. `.env.example` is the
+authoritative list: it documents every variable name, its default, and what the
+application does when the variable is unset. Every credential-backed path fails
+closed, which is why a build with none of them set is green and safe.
+
+| Variable | Purpose |
+|---|---|
+| `NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT` | ImageKit delivery endpoint (public, inlined into the bundle) |
+| `NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY` | ImageKit public key (public, safe in the browser) |
+| `IMAGEKIT_PRIVATE_KEY` | ImageKit private key — **secret**, server-side only |
+| `FEELSTACK_API_URL` / `FEELSTACK_SITE_KEY` / `FEELSTACK_PROJECT_ID` | FeelStack CMS read integration |
+| `FEELSTACK_CONTENT_MODE` | `static` \| `hybrid` \| `cms` |
+| `FEELSTACK_REVALIDATE_SECRET` | HMAC secret for `POST /api/feelstack/revalidate` — **secret** |
+| `FEELSTACK_PREVIEW_SECRET` | Shared secret for the `/api/draft` preview entry — **secret** |
+| `FEELSTACK_ADMIN_*`, `BEFORE_AFTER_STAGE_DIR` | `scripts/import-before-after.mjs` only — **secret**, never read at runtime |
+| `CONTACT_DELIVERY_PROVIDER` | Contact-form delivery adapter id |
+| `NEXT_PUBLIC_SITE_URL` | Canonical site origin |
+| `SITE_LAUNCHED` | Pre-launch indexing gate — leave unset until launch is authorised |
+
+**Secrets are never committed.** No real `.env` file belongs in this repository —
+only `.env.example`, which carries variable names and placeholder values. Real
+values are configured through the chosen hosting provider's environment
+settings (for this deployment, the per-slot runtime env files described in
+`docs/DEPLOYMENT.md`). Anything marked **secret** above must stay server-side:
+never move one behind a `NEXT_PUBLIC_` prefix, which would inline it into the
+browser bundle. If a credential has ever been committed or shared, rotate it.
+
+## Deployment
+
+The application is deployment-neutral: `npm run build` produces a standalone
+Node server and `npm run start` serves it. There is no vendor adapter, edge
+runtime or platform-specific configuration in the build. `docs/DEPLOYMENT.md`
+describes the Blue/Green release model this project uses, but nothing in the
+source depends on it.
 
 ## Architecture
 

@@ -8,3 +8,4 @@ export type { RouteEntry } from "@/types/route";
 export { getRoute, href, localePath, cmsPathForLocale, englishPathFor } from "./routes";
 export { absoluteRouteUrl, hreflangAlternates } from "./canonical";
 export { legacyRedirects } from "./legacy-redirects";
+export { movedRoutes } from "./moved-routes";
