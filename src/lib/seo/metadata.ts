@@ -13,6 +13,7 @@ import type { Metadata } from "next";
 import { buildSrc } from "@imagekit/javascript";
 import { absoluteRouteUrl, getRoute, hreflangAlternates } from "@/lib/routing";
 import { imagekitConfig, imagekitIsConfigured, imagePresets } from "@/config/imagekit";
+import { manifestAssetByPath } from "@/lib/media/image-manifest";
 import { isSiteLaunched } from "@/config/launch";
 import type { Locale } from "@/i18n/config";
 
@@ -50,10 +51,31 @@ export function getRouteMetadata(
   // docs/MEDIA.md), `images` is omitted entirely rather
   // than pointing at a URL that would 404, which is the same honest
   // fallback behavior used everywhere else in the app.
+  // APPROVAL, not merely "a CDN is configured".
+  //
+  // This used to gate on `imagekitIsConfigured` alone, so a configured build
+  // published whatever path a page passed. The homepage passed
+  // /blue-diamond/home/home-hero-blue-diamond.png, whose manifest entry is
+  // `status: "pending"` -- and every on-page image in the app renders the
+  // FacetTile placeholder rather than the real bytes until that flips to
+  // "approved". og:image was the one surface that ignored the rule, which is
+  // the worst place to ignore it: an on-page image is seen by a visitor who is
+  // already here and can be corrected by a redeploy, while a social card is
+  // scraped once and cached by Facebook, X and LinkedIn for as long as they
+  // like. "Not approved for the page" cannot mean "approved for every share of
+  // it".
+  //
+  // A path the manifest does not describe at all is treated the same as an
+  // unapproved one. Both mean there is no image here we are willing to
+  // publish, and a path that no manifest entry backs is exactly how an
+  // unreviewed asset would reach this line.
+  const ogAsset = overrides.ogImagePath
+    ? manifestAssetByPath(overrides.ogImagePath)
+    : undefined;
   const ogImage =
-    overrides.ogImagePath && imagekitIsConfigured
+    ogAsset?.status === "approved" && imagekitIsConfigured
       ? buildSrc({
-          src: overrides.ogImagePath,
+          src: ogAsset.path,
           urlEndpoint: imagekitConfig.urlEndpoint,
           transformation: [imagePresets["og-image"]],
         })

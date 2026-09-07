@@ -359,3 +359,18 @@ export function manifestAsset(id: string): ImageKitAsset {
   if (!asset) throw new Error(`image-manifest.ts: no asset with id "${id}"`);
   return asset;
 }
+
+/**
+ * The manifest entry for a library PATH, or undefined when the manifest does
+ * not describe it.
+ *
+ * Deliberately does not throw, unlike `manifestAsset`. Its caller is the SEO
+ * metadata builder, which runs during static generation for every route: a
+ * throw there fails the whole build over one social-card image, which is a
+ * worse outcome than omitting the card. Absence and unapproved are handled the
+ * same way at the call site, because they mean the same thing to a crawler —
+ * there is no image here that we are willing to publish.
+ */
+export function manifestAssetByPath(path: string): ImageKitAsset | undefined {
+  return imageManifest.find((a) => a.path === path);
+}
