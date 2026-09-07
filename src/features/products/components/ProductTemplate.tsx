@@ -42,6 +42,7 @@ const labels = {
     directions: "Directions",
     keyIngredients: "Key ingredients",
     comparison: "Manufacturer example",
+    asSupplied: "As supplied by the manufacturer",
     beforeLabel: "Before",
     afterLabel: "After",
   },
@@ -68,6 +69,7 @@ const labels = {
     directions: "طريقة الاستخدام",
     keyIngredients: "المكونات الرئيسية",
     comparison: "مثال من الشركة المصنّعة",
+    asSupplied: "كما وردت من الشركة المصنّعة",
     beforeLabel: "قبل",
     afterLabel: "بعد",
   },
@@ -284,6 +286,36 @@ export function ProductTemplate({ product, locale }: { product: Product; locale:
               shape (`before` then `after`), not by DOM position. */}
           {product.manufacturerComparison ? (
             <DetailSection heading={t.comparison}>
+              {/* The manufacturer's own untouched composite, first, exactly as
+                  the supplied manifest orders it (source, before, after). It
+                  is shown at its natural aspect ratio and never cropped: the
+                  printed labels and privacy bars inside it are part of the
+                  evidence, and trimming them would turn an attributable
+                  clinical example into an anonymous claim. */}
+              {product.manufacturerComparison.source ? (
+                <figure className="mb-4">
+                  <ImageKitImage
+                    path={product.manufacturerComparison.source.path}
+                    preset="product"
+                    role="product"
+                    status="approved"
+                    alt={product.manufacturerComparison.source.alt}
+                    locale={locale}
+                    fit="contain"
+                    width={1280}
+                    height={528}
+                    className="w-full rounded-lg"
+                  />
+                  <figcaption className="mt-1 text-sm text-text-secondary">{t.asSupplied}</figcaption>
+                </figure>
+              ) : null}
+              {/* `contain`, and the supplied files' own dimensions (160x132
+                  each half, 320x132 composite, scaled 4x here). These were
+                  declared 600x600 — a square frame for a 1.21:1 picture, which
+                  under the default `cover` silently cropped ~17% off each side
+                  of a clinical comparison. That is the one crop this section
+                  must never make: what sits at the edge of a manufacturer's
+                  example is the label and the attribution. */}
               <div className="grid grid-cols-2 gap-4">
                 <figure>
                   <ImageKitImage
@@ -293,8 +325,9 @@ export function ProductTemplate({ product, locale }: { product: Product; locale:
                     status="approved"
                     alt={product.manufacturerComparison.before.alt}
                     locale={locale}
-                    width={600}
-                    height={600}
+                    fit="contain"
+                    width={640}
+                    height={528}
                     className="rounded-lg"
                   />
                   <figcaption className="mt-1 text-sm text-text-secondary">{t.beforeLabel}</figcaption>
@@ -307,14 +340,18 @@ export function ProductTemplate({ product, locale }: { product: Product; locale:
                     status="approved"
                     alt={product.manufacturerComparison.after.alt}
                     locale={locale}
-                    width={600}
-                    height={600}
+                    fit="contain"
+                    width={640}
+                    height={528}
                     className="rounded-lg"
                   />
                   <figcaption className="mt-1 text-sm text-text-secondary">{t.afterLabel}</figcaption>
                 </figure>
               </div>
               <p className="mt-3 text-sm text-text-secondary">
+                {product.manufacturerComparison.caption[locale]}
+              </p>
+              <p className="text-sm text-text-secondary">
                 {product.manufacturerComparison.attribution[locale]}
               </p>
               <p className="text-sm text-text-secondary">
