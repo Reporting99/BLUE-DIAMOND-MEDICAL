@@ -280,7 +280,7 @@ export const concerns: AestheticConcern[] = [
     slugAr: "ترهل-البشرة",
     title: { en: "Skin Laxity", ar: "ترهل البشرة" },
     summary: {
-      en: "Radio-frequency waves promote collagen and elastin production to tighten and smooth skin all over the body — a quick, pain-free treatment (about 15 minutes) with easy, visible results and no downtime.",
+      en: "Skin loses firmness as the collagen and elastin that support it gradually decline. Radiofrequency treatment at Blue Diamond Medical warms the deeper layers of the skin to encourage collagen production, which may help tighten and smooth areas of laxity on the face and body. Sessions take about 15 minutes, most patients find them comfortable, and downtime is usually minimal. Results vary, and a consultation confirms whether the treatment suits you.",
       ar: "تُحفّز موجات الترددات الراديوية إنتاج الكولاجين والإيلاستين لشدّ البشرة وتنعيمها في مختلف مناطق الجسم — علاج سريع وغير مؤلم (نحو 15 دقيقة) بنتائج واضحة ودون تعافٍ.",
     },
     relatedTreatmentIds: ["radio-frequency"],
@@ -302,7 +302,7 @@ export const concerns: AestheticConcern[] = [
       {
         question: { en: "Is there downtime after treatment?", ar: "هل هناك فترة تعافٍ بعد العلاج؟" },
         answer: {
-          en: "No downtime is associated with this treatment.",
+          en: "This treatment is not typically associated with downtime, though your physician will confirm what to expect for the area being treated.",
           ar: "لا يرتبط هذا العلاج بأي فترة تعافٍ.",
         },
       },
@@ -426,7 +426,7 @@ export const concerns: AestheticConcern[] = [
     slugAr: "حبوب-الحلاقة",
     title: { en: "Razor Bumps", ar: "حبوب الحلاقة" },
     summary: {
-      en: "Uncomfortable and prone to infection when combined with ingrown hairs. Our technologies can remove razor bumps, treat the underlying cause, and give you smoother, softer skin with minimally invasive treatment.",
+      en: "Razor bumps form when shaved hairs curl back into the skin, and they can be uncomfortable and prone to infection where ingrown hairs are also present. Laser hair removal at Blue Diamond Medical addresses the underlying cause by reducing the hair that produces them, which may improve both comfort and skin texture. Results vary, and a consultation confirms whether the treatment suits your skin and hair type.",
       ar: "مزعجة وقابلة للإصابة عند اقترانها بالشعر النامي تحت الجلد. يمكن لتقنياتنا إزالة حبوب الحلاقة، وعلاج السبب الجذري، ومنحكم بشرة أنعم وأكثر نعومة بعلاج طفيف التوغل.",
     },
     relatedTreatmentIds: ["laser-hair-removal"],
