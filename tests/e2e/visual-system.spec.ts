@@ -838,6 +838,38 @@ test.describe("Back-to-top arrow", () => {
       await expect.poll(() => page.evaluate(() => Math.round(window.scrollY)), { timeout: 4000 }).toBeLessThanOrEqual(2);
     });
 
+    test(`${locale}: a page that ARRIVES scrolled offers the arrow immediately`, async ({ page }) => {
+      // A reload landing mid-page and a back/forward restore both hand the
+      // component a window that is already scrolled past the reveal threshold
+      // before its effect ever runs. That case was broken: the effect seeded
+      // its "currently shown" mirror from `window.scrollY` while React had
+      // rendered `false`, so the first update found no change, never called
+      // `setVisible`, and the control stayed inert and invisible — on exactly
+      // the pages where a reader is furthest from the top and most likely to
+      // want it.
+      //
+      // `waitUntil: "commit"` then scrolling BEFORE networkidle is what puts
+      // the scroll ahead of hydration deterministically. Waiting for the load
+      // first and scrolling after — what the test above does — only reproduces
+      // it when the machine is loaded enough for hydration to land late, which
+      // is why this arrived as an intermittent failure rather than a bug
+      // report.
+      await page.goto(`/${locale}`, { waitUntil: "commit" });
+      await page.evaluate(() => window.scrollTo(0, 1400));
+      await page.waitForLoadState("networkidle");
+
+      // The precondition is asserted, not assumed: if the page were too short
+      // to scroll, or the scroll were undone, this test would otherwise pass
+      // while proving nothing.
+      await expect
+        .poll(() => page.evaluate(() => Math.round(window.scrollY)), { timeout: 5000 })
+        .toBeGreaterThan(100);
+
+      const button = page.locator("[data-back-to-top]");
+      await expect(button).not.toHaveAttribute("inert", "");
+      await expect(button).toBeVisible();
+    });
+
     test(`${locale}: the arrow stays legible over the footer, not just over light sections`, async ({ page }) => {
       await page.goto(`/${locale}`);
       await page.waitForLoadState("networkidle");
