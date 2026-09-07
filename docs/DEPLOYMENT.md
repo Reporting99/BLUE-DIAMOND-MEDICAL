@@ -144,14 +144,28 @@ trust-anchor install and `ops/nginx/README.md` for the launch procedure.
 
 ## 3. Pre-launch indexing guard
 
-`siteConfig.url` is already the real launch domain, and every canonical,
-hreflang, OG URL and sitemap entry is built from it. Those URLs must not churn
-at launch — so indexability is gated by an explicit flag instead.
+> Full activation procedure: **`docs/DOMAIN_SEO_ACTIVATION.md`**. This section
+> is the layer model; that document is the ordered runbook.
 
-**`SITE_LAUNCHED` — server-only, opt-in, exact string `"true"`.** Anything else
-(unset, empty, `"false"`, `"TRUE"`, `"true "`) means not launched. Fail-closed
-is the point: the failure mode is silent, and by the time it is visible a
-crawler has already acted.
+Indexing requires **two** things, ANDed in `isIndexingEnabled()`
+(`src/config/launch.ts`). Neither alone changes anything:
+
+| Variable | Meaning |
+|---|---|
+| `SITE_URL` | the one authoritative public origin. Absolute `https://`, origin only. Validated by `resolveSiteUrl()` (`src/config/site-url.ts`); `http://`, localhost, a bare IP, a single-label host, an explicit port, a path, or a platform-ephemeral host (`.pages.dev`, `.vercel.app`, `.ngrok*`, …) is treated as unset. |
+| `INDEXING_ENABLED` | the explicit switch. Exact string `"true"`. |
+
+`NEXT_PUBLIC_SITE_URL` and `SITE_LAUNCHED` are honoured as deprecated aliases
+so existing slot env files keep working; the new names win when both are set.
+
+No domain is hard-coded anywhere. With `SITE_URL` unset the app emits **no**
+canonical, hreflang or `og:url` tag at all, rather than a fabricated or
+localhost one — a relative canonical would be resolved by Next against
+`metadataBase`, whose default is `http://localhost:<port>`.
+
+**Opt-in, exact string `"true"`.** Anything else (unset, empty, `"false"`,
+`"TRUE"`, `"true "`) means not indexable. Fail-closed is the point: the failure
+mode is silent, and by the time it is visible a crawler has already acted.
 
 Deliberately **not** `NEXT_PUBLIC_` — Next inlines those into the client
 bundle, and a crawler-facing gate belongs on the server.
@@ -168,7 +182,8 @@ that point on. Changing `SITE_LAUNCHED` on a running server cannot alter it.
 | `robots.txt` | `src/app/robots.ts` | **request time** | crawling |
 | `sitemap.xml` | `src/app/sitemap.ts` | **request time** | URL discovery |
 | `X-Robots-Tag` header | `src/proxy.ts` | **request time** | indexing of anything already fetched |
-| page `<meta robots>` | `src/lib/seo/metadata.ts` | **BUILD TIME** | indexing of a rendered page |
+| page `<meta robots>`, canonical, hreflang, `og:url` | `src/lib/seo/metadata.ts` | **BUILD TIME** | indexing of a rendered page |
+| `llms.txt` | `src/app/llms.txt/route.ts` | **request time** | URL discovery by answer engines |
 
 While unlaunched the sitemap also publishes no URL inventory at all.
 
@@ -198,14 +213,15 @@ rebuilt. A runtime-only change is not a launch.
 
 | # | Step |
 |---|---|
-| A | Set `SITE_LAUNCHED=true` in the build/deploy environment (CI variable — it is read during `npm run build`, alongside `NEXT_PUBLIC_SITE_URL`, which is likewise inlined at build time) |
+| A | Set **both** `SITE_URL=https://<final domain>` and `SITE_LAUNCHED=true` in the build/deploy environment (CI variables — both are read during `npm run build` and baked into page metadata), **and** in both slot runtime env files. Setting the flag alone does nothing: indexing also requires a valid origin. |
 | B | Rebuild the application |
 | C | Deploy the new release through the Blue/Green orchestrator |
 | D | Verify `<meta name="robots">` is `index, follow` on a real page |
 | E | Verify `robots.txt` allows crawling and advertises the sitemap |
 | F | Verify `sitemap.xml` contains the full URL inventory |
 | G | Verify `X-Robots-Tag` no longer sends `noindex` |
-| H | Verify canonical and hreflang point at `https://bluediamondmedical.ca` |
+| H | Verify canonical and hreflang point at the configured `SITE_URL` — self-referencing per page, reciprocal EN↔AR, `x-default` on the English URL |
+| I | Verify `/` answers **200** (internal rewrite), not a redirect |
 
 D through H are all externally observable — check them against the deployed
 slot, not against a local build.
@@ -244,8 +260,9 @@ that artifact is still there (see the release-safety tests in
 
 ## 5. DNS and the legacy domains
 
-- **`bluediamondmedical.ca`** — becomes canonical. `src/proxy.ts` handles its
-  own legacy-URL 301s natively (see `ROUTING.md`).
+- **The final domain** — becomes canonical, and is supplied through `SITE_URL`
+  rather than written into the codebase. `src/proxy.ts` handles the legacy-URL
+  301s from the two old sites natively (see `ROUTING.md`).
 - **`bluediamondmedicalaesthetics.ca`** — a separate legacy domain. This app
   cannot redirect requests it never receives, so retiring it needs either:
   1. pointing it at the same hosting and adding a host-aware branch to the

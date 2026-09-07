@@ -5,7 +5,7 @@ import { medicalServices } from "@/features/medical-services/data";
 import { getRoute } from "@/lib/routing";
 import { aestheticsId, clinicId, doctorEntityId } from "@/lib/seo/entity-graph";
 import type { Locale } from "@/i18n/config";
-import { schemaLanguage, websiteId } from "./shared";
+import { schemaLanguage, siteOrigin, websiteId } from "./shared";
 import type { JsonLdNode } from "./types";
 
 const SCHEMA_DAYS = [
@@ -86,7 +86,7 @@ export function buildClinicGraph(locale: Locale): JsonLdNode {
         "@type": "MedicalClinic",
         "@id": clinicId,
         name: siteConfig.clinic.name,
-        url: siteConfig.url,
+        ...(siteOrigin() ? { url: siteOrigin() } : {}),
         telephone: siteConfig.clinic.phoneDisplay,
         faxNumber: siteConfig.clinic.faxDisplay,
         address: {
@@ -127,7 +127,7 @@ export function buildClinicGraph(locale: Locale): JsonLdNode {
           "@type": "MedicalBusiness",
           "@id": aestheticsId,
           name: siteConfig.aesthetics.name,
-          url: siteConfig.url,
+          ...(siteOrigin() ? { url: siteOrigin() } : {}),
           telephone: siteConfig.aesthetics.phoneDisplay,
           faxNumber: siteConfig.aesthetics.faxDisplay,
           address: {
@@ -163,7 +163,7 @@ export function buildClinicGraph(locale: Locale): JsonLdNode {
         "@type": "WebSite",
         "@id": websiteId,
         name: siteConfig.clinic.name,
-        url: siteConfig.url,
+        ...(siteOrigin() ? { url: siteOrigin() } : {}),
         publisher: { "@id": clinicId },
         inLanguage: [schemaLanguage(locale)],
         // No SearchAction — the site has no internal search feature, and

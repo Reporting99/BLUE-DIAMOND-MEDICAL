@@ -14,7 +14,8 @@ import { buildSrc } from "@imagekit/javascript";
 import { absoluteRouteUrl, getRoute, hreflangAlternates } from "@/lib/routing";
 import { imagekitConfig, imagekitIsConfigured, imagePresets } from "@/config/imagekit";
 import { manifestAssetByPath } from "@/lib/media/image-manifest";
-import { isSiteLaunched } from "@/config/launch";
+import { isIndexingEnabled } from "@/config/launch";
+import { siteUrlIsConfigured } from "@/config/site-url";
 import type { Locale } from "@/i18n/config";
 
 interface RouteMetadataOverrides {
@@ -81,35 +82,57 @@ export function getRouteMetadata(
         })
       : undefined;
 
+  // With no configured origin, `canonical`/`languages` are ROOT-RELATIVE, and
+  // Next resolves a relative canonical against `metadataBase` — which, unset,
+  // defaults to http://localhost:<port>. Emitting them would therefore publish
+  // exactly the localhost canonical this build must never contain. Omitting
+  // the tags entirely is the honest state: the page has no public URL yet.
+  const urlsArePublishable = siteUrlIsConfigured();
+
   return {
     title: route.title[locale],
     description: overrides.description[locale],
-    alternates: {
-      canonical,
-      languages,
-    },
+    ...(urlsArePublishable
+      ? {
+          alternates: {
+            canonical,
+            languages,
+          },
+        }
+      : {}),
     // Pre-launch, NO page is indexable regardless of its route-registry
-    // setting. This is the build-time layer of the guard; the authoritative
+    // setting, and regardless of whether an origin is configured. This is the
+    // build-time layer of the guard; the authoritative
     // request-time layer is the X-Robots-Tag header stamped by src/proxy.ts,
     // and robots.txt is the third. They are not redundant — robots.txt stops
     // crawling, while the header and this meta tag stop *indexing* of
     // anything already fetched or reached from an external link, which
     // robots.txt alone does not prevent.
     //
-    // Canonical, hreflang and OG URLs above are deliberately left pointing at
-    // the real launch domain: they are stable, correct, and must not churn at
-    // launch. Nothing here ever emits a temporary or runtime hostname.
+    // Canonical, hreflang and OG URLs above come from the configured origin
+    // and are omitted outright when there is none. Nothing here ever emits a
+    // temporary or runtime hostname in either state.
     robots:
-      isSiteLaunched() && route.indexing === "index"
+      isIndexingEnabled() && route.indexing === "index"
         ? { index: true, follow: true }
         : { index: false, follow: false },
     openGraph: {
       title: route.title[locale],
       description: overrides.description[locale],
-      url: canonical,
+      // Same rule as the canonical above: an absolute og:url only once a real
+      // origin exists. A relative og:url is meaningless to every consumer.
+      ...(urlsArePublishable ? { url: canonical } : {}),
       locale: locale === "ar" ? "ar_CA" : "en_CA",
+      // Declares that the page exists in the other language too, matching the
+      // hreflang pair above. Both locales are always built, so this is never
+      // a claim about a translation that does not exist.
+      alternateLocale: locale === "ar" ? "en_CA" : "ar_CA",
       type: "website",
-      ...(ogImage ? { images: [{ url: ogImage, width: 1200, height: 630 }] } : {}),
+      // og:image:alt is the approved manifest alt text for THIS locale — the
+      // same string the on-page <img> would carry, never a keyword list.
+      ...(ogImage && ogAsset
+        ? { images: [{ url: ogImage, width: 1200, height: 630, alt: ogAsset.alt[locale] }] }
+        : {}),
     },
     twitter: {
       card: ogImage ? "summary_large_image" : "summary",

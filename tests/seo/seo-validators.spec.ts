@@ -43,8 +43,17 @@ test.describe("Sitemap", () => {
     const response = await request.get("/sitemap.xml");
     const body = await response.text();
     for (const route of publishedRoutes) {
-      expect(body, `sitemap missing EN path for ${route.id}`).toContain(`/en${route.path.en}`);
-      expect(body, `sitemap missing AR path for ${route.id}`).toContain(`/ar${route.path.ar}`);
+      // Sitemap entries are percent-encoded (see encodeSitemapUrl in
+      // src/app/sitemap.ts), so Arabic slugs appear as %D8%A7... — encode the
+      // expected path the same way rather than searching for raw UTF-8.
+      //
+      // Trailing slash stripped for the home route, whose registry path is
+      // "/": "/en/" answers a 308, so the sitemap must not contain it.
+      const en = encodeURI(`/en${route.path.en}`).replace(/\/$/, "");
+      const ar = encodeURI(`/ar${route.path.ar}`).replace(/\/$/, "");
+      expect(body, `sitemap missing EN path for ${route.id}`).toContain(`<loc>https://`);
+      expect(body, `sitemap missing EN path for ${route.id}`).toContain(`${en}</loc>`);
+      expect(body, `sitemap missing AR path for ${route.id}`).toContain(`${ar}</loc>`);
     }
   });
 
@@ -53,7 +62,7 @@ test.describe("Sitemap", () => {
     const body = await response.text();
     for (const route of routes) {
       if (route.requiresFeature && !features[route.requiresFeature as keyof typeof features]) {
-        expect(body).not.toContain(`/en${route.path.en}`);
+        expect(body).not.toContain(`${encodeURI(`/en${route.path.en}`)}</loc>`);
       }
     }
   });

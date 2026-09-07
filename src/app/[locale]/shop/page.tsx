@@ -11,7 +11,7 @@ import { cacheTags } from "@/lib/feelstack/cache-tags";
 import { isLocale, type Locale } from "@/i18n/config";
 import { getRoute, href } from "@/lib/routing";
 import { features } from "@/config/features";
-import { availabilityNotice, productCategories, productConcerns, products } from "@/features/products";
+import { availabilityNotice, productBrands, productCategories, productConcerns, products } from "@/features/products";
 import { getRouteMetadata } from "@/lib/seo/metadata";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
 import { PageSchema } from "@/components/shared/schema";
@@ -43,10 +43,24 @@ export async function generateMetadata({
   if (!features.shopEnabled) return {};
   const { locale } = await params;
   const safeLocale: Locale = isLocale(locale) ? locale : "en";
+  // Brand list and product count are DERIVED, not written down.
+  //
+  // This description said "the full SkinMedica catalogue — 23 approved
+  // products". Both halves went stale when the second brand landed: the
+  // catalogue now carries two brands and 54 products, so the hub's own meta
+  // description named the wrong catalogue and undercounted it by more than
+  // half. Deriving both from the data the page renders means the description
+  // cannot drift from the page again — which is the actual requirement, not
+  // "update the number".
+  const brandNames = productBrands.map((brand) => brand.name);
+  const brandsEn = brandNames.join(" and ");
+  const brandsAr = brandNames.join(" و");
+  const count = products.length;
+
   return getRouteMetadata("shop-hub", safeLocale, {
     description: {
-      en: "Browse the full SkinMedica professional skincare catalogue carried by Blue Diamond Medical Clinic — 23 approved products across cleansers, serums, moisturizers, sunscreen, and more.",
-      ar: "تصفّحوا كتالوج سكين ميديكا الكامل للعناية الاحترافية بالبشرة الذي تقدّمه عيادة بلو دايموند الطبية — 23 منتجًا معتمدًا بين المنظفات والسيروم والمرطبات وواقي الشمس والمزيد.",
+      en: `Browse the ${brandsEn} professional skincare catalogue carried by Blue Diamond Medical Clinic — ${count} products across cleansers, serums, moisturizers, sunscreen, and more.`,
+      ar: `تصفّحوا كتالوج ${brandsAr} للعناية الاحترافية بالبشرة الذي تقدّمه عيادة بلو دايموند الطبية — ${count} منتجًا بين المنظفات والسيروم والمرطبات وواقي الشمس والمزيد.`,
     },
   });
 }

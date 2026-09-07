@@ -1,4 +1,5 @@
 import { defineConfig, devices } from "@playwright/test";
+import { SEO_TEST_ORIGIN } from "./tests/support/seo-test-origin";
 
 /**
  * Playwright config — brief §39. Suites: tests/e2e, tests/accessibility
@@ -55,14 +56,21 @@ export default defineConfig({
     reuseExistingServer: false,
     timeout: 120_000,
     // The suite validates LAUNCHED behaviour — populated sitemap, `Sitemap:`
-    // in robots.txt, indexable pages — so the server runs with the gate open.
+    // in robots.txt, indexable pages, absolute canonical/hreflang/og:url — so
+    // the server runs with the gate fully open: flag AND origin.
     // Production defaults to the opposite (see src/config/launch.ts): the
     // flag is absent, so the site is not indexable. The unlaunched branch is
     // covered by tests/unit/prelaunch-guard.spec.ts, which asserts the gate
     // directly rather than needing a second server.
     env: {
       ...process.env,
-      SITE_LAUNCHED: "true",
+      INDEXING_ENABLED: "true",
+      // Indexing needs BOTH the flag and a valid https origin
+      // (src/config/launch.ts). Without this the suite would exercise the
+      // UNCONFIGURED path — empty sitemap, no `Sitemap:` line, no canonical
+      // tags — while claiming to test launched behaviour. A reserved
+      // .invalid origin, never a real domain: tests/support/seo-test-origin.ts.
+      SITE_URL: SEO_TEST_ORIGIN,
       PORT: String(TEST_SERVER_PORT),
       HOSTNAME: "127.0.0.1",
     },

@@ -52,7 +52,17 @@ jobs:
           # No real secrets in CI — every ImageKit/FeelStack-dependent code
           # path is designed to fail closed to local fallback content when
           # these are unset, per docs/DEPLOYMENT.md.
-          NEXT_PUBLIC_SITE_URL: https://bluediamondmedical.ca
+          #
+          # A RESERVED .invalid origin, not the production domain. This step
+          # used to hard-code the real hostname, which made the repository
+          # assert a public identity no operator had configured and baked it
+          # into every canonical tag CI produced. CI validates behaviour, not
+          # a domain; page metadata is baked at build time, so the value here
+          # must match the one the Playwright web server uses or the built
+          # pages and the request-time sitemap would disagree.
+          # Keep in sync with tests/support/seo-test-origin.ts.
+          SITE_URL: https://seo-test.invalid
+          INDEXING_ENABLED: "true"
 
       # next.config.ts sets `output: "standalone"`, and the Playwright harness
       # serves `.next/standalone/server.js` with --no-build. If the build ever

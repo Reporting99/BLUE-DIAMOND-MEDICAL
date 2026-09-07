@@ -1,6 +1,12 @@
+import { resolveSiteUrl } from "./site-url";
+
 /**
  * Central clinic facts. Every component/schema/doc must read from here —
  * never hardcode address, phone, fax, domain, or social links elsewhere.
+ *
+ * `url`/`domain` are the deployment's configured public origin and resolve to
+ * "" when none is set — they are NOT constants. Everything else in this file
+ * is an approved, verified clinic fact.
  *
  * Source: Blue-Diamond-Medical-Website-Content-Extraction_1.docx
  * (approved content extraction of the two live legacy sites).
@@ -10,8 +16,35 @@
 export const siteConfig = {
   name: "Blue Diamond Medical",
   legalName: "Blue Diamond Medical Clinic",
-  domain: "bluediamondmedical.ca",
-  url: "https://bluediamondmedical.ca",
+
+  /**
+   * The public origin, or "" when none is configured.
+   *
+   * A GETTER, not a literal. It used to be the string
+   * "https://bluediamondmedical.ca", which made every canonical, hreflang, OG
+   * and JSON-LD URL in the app assert a production identity that no operator
+   * had configured — the hard-coded production domain this pass removes. The
+   * value now comes from SITE_URL (see src/config/site-url.ts) and is read
+   * per access, so robots.txt and sitemap.xml — which run at request time —
+   * always reflect the running configuration.
+   *
+   * The empty-string fallback is deliberate and load-bearing: the ~30 call
+   * sites that build URLs as `${siteConfig.url}${path}` degrade to a
+   * ROOT-RELATIVE path rather than to a fabricated absolute one. Callers for
+   * which a relative value would be wrong (canonical, hreflang, Open Graph
+   * `url`, sitemap entries) must check `siteUrlIsConfigured()` and omit the
+   * field instead — never substitute a host of their own.
+   */
+  get url(): string {
+    return resolveSiteUrl() ?? "";
+  },
+
+  /** Bare hostname of the configured origin, or "" — same rules as `url`. */
+  get domain(): string {
+    const url = resolveSiteUrl();
+    return url ? new URL(url).hostname : "";
+  },
+
   defaultLocale: "en",
   locales: ["en", "ar"] as const,
 

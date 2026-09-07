@@ -7,5 +7,6 @@ export { routes } from "@/config/routes";
 export type { RouteEntry } from "@/types/route";
 export { getRoute, href, localePath, cmsPathForLocale, englishPathFor } from "./routes";
 export { absoluteRouteUrl, hreflangAlternates } from "./canonical";
+export { resolveSiteUrl, siteUrlIsConfigured, absoluteUrl } from "@/config/site-url";
 export { legacyRedirects } from "./legacy-redirects";
 export { movedRoutes } from "./moved-routes";

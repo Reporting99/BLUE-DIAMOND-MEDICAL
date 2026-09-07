@@ -1,9 +1,45 @@
 import { test, expect } from "@playwright/test";
 
 test.describe("Locale routing", () => {
-  test("root redirects to /en/", async ({ page }) => {
+  /**
+   * "/" is SERVED, not redirected.
+   *
+   * It used to answer 301 -> /en, which put a redirect hop in front of the
+   * single most-requested URL on the site — the one a visitor reaches by
+   * typing the domain. The proxy now rewrites it internally, so the visitor
+   * and the crawler both get the English homepage with a 200 and the URL
+   * stays "/".
+   *
+   * The duplication that creates ("/" and "/en" serve the same page) is
+   * resolved by the canonical tag, which is asserted here rather than left
+   * implied: without it this would be two competing URLs instead of one page
+   * with a front door.
+   */
+  test("root is served directly with no redirect hop", async ({ page, request }) => {
+    const response = await request.get("/", { maxRedirects: 0 });
+    expect(response.status(), "/ must not answer a 3xx").toBe(200);
+
     await page.goto("/");
-    await expect(page).toHaveURL(/\/en\/?$/);
+    await expect(page).toHaveURL(/\/$/);
+    await expect(page.locator("html")).toHaveAttribute("lang", "en");
+    // Canonicalised to /en, so "/" and "/en" are one page, not duplicates.
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", /\/en$/);
+  });
+
+  test("/en and /ar both remain directly reachable", async ({ request }) => {
+    for (const path of ["/en", "/ar"]) {
+      const response = await request.get(path, { maxRedirects: 0 });
+      expect(response.status(), `${path} must answer 200`).toBe(200);
+    }
+  });
+
+  test("an unprefixed path that is not the root still redirects once to its locale URL", async ({ request }) => {
+    // Deliberately still a 301: /medical is not a URL this site publishes,
+    // links to, or lists in its sitemap. Serving it 200 would mint a second
+    // address for every page in the app.
+    const response = await request.get("/medical", { maxRedirects: 0 });
+    expect(response.status()).toBe(301);
+    expect(response.headers()["location"]).toContain("/en/medical");
   });
 
   test("English homepage sets lang=en and dir=ltr", async ({ page }) => {

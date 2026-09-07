@@ -1,6 +1,7 @@
 import { test, expect } from "@playwright/test";
 import { listRoutes, FeelStackRouteInventoryContractError } from "../../src/lib/feelstack/client";
 import sitemap from "../../src/app/sitemap";
+import { SEO_TEST_ORIGIN } from "../support/seo-test-origin";
 
 /**
  * Route-inventory contract tests.
@@ -38,6 +39,14 @@ const HYBRID_ENV = {
   FEELSTACK_CONTENT_MODE: "hybrid",
   FEELSTACK_API_URL: "https://feelstack.example.test/api",
   FEELSTACK_SITE_KEY: "blue-diamond-medical",
+  // Indexing needs a valid https origin as well as the flag
+  // (src/config/launch.ts), so every sitemap case below has to supply one or
+  // it would assert an empty sitemap for the wrong reason. Reserved .invalid
+  // origin, never a real domain — tests/support/seo-test-origin.ts.
+  SITE_URL: SEO_TEST_ORIGIN,
+  // Pinned: it outranks SITE_LAUNCHED, so an ambient value would override the
+  // flag each test is setting.
+  INDEXING_ENABLED: undefined as string | undefined,
 };
 
 /**
