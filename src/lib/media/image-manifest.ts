@@ -138,6 +138,63 @@ export const imageManifest: ImageKitAsset[] = [
     status: "pending",
   },
   /**
+   * The two "Find your way in" navigation cards on /aesthetics.
+   *
+   * These two cards are the only imagery on the site that no CMS entity owns.
+   * They illustrate a ROUTE — "Treatments", "Our Technologies" — rather than a
+   * concern, a treatment or a technology, so there is no content entry whose
+   * media assignment could carry them, and inventing a content type just to
+   * hold navigation artwork would put a schema in the CMS that models the
+   * menu rather than the clinic. They are therefore repo-owned and audited
+   * here, which is what this manifest is for.
+   *
+   * Supplied by the client on 2026-09-07 in
+   * BLUE_DIAMOND_NEW_IMAGES_FEELSTACK_READY_2026-09-07 and imported through
+   * the sanctioned door (FeelStack `POST /media/import`), which put the bytes
+   * in ImageKit at exactly these paths and recorded the MediaAsset rows;
+   * both were then approved by the `bd-media-reviewer` identity and the
+   * delivered bytes re-verified against the supplied SHA-256 with
+   * `?tr=orig-true`:
+   *   treatments-collection.png  0b99b353f6b30e82512c5ce0871afd32e8ae91c1e9ed3ff5e642f576f6c57196
+   *   technologies-equipment.png c65f6028dbee2815f70829e4ae8ecaaf71e9e438b1bffc273bacb2d60080503a
+   *
+   * They are AI-generated EDITORIAL imagery — not Blue Diamond patients, not
+   * named clinic staff, and not before/after evidence. That provenance is
+   * recorded on the media rows themselves (metadata.sourceType) and is the
+   * reason they are allowed on a page whose other pictures are real people:
+   * docs/UI_UX_FOUNDATION.md §18 forbids an INVENTED FACE standing in for a
+   * real person, and neither of these depicts an identifiable individual.
+   *
+   * 1672x941 is the supplied original (≈16:9, the frame the cards already
+   * use), so the card never asks ImageKit to enlarge the source.
+   */
+  {
+    id: "aesthetics-nav-treatments",
+    path: `${MEDIA_ROOT}/aesthetics/navigation/treatments-collection.png`,
+    width: 1672,
+    height: 941,
+    aspectRatio: "16:9",
+    alt: {
+      en: "Editorial montage of laser, facial, and scalp treatments",
+      ar: "مشهد تحريري يجمع علاجات الليزر والوجه وفروة الرأس",
+    },
+    role: "treatment",
+    status: "approved",
+  },
+  {
+    id: "aesthetics-nav-technologies",
+    path: `${MEDIA_ROOT}/aesthetics/navigation/technologies-equipment.png`,
+    width: 1672,
+    height: 941,
+    aspectRatio: "16:9",
+    alt: {
+      en: "Potenza, Elite iQ, and LaseMD Ultra treatment technologies",
+      ar: "تقنيات العلاج Potenza وElite iQ وLaseMD Ultra",
+    },
+    role: "technology",
+    status: "approved",
+  },
+  /**
    * The Our Team hero group photograph, supplied by the clinic for this page
    * and imported through the sanctioned door (FeelStack
    * `POST /admin/v1/projects/:id/media/import`, which put the bytes in
