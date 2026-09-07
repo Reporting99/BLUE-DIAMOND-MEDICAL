@@ -262,7 +262,49 @@ export function proxy(request: NextRequest) {
 
       const canonical = arabicToCanonicalPath.get(withoutLocale);
       if (canonical) {
-        const url = new URL(`/ar${canonical}`, request.url);
+        // The rewrite target must be SAME-ORIGIN with the server, and behind
+        // Nginx that origin is plain http -- hence the explicit protocol below.
+        //
+        // Every pretty Arabic URL returned 500 in production while the same
+        // path served 200 when requested directly against a slot. The only
+        // difference was the header Nginx sets and a direct request does not:
+        // `X-Forwarded-Proto: https`.
+        //
+        // Next decides whether a rewrite is internal in
+        // server/lib/router-utils/resolve-routes.js, by relativising the
+        // destination against `initUrl`:
+        //
+        //   initUrl = `${protocol}://${hostname}:${port}${req.url}`
+        //
+        // built from the SERVER's own listener -- `http://localhost:3030/...`
+        // here -- because `experimental.trustHostHeader` is off. The
+        // destination stays absolute unless its origin matches exactly
+        // (shared/lib/router/utils/relativize-url.js), and router-server.js
+        // then does `if (finished && parsedUrl.protocol) proxyRequest(...)`.
+        //
+        // `nextUrl` takes its protocol from X-Forwarded-Proto, so the
+        // destination was `https://localhost:3030/...`: same host, same port,
+        // WRONG SCHEME. Next therefore treated an internal rewrite as external
+        // and fetched it over TLS against a plaintext port --
+        // `EPROTO ... ssl3_get_record: wrong version number` -- and returned
+        // 500. Verified on both slots and both deployed releases:
+        //
+        //   Host only                -> 200
+        //   X-Forwarded-Proto: http  -> 200
+        //   X-Forwarded-Proto: https -> 500
+        //
+        // Pinning the scheme to the one the server actually listens on is what
+        // makes the origins match. This app is ALWAYS the upstream of a proxy
+        // that terminates TLS and always binds loopback HTTP (HOSTNAME/PORT in
+        // the slot runtime env), so `http:` is a property of the deployment,
+        // not a guess about the visitor -- the visitor's real scheme is still
+        // https, and nothing here changes what they see.
+        //
+        // The sibling 301 above needs none of this: a redirect emits a relative
+        // Location and never round-trips through Next's rewrite proxy.
+        const url = request.nextUrl.clone();
+        url.pathname = `/ar${canonical}`;
+        url.protocol = "http:";
         if (search) url.search = search;
         const headers = new Headers(request.headers);
         headers.set(ARABIC_REWRITE_MARKER, arabicRewriteNonce());
