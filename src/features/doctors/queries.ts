@@ -31,6 +31,33 @@ export function portraitForLocale(doctor: Doctor, locale: Locale): Doctor["image
 }
 
 /**
+ * The client-approved presentation order for the physician roster.
+ *
+ * Display order only: it reorders the same six records `doctors` holds and
+ * changes nothing about them. Every surface that lists more than one doctor
+ * — the team index and the homepage trio — reads `doctorsInTeamOrder` so the
+ * two can never drift apart; detail pages and structured data keep reading
+ * `doctors` directly, where order is meaningless.
+ *
+ * Any roster id not listed here still renders, appended after the ordered
+ * ones, so a future addition can never silently disappear from a page.
+ */
+export const TEAM_DISPLAY_ORDER = [
+  "mohamed-farhat",
+  "reem-hamdi",
+  "bakare",
+  "omonijo",
+  "omaima-saeed",
+  "ahmed-gwea",
+];
+
+export const doctorsInTeamOrder: Doctor[] = [...doctors].sort((a, b) => {
+  const ai = TEAM_DISPLAY_ORDER.indexOf(a.id);
+  const bi = TEAM_DISPLAY_ORDER.indexOf(b.id);
+  return (ai === -1 ? TEAM_DISPLAY_ORDER.length : ai) - (bi === -1 ? TEAM_DISPLAY_ORDER.length : bi);
+});
+
+/**
  * CL-027 — the availability line published under every physician biography.
  *
  * English is the client's exact approved sentence. Arabic reuses the clinic's

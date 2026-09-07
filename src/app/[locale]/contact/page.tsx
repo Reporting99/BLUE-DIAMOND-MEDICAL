@@ -125,6 +125,11 @@ export default async function ContactPage({
         }}
         breadcrumbs={<Breadcrumbs locale={locale} items={[{ label: ownRoute.title[locale] }]} />}
         size="compact"
+        /* The backdrop here is a map of where the clinic is — on a Contact
+           page that is the answer to the page's own question, not decoration.
+           At copy height the 16:9 asset was cropped to a strip with no
+           legible landmark in it; `tall` gives it the room to be read. */
+        backdrop="tall"
       />
 
       <section className="section-y">
