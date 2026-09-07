@@ -38,7 +38,8 @@ NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT=https://ik.imagekit.io/oq92dh6zib
 
 `NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY` is **not required for image delivery** — the
 root layout's `ImageKitProvider` takes only `urlEndpoint`, and
-`imagekitIsConfigured` tests only that. A public key would only be needed if an
+`imagekitIsConfigured` tests only that. Setting the endpoint is what switches
+ImageKit on; leaving it unset is a supported state, not a broken one. A public key would only be needed if an
 authenticated *browser-upload* flow were added later, which this build does not
 have. `IMAGEKIT_PRIVATE_KEY` must never appear in this repository's environment
 in any form: the only process that holds one is the FeelStack backend, using the
@@ -73,8 +74,20 @@ fact below is carried over verbatim from the source noted at each section.
 The approved account/endpoint is **`https://ik.imagekit.io/oq92dh6zib`**, media
 root **`/blue-diamond/`** — e.g. `/blue-diamond/home/home-hero-blue-diamond.png`.
 `src/config/imagekit.ts` defaults `NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT` to this
-value and exports `MEDIA_ROOT` for every content file that builds a path, so no
-environment variable is required just to point at the right account.
+value and exports `MEDIA_ROOT` for every content file that builds a path, so a
+deployment that sets the variable to nothing still builds URLs against the right
+account rather than an empty origin.
+
+**That default is not the same as being configured, and this used to be
+conflated.** `imagekitIsConfigured` was derived from the endpoint *field*, which
+falls back to the constant above, so it was true in every environment including
+ones with no ImageKit at all — a CI build with no `.env` emitted live CDN URLs
+and fetched them over the network, while the fallback branch that exists for
+exactly that case was unreachable. Configured-ness now comes from the
+environment variable alone, trimmed, with a blank string treated as absent.
+**An environment that does not set `NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT` renders
+no CDN image**: the FacetTile placeholder everywhere, and the copy bundled into
+the build for the brand mark. Set it, or accept the fallback deliberately.
 
 **This repository holds no ImageKit credential, and does not need one.** The
 private key lives in FeelStack's per-project media-provider configuration and
