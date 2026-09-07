@@ -1,4 +1,4 @@
-import diamondMark from "@/assets/brand/blue-diamond-mark.png";
+import diamondMark from "@/assets/brand/blue-diamond-medical-mark.png";
 import { BRAND_MARK_PATH, imagekitIsConfigured, imagekitSrc } from "@/config/imagekit";
 import { manifestAsset } from "./image-manifest";
 
@@ -7,10 +7,10 @@ import { manifestAsset } from "./image-manifest";
  *
  * ImageKit is the source, on the client's instruction (2026-09-07): the bytes
  * were imported through FeelStack's media/import door to
- * `/blue-diamond/brand/blue-diamond-mark.png`, and `?tr=orig-true` on the CDN
- * returns 26,165 bytes with sha256
- * f467436ad918c33518f99f7294225797ad7269bd499764e1a3294541aec76e9b -- byte for
- * byte the file committed at src/assets/brand/blue-diamond-mark.png. (A plain
+ * `/blue-diamond/brand/blue-diamond-medical-mark.png`, and `?tr=orig-true` on
+ * the CDN returns 57,861 bytes with sha256
+ * 345575466a2b48619560f7e5a99aaddeaa01a6dc95238ad1d5d4813a016f10d4 -- byte for
+ * byte the file committed at src/assets/brand/blue-diamond-medical-mark.png. (A plain
  * CDN URL returns fewer bytes; that is ImageKit's delivery-time optimisation,
  * not a different asset. Compare originals with `orig-true` or the checksums
  * will disagree for the wrong reason.)

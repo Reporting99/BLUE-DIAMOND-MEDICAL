@@ -12,7 +12,7 @@
  * checkout `next-env.d.ts` does not exist yet and every static image import
  * fails with:
  *
- *   error TS2307: Cannot find module '@/assets/brand/blue-diamond-mark.png'
+ *   error TS2307: Cannot find module '@/assets/brand/blue-diamond-medical-mark.png'
  *
  * It passes on any developer machine that has ever built, which is exactly the
  * kind of difference that only ever shows up in CI. Committing the reference
