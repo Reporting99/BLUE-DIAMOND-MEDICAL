@@ -1,10 +1,34 @@
 import { siteConfig } from "@/config/site";
+import { isIndexingEnabled } from "@/config/launch";
+
+// Request-time, like robots.txt and sitemap.xml — indexability is a property
+// of the running environment, never of the artifact.
+export const dynamic = "force-dynamic";
 
 /**
  * llms.txt — brief §31. Every claim here must already be visible on the
  * live site; nothing is added here that the pages themselves don't say.
+ *
+ * Optional and non-standard: it is a convenience for answer engines that
+ * choose to read it, and it guarantees nothing about AI indexing or ranking.
+ * It contains only public canonical content — no secrets, internal APIs,
+ * admin routes, or unpublished pages.
+ *
+ * Gated on the same condition as robots.txt and sitemap.xml. This file is a
+ * URL inventory, so serving it on a deployment that is withholding its
+ * sitemap and answering `Disallow: /` would hand that inventory to exactly
+ * the class of client the gate exists to withhold it from. It also has no
+ * absolute URLs to print before an origin is configured. 404 is the honest
+ * answer in that state, not an empty 200.
  */
 export function GET() {
+  if (!isIndexingEnabled()) {
+    return new Response("Not Found", {
+      status: 404,
+      headers: { "Content-Type": "text/plain; charset=utf-8" },
+    });
+  }
+
   const body = `# Blue Diamond Medical Clinic
 
 > Family medicine, walk-in care, and physician-led medical aesthetics in West Springs, Calgary, Alberta, Canada.

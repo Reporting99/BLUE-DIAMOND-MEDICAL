@@ -3,7 +3,7 @@ import { cmsPathForLocale } from "@/lib/routing";
 import { notFound } from "next/navigation";
 import { isLocale, locales, type Locale } from "@/i18n/config";
 import { features } from "@/config/features";
-import { getProduct, products } from "@/features/products";
+import { getProduct, productBrands, products } from "@/features/products";
 import { ProductTemplate } from "@/features/products";
 import { getRouteMetadata } from "@/lib/seo/metadata";
 import { resolvePageContent, entityCacheTags } from "@/lib/feelstack/page-resolver";
@@ -71,10 +71,29 @@ export async function generateMetadata({
   const product = await loadProduct(productId, locale);
   if (!product) return {};
 
+  // The brand comes from the PRODUCT, not from a literal.
+  //
+  // This fallback used to say "SkinMedica" unconditionally. The catalogue now
+  // carries two brands (productBrands), and 31 Myriade products have no
+  // `detail.overview`, so every one of their pages — 62 URLs across both
+  // locales — published a meta description attributing a Myriade product to
+  // SkinMedica. That is a factual misstatement about a skincare product on a
+  // medical clinic's site, not a cosmetic wording issue.
+  //
+  // `name` is a proper noun and is deliberately untranslated (see
+  // ProductBrand), so the same value is correct in both locales. A product
+  // with no recognised brandId falls back to naming no brand at all rather
+  // than guessing one.
+  const brand = productBrands.find((b) => b.id === product.brandId);
+
   return getRouteMetadata(`shop-product-${product.id}`, locale, {
     description: product.detail?.overview ?? {
-      en: `${product.name.en} — SkinMedica professional skincare, carried by Blue Diamond Medical Clinic.`,
-      ar: `${product.name.ar} — من منتجات سكين ميديكا الاحترافية، تقدّمها عيادة بلو دايموند الطبية.`,
+      en: brand
+        ? `${product.name.en} — ${brand.name} professional skincare, carried by Blue Diamond Medical Clinic.`
+        : `${product.name.en} — professional skincare carried by Blue Diamond Medical Clinic.`,
+      ar: brand
+        ? `${product.name.ar} — من منتجات ${brand.name} الاحترافية، تقدّمها عيادة بلو دايموند الطبية.`
+        : `${product.name.ar} — من منتجات العناية الاحترافية بالبشرة، تقدّمها عيادة بلو دايموند الطبية.`,
     },
   });
 }

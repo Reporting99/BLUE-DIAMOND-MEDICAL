@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { hreflangAlternates, routes } from "@/lib/routing";
 import { siteConfig } from "@/config/site";
 import { features, type FeatureFlags } from "@/config/features";
-import { isSiteLaunched } from "@/config/launch";
+import { isIndexingEnabled } from "@/config/launch";
 import { getSiteConfig, listRoutes } from "@/lib/feelstack/client";
 import { getFeelstackContentMode } from "@/lib/feelstack/content-mode";
 import { locales, type Locale } from "@/i18n/config";
@@ -66,18 +66,48 @@ async function cmsOnlyEntries(
          * appear.
          */
         .filter((route) => !knownEnglishPaths.has(route.path))
-        .map((route) => ({ url: `${siteConfig.url}/${locale}${route.path}` }));
+        .map((route) => {
+          // Same trailing-slash normalisation as absoluteRouteUrl: a CMS route
+          // whose path is "/" would otherwise put a URL in the sitemap that
+          // answers a 308.
+          const url = `${siteConfig.url}/${locale}${route.path}`;
+          return { url: encodeSitemapUrl(url.endsWith("/") ? url.slice(0, -1) : url) };
+        });
     }),
   );
 
   return perLocale.flat();
 }
 
+/**
+ * Percent-encodes the non-ASCII parts of a sitemap URL.
+ *
+ * Arabic routes have Arabic slugs, so `<loc>` was emitting raw UTF-8
+ * (`.../ar/الرعاية-الطبية`). The sitemap protocol requires entries to be
+ * URL-escaped, and — more practically — every `<link rel="canonical">` and
+ * `hreflang` tag the app renders IS percent-encoded, because Next encodes
+ * them. So the sitemap and the page tags were spelling the same URL two
+ * different ways. Search engines normalise both to the same address, but a
+ * strict validator flags the raw form, and "the sitemap says X, the page says
+ * Y" is exactly the kind of avoidable inconsistency this audit exists to
+ * remove.
+ *
+ * `encodeURI`, not `encodeURIComponent`: the separators (`:` `/`) must
+ * survive. It is a no-op on the ASCII English routes.
+ */
+function encodeSitemapUrl(url: string): string {
+  return encodeURI(url);
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // An unlaunched deployment publishes no URL inventory at all. Every entry
   // in a sitemap is an absolute URL on the launch domain, so a sitemap served
   // before launch can only ever invite crawling of a site that is not ready.
-  if (!isSiteLaunched()) return [];
+  //
+  // This gate also covers "flag set but no SITE_URL": without an origin every
+  // entry below would be a bare path, which is invalid in a sitemap. There is
+  // no state in which this function emits a relative or placeholder URL.
+  if (!isIndexingEnabled()) return [];
 
   const published = routes
     .filter((route) => route.inSitemap && route.indexing === "index")
@@ -91,9 +121,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // mismatch Search Console reports as an hreflang error.
     const languages = hreflangAlternates(route);
 
+    const encoded = Object.fromEntries(
+      Object.entries(languages).map(([key, value]) => [key, encodeSitemapUrl(value)]),
+    );
+
     return [
-      { url: languages["en-CA"], alternates: { languages } },
-      { url: languages["ar-CA"], alternates: { languages } },
+      { url: encoded["en-CA"], alternates: { languages: encoded } },
+      { url: encoded["ar-CA"], alternates: { languages: encoded } },
     ];
   });
 

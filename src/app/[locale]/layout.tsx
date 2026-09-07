@@ -4,6 +4,7 @@ import { ImageKitProvider } from "@imagekit/next";
 import { dirFor, isLocale, locales, type Locale } from "@/i18n/config";
 import { fontVariables } from "@/lib/fonts";
 import { siteConfig } from "@/config/site";
+import { siteUrlIsConfigured } from "@/config/site-url";
 import { imagekitConfig } from "@/config/imagekit";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
@@ -30,20 +31,31 @@ export async function generateMetadata({
   const { locale } = await params;
   const safeLocale: Locale = isLocale(locale) ? locale : "en";
 
+  // `new URL("")` throws, and Next's own fallback for an absent metadataBase
+  // is http://localhost:<port> — so with no configured origin the ONLY safe
+  // option is to emit neither metadataBase nor any absolute alternate. The
+  // per-page builder (src/lib/seo/metadata.ts) applies the same rule; this is
+  // the layout-level half, covering the two locale roots.
+  const publishable = siteUrlIsConfigured();
+
   return {
-    metadataBase: new URL(siteConfig.url),
+    ...(publishable ? { metadataBase: new URL(siteConfig.url) } : {}),
     title: {
       default: siteConfig.name,
       template: `%s · ${siteConfig.name}`,
     },
-    alternates: {
-      canonical: `${siteConfig.url}/${safeLocale}`,
-      languages: {
-        "en-CA": `${siteConfig.url}/en`,
-        "ar-CA": `${siteConfig.url}/ar`,
-        "x-default": `${siteConfig.url}/en`,
-      },
-    },
+    ...(publishable
+      ? {
+          alternates: {
+            canonical: `${siteConfig.url}/${safeLocale}`,
+            languages: {
+              "en-CA": `${siteConfig.url}/en`,
+              "ar-CA": `${siteConfig.url}/ar`,
+              "x-default": `${siteConfig.url}/en`,
+            },
+          },
+        }
+      : {}),
     openGraph: {
       locale: safeLocale === "ar" ? "ar_CA" : "en_CA",
       siteName: siteConfig.name,

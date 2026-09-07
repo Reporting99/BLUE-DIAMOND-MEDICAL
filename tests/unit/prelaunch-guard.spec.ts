@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
-import { isSiteLaunched, PRE_LAUNCH_ROBOTS_HEADER } from "../../src/config/launch";
+import { isSiteLaunched, isIndexingEnabled, PRE_LAUNCH_ROBOTS_HEADER } from "../../src/config/launch";
+import { SEO_TEST_ORIGIN } from "../support/seo-test-origin";
 // Static imports: both modules read the gate inside their exported function,
 // so the flag is evaluated per call and a top-level import is enough. (A
 // dynamic import() is not transpiled by the Playwright runner.)
@@ -17,16 +18,41 @@ import { getRouteMetadata } from "../../src/lib/seo/metadata";
  * assertion mean anything. Restoration happens in a `finally`, so a failing
  * expectation inside `run` still leaves the environment as it was found.
  */
-function withLaunchFlag<T>(value: string | undefined, run: () => T): T {
-  const previous = process.env.SITE_LAUNCHED;
-  if (value === undefined) delete process.env.SITE_LAUNCHED;
-  else process.env.SITE_LAUNCHED = value;
+function setEnv(key: string, value: string | undefined): void {
+  if (value === undefined) delete process.env[key];
+  else process.env[key] = value;
+}
+
+function withEnv<T>(vars: Record<string, string | undefined>, run: () => T): T {
+  const previous = Object.fromEntries(
+    Object.keys(vars).map((key) => [key, process.env[key]]),
+  );
+  for (const [key, value] of Object.entries(vars)) setEnv(key, value);
   try {
     return run();
   } finally {
-    if (previous === undefined) delete process.env.SITE_LAUNCHED;
-    else process.env.SITE_LAUNCHED = previous;
+    for (const [key, value] of Object.entries(previous)) setEnv(key, value);
   }
+}
+
+/**
+ * Runs `run` with the indexing flag forced to a given state AND a valid origin
+ * present, so `value` is the only thing under test.
+ *
+ * Indexing now requires BOTH halves (src/config/launch.ts), so a helper that
+ * set only the flag would make every "launched" assertion below fail for the
+ * wrong reason — missing SITE_URL rather than the behaviour being asserted.
+ * The origin is the reserved .invalid one, never a real domain.
+ *
+ * INDEXING_ENABLED is pinned too: it takes precedence over SITE_LAUNCHED, so
+ * an ambient value in the runner's environment would otherwise silently
+ * override the flag this helper is trying to set.
+ */
+function withLaunchFlag<T>(value: string | undefined, run: () => T): T {
+  return withEnv(
+    { SITE_LAUNCHED: value, INDEXING_ENABLED: undefined, SITE_URL: SEO_TEST_ORIGIN },
+    run,
+  );
 }
 
 /**
@@ -222,9 +248,71 @@ test.describe("sitemap.xml", () => {
   test("publishes the real route inventory once launched", async () => {
     const entries = await withLaunchFlag("true", () => sitemap());
     expect(entries.length).toBeGreaterThan(0);
-    // Nothing may ever point at a temporary or runtime hostname.
+    // Every entry is absolute, https, and on the CONFIGURED origin — asserted
+    // against whatever SITE_URL was injected rather than against a hostname
+    // written into this file. A test that pins the production domain is itself
+    // a hard-coded production domain.
     for (const entry of entries) {
-      expect(entry.url).toContain("https://bluediamondmedical.ca/");
+      expect(entry.url.startsWith(`${SEO_TEST_ORIGIN}/`)).toBe(true);
+    }
+  });
+});
+
+/**
+ * The gate is the flag AND a valid public origin.
+ *
+ * Splitting these is what stops a deployment from becoming crawlable as a side
+ * effect of an unrelated configuration change. Setting SITE_URL is something an
+ * operator might do while wiring up a staging host; it must not, on its own,
+ * publish a sitemap. And the flag without an origin would publish canonical
+ * tags and sitemap entries with no trustworthy host in them.
+ */
+test.describe("indexing requires both the flag and a valid origin", () => {
+  test("the flag alone is not enough", () => {
+    withEnv({ SITE_LAUNCHED: "true", INDEXING_ENABLED: undefined, SITE_URL: undefined, NEXT_PUBLIC_SITE_URL: undefined }, () => {
+      expect(isSiteLaunched()).toBe(true); // the flag really is set
+      expect(isIndexingEnabled()).toBe(false); // and it still is not enough
+    });
+  });
+
+  test("a valid origin alone is not enough", () => {
+    withEnv({ SITE_LAUNCHED: undefined, INDEXING_ENABLED: undefined, SITE_URL: SEO_TEST_ORIGIN }, () => {
+      expect(isIndexingEnabled()).toBe(false);
+    });
+  });
+
+  test("both together open the gate", () => {
+    withEnv({ SITE_LAUNCHED: undefined, INDEXING_ENABLED: "true", SITE_URL: SEO_TEST_ORIGIN }, () => {
+      expect(isIndexingEnabled()).toBe(true);
+    });
+  });
+
+  test("INDEXING_ENABLED takes precedence over the SITE_LAUNCHED alias", () => {
+    withEnv({ INDEXING_ENABLED: "false", SITE_LAUNCHED: "true", SITE_URL: SEO_TEST_ORIGIN }, () => {
+      expect(isIndexingEnabled()).toBe(false);
+    });
+  });
+
+  test("an origin the resolver rejects cannot open the gate", () => {
+    // Each of these is a hostname someone could plausibly paste in during a
+    // staging bring-up. None is a publishable canonical identity.
+    for (const origin of [
+      "http://bluediamond.example.ca",  // not https
+      "https://localhost",
+      "https://127.0.0.1",
+      "https://192.168.1.10",
+      "https://bd-preview.pages.dev",
+      "https://bd.workers.dev",
+      "https://bd.vercel.app",
+      "https://staging",                // single-label host
+      "https://example.ca:8443",        // explicit port
+      "https://example.ca/site",        // not an origin
+      "not-a-url",
+      "",
+    ]) {
+      withEnv({ INDEXING_ENABLED: "true", SITE_LAUNCHED: undefined, SITE_URL: origin }, () => {
+        expect(isIndexingEnabled(), `${origin} must not be accepted as a canonical origin`).toBe(false);
+      });
     }
   });
 });

@@ -47,7 +47,8 @@ const failures = [];
  */
 const PUBLIC_ENV_KEYS = new Map([
   ["NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT", "public CDN base; src/config/imagekit.ts defaults to it"],
-  ["NEXT_PUBLIC_SITE_URL", "the public canonical origin"],
+  ["NEXT_PUBLIC_SITE_URL", "deprecated alias for SITE_URL; the public canonical origin"],
+  ["SITE_URL", "the public canonical origin — public by definition, never a secret"],
   ["FEELSTACK_SITE_KEY", "site identifier, not a credential; the frontend pins it"],
   ["FEELSTACK_CONTENT_MODE", "a mode name: static | hybrid | cms"],
 ]);
@@ -67,6 +68,7 @@ const SERVER_ONLY_VARIABLES = [
   // into the client bundle, or a build could be made indexable from the
   // browser side. See docs/DEPLOYMENT.md.
   "SITE_LAUNCHED",
+  "INDEXING_ENABLED",
 ];
 
 /** Shapes that are credentials wherever they appear. */

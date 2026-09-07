@@ -4,7 +4,7 @@ import { defaultLocale, isLocale } from "@/i18n/config";
 import { legacyRedirects, movedRoutes } from "@/lib/routing";
 import { routes } from "@/lib/routing";
 import { localizedEntityRoutes } from "@/config/localized-entity-routes.generated";
-import { isSiteLaunched, PRE_LAUNCH_ROBOTS_HEADER } from "@/config/launch";
+import { isIndexingEnabled, PRE_LAUNCH_ROBOTS_HEADER } from "@/config/launch";
 
 /**
  * Arabic public URLs use meaningful Arabic slugs (e.g. /ar/فريقنا/...)
@@ -107,7 +107,7 @@ function arabicRewriteNonce(): string {
  * Costs one env read per request and adds nothing at all once launched.
  */
 function withIndexingGuard(response: NextResponse): NextResponse {
-  if (!isSiteLaunched()) {
+  if (!isIndexingEnabled()) {
     response.headers.set("X-Robots-Tag", PRE_LAUNCH_ROBOTS_HEADER);
   }
   return response;
@@ -121,8 +121,9 @@ function withIndexingGuard(response: NextResponse): NextResponse {
  * Responsibilities:
  *  1. Direct 301 redirects for every legacy URL (brief §33) — checked first
  *     so an old path never round-trips through locale detection.
- *  2. `/ -> /en/` and bare-path locale prefixing, so every route in the app
- *     lives under /en/... or /ar/....
+ *  2. Serving "/" as the English homepage via an internal rewrite (200, no
+ *     hop), and 301 bare-path locale prefixing for every other unprefixed
+ *     path, so every route in the app lives under /en/... or /ar/....
  */
 /**
  * True when the request path cannot be safely handed to the router.
@@ -262,7 +263,49 @@ export function proxy(request: NextRequest) {
 
       const canonical = arabicToCanonicalPath.get(withoutLocale);
       if (canonical) {
-        const url = new URL(`/ar${canonical}`, request.url);
+        // The rewrite target must be SAME-ORIGIN with the server, and behind
+        // Nginx that origin is plain http -- hence the explicit protocol below.
+        //
+        // Every pretty Arabic URL returned 500 in production while the same
+        // path served 200 when requested directly against a slot. The only
+        // difference was the header Nginx sets and a direct request does not:
+        // `X-Forwarded-Proto: https`.
+        //
+        // Next decides whether a rewrite is internal in
+        // server/lib/router-utils/resolve-routes.js, by relativising the
+        // destination against `initUrl`:
+        //
+        //   initUrl = `${protocol}://${hostname}:${port}${req.url}`
+        //
+        // built from the SERVER's own listener -- `http://localhost:3030/...`
+        // here -- because `experimental.trustHostHeader` is off. The
+        // destination stays absolute unless its origin matches exactly
+        // (shared/lib/router/utils/relativize-url.js), and router-server.js
+        // then does `if (finished && parsedUrl.protocol) proxyRequest(...)`.
+        //
+        // `nextUrl` takes its protocol from X-Forwarded-Proto, so the
+        // destination was `https://localhost:3030/...`: same host, same port,
+        // WRONG SCHEME. Next therefore treated an internal rewrite as external
+        // and fetched it over TLS against a plaintext port --
+        // `EPROTO ... ssl3_get_record: wrong version number` -- and returned
+        // 500. Verified on both slots and both deployed releases:
+        //
+        //   Host only                -> 200
+        //   X-Forwarded-Proto: http  -> 200
+        //   X-Forwarded-Proto: https -> 500
+        //
+        // Pinning the scheme to the one the server actually listens on is what
+        // makes the origins match. This app is ALWAYS the upstream of a proxy
+        // that terminates TLS and always binds loopback HTTP (HOSTNAME/PORT in
+        // the slot runtime env), so `http:` is a property of the deployment,
+        // not a guess about the visitor -- the visitor's real scheme is still
+        // https, and nothing here changes what they see.
+        //
+        // The sibling 301 above needs none of this: a redirect emits a relative
+        // Location and never round-trips through Next's rewrite proxy.
+        const url = request.nextUrl.clone();
+        url.pathname = `/ar${canonical}`;
+        url.protocol = "http:";
         if (search) url.search = search;
         const headers = new Headers(request.headers);
         headers.set(ARABIC_REWRITE_MARKER, arabicRewriteNonce());
@@ -274,11 +317,48 @@ export function proxy(request: NextRequest) {
     return withIndexingGuard(NextResponse.next());
   }
 
-  // 3. Bare-path locale prefixing. `defaultLocale` is a static constant, not
-  // Accept-Language content negotiation (see src/i18n/config.ts) — the
-  // mapping from an unprefixed path to its /en/... equivalent never varies
-  // per visitor, so this is a genuine permanent redirect (301), not a
-  // temporary one. Required explicitly for "/" -> "/en/" (brief §4).
+  // 3. The site root is served, not redirected.
+  //
+  // "/" is the ONE unprefixed path that is a real destination: it is what a
+  // visitor gets by typing the domain, what an inbound link points at, and
+  // what a crawler tries first. It used to answer 301 -> /en, which made the
+  // site's front door a redirect and put a 3xx hop in front of the single
+  // most-requested URL. A transparent internal REWRITE serves the English
+  // homepage at "/" with a 200 and no hop.
+  //
+  // This does mean the homepage is reachable at both "/" and "/en". That
+  // duplication is resolved the correct way, by the canonical tag: the page
+  // rendered here is the /en route, whose self-referencing canonical points
+  // at <origin>/en. So "/" is served, /en is canonical, and neither answers
+  // a redirect.
+  //
+  // Deliberately NOT extended to other bare paths. "/medical" is not a URL
+  // this site publishes, links to, or lists in its sitemap — it is a guess.
+  // Serving it 200 would mint a second address for every page in the app and
+  // trade one redirect for ~100 duplicate URLs; a 301 to the locale-prefixed
+  // canonical is the right answer for a path that is not itself canonical.
+  //
+  // The rewrite target is pinned to the server's own scheme for exactly the
+  // reason documented on the Arabic rewrite above: `request.url` carries the
+  // scheme from X-Forwarded-Proto, so behind Nginx this would build
+  // `https://localhost:3030/en` -- same host, same port, WRONG SCHEME. Next
+  // would treat the site's front door as an external rewrite and fetch it over
+  // TLS against a plaintext port (EPROTO), turning "/" into a 500. That is the
+  // same defect that took every Arabic URL down, on the one URL that would
+  // hurt most, so it is fixed here rather than discovered in production.
+  if (pathname === "/") {
+    const url = request.nextUrl.clone();
+    url.pathname = `/${defaultLocale}`;
+    url.protocol = "http:";
+    if (search) url.search = search;
+    return withIndexingGuard(NextResponse.rewrite(url));
+  }
+
+  // 3a. Bare-path locale prefixing for everything else. `defaultLocale` is a
+  // static constant, not Accept-Language content negotiation (see
+  // src/i18n/config.ts) — the mapping from an unprefixed path to its /en/...
+  // equivalent never varies per visitor, so this is a genuine permanent
+  // redirect (301), not a temporary one.
   const url = new URL(`/${defaultLocale}${pathname}`, request.url);
   if (search) url.search = search;
   return withIndexingGuard(NextResponse.redirect(url, 301));
