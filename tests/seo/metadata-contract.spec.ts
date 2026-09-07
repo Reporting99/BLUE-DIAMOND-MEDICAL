@@ -218,3 +218,43 @@ test.describe("no emitted URL ends in a trailing slash", () => {
     expect(offenders).toEqual([]);
   });
 });
+
+/**
+ * The approved-title override. Titles normally come from the route registry
+ * and pick up the layout's `%s · Blue Diamond Medical` template; where the
+ * client approved an exact string (/careers), it must be emitted verbatim.
+ */
+test.describe("client-approved exact titles", () => {
+  const approved = { en: "Careers at Blue Diamond Medical | Join Our Team" };
+
+  test("an approved locale gets an absolute title, opting out of the template", () => {
+    const metadata = withEnv(CONFIGURED, () =>
+      getRouteMetadata("careers", "en", { ...overrides, title: approved }),
+    );
+    expect(metadata.title).toEqual({ absolute: approved.en });
+  });
+
+  test("a locale with no approved title keeps the registry title", () => {
+    const metadata = withEnv(CONFIGURED, () =>
+      getRouteMetadata("careers", "ar", { ...overrides, title: approved }),
+    );
+    // A plain string still flows through the layout's title template, which is
+    // what every un-overridden route does — no machine-translated title is
+    // invented for Arabic just because English supplied one.
+    expect(typeof metadata.title).toBe("string");
+  });
+
+  test("og:title and twitter:title match the approved title", () => {
+    const metadata = withEnv(CONFIGURED, () =>
+      getRouteMetadata("careers", "en", { ...overrides, title: approved }),
+    );
+    expect(metadata.openGraph?.title).toBe(approved.en);
+    expect(metadata.twitter?.title).toBe(approved.en);
+  });
+
+  test("routes passing no override are completely unaffected", () => {
+    const metadata = withEnv(CONFIGURED, () => getRouteMetadata("about", "en", overrides));
+    expect(typeof metadata.title).toBe("string");
+    expect(metadata.openGraph?.title).toBe(metadata.title);
+  });
+});
