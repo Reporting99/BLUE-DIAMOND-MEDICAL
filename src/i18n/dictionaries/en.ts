@@ -123,11 +123,11 @@ const en: Dictionary = {
     doctorsBody: "Six family physicians, one clinic, one standard of care.",
     locationTitle: "Visit us in West Springs",
     locationBody:
-      "We love our patients, so feel free to visit during normal business hours. Closed all statutory holidays.",
+      "You are welcome to visit us during regular business hours. We are closed on all statutory holidays.",
     healthHubTitle: "From the Health Hub",
     healthHubBody: "Guidance from our clinical team, in plain language.",
     finalCtaTitle: "Ready to find the right place to begin?",
-    finalCtaBody: "Book with your doctor, a walk-in visit, or a medical aesthetics consultation.",
+    finalCtaBody: "Book with your family physician, come in as a walk-in, or request a medical aesthetics consultation.",
   },
   footer: {
     tagline: "Family medicine and physician-led medical aesthetics in West Springs, Calgary.",

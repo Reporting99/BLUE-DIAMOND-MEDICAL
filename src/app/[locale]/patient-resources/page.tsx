@@ -21,7 +21,7 @@ const policies = {
   en: [
     {
       title: "Appointments",
-      body: "Arrive on time — patients more than 5 minutes late may need to rebook at the doctor's discretion. Bring your Alberta Healthcare number to every visit. Standard appointments are 15 minutes; call at least 48 hours ahead for a longer appointment.",
+      body: "Arrive on time — patients more than 5 minutes late may need to rebook at the doctor's discretion. Bring your Alberta Health Care number to every visit. Standard appointments are 15 minutes; call at least 48 hours ahead for a longer appointment.",
     },
     {
       title: "No-show fees",

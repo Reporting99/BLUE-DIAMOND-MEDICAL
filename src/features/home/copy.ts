@@ -111,8 +111,8 @@ export const homepageCopy = {
     // English and Arabic cannot drift apart. Only presentation strings below.
     location: {
       eyebrow: "VISIT US",
-      heading: "Better yet, see us in person!",
-      body: "We love our customers, so feel free to visit during normal business hours to ask about laser treatment, aesthetics microneedling, and radio frequency waves.",
+      heading: "See us in person",
+      body: "You are welcome to visit during regular business hours. Our team is happy to answer questions about laser treatments, RF microneedling, and radiofrequency skin tightening.",
       addressLabel: "Address",
       phoneLabel: "Phone",
       faxLabel: "Fax",
