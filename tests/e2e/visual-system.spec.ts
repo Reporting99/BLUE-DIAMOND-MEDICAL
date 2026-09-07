@@ -387,6 +387,14 @@ test.describe("Listing cards carry imagery", () => {
 
   for (const listing of LISTINGS) {
     test(`every ${listing.label} card renders a visual`, async ({ page }) => {
+      // BUDGET, NOT ASSERTION. This test walks an entire listing page in
+      // half-viewport steps and then waits for every card's image to decode.
+      // The products listing grew from 23 cards to 54 with the Myriade
+      // catalogue (CL-042), so the same work now takes roughly 2.3x as long
+      // and overran the 30s default on chromium-mobile — for a page in which
+      // nothing was wrong. Nothing this test checks is relaxed; it is simply
+      // given time to finish the walk it has always done.
+      test.setTimeout(90_000);
       await page.goto(listing.path);
       await scrollThroughAndSettle(page);
 
@@ -444,6 +452,14 @@ test.describe("Listing cards carry imagery", () => {
    */
   for (const listing of LISTINGS) {
     test(`every real image on ${listing.label} decodes`, async ({ page }) => {
+      // BUDGET, NOT ASSERTION. This test walks an entire listing page in
+      // half-viewport steps and then waits for every card's image to decode.
+      // The products listing grew from 23 cards to 54 with the Myriade
+      // catalogue (CL-042), so the same work now takes roughly 2.3x as long
+      // and overran the 30s default on chromium-mobile — for a page in which
+      // nothing was wrong. Nothing this test checks is relaxed; it is simply
+      // given time to finish the walk it has always done.
+      test.setTimeout(90_000);
       await page.goto(listing.path);
       await scrollThroughAndSettle(page);
 

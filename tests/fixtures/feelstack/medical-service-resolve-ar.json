@@ -1,8 +1,9 @@
 {
   "type": "content_entry",
+  "status": "published",
   "route": {
     "id": "2a98a868-eb0e-4e3c-9d02-5bdd8057ecc4",
-    "path": "/medical/after-hours-care",
+    "path": "/الرعاية-الطبية/الرعاية-خارج-أوقات-الدوام",
     "locale": "ar",
     "requestedLocale": "ar",
     "resolvedLocale": "ar",
@@ -10,7 +11,7 @@
     "alternates": [
       {
         "locale": "ar",
-        "path": "/medical/after-hours-care"
+        "path": "/الرعاية-الطبية/الرعاية-خارج-أوقات-الدوام"
       },
       {
         "locale": "en",
@@ -34,22 +35,19 @@
         {
           "url": "https://mosaicpcn.ca",
           "name": "Mosaic Primary Care Network",
-          "note": "لمرضى الدكتورة حمدي."
+          "note": "لمرضى الدكتورة ريم حمدي."
         },
         {
           "url": "https://cwcpcn.com",
           "name": "Calgary West Central Primary Care Network",
-          "note": "لمرضى الدكتور فرحات."
+          "note": "لمرضى جميع أطباء الأسرة الآخرين في بلو دايموند."
         }
       ],
-      "related_doctor_ids": [
-        "reem-hamdi",
-        "mohamed-farhat"
-      ]
+      "related_doctor_ids": []
     },
     "translationGroupId": "8a5a02ef-5fa9-407b-9aff-d23f08765cbc",
     "publishedAt": "2026-08-23T10:37:59.606Z",
-    "updatedAt": "2026-08-23T10:39:43.063Z"
+    "updatedAt": "2026-09-07T05:44:04.891Z"
   },
   "seo": {
     "title": "الرعاية خارج أوقات الدوام",
@@ -85,13 +83,13 @@
         "id": "007f31d3-7658-42d4-bd2b-e4e1f48463af",
         "key": "after-hours-care-faq-2",
         "question": "بأي شبكة رعاية أولية أتواصل؟",
-        "answer": "يعتمد ذلك على طبيب أسرتكم: يُحال مرضى الدكتورة حمدي إلى شبكة Mosaic للرعاية الأولية، بينما يُحال مرضى الدكتور فرحات إلى شبكة Calgary West Central للرعاية الأولية."
+        "answer": "يعتمد ذلك على طبيب أسرتكم: يُحال مرضى الدكتورة ريم حمدي إلى شبكة Mosaic للرعاية الأولية، بينما يُحال مرضى جميع أطباء الأسرة الآخرين في بلو دايموند إلى شبكة Calgary West Central للرعاية الأولية."
       },
       {
         "id": "9ec286e0-9c17-417c-91c2-96d420f2d7ea",
         "key": "after-hours-care-faq-3",
         "question": "هل ينطبق هذا على جميع مرضى العيادة؟",
-        "answer": "المسار الموضّح هنا موثّق لمرضى الدكتورة حمدي والدكتور فرحات تحديدًا. إذا كان طبيب أسرتكم غير ذلك، يُرجى الاستفسار في زيارتكم القادمة عن خيار الرعاية خارج أوقات الدوام الخاص بكم."
+        "answer": "نعم. لكل مريض في بلو دايموند مسار للرعاية خارج أوقات الدوام: يُحال مرضى الدكتورة ريم حمدي إلى شبكة Mosaic للرعاية الأولية، ويُحال مرضى جميع أطباء الأسرة الآخرين في بلو دايموند إلى شبكة Calgary West Central للرعاية الأولية."
       },
       {
         "id": "01a6070c-16c0-4dad-b3f7-91ba7118aff2",
@@ -108,5 +106,23 @@
     ],
     "sections": [],
     "taxonomies": []
-  }
+  },
+  "media": [
+    {
+      "id": "af363e3c-1517-442a-bcc8-5fa1e0b59c68",
+      "path": "/blue-diamond/home/medical/blue-diamond-home-medical-evening-compassionate-consultation-card.png",
+      "width": 1122,
+      "height": 1402,
+      "aspectRatio": 0.800285,
+      "alt": {
+        "ar": "طبيبة تتحدث مع مريضة جالسة على طاولة الفحص في المساء، خلفهما ساعة حائط ونوافذ مدينة مضاءة",
+        "en": "A doctor speaking with a patient seated on an examination table in the evening, with a wall clock and lit city windows behind them"
+      },
+      "role": "card",
+      "slot": "card",
+      "approvalStatus": "approved",
+      "sortOrder": 0,
+      "localeMode": "shared"
+    }
+  ]
 }

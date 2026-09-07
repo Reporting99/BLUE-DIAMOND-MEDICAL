@@ -38,6 +38,12 @@ const labels = {
     askAboutThisProduct: "Ask About This Product",
     benefits: "Benefits",
     keyFeatures: "Key features",
+    kitContents: "What's in this kit",
+    directions: "Directions",
+    keyIngredients: "Key ingredients",
+    comparison: "Manufacturer example",
+    beforeLabel: "Before",
+    afterLabel: "After",
   },
   ar: {
     whatItIs: "ما هو",
@@ -58,6 +64,12 @@ const labels = {
     askAboutThisProduct: "استفسري عن هذا المنتج",
     benefits: "الفوائد",
     keyFeatures: "الخصائص الأساسية",
+    kitContents: "محتويات هذا الطقم",
+    directions: "طريقة الاستخدام",
+    keyIngredients: "المكونات الرئيسية",
+    comparison: "مثال من الشركة المصنّعة",
+    beforeLabel: "قبل",
+    afterLabel: "بعد",
   },
 };
 
@@ -212,7 +224,7 @@ export function ProductTemplate({ product, locale }: { product: Product; locale:
           never one concatenated paragraph. Rendered outside the `detail`
           block because the peel records carry no SkinMedica-style research
           `detail` and must not be given an invented one. */}
-      {product.benefits || product.keyFeatures ? (
+      {product.benefits || product.keyFeatures || product.kitContents || product.directions || product.keyIngredients || product.manufacturerComparison ? (
         <Container className="mt-4 max-w-3xl">
           {product.benefits ? (
             <DetailSection heading={t.benefits}>
@@ -230,6 +242,84 @@ export function ProductTemplate({ product, locale }: { product: Product; locale:
                   <li key={item}>{item}</li>
                 ))}
               </ul>
+            </DetailSection>
+          ) : null}
+          {/* CL-042 - the Myriade flyer's own Kit contents / Directions /
+              Ingredients lists. Same rule as Benefits and Key features above:
+              rendered outside `detail`, because these records deliberately
+              carry no researched `detail` block. */}
+          {product.kitContents ? (
+            <DetailSection heading={t.kitContents}>
+              <ul className="list-disc space-y-1 ps-5">
+                {product.kitContents[locale].map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </DetailSection>
+          ) : null}
+          {product.directions ? (
+            <DetailSection heading={t.directions}>
+              <ol className="list-decimal space-y-1 ps-5">
+                {product.directions[locale].map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ol>
+            </DetailSection>
+          ) : null}
+          {product.keyIngredients ? (
+            <DetailSection heading={t.keyIngredients}>
+              <ul className="list-disc space-y-1 ps-5">
+                {product.keyIngredients[locale].map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </DetailSection>
+          ) : null}
+          {/* CL-042 — a manufacturer's own before/after example, on the one
+              product page that has one. The attribution and the results-vary
+              qualifier render WITH the pictures, never as small print
+              elsewhere: these are the manufacturer's clinical examples and
+              presenting them as Blue Diamond patient photography would be a
+              false claim about our own results. Ordering is fixed by the data
+              shape (`before` then `after`), not by DOM position. */}
+          {product.manufacturerComparison ? (
+            <DetailSection heading={t.comparison}>
+              <div className="grid grid-cols-2 gap-4">
+                <figure>
+                  <ImageKitImage
+                    path={product.manufacturerComparison.before.path}
+                    preset="product"
+                    role="product"
+                    status="approved"
+                    alt={product.manufacturerComparison.before.alt}
+                    locale={locale}
+                    width={600}
+                    height={600}
+                    className="rounded-lg"
+                  />
+                  <figcaption className="mt-1 text-sm text-text-secondary">{t.beforeLabel}</figcaption>
+                </figure>
+                <figure>
+                  <ImageKitImage
+                    path={product.manufacturerComparison.after.path}
+                    preset="product"
+                    role="product"
+                    status="approved"
+                    alt={product.manufacturerComparison.after.alt}
+                    locale={locale}
+                    width={600}
+                    height={600}
+                    className="rounded-lg"
+                  />
+                  <figcaption className="mt-1 text-sm text-text-secondary">{t.afterLabel}</figcaption>
+                </figure>
+              </div>
+              <p className="mt-3 text-sm text-text-secondary">
+                {product.manufacturerComparison.attribution[locale]}
+              </p>
+              <p className="text-sm text-text-secondary">
+                {product.manufacturerComparison.resultsVary[locale]}
+              </p>
             </DetailSection>
           ) : null}
         </Container>

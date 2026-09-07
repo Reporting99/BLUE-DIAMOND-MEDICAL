@@ -135,6 +135,42 @@ export interface Product {
    * availability claim, and an explicit note saying what is outstanding.
    */
   purchaseBlocked?: Bilingual;
+  /**
+   * CL-042 (Myriade) — the client-supplied catalogue shape, continuing the
+   * CL-037/CL-038 precedent above: a record sourced from a supplied product
+   * flyer carries the manufacturer's own lists and no research `detail`
+   * block, because inventing that research is what this repository refuses
+   * to do. All four are optional and render only when supplied.
+   *
+   * `professionalOnly` is not decoration: it is what keeps a clinician-applied
+   * product out of any purchase path regardless of stock or price state.
+   */
+  /**
+   * CL-042 — a MANUFACTURER-SUPPLIED before/after example for this product.
+   *
+   * Deliberately its own field rather than another `images[]` entry: an entry
+   * in `images` is product packaging, and a result photograph is not. Keeping
+   * them apart is what stops a comparison shot being picked up as a packshot
+   * by the card grid, and it forces the attribution below to travel with the
+   * pictures rather than being remembered separately.
+   *
+   * `attribution` and `resultsVary` are REQUIRED, not optional. These are
+   * manufacturer clinical examples, never Blue Diamond patient photography,
+   * and both statements must render wherever the pair does.
+   */
+  manufacturerComparison?: {
+    before: { path: string; alt: Bilingual };
+    after: { path: string; alt: Bilingual };
+    attribution: Bilingual;
+    resultsVary: Bilingual;
+  };
+  professionalOnly?: boolean;
+  /** Manufacturer "Directions"/how-to-use steps, one entry per step. */
+  directions?: { en: string[]; ar: string[] };
+  /** Manufacturer-stated key ingredients, verbatim — never an inferred list. */
+  keyIngredients?: { en: string[]; ar: string[] };
+  /** For a kit: the products it contains, as supplied. */
+  kitContents?: { en: string[]; ar: string[] };
   sizeLabel?: string; // e.g. "56.7 g" — not translated, a measurement
   images: { path: string; status: ImageStatus; alt: Bilingual }[];
   approvalStatus: "approved" | "pending";

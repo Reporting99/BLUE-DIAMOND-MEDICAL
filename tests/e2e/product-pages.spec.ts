@@ -29,12 +29,24 @@ test.describe("Every product page — English", () => {
       expect(html, `${product.slug}: H1`).toContain(product.name.en);
 
       if (product.purchaseBlocked) {
-        expect(html, `${product.slug}: blocked-purchase note`).toContain("shown for information only");
+        // Assert the record's OWN note rather than one hardcoded phrase. The
+        // CL-042 Myriade records state a different, truer reason (a
+        // professional-use product is not blocked for a missing photograph),
+        // and pinning the old wording would have forced every future blocked
+        // product to repeat a sentence that does not apply to it.
+        const note = product.purchaseBlocked.en.split(" — ")[0].slice(0, 60);
+        expect(html, `${product.slug}: blocked-purchase note`).toContain(note);
         expect(html, `${product.slug}: must claim no availability`).not.toContain(
           "confirmed directly with Blue Diamond Medical Clinic",
         );
-        expect(html, `${product.slug}: Benefits`).toContain("Benefits");
-        expect(html, `${product.slug}: Key features`).toContain("Key features");
+        // Only assert a list the record actually has. The 8 Myriade kits carry
+        // Contents and Directions instead of Benefits/Key features, and
+        // demanding the SkinMedica shape of them would fabricate a
+        // requirement the source never met.
+        if (product.benefits) expect(html, `${product.slug}: Benefits`).toContain("Benefits");
+        if (product.keyFeatures) expect(html, `${product.slug}: Key features`).toContain("Key features");
+        if (product.kitContents) expect(html, `${product.slug}: kit contents`).toContain("What&#x27;s in this kit");
+        if (product.directions) expect(html, `${product.slug}: Directions`).toContain("Directions");
       } else {
         expect(html, `${product.slug}: FAQ heading`).toContain("Questions and Answers About This Product");
         expect(html, `${product.slug}: availability notice`).toContain("confirmed directly with Blue Diamond Medical Clinic");

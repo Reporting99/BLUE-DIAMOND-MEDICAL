@@ -21,10 +21,20 @@ test.describe("Medical service pages", () => {
     await expect(page.getByText("$400")).toBeVisible();
   });
 
-  test("service page with a related doctor links to their profile", async ({ page }) => {
+  test("a clinic-wide service page attributes itself to no single physician", async ({ page }) => {
+    // This test used to click a "Dr. Bakare" link on /medical/minor-procedures
+    // and assert it reached his profile. That link WAS the defect: minor
+    // procedures are provided by all of our family physicians, and publishing
+    // them as one doctor's service is what the 2026-09-06 CMS corrections
+    // removed (OP-001..OP-004 and their Arabic counterparts).
+    //
+    // So the assertion is inverted, not deleted. The guard now protects the
+    // approved rule instead of the retired one — if a single-physician
+    // attribution ever comes back, this fails.
     await page.goto("/en/medical/minor-procedures");
-    await page.getByRole("link", { name: /Dr\. Bakare/ }).click();
-    await expect(page).toHaveURL(/\/en\/our-team\/bakare\/?$/);
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    await expect(page.getByRole("link", { name: /Dr\. Bakare/ })).toHaveCount(0);
+    await expect(page.getByText(/Dr\. Bakare/)).toHaveCount(0);
   });
 
   test("after-hours-care page links to external PCN partners", async ({ page }) => {

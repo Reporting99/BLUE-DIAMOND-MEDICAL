@@ -5,7 +5,20 @@ the host until the canonical domain is connected.
 
 ## The canonical-domain vhost (launch)
 
-Still to be written. Launch requires:
+**Written 2026-09-07** — `bluediamondmedical.ca.conf` and
+`bluediamondmedicalaesthetics.ca.conf` in this directory, with the full cutover
+procedure, the real DNS values and the email records that must NOT change in
+`DOMAIN_CUTOVER.md`.
+
+They are deliberately **not installed**. An `ssl_certificate` line pointing at a
+file that does not exist yet fails `nginx -t`, and on this shared host that
+blocks the reload for every other tenant — so the vhosts go in only after the
+certificate exists, which needs DNS pointing here first. Both files were
+syntax-checked with `nginx -t` against an isolated config, and functionally
+verified end-to-end on ports 8081/8444 with Host headers against the running
+application, without touching the live config or DNS.
+
+Launch requires:
 
 1. A vhost for the canonical domain whose `location /` proxies to
    `blue_diamond_app`, plus a `location = /api/feelstack/revalidate` so
