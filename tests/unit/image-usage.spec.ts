@@ -125,10 +125,13 @@ test("every literal ImageKit-style path (path=\"...\" or ogImagePath: \"...\") i
 const MEDIA_NAMESPACES = [
   "aesthetics",
   "before-after",
-  // The brand namespace, holding exactly one asset: the logo itself
-  // (`/blue-diamond/brand/blue-diamond-mark.png`, imported 2026-09-07). It is
-  // not photography and no page's content owns it, which is precisely why it
-  // has a directory of its own rather than living among the section imagery.
+  // The brand namespace, holding the clinic's own logo: the mark the site
+  // renders (`/blue-diamond/brand/blue-diamond-medical-mark.png`) and the
+  // supplied lock-up it is cut from
+  // (`/blue-diamond/brand/blue-diamond-medical-logo.png`), both imported
+  // 2026-09-07. Neither is photography and no page's content owns them, which
+  // is precisely why they have a directory of their own rather than living
+  // among the section imagery.
   "brand",
   "home",
   "medical",

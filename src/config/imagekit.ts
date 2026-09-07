@@ -94,10 +94,18 @@ export const imagekitConfig = {
  * a literal would be a second source of truth for the one asset that must
  * never silently move. The bytes were imported through the sanctioned door
  * (FeelStack `POST /admin/v1/projects/:id/media/import`) on 2026-09-07 and the
- * CDN copy is byte-identical to `src/assets/brand/blue-diamond-mark.png` --
- * see src/lib/media/brand-mark.ts.
+ * CDN copy is byte-identical to `src/assets/brand/blue-diamond-medical-mark.png`
+ * -- see src/lib/media/brand-mark.ts.
+ *
+ * The `-medical-` name is not decoration. It distinguishes the clinic's own
+ * mark from the third-party device marks that also live under a `brand`
+ * directory of their own -- Ultra, FlexSure and TempSure each have one beneath
+ * `/blue-diamond/technologies/`. It is also a new path rather than a reused
+ * one: the mark supplied on 2026-09-07 is a different image from the one it
+ * replaces, and the import endpoint answers different bytes at a known path
+ * with a 409 rather than a silent overwrite.
  */
-export const BRAND_MARK_PATH = `${MEDIA_ROOT}/brand/blue-diamond-mark.png`;
+export const BRAND_MARK_PATH = `${MEDIA_ROOT}/brand/blue-diamond-medical-mark.png`;
 
 /**
  * Reusable transformation presets, keyed by ImageRole (src/types/media.ts).

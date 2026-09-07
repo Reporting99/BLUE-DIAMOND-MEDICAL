@@ -5,14 +5,16 @@ import { brandMark } from "@/lib/media/brand-mark";
 
 /**
  * The approved Blue Diamond Medical mark, as supplied by the client on
- * 2026-09-06 — docs/MEDIA.md CL-001. This replaced the inline SVG stand-in
- * that recreated the mark from the brand PDF's coordinates; that recreation
- * is gone and must not come back.
+ * 2026-09-07 — docs/MEDIA.md CL-001. This replaced the mark derived from the
+ * client's earlier black-field render, which in turn replaced an inline SVG
+ * stand-in; neither predecessor may come back.
  *
- * The asset is the client's own file with the render's black field cut away
- * to transparency, so it sits on the white header, the dark blue footer and
- * the About hero alike. Every pixel of the diamond is theirs — nothing is
- * redrawn, recolored, or restyled, per docs/UI_UX_FOUNDATION.md §1.1. See
+ * The asset is the client's own file with the white page field cut away to
+ * transparency, so it sits on the white header, the dark blue footer and the
+ * About hero alike. Every pixel of the diamond is theirs — nothing is
+ * redrawn, recolored, or restyled, per docs/UI_UX_FOUNDATION.md §1.1, and the
+ * diamond's own white interior is KEPT white rather than knocked through to
+ * the background, because that negative space is part of the artwork. See
  * src/assets/brand/README.md for the source file, its checksum and how the
  * cut-out was derived.
  *
@@ -84,11 +86,12 @@ export function Logo({
  *
  * It is not a second logo and nothing here is redrawn: it is `DiamondMark`
  * plus the same wordmark, in the same order, the same `--blue-3`, and the
- * same proportions the header sets — mark width 1.831× the wordmark's font
- * size (30.76/16.8), gap 0.595× (10/16.8). The mark ratio moved from 1.648
- * when the inline SVG's 100:130 box was replaced by the supplied asset's
- * 440:515: the header sizes the mark by height (`h-9`), so a wider asset at
- * the same height is a wider mark, and this lock-up has to follow it. Those two ratios are the only
+ * same proportions the header sets — mark width 1.751× the wordmark's font
+ * size (29.41/16.8), gap 0.595× (10/16.8). The mark ratio moved again when the
+ * client supplied the current logo on 2026-09-07 and the derived mark's box
+ * went from 440:515 to 424:519: the header sizes the mark by height (`h-9`),
+ * so a narrower asset at the same height is a narrower mark, and this lock-up
+ * has to follow it. Those two ratios are the only
  * reason this is a component rather than a `className` on `Logo`: scaling a
  * lock-up whose parts are pinned in px (`h-9`, `gap-2.5`, `1.05rem`) means
  * re-spacing it by hand at every size, and re-spacing the lock-up is exactly
@@ -97,7 +100,7 @@ export function Logo({
  *
  * Callers set `--bd-lockup` to the lock-up's *rendered* width; everything
  * else follows from it, so `height` is never specified and the mark asset's
- * own 440:515 ratio is what decides it. The three coefficients below are the two
+ * own 424:519 ratio is what decides it. The three coefficients below are the two
  * ratios above divided through by the wordmark's measured advance width
  * (~10.1em in IBM Plex Sans SemiBold at `tracking-tight`), which is what makes
  * the box come out at `--bd-lockup` rather than a tenth under it.
@@ -113,14 +116,14 @@ export function BrandLockup({ locale, className }: { locale: Locale; className?:
       role="img"
       aria-label={locale === "ar" ? "بلو دايموند الطبية" : "Blue Diamond Medical"}
       className={cn("flex items-center", className)}
-      style={{ gap: "calc(var(--bd-lockup) * 0.0493)" }}
+      style={{ gap: "calc(var(--bd-lockup) * 0.0497)" }}
     >
-      <span className="block shrink-0" style={{ width: "calc(var(--bd-lockup) * 0.1518)" }}>
+      <span className="block shrink-0" style={{ width: "calc(var(--bd-lockup) * 0.1461)" }}>
         <DiamondMark className="block h-auto w-full" />
       </span>
       <span
         className="font-semibold leading-tight tracking-tight whitespace-nowrap"
-        style={{ fontSize: "calc(var(--bd-lockup) * 0.0829)", color: "var(--blue-3)" }}
+        style={{ fontSize: "calc(var(--bd-lockup) * 0.0835)", color: "var(--blue-3)" }}
       >
         {locale === "ar" ? "بلو دايموند الطبية" : "Blue Diamond Medical"}
       </span>

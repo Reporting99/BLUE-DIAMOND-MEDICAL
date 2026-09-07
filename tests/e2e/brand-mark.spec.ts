@@ -29,19 +29,24 @@ const LOCALES = [
 /**
  * Both legitimate sources for the mark, and nothing else.
  *
- * `/_next/static/media/blue-diamond-mark.<hash>.png` is the copy bundled in
+ * `/_next/static/media/blue-diamond-medical-mark.<hash>.png` is the copy bundled in
  * the build — what renders when the manifest entry is not `approved` OR when
  * NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT is unset, which is the case in CI: it has
  * no .env, so `imagekitIsConfigured` is false there and this fallback is what
  * the suite actually exercises. The webpack content hash is why this is a
- * pattern and not a literal.
+ * pattern and not a literal -- and why the class allows a HYPHEN. Turbopack
+ * emits hashes such as `32xu51t6-hluu`, so `[a-z0-9]+` matches only the ones
+ * that happen not to contain `-`. It passed for two years on that luck; the
+ * first hash with a hyphen failed all five of these assertions at once, and
+ * only in CI, because a local run has a `.env` and takes the ImageKit branch
+ * instead.
  *
  * The ImageKit form is what production serves. Matching the endpoint rather
  * than just the filename is deliberate: "some host is serving something
- * called blue-diamond-mark.png" is not the assertion — the approved CDN is.
+ * called blue-diamond-medical-mark.png" is not the assertion — the approved CDN is.
  */
-const BUNDLED_MARK = /^\/_next\/static\/media\/blue-diamond-mark\.[a-z0-9]+\.png$/i;
-const IMAGEKIT_MARK = /^https:\/\/ik\.imagekit\.io\/[a-z0-9]+\/blue-diamond\/brand\/blue-diamond-mark\.png(\?|$)/i;
+const BUNDLED_MARK = /^\/_next\/static\/media\/blue-diamond-medical-mark\.[a-z0-9-]+\.png$/i;
+const IMAGEKIT_MARK = /^https:\/\/ik\.imagekit\.io\/[a-z0-9]+\/blue-diamond\/brand\/blue-diamond-medical-mark\.png(\?|$)/i;
 
 async function expectRenderedMark(mark: Locator) {
   await expect(mark).toHaveCount(1);
@@ -59,7 +64,7 @@ async function expectRenderedMark(mark: Locator) {
   // guarantees it.
   const box = await mark.boundingBox();
   expect(box).not.toBeNull();
-  expect(box!.width / box!.height).toBeCloseTo(440 / 515, 1);
+  expect(box!.width / box!.height).toBeCloseTo(424 / 519, 1);
 }
 
 for (const { locale, home } of LOCALES) {

@@ -37,8 +37,8 @@ export const imageManifest: ImageKitAsset[] = [
   {
     id: "brand-mark",
     path: BRAND_MARK_PATH,
-    width: 440,
-    height: 515,
+    width: 424,
+    height: 519,
     alt: {
       en: "Blue Diamond Medical Clinic",
       ar: "عيادة بلو دايموند الطبية",
