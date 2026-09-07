@@ -16,6 +16,8 @@ import { resolvePageContent, entityCacheTags } from "@/lib/feelstack/page-resolv
 import { cacheTags } from "@/lib/feelstack/cache-tags";
 import { aestheticTreatmentCmsContract } from "@/features/aesthetics/cms-contract";
 import { aestheticConcernCmsContract, concernCmsPath } from "@/features/concerns/cms-contract";
+import { concernRepoArt } from "@/features/concerns/media";
+import { approvedManifestAsset } from "@/lib/media/image-manifest";
 
 /**
  * /aesthetics/treatments/<slug> serves TWO entity types.
@@ -82,7 +84,13 @@ async function loadTreatment(id: string, locale: Locale) {
       path: cmsPath,
     }),
   });
-  return resolution.source === "not-found" ? undefined : resolution.data;
+  if (resolution.source === "not-found") return undefined;
+  const treatment = resolution.data;
+  /* The CMS assignment wins whenever there is one. This only fills the gap for
+     a treatment whose artwork the repository owns because no publishable
+     assignment could be written for it — today that is TempSure Vitalia; see
+     `approvedManifestAsset` and docs/MEDIA.md. */
+  return treatment.image ? treatment : { ...treatment, image: approvedManifestAsset(`treatment-${id}`) };
 }
 
 /**
@@ -111,7 +119,12 @@ async function loadConcern(id: string, locale: Locale) {
       path: cmsPath,
     }),
   });
-  return resolution.source === "not-found" ? undefined : resolution.data;
+  if (resolution.source === "not-found") return undefined;
+  const concern = resolution.data;
+  /* Same rule as the explorer: the assignment first, the repo's own artwork
+     only for the two concerns that have no publishable CMS entry to carry
+     one. See `concernRepoArt`. */
+  return concern.image ? concern : { ...concern, image: concernRepoArt(id) };
 }
 
 export async function generateMetadata({
