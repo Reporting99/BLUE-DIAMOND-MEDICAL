@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { imagekitIsConfigured } from "../../src/config/imagekit";
 
 /**
  * Every route built but kept behind a disabled feature flag must be
@@ -113,12 +114,35 @@ test("Before/After is reachable but deliberately NOT indexed", async ({ page, re
 });
 
 test("Before/After renders real imagery, not placeholders", async ({ page }) => {
+  // What "real imagery" means depends on whether this environment HAS a CDN.
+  //
+  // The assertion used to be unconditional: at least one
+  // `img[src*="ik.imagekit.io"]`. That held in CI only because
+  // `imagekitIsConfigured` was true even with no ImageKit configured, so a run
+  // with no `.env` reached out to the live CDN and this test passed on network
+  // delivery it was never meant to exercise. With that fixed
+  // (src/config/imagekit.ts), an unconfigured build renders the FacetTile
+  // placeholder here — correctly — and asserting a CDN host would fail for a
+  // reason that has nothing to do with the pairs.
+  //
+  // Deleting the check would lose the thing it exists to catch, so it forks
+  // instead. Configured: the CDN must serve the pairs, which is the original
+  // guard against approval and the binaries falling out of step. Unconfigured:
+  // the page must degrade to the placeholder rather than emit a broken <img>,
+  // which is the failure mode that would otherwise ship silently.
   await page.goto("/en/aesthetics/before-after");
-  // The pairs are approved, so ImageKitImage must emit real <img> elements
-  // pointing at the CDN. A FacetTile placeholder renders no <img> at all, so
-  // this fails loudly if approval and the binaries ever fall out of step.
-  const images = page.locator('img[src*="ik.imagekit.io"]');
-  expect(await images.count()).toBeGreaterThan(0);
+  if (imagekitIsConfigured) {
+    const images = page.locator('img[src*="ik.imagekit.io"]');
+    expect(await images.count()).toBeGreaterThan(0);
+  } else {
+    // No <img> may point at a CDN this environment has not configured, and
+    // nothing on the page may be a broken image.
+    expect(await page.locator('img[src*="ik.imagekit.io"]').count()).toBe(0);
+    const broken = await page.locator("img").evaluateAll((nodes) =>
+      nodes.filter((n) => !(n as HTMLImageElement).complete || (n as HTMLImageElement).naturalWidth === 0).length,
+    );
+    expect(broken, "unconfigured build must not emit a broken image").toBe(0);
+  }
 });
 
 test("Before/After states its provenance on the page", async ({ page }) => {

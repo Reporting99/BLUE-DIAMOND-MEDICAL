@@ -25,12 +25,65 @@ const DEFAULT_URL_ENDPOINT = "https://ik.imagekit.io/oq92dh6zib";
  * e.g. `/blue-diamond/home/home-hero-blue-diamond.png`. */
 export const MEDIA_ROOT = "/blue-diamond";
 
-export const imagekitConfig = {
-  urlEndpoint: process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT ?? DEFAULT_URL_ENDPOINT,
-  publicKey: process.env.NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY ?? "",
-} as const;
+/**
+ * Normalize one ImageKit environment value into "configured" or "not".
+ *
+ * Exported, and taking the raw value rather than reading the environment, so
+ * both states are directly testable without mutating `process.env` — the same
+ * shape `isSiteLaunched` uses in src/config/launch.ts.
+ *
+ * `??` is deliberately NOT the test. Next inlines `process.env.NEXT_PUBLIC_*`
+ * at build time, and a variable that is declared-but-blank — an empty line in
+ * a slot runtime file, a GitHub Actions `vars.` entry that exists with no
+ * value, `NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT=` in a hand-edited .env — arrives
+ * as `""`, not `undefined`. `??` passes `""` straight through, so a blank
+ * value would be treated as a configured endpoint and every image URL would
+ * be built against an empty origin. Trimming first also catches the trailing
+ * space a copy-paste leaves behind. A trailing slash is stripped so
+ * `https://ik.imagekit.io/x` and `https://ik.imagekit.io/x/` are one value and
+ * cannot produce a double slash in a delivery URL.
+ */
+export function normalizeImagekitEndpoint(raw: string | undefined | null): string | null {
+  const trimmed = (raw ?? "").trim().replace(/\/+$/, "");
+  return trimmed.length > 0 ? trimmed : null;
+}
 
-export const imagekitIsConfigured = imagekitConfig.urlEndpoint.length > 0;
+/**
+ * The endpoint an operator actually configured, or `null` when none is.
+ *
+ * The member expression is written out in full because webpack replaces
+ * `process.env.NEXT_PUBLIC_…` textually; reading it through a variable or a
+ * destructure would leave it unsubstituted in the client bundle.
+ */
+const CONFIGURED_URL_ENDPOINT = normalizeImagekitEndpoint(
+  process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT,
+);
+
+/**
+ * Whether ImageKit delivery is available in THIS environment.
+ *
+ * This is the environment's answer, not the constant's. It used to be
+ * `imagekitConfig.urlEndpoint.length > 0`, which — because `urlEndpoint` falls
+ * back to `DEFAULT_URL_ENDPOINT` — could only ever be `true`. So an
+ * environment with no ImageKit at all still reported itself configured, and a
+ * CI build with no `.env` emitted live `https://ik.imagekit.io/…` URLs: the
+ * brand mark's bundled-copy fallback was never exercised there, and the suite
+ * that claims to cover it was in fact asserting against real CDN delivery over
+ * the network. Verified 2026-09-07 by building this branch with no `.env`:
+ * the prerendered `/en` carried the ImageKit `src`, not
+ * `/_next/static/media/blue-diamond-mark.<hash>.png`.
+ *
+ * `DEFAULT_URL_ENDPOINT` stays as the endpoint URLs are BUILT from, so a
+ * configured deployment that omits the variable still resolves the approved
+ * account. What changed is that it no longer answers "is ImageKit set up
+ * here?" — only a real environment value does.
+ */
+export const imagekitIsConfigured = CONFIGURED_URL_ENDPOINT !== null;
+
+export const imagekitConfig = {
+  urlEndpoint: CONFIGURED_URL_ENDPOINT ?? DEFAULT_URL_ENDPOINT,
+  publicKey: normalizeImagekitEndpoint(process.env.NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY) ?? "",
+} as const;
 
 /**
  * The brand mark's own library path.
