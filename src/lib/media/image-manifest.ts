@@ -24,6 +24,18 @@ import { BRAND_MARK_PATH, MEDIA_ROOT } from "@/config/imagekit";
  */
 const SUPPLIED_CONCERN_ART = new Set(["unwanted-hair", "hair-loss"]);
 
+/**
+ * The same, for treatments.
+ *
+ * This filter is not cosmetic: `manifestAsset`/`approvedManifestAsset` resolve
+ * an id with `find`, which returns the FIRST match. Without it the generated
+ * `pending` row for TempSure Vitalia sits earlier in the array than the real
+ * approved entry below and wins the lookup, so the approval gate reads
+ * `pending` and the supplied image never renders — which is exactly what
+ * happened before this filter was added.
+ */
+const SUPPLIED_TREATMENT_ART = new Set(["tempsure-vitalia"]);
+
 export const imageManifest: ImageKitAsset[] = [
   /**
    * The brand mark, and the only entry here that is not content.
@@ -331,18 +343,20 @@ export const imageManifest: ImageKitAsset[] = [
   // so a treatment gated off (cosmetic-botox, skin-tightening) never gets a
   // stray manifest/image reference here; the homepage showcase filters to
   // sourceVerified, published treatments the same way.
-  ...treatments.map(
-    (t): ImageKitAsset => ({
-      id: `treatment-${t.id}`,
-      path: `${MEDIA_ROOT}/treatments/${t.id}.jpg`,
-      width: 900,
-      height: 700,
-      aspectRatio: "9:7",
-      alt: { en: `${t.title.en} at Blue Diamond Medical`, ar: `${t.title.ar} في بلو دايموند الطبية` },
-      role: "treatment",
-      status: "pending",
-    }),
-  ),
+  ...treatments
+    .filter((t) => !SUPPLIED_TREATMENT_ART.has(t.id))
+    .map(
+      (t): ImageKitAsset => ({
+        id: `treatment-${t.id}`,
+        path: `${MEDIA_ROOT}/treatments/${t.id}.jpg`,
+        width: 900,
+        height: 700,
+        aspectRatio: "9:7",
+        alt: { en: `${t.title.en} at Blue Diamond Medical`, ar: `${t.title.ar} في بلو دايموند الطبية` },
+        role: "treatment",
+        status: "pending",
+      }),
+    ),
   // Technology devices — generated from src/features/technologies/data.ts.
   // "potenza-device" above predates this pass and is kept as the canonical
   // entry for Potenza rather than duplicated.
