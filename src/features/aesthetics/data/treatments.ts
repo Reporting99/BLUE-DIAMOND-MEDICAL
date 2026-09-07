@@ -237,7 +237,7 @@ export const treatments: AestheticTreatment[] = [
       ar: "نحو 30 دقيقة عادةً. يُطبَّق مخدر موضعي قد يستغرق حتى 45 دقيقة ليصبح فعالًا بالكامل.",
     },
     comfortLevel: {
-      en: "The numbing agent removes most discomfort — patients report feeling the needling but not actual pain. Providers monitor continuously and treatment can be halted at any time.",
+      en: "A topical numbing agent removes most of the discomfort. Most patients say they can feel the needles working but do not find it painful. A provider monitors you throughout, and treatment can be stopped at any point.",
       ar: "يُزيل المخدر معظم الانزعاج — يشعر المرضى بوخز الإبر دون ألم حقيقي. يراقب مقدمو الرعاية الجلسة باستمرار، ويمكن إيقافها في أي وقت.",
     },
     resultTimeline: {

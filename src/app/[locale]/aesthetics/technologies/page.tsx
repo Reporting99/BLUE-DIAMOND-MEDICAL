@@ -17,7 +17,7 @@ import { cacheTags } from "@/lib/feelstack/cache-tags";
 /** Single source for this page's description: consumed by both generateMetadata
  * and the page's JSON-LD node, so the two can never drift apart (brief §9). */
 const PAGE_DESCRIPTION = {
-      en: "World-class Cynosure equipment at Blue Diamond Medical Aesthetics — Elite iQ, Potenza, TempSure, Ultra, and TempSure Vitalia.",
+      en: "The Cynosure devices used at Blue Diamond Medical Aesthetics in Calgary — Elite iQ, Potenza, TempSure, Ultra, and TempSure Vitalia — and the treatments each one supports.",
       ar: "معدات عالمية من Cynosure في بلو دايموند للتجميل الطبي — Elite iQ وPotenza وTempSure وUltra وTempSure Vitalia.",
     } as const;
 

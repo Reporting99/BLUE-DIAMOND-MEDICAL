@@ -36,7 +36,7 @@ export default async function CareersPage({ params }: { params: Promise<{ locale
   const copy = {
     en: {
       title: "Join Our Team",
-      body: "Blue Diamond Medical is seeking qualified and eligible medical staff who are committed to exemplary patient care without sacrificing their own wellbeing. Email us your resume to apply.",
+      body: "Blue Diamond Medical is seeking qualified and eligible medical staff who are committed to exemplary patient care without sacrificing their own well-being. Email us your resume to apply.",
       cta: "Email your application",
     },
     ar: {

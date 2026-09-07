@@ -115,7 +115,7 @@ const en: Dictionary = {
       "Physician-led RF microneedling, skin tightening, laser treatments, and Botox — delivered by the same clinical team.",
     servicesTitle: "What we offer",
     servicesBody:
-      "Our practice opened on July 4, 2022 in West Springs and has consistently welcomed walk-in patients ever since. Founded by Dr. Mohamed Farhat, who brings over 30 years of family medicine experience, Blue Diamond Medical now houses six family physicians.",
+      "Our practice opened on July 4, 2022 in West Springs and has welcomed walk-in patients ever since. It was founded by Dr. Mohamed Farhat, who brings over 30 years of family medicine experience, and six family physicians now practise here.",
     botoxTitle: "Medical Botox",
     botoxBody:
       "Botox for migraines, bruxism, and hyperhidrosis, alongside cosmetic Botox — administered by Dr. Farhat and Dr. Hamdi, starting with a consultation.",
