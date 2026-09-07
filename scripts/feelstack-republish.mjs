@@ -3,7 +3,7 @@
  * FeelStack republishing utility — Blue Diamond Medical.
  *
  * Applies the field-level corrections in
- * `evidence/feelstack-republish-operations.json` to the FeelStack CMS, which
+ * `content/feelstack/republish-operations.json` to the FeelStack CMS, which
  * owns the published text on the affected routes. This repository's own static
  * data is already correct; in `hybrid` content mode the CMS record wins, so
  * only a CMS write changes what a visitor sees.

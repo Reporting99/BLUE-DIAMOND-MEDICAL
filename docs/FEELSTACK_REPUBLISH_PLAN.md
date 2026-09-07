@@ -3,7 +3,53 @@
 **Generated:** 2026-09-06
 **Site key:** `blue-diamond-medical`
 **Project ID:** `d1a870a4-a514-4719-bf71-6cff26b18dcb`
-**Status:** `NEEDS_CMS_REPUBLISH` — **59 operations** across 11 records, both locales.
+**Status:** `NEEDS_CMS_REPUBLISH` — **6 operations** still to apply. See below.
+
+---
+
+## 0. Status, re-derived from the records — 2026-09-07
+
+Everything below §1 describes the set as generated on 2026-09-06. Most of it has
+since been applied. This section is the current state, taken from
+`--mode=verify` against the live public resolver rather than from any earlier
+summary, and it supersedes the counts further down where they differ.
+
+| | count | |
+| --- | --- | --- |
+| Operations in the file | **69** | |
+| Applicable | **63** | 59 as generated, plus OP-060..OP-063 added 2026-09-07 |
+| Excluded, never written by the tool | **6** | EX-001..EX-006, unchanged |
+| **Verified live** | **57** | `--mode=verify` → `VERIFIED_LIVE=57` |
+| **Still to apply** | **6** | `--mode=dry-run` → `READY=6`, no `CONFLICT`, no `UNREADABLE` |
+
+The six outstanding:
+
+| op | route | field | why it is still open |
+| --- | --- | --- | --- |
+| OP-002 | `/medical/minor-procedures` | `booking_channel` | still `family-doctor`; must be `minor-procedures` |
+| OP-012 | Arabic counterpart | `booking_channel` | same |
+| OP-060 | `/medical/minor-procedures` | `seo.description` | still attributes clinic-wide care to Dr. Bakare |
+| OP-061 | Arabic counterpart | `seo.description` | same |
+| OP-062 | `/medical/chronic-disease-management` | `seo.description` | same |
+| OP-063 | Arabic counterpart | `seo.description` | same |
+
+**Correcting the arithmetic that has been restated a few times.** The effective
+set was reported as 57 by taking 59 applicable and subtracting the 2 manual
+relation deletions. That reaches the right number by the wrong route: EX-003 and
+EX-004, the relation deletions, are `applicable: false` and are already among
+the 6 excluded — they were never inside the 59. 57 is simply how many of the 59
+are live; the missing 2 are OP-002 and OP-012, which have not been applied at
+all. The two coincide numerically and mean different things.
+
+**Do not read a timestamp as proof.** `publishedAt`/`updatedAt` move for any
+write to a record, so an array-valued operation (`whats_included`,
+`related_doctor_ids`) or a `faq.archive` can show a fresh timestamp on a record
+whose target field never changed. Every count above comes from comparing the
+structured field value itself, which is what `--mode=verify` does.
+
+**The blocker** is unchanged and is B-1 below: applying these needs an identity
+holding `content.publish`. The credentials for it live in
+`/home/blue-diamond/secrets/`.
 
 ---
 
@@ -65,7 +111,7 @@ those tests the definition of "done" rather than a second opinion about it.
 
 | File | Use |
 | --- | --- |
-| `evidence/feelstack-republish-operations.json` | **Canonical.** Machine-executable operations consumed by the utility. |
+|  `content/feelstack/republish-operations.json` | **Canonical.** Machine-executable operations consumed by the utility. |
 | `evidence/feelstack-content-patches.json` / `.csv` | Same rows as a review/sign-off manifest (CSV is UTF-8 BOM for Excel). |
 | `evidence/cms-live/approved-static.json` | The approved source of truth, dumped from the repository. |
 | `evidence/cms-live/raw.json` | Full live API capture — the "before" evidence. |
