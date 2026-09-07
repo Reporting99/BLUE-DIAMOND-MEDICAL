@@ -75,6 +75,23 @@ export type MedicalServiceFields = z.infer<typeof medicalServiceFieldsSchema>;
  * editor can still change every word on the page; they cannot re-route a
  * procedure into an online queue. A service the CMS knows about and we do not
  * keeps the CMS value, since there is no policy here to defend.
+ *
+ * THE STORED VALUE IS STILL WRONG, AND THIS IS NOT THE FIX FOR THAT.
+ *
+ * Re-checked 2026-09-07 against the live resolver: `/medical/minor-procedures`
+ * and its Arabic counterpart still hold `booking_channel: "family-doctor"`.
+ * OP-002 and OP-012 in content/feelstack/republish-operations.json correct
+ * them to "minor-procedures"; both report READY, and both are among the six
+ * operations still waiting on a publisher identity. So the data and the
+ * rendered behaviour disagree today, and what closes that gap is applying
+ * those two operations -- not deleting this function.
+ *
+ * This override is deliberately NOT temporary and must survive that fix. It
+ * defends a clinical rule against the next edit, not against one stale row: an
+ * editor with legitimate CMS access can set booking_channel to anything the
+ * schema allows, and "the field happens to be right today" is not a control.
+ * Removing it once the data is corrected would re-open CL-018 the first time
+ * someone changes that field for a reason that looks sensible in an admin UI.
  */
 function authoritativeBookingChannel(serviceId: string, fromCms: BookingChannel): BookingChannel {
   // Matched on id, which is what the CMS field carries. ids and slugs happen
