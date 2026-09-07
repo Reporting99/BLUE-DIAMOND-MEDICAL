@@ -133,6 +133,12 @@ const MEDIA_NAMESPACES = [
   // is precisely why they have a directory of their own rather than living
   // among the section imagery.
   "brand",
+  // Created 2026-09-07 by the client's editorial package: the ImageKit
+  // destinations it specified put the Unwanted Hair and Hair Loss artwork
+  // under /blue-diamond/concerns/. The nine concerns that DO have a CMS
+  // entry keep their card assets elsewhere, which is why this namespace did
+  // not exist until those two arrived.
+  "concerns",
   "home",
   "medical",
   "shared",

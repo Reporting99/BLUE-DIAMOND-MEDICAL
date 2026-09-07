@@ -116,6 +116,60 @@ asset just because a file appeared in the account. That is what keeps
 `"pending"` a signal rather than a formality, and it is the invariant a bulk
 `approvalStatus` write broke once already.
 
+### Repo-owned placements, and the FeelStack assignment-write outage (2026-09-07)
+
+Seven client-supplied images arrived on 2026-09-07 as
+`BLUE_DIAMOND_NEW_IMAGES_FEELSTACK_READY_2026-09-07`. All seven were imported
+through `POST /admin/v1/projects/:id/media/import`, approved by the
+`bd-media-reviewer` identity, and re-verified byte-for-byte against the
+supplied SHA-256 with `?tr=orig-true`. **The binaries are FeelStack/ImageKit
+assets like any other.** What is unusual is where their *placement* is decided.
+
+Five of the seven were specified as FeelStack `card` assignments and none could
+be written, for two independent reasons:
+
+1. **The entities are missing or draft.** `/aesthetics/concerns/unwanted-hair`
+   and `/botox` have no content entry in the Blue Diamond project at all;
+   `/aesthetics/concerns/hair-loss` and `/medical/uninsured-services` exist
+   only as draft EN/AR pairs, which `GET /public/v1/sites/:key/resolve` 404s.
+   Nine of the eleven concerns have published entries and real `card`
+   assignments — the two that do not are exactly the two the client
+   commissioned artwork for.
+2. **`POST /media/assignments` is failing outright.** Every write returns
+   `404 {"message":"Media asset not found in this project."}`, including exact
+   no-op replays of assignment rows that already exist and reference
+   long-standing approved assets (verified against the `/medical` EN page hero
+   and the TempSure Vitalia EN treatment hero). DTO validation passes first, so
+   the field names are right, and `PATCH /media/:id` succeeds with the same
+   token, so the identity's media permissions are intact. `bd-media-reviewer`
+   gets a `403` at the guard instead. **This is deferred platform debt: it
+   blocks every media re-assignment on this project, not just this package.**
+
+So these placements are repo-owned, in `src/lib/media/image-manifest.ts`:
+`aesthetics-nav-treatments`, `aesthetics-nav-technologies`,
+`concern-unwanted-hair`, `concern-hair-loss`, `treatment-tempsure-vitalia`,
+`medical-botox-card`, `medical-service-uninsured-services`.
+
+**The CMS is still asked first at every one of those call sites.**
+`concernRepoArt` (`src/features/concerns/media.ts`) and
+`approvedManifestAsset` (`src/lib/media/image-manifest.ts`) are consulted only
+when the media assignment resolves empty, and both read `status` from the
+manifest — so the approval gate stays in one place, and publishing a real
+assignment later silently takes precedence and retires the fallback with no
+further code change. Nothing can leak onto a page it was not meant for: every
+other concern's generated manifest entry is still `pending`, and the gate reads
+it.
+
+The two Aesthetics navigation cards are a permanent case rather than a
+workaround — they illustrate a **route**, not an entity, so no content entry
+could ever carry them and inventing a content type for navigation artwork would
+model the menu rather than the clinic.
+
+**To retire the fallbacks once the platform is fixed:** create/publish the four
+missing entities, write the `card` assignments (one row per locale — EN and AR
+carry separate `entityId`s), then set the corresponding manifest entries back
+to `pending`. The pages need no edit.
+
 ### Verify
 
 - `tests/unit/image-usage.spec.ts` — no code bypasses `ImageKitImage`, and every
