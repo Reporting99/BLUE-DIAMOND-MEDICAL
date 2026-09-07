@@ -67,7 +67,16 @@ import { dirname, resolve, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const OPS_FILE = join(ROOT, "evidence", "feelstack-republish-operations.json");
+/**
+ * The operation set, TRACKED.
+ *
+ * It lived under `evidence/`, which .gitignore excludes, so this script — the
+ * committed, reviewable, idempotent way to make these corrections — could not
+ * run at all from a fresh checkout: the one artefact it is entirely driven by
+ * was never in the clone. `evidence/` is the right home for a one-off harness
+ * and its output; it is the wrong home for a program's input.
+ */
+const OPS_FILE = join(ROOT, "content", "feelstack", "republish-operations.json");
 
 /* ------------------------------------------------------------------ args -- */
 const args = new Map(
@@ -171,6 +180,14 @@ function publicValueOf(op, payload) {
   switch (op.kind) {
     case "entry.field.set":
       return data.fields?.[op.field];
+    case "entry.seo.set":
+      // The resolver returns seo already MERGED
+      // (settings.defaultSeo <- section.seo <- entity.seo), which is exactly
+      // what a crawler sees and therefore the right thing to compare against.
+      // It is also why applying one of these can mean CREATING an entity-level
+      // override rather than editing an existing value — applyOne says so when
+      // it happens.
+      return payload?.seo?.[op.field];
     case "entry.partnerNote.set":
       return data.fields?.external_partners?.[op.partnerIndex]?.note;
     case "person.biography.set":
@@ -280,6 +297,25 @@ async function applyOne(op, entryCache) {
       entryCache.set(op.recordId, updated ?? { ...entry, data });
       return updated;
     }
+    case "entry.seo.set": {
+      let entry = entryCache.get(op.recordId);
+      if (!entry) { entry = await getEntry(op.recordId); entryCache.set(op.recordId, entry); }
+      // Same field-preserving shape as entry.field.set: clone, mutate only the
+      // named key, PATCH the merged object back.
+      const seo = { ...(entry.seo ?? {}) };
+      if (entry.seo == null || entry.seo[op.field] === undefined) {
+        // Said out loud rather than done quietly: the live value the
+        // conflict-check matched came from a section or site default, so this
+        // write ADDS an entity-level override. That is the intended outcome
+        // for a route-specific description, but it is a different act from
+        // editing a value the record already had.
+        warn(`${op.opId}: no entity-level seo.${op.field} on ${op.route} — this write creates an override of the inherited value.`);
+      }
+      seo[op.field] = op.to;
+      const updated = await patchEntry(op.recordId, { seo, status: "published" });
+      entryCache.set(op.recordId, updated ?? { ...entry, seo });
+      return updated;
+    }
     case "faq.update":
       return patchFaq(op.faqId, { [op.field]: op.to, status: "published" });
     case "faq.archive":
@@ -307,6 +343,23 @@ async function rollbackOne(op, backup, entryCache) {
       else data.external_partners[op.partnerIndex].note = saved.data?.external_partners?.[op.partnerIndex]?.note;
       const updated = await patchEntry(op.recordId, { data, status: saved.status ?? "published" });
       entryCache.set(op.recordId, updated ?? { ...live, data });
+      return updated;
+    }
+    case "entry.seo.set": {
+      const saved = backup.records.entries[op.recordId];
+      if (!saved) throw new Error(`no backup for entry ${op.recordId}`);
+      let live = entryCache.get(op.recordId);
+      if (!live) { live = await getEntry(op.recordId); entryCache.set(op.recordId, live); }
+      const seo = { ...(live.seo ?? {}) };
+      const before = saved.seo?.[op.field];
+      // Restoring "the field was not there" has to DELETE it, not write
+      // undefined: an entity-level key set to undefined still shadows the
+      // inherited value on some serializers, which would leave the record in a
+      // third state that is neither before nor after.
+      if (before === undefined) delete seo[op.field];
+      else seo[op.field] = before;
+      const updated = await patchEntry(op.recordId, { seo, status: saved.status ?? "published" });
+      entryCache.set(op.recordId, updated ?? { ...live, seo });
       return updated;
     }
     case "faq.update": {
