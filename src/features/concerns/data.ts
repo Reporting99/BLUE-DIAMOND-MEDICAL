@@ -51,7 +51,7 @@ export const concerns: AestheticConcern[] = [
         },
       },
       {
-        question: { en: "How many treatments will I need?", ar: "كم عدد الجلسات التي سأحتاجها؟" },
+        question: { en: "How many laser hair removal treatments will I need?", ar: "كم عدد الجلسات التي سأحتاجها؟" },
         answer: {
           en: "Treatment times vary by area, but a session usually takes less than 30 minutes. Multiple sessions are needed because not all hairs are actively growing at once. Book a consultation to discuss the areas you would like treated.",
           ar: "تختلف مدة الجلسة حسب المنطقة، لكنها عادة أقل من 30 دقيقة. ويلزم عدة جلسات لأن الشعر لا ينمو كله في وقت واحد. تحدثوا مع مقدم الرعاية لتحديد استشارة ومناقشة المناطق المطلوب علاجها.",
@@ -293,7 +293,7 @@ export const concerns: AestheticConcern[] = [
         },
       },
       {
-        question: { en: "How long does a session take?", ar: "كم تستغرق الجلسة؟" },
+        question: { en: "How long does a radiofrequency session take?", ar: "كم تستغرق الجلسة؟" },
         answer: {
           en: "About 15 minutes.",
           ar: "نحو 15 دقيقة.",

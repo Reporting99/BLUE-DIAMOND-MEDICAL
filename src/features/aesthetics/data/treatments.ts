@@ -61,7 +61,7 @@ export const treatments: AestheticTreatment[] = [
         },
       },
       {
-        question: { en: "How many treatments will I need?", ar: "كم عدد الجلسات التي سأحتاجها؟" },
+        question: { en: "How many laser hair removal treatments will I need?", ar: "كم عدد الجلسات التي سأحتاجها؟" },
         answer: {
           en: "Treatment times vary by area, but a session usually takes less than 30 minutes. Book a consultation to discuss the areas you would like treated.",
           ar: "تختلف مدة الجلسة حسب المنطقة، لكنها عادة أقل من 30 دقيقة. تحدثوا مع مقدم الرعاية لتحديد استشارة ومناقشة المناطق المطلوب علاجها.",
@@ -182,7 +182,7 @@ export const treatments: AestheticTreatment[] = [
         },
       },
       {
-        question: { en: "How long does a session take?", ar: "كم تستغرق الجلسة؟" },
+        question: { en: "How long does a radiofrequency session take?", ar: "كم تستغرق الجلسة؟" },
         answer: {
           en: "Face and neck treatments take 40–90 minutes depending on the area; body areas are treated with non-invasive pads over about 20 minutes.",
           ar: "تستغرق علاجات الوجه والرقبة بين 40 و90 دقيقة حسب المنطقة؛ وتُعالَج مناطق الجسم بواسطة وسائد غير جراحية خلال نحو 20 دقيقة.",
@@ -335,7 +335,7 @@ export const treatments: AestheticTreatment[] = [
         },
       },
       {
-        question: { en: "Will one session be enough?", ar: "هل تكفي جلسة واحدة؟" },
+        question: { en: "Will one Ultra treatment be enough?", ar: "هل تكفي جلسة واحدة؟" },
         answer: {
           en: "Results may appear after a single treatment or require several visits, depending on the condition being treated.",
           ar: "قد تظهر النتائج بعد جلسة واحدة أو تتطلب عدة زيارات، حسب الحالة المُعالَجة.",

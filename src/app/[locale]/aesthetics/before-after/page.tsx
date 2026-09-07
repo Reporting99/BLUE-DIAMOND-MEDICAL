@@ -30,7 +30,7 @@ export async function generateMetadata({
   const { locale } = await params;
   const safeLocale: Locale = isLocale(locale) ? locale : "en";
   return getRouteMetadata("aesthetics-before-after", safeLocale, {
-    description: { en: "Before and after results at Blue Diamond Medical Aesthetics.", ar: "نتائج قبل وبعد في بلو دايموند للتجميل الطبي." },
+    description: { en: "Before-and-after examples from laser, radiofrequency, and PRP treatments at Blue Diamond Medical Aesthetics in Calgary. Individual results vary.", ar: "نتائج قبل وبعد في بلو دايموند للتجميل الطبي." },
   });
 }
 

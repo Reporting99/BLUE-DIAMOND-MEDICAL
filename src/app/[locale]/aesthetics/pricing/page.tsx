@@ -33,7 +33,7 @@ export async function generateMetadata({
   const safeLocale: Locale = isLocale(locale) ? locale : "en";
   return getRouteMetadata("aesthetics-pricing", safeLocale, {
     description: {
-      en: "Pricing for medical aesthetics treatments at Blue Diamond Medical.",
+      en: "Current pricing for laser, radiofrequency, microneedling, and PRP treatments at Blue Diamond Medical Aesthetics in Calgary, listed by treatment area.",
       ar: "أسعار علاجات التجميل الطبي في بلو دايموند الطبية.",
     },
   });
