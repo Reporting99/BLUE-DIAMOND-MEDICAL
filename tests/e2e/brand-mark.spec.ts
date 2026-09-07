@@ -26,9 +26,30 @@ const LOCALES = [
   { locale: "ar", home: "بلو دايموند الطبية — الصفحة الرئيسية" },
 ] as const;
 
+/**
+ * Both legitimate sources for the mark, and nothing else.
+ *
+ * `/_next/static/media/blue-diamond-mark.<hash>.png` is the copy bundled in
+ * the build — what renders when the manifest entry is not `approved` OR when
+ * NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT is unset, which is the case in CI: it has
+ * no .env, so `imagekitIsConfigured` is false there and this fallback is what
+ * the suite actually exercises. The webpack content hash is why this is a
+ * pattern and not a literal.
+ *
+ * The ImageKit form is what production serves. Matching the endpoint rather
+ * than just the filename is deliberate: "some host is serving something
+ * called blue-diamond-mark.png" is not the assertion — the approved CDN is.
+ */
+const BUNDLED_MARK = /^\/_next\/static\/media\/blue-diamond-mark\.[a-z0-9]+\.png$/i;
+const IMAGEKIT_MARK = /^https:\/\/ik\.imagekit\.io\/[a-z0-9]+\/blue-diamond\/brand\/blue-diamond-mark\.png(\?|$)/i;
+
 async function expectRenderedMark(mark: Locator) {
   await expect(mark).toHaveCount(1);
-  await expect(mark).toHaveAttribute("src", /blue-diamond-mark\.png/);
+  const src = await mark.getAttribute("src");
+  expect(
+    src && (BUNDLED_MARK.test(src) || IMAGEKIT_MARK.test(src)),
+    `logo src must be the bundled mark or the ImageKit copy, got: ${src}`,
+  ).toBe(true);
   // Decoded, not merely present: a broken URL still matches the src above.
   await expect
     .poll(() => mark.evaluate((el) => (el as HTMLImageElement).naturalWidth), { timeout: 10_000 })

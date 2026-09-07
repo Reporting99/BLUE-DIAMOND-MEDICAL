@@ -16,7 +16,11 @@ import { manifestAsset } from "./image-manifest";
  * will disagree for the wrong reason.)
  *
  * That committed file stays in the repository and stays imported here, as the
- * fallback. The logo is the one image whose absence reads as a broken site
+ * fallback. It is not a theoretical branch: `NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT`
+ * comes from `.env`, which is gitignored, so CI has no ImageKit endpoint and
+ * every CI run of the suite exercises this path rather than the CDN one
+ * (verified 2026-09-07 by building with .env moved aside). Production and the
+ * deployed slots do set it, so what a visitor gets is the CDN copy. The logo is the one image whose absence reads as a broken site
  * rather than a missing photo, so it does not depend on a remote host and a
  * CMS status field alone: if the manifest entry is ever set back to `pending`
  * -- the ordinary way an editor withdraws an asset -- the header keeps showing
