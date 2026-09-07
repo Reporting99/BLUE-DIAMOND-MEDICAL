@@ -6,7 +6,7 @@ import { Container } from "@/components/layout/Container";
 import { AestheticsHero } from "@/features/aesthetics/components/AestheticsHero";
 import { SectionTransition } from "@/components/layout/SectionTransition";
 import { Button } from "@/components/ui/button";
-import { FacetTile } from "@/components/shared/FacetTile";
+import { ImageKitImage } from "@/components/shared/ImageKitImage";
 import { isLocale, type Locale } from "@/i18n/config";
 import { getRouteMetadata } from "@/lib/seo/metadata";
 import { getBookingUrl } from "@/config/booking";
@@ -14,6 +14,7 @@ import { getRoute, href } from "@/lib/routing";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
 import { PageSchema } from "@/components/shared/schema";
 import { resolvePageHeroImage } from "@/lib/feelstack/page-hero-media";
+import { manifestAsset } from "@/lib/media/image-manifest";
 
 export async function generateMetadata({
   params,
@@ -76,9 +77,24 @@ export default async function AestheticsHubPage({ params }: { params: Promise<{ 
      menu carried, and the same guess it asked the visitor to make. Now the
      concern list IS the treatments list, so a third card would be a second
      link to the identical page. */
+  /* The card art is repo-owned rather than CMS-assigned: these two cards
+     illustrate a ROUTE, not an entity, so there is no content entry whose
+     media assignment could carry them. `manifestAsset` is the single approval
+     gate -- setting either entry back to `pending` in image-manifest.ts takes
+     the picture off this page without touching it. */
   const exploreCards = [
-    { icon: Sparkles, ...copy.byTreatment, href: href("aesthetics-treatments-hub", locale) },
-    { icon: Cpu, ...copy.byTechnology, href: href("aesthetics-technologies-hub", locale) },
+    {
+      icon: Sparkles,
+      ...copy.byTreatment,
+      href: href("aesthetics-treatments-hub", locale),
+      asset: manifestAsset("aesthetics-nav-treatments"),
+    },
+    {
+      icon: Cpu,
+      ...copy.byTechnology,
+      href: href("aesthetics-technologies-hub", locale),
+      asset: manifestAsset("aesthetics-nav-technologies"),
+    },
   ];
 
   const ownRoute = getRoute("aesthetics-hub")!;
@@ -143,11 +159,24 @@ export default async function AestheticsHubPage({ params }: { params: Promise<{ 
                 href={card.href}
                 className="group flex flex-col overflow-hidden rounded-lg border border-border bg-background transition-[border-color,box-shadow] duration-[var(--motion-normal)] ease-[var(--motion-ease)] hover:border-primary hover:shadow-[0_10px_30px_rgba(29,86,120,0.10)] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus"
               >
-                <div className="relative aspect-[16/9] overflow-hidden">
-                  <FacetTile
-                    role="treatment"
+                {/* aria-hidden, exactly as the FacetTile this replaced was
+                    `decorative`: the link's own heading and body already name
+                    where it goes, so announcing the picture as well would add
+                    a second label for one destination. The bilingual alt text
+                    still travels with the asset in image-manifest.ts and on
+                    the FeelStack media row. */}
+                <div aria-hidden="true" className="relative aspect-[16/9] overflow-hidden">
+                  <ImageKitImage
+                    path={card.asset.path}
+                    preset="treatment"
+                    role={card.asset.role}
+                    status={card.asset.status}
+                    alt={card.asset.alt}
+                    locale={locale}
+                    width={card.asset.width}
+                    height={card.asset.height}
                     seed={card.title}
-                    decorative
+                    sizes="(min-width: 640px) 33vw, 100vw"
                     className="h-full w-full transition-transform duration-[600ms] ease-[var(--motion-ease)] group-hover:scale-[1.04]"
                   />
                   {/* The icon sits on the visual, in a solid disc, so it reads

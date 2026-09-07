@@ -16,6 +16,26 @@ import { BRAND_MARK_PATH, MEDIA_ROOT } from "@/config/imagekit";
  * docs/MEDIA.md is generated from by hand; keep them
  * in sync when either changes.
  */
+/**
+ * Concerns whose imagery this repository owns outright, because no publishable
+ * CMS entry exists to carry a media assignment for them. Keeping the ids in
+ * one named set is what stops the generated block below from emitting a second,
+ * `pending` entry for the same concern under the same id.
+ */
+const SUPPLIED_CONCERN_ART = new Set(["unwanted-hair", "hair-loss"]);
+
+/**
+ * The same, for treatments.
+ *
+ * This filter is not cosmetic: `manifestAsset`/`approvedManifestAsset` resolve
+ * an id with `find`, which returns the FIRST match. Without it the generated
+ * `pending` row for TempSure Vitalia sits earlier in the array than the real
+ * approved entry below and wins the lookup, so the approval gate reads
+ * `pending` and the supplied image never renders — which is exactly what
+ * happened before this filter was added.
+ */
+const SUPPLIED_TREATMENT_ART = new Set(["tempsure-vitalia"]);
+
 export const imageManifest: ImageKitAsset[] = [
   /**
    * The brand mark, and the only entry here that is not content.
@@ -136,6 +156,63 @@ export const imageManifest: ImageKitAsset[] = [
     alt: { en: "Blue Diamond Medical Aesthetics", ar: "التجميل الطبي في بلو دايموند" },
     role: "treatment",
     status: "pending",
+  },
+  /**
+   * The two "Find your way in" navigation cards on /aesthetics.
+   *
+   * These two cards are the only imagery on the site that no CMS entity owns.
+   * They illustrate a ROUTE — "Treatments", "Our Technologies" — rather than a
+   * concern, a treatment or a technology, so there is no content entry whose
+   * media assignment could carry them, and inventing a content type just to
+   * hold navigation artwork would put a schema in the CMS that models the
+   * menu rather than the clinic. They are therefore repo-owned and audited
+   * here, which is what this manifest is for.
+   *
+   * Supplied by the client on 2026-09-07 in
+   * BLUE_DIAMOND_NEW_IMAGES_FEELSTACK_READY_2026-09-07 and imported through
+   * the sanctioned door (FeelStack `POST /media/import`), which put the bytes
+   * in ImageKit at exactly these paths and recorded the MediaAsset rows;
+   * both were then approved by the `bd-media-reviewer` identity and the
+   * delivered bytes re-verified against the supplied SHA-256 with
+   * `?tr=orig-true`:
+   *   treatments-collection.png  0b99b353f6b30e82512c5ce0871afd32e8ae91c1e9ed3ff5e642f576f6c57196
+   *   technologies-equipment.png c65f6028dbee2815f70829e4ae8ecaaf71e9e438b1bffc273bacb2d60080503a
+   *
+   * They are AI-generated EDITORIAL imagery — not Blue Diamond patients, not
+   * named clinic staff, and not before/after evidence. That provenance is
+   * recorded on the media rows themselves (metadata.sourceType) and is the
+   * reason they are allowed on a page whose other pictures are real people:
+   * docs/UI_UX_FOUNDATION.md §18 forbids an INVENTED FACE standing in for a
+   * real person, and neither of these depicts an identifiable individual.
+   *
+   * 1672x941 is the supplied original (≈16:9, the frame the cards already
+   * use), so the card never asks ImageKit to enlarge the source.
+   */
+  {
+    id: "aesthetics-nav-treatments",
+    path: `${MEDIA_ROOT}/aesthetics/navigation/treatments-collection.png`,
+    width: 1672,
+    height: 941,
+    aspectRatio: "16:9",
+    alt: {
+      en: "Editorial montage of laser, facial, and scalp treatments",
+      ar: "مشهد تحريري يجمع علاجات الليزر والوجه وفروة الرأس",
+    },
+    role: "treatment",
+    status: "approved",
+  },
+  {
+    id: "aesthetics-nav-technologies",
+    path: `${MEDIA_ROOT}/aesthetics/navigation/technologies-equipment.png`,
+    width: 1672,
+    height: 941,
+    aspectRatio: "16:9",
+    alt: {
+      en: "Potenza, Elite iQ, and LaseMD Ultra treatment technologies",
+      ar: "تقنيات العلاج Potenza وElite iQ وLaseMD Ultra",
+    },
+    role: "technology",
+    status: "approved",
   },
   /**
    * The Our Team hero group photograph, supplied by the clinic for this page
@@ -266,18 +343,20 @@ export const imageManifest: ImageKitAsset[] = [
   // so a treatment gated off (cosmetic-botox, skin-tightening) never gets a
   // stray manifest/image reference here; the homepage showcase filters to
   // sourceVerified, published treatments the same way.
-  ...treatments.map(
-    (t): ImageKitAsset => ({
-      id: `treatment-${t.id}`,
-      path: `${MEDIA_ROOT}/treatments/${t.id}.jpg`,
-      width: 900,
-      height: 700,
-      aspectRatio: "9:7",
-      alt: { en: `${t.title.en} at Blue Diamond Medical`, ar: `${t.title.ar} في بلو دايموند الطبية` },
-      role: "treatment",
-      status: "pending",
-    }),
-  ),
+  ...treatments
+    .filter((t) => !SUPPLIED_TREATMENT_ART.has(t.id))
+    .map(
+      (t): ImageKitAsset => ({
+        id: `treatment-${t.id}`,
+        path: `${MEDIA_ROOT}/treatments/${t.id}.jpg`,
+        width: 900,
+        height: 700,
+        aspectRatio: "9:7",
+        alt: { en: `${t.title.en} at Blue Diamond Medical`, ar: `${t.title.ar} في بلو دايموند الطبية` },
+        role: "treatment",
+        status: "pending",
+      }),
+    ),
   // Technology devices — generated from src/features/technologies/data.ts.
   // "potenza-device" above predates this pass and is kept as the canonical
   // entry for Potenza rather than duplicated.
@@ -312,29 +391,160 @@ export const imageManifest: ImageKitAsset[] = [
       status: "pending",
     }),
   ),
+  /**
+   * The Uninsured Services card on the Medical Care hub.
+   *
+   * Supplied by the client on 2026-09-07 in
+   * BLUE_DIAMOND_NEW_IMAGES_FEELSTACK_READY_2026-09-07, imported through
+   * FeelStack `POST /media/import` (which put the bytes in ImageKit and
+   * recorded the MediaAsset row), approved by the `bd-media-reviewer`
+   * identity, and re-verified byte-for-byte against the supplied SHA-256
+   * with `?tr=orig-true`. AI-generated EDITORIAL imagery: not a Blue Diamond
+   * patient, not named clinic staff, not before/after evidence.
+   *
+   * sha256 cf1953858f9b0e6d959363db2838f1a0f813c87ff30120ae66d25cc0db49f051.
+   * The path this entry carried before was a `.jpg` placeholder that never
+   * existed in the library; 1122x1402 is the supplied original.
+   */
   {
     id: "medical-service-uninsured-services",
-    path: `${MEDIA_ROOT}/medical/uninsured-services.jpg`,
-    width: 900,
-    height: 700,
-    aspectRatio: "9:7",
-    alt: { en: "Uninsured services at Blue Diamond Medical", ar: "الخدمات غير المشمولة بالتأمين في بلو دايموند الطبية" },
+    path: `${MEDIA_ROOT}/medical/uninsured-services.png`,
+    width: 1122,
+    height: 1402,
+    aspectRatio: "4:5",
+    alt: {
+      en: "Editorial image of a physician reviewing an administrative medical form with a patient",
+      ar: "صورة تحريرية لطبيبة تراجع نموذجاً طبياً إدارياً مع مريضة",
+    },
     role: "service",
-    status: "pending",
+    status: "approved",
   },
-  // Concern-explorer imagery — generated from src/features/concerns/data.ts.
-  ...concerns.map(
-    (c): ImageKitAsset => ({
-      id: `concern-${c.id}`,
-      path: `${MEDIA_ROOT}/concerns/${c.id}.jpg`,
-      width: 900,
-      height: 900,
-      aspectRatio: "1:1",
-      alt: { en: `${c.title.en} — Blue Diamond Medical Aesthetics`, ar: `${c.title.ar} — بلو دايموند للتجميل الطبي` },
-      role: "concern",
-      status: "pending",
-    }),
-  ),
+  /**
+   * The Botox card on the Medical Care hub.
+   *
+   * Distinct from `botox-consultation` above, which names an unshipped plan
+   * under a `/botox/` namespace the media library does not have. This is the
+   * asset that exists.
+   *
+   * Supplied by the client on 2026-09-07 in
+   * BLUE_DIAMOND_NEW_IMAGES_FEELSTACK_READY_2026-09-07, imported through
+   * FeelStack `POST /media/import` (which put the bytes in ImageKit and
+   * recorded the MediaAsset row), approved by the `bd-media-reviewer`
+   * identity, and re-verified byte-for-byte against the supplied SHA-256
+   * with `?tr=orig-true`. AI-generated EDITORIAL imagery: not a Blue Diamond
+   * patient, not named clinic staff, not before/after evidence.
+   *
+   * sha256 b8b2518a7157aa58534db324f3334d8cab6c0488ef30050b2116ec6b15f09f2a.
+   */
+  {
+    id: "medical-botox-card",
+    path: `${MEDIA_ROOT}/medical/botox.png`,
+    width: 1536,
+    height: 1024,
+    aspectRatio: "3:2",
+    alt: {
+      en: "Editorial image of a therapeutic injection for migraine management",
+      ar: "صورة تحريرية لحقن علاجي للمساعدة في إدارة الشقيقة",
+    },
+    role: "treatment",
+    status: "approved",
+  },
+  /**
+   * The TempSure Vitalia aesthetic-treatment lead image.
+   *
+   * Supplied by the client on 2026-09-07 in
+   * BLUE_DIAMOND_NEW_IMAGES_FEELSTACK_READY_2026-09-07, imported through
+   * FeelStack `POST /media/import` (which put the bytes in ImageKit and
+   * recorded the MediaAsset row), approved by the `bd-media-reviewer`
+   * identity, and re-verified byte-for-byte against the supplied SHA-256
+   * with `?tr=orig-true`. AI-generated EDITORIAL imagery: not a Blue Diamond
+   * patient, not named clinic staff, not before/after evidence.
+   *
+   * sha256 7e7bc713f840c6228b1529fbd48de6829e838bb43aeaf2fec417330301f8adb3.
+   * A discreet consultation image, deliberately: it illustrates the
+   * conversation about the treatment, not the procedure.
+   */
+  {
+    id: "treatment-tempsure-vitalia",
+    path: `${MEDIA_ROOT}/treatments/tempsure-vitalia.png`,
+    width: 1254,
+    height: 1254,
+    aspectRatio: "1:1",
+    alt: {
+      en: "Editorial consultation about TempSure Vitalia treatment",
+      ar: "صورة تحريرية لاستشارة حول علاج TempSure Vitalia",
+    },
+    role: "treatment",
+    status: "approved",
+  },
+  /**
+   * The two concerns the client supplied artwork for.
+   *
+   * Every other concern's picture comes from its FeelStack `card` assignment,
+   * which is why the generated block below still describes them as pending
+   * placeholders. Unwanted Hair and Hair Loss are the two concerns with no
+   * publishable CMS entry to hang an assignment on — Unwanted Hair has no
+   * content entry at all and Hair Loss exists only as a draft pair, so the
+   * public resolver 404s both — and they are, not coincidentally, the two the
+   * client commissioned images for. Until those entries exist and are
+   * published, the repo owns these two placements; see docs/MEDIA.md.
+   *
+   * Supplied by the client on 2026-09-07 in
+   * BLUE_DIAMOND_NEW_IMAGES_FEELSTACK_READY_2026-09-07, imported through
+   * FeelStack `POST /media/import` (which put the bytes in ImageKit and
+   * recorded the MediaAsset row), approved by the `bd-media-reviewer`
+   * identity, and re-verified byte-for-byte against the supplied SHA-256
+   * with `?tr=orig-true`. AI-generated EDITORIAL imagery: not a Blue Diamond
+   * patient, not named clinic staff, not before/after evidence.
+   *
+   *   unwanted-hair 1efbc29133ce8a4b397015d72a0bc74ccabd4b3ee736f82b60f2e3f0036a2b3c
+   *   hair-loss     acd6eaca49f50afc9e7f224751c41c43e62cf47b366a735572d1b63017e41d83
+   *
+   * 3:2 originals rendered inside the explorer's square preview — see
+   * `concernRepoArt` in src/features/concerns/media.ts for the framing.
+   */
+  {
+    id: "concern-unwanted-hair",
+    path: `${MEDIA_ROOT}/concerns/unwanted-hair.png`,
+    width: 1536,
+    height: 1024,
+    aspectRatio: "3:2",
+    alt: {
+      en: "Editorial image of laser hair reduction on a lower leg",
+      ar: "صورة تحريرية لعلاج تقليل الشعر بالليزر على الساق",
+    },
+    role: "concern",
+    status: "approved",
+  },
+  {
+    id: "concern-hair-loss",
+    path: `${MEDIA_ROOT}/concerns/hair-loss.png`,
+    width: 1536,
+    height: 1024,
+    aspectRatio: "3:2",
+    alt: {
+      en: "Editorial image of a platelet-rich plasma scalp treatment",
+      ar: "صورة تحريرية لعلاج فروة الرأس بالبلازما الغنية بالصفائح",
+    },
+    role: "concern",
+    status: "approved",
+  },
+  // Concern-explorer imagery — generated from src/features/concerns/data.ts,
+  // minus the two above, whose real assets are inventoried explicitly.
+  ...concerns
+    .filter((c) => !SUPPLIED_CONCERN_ART.has(c.id))
+    .map(
+      (c): ImageKitAsset => ({
+        id: `concern-${c.id}`,
+        path: `${MEDIA_ROOT}/concerns/${c.id}.jpg`,
+        width: 900,
+        height: 900,
+        aspectRatio: "1:1",
+        alt: { en: `${c.title.en} — Blue Diamond Medical Aesthetics`, ar: `${c.title.ar} — بلو دايموند للتجميل الطبي` },
+        role: "concern",
+        status: "pending",
+      }),
+    ),
 ];
 
 /**
@@ -358,6 +568,24 @@ export function manifestAsset(id: string): ImageKitAsset {
   const asset = imageManifest.find((a) => a.id === id);
   if (!asset) throw new Error(`image-manifest.ts: no asset with id "${id}"`);
   return asset;
+}
+
+/**
+ * One manifest entry by id, but ONLY if it is approved.
+ *
+ * The counterpart to `manifestAsset` for a caller that is asking "does this
+ * repository own publishable artwork for X?" rather than "give me X". Absence
+ * and `pending` are the same answer to that question — no picture — so this
+ * returns undefined for both instead of throwing, and the caller falls back to
+ * whatever it already draws when a CMS assignment is missing.
+ *
+ * Keeping the `status` check here rather than at the call sites means the
+ * approval gate stays in one place: setting an entry back to `pending` takes
+ * the asset off every page that reads it through this function.
+ */
+export function approvedManifestAsset(id: string): ImageKitAsset | undefined {
+  const asset = imageManifest.find((a) => a.id === id);
+  return asset?.status === "approved" ? asset : undefined;
 }
 
 /**

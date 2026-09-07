@@ -15,6 +15,7 @@ import { ScrollCue } from "@/components/layout/ScrollCue";
 import { getRoute, href } from "@/lib/routing";
 import { medicalServices } from "@/features/medical-services";
 import { resolveListingMedia } from "@/lib/feelstack/listing-media";
+import { approvedManifestAsset } from "@/lib/media/image-manifest";
 import { heroFromListing } from "@/lib/feelstack/page-hero-media";
 import { cacheTags } from "@/lib/feelstack/cache-tags";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
@@ -195,6 +196,13 @@ export default async function MedicalHubPage({ params }: { params: Promise<{ loc
               );
             })}
 
+            {/* Botox and Uninsured Services are the two cards on this hub that
+                no CMS entity backs: neither `/botox` nor
+                `/medical/uninsured-services` has a publishable entry in the
+                Blue Diamond project, so `serviceImage` above has nothing to
+                return for them and the batch above cannot ask. Their artwork
+                is inventoried in image-manifest.ts instead, behind the same
+                approval gate — see docs/MEDIA.md. */}
             <MediaCard
               href={`/${locale}${botoxRoute.path[locale]}`}
               title={botoxRoute.title[locale]}
@@ -203,6 +211,7 @@ export default async function MedicalHubPage({ params }: { params: Promise<{ loc
                   ? "بعض إجراءات البوتوكس الطبي مشمولة بالتأمين الصحي — بما في ذلك الشقيقة وصرير الأسنان والتعرق الزائد."
                   : "Some medical Botox procedures are AHS-insured — including migraine, bruxism, and hyperhidrosis."
               }
+              image={approvedManifestAsset("medical-botox-card")}
               imageRole="treatment"
               seed="medical-botox"
               imageAlt={{
@@ -212,6 +221,32 @@ export default async function MedicalHubPage({ params }: { params: Promise<{ loc
               locale={locale}
               ctaLabel={detailsLabel}
               delay={medicalServices.length % 3}
+            />
+
+            {/* The fee schedule was reachable only from a text link further
+                down the page, which put it below every service it sits
+                alongside. The summary is the destination page's own approved
+                opening sentence, verbatim -- no new copy, and the link below
+                is left where it is. */}
+            <MediaCard
+              href={`/${locale}${uninsuredRoute.path[locale]}`}
+              title={uninsuredRoute.title[locale]}
+              summary={
+                locale === "ar"
+                  ? "عدد من الخدمات التي يقدمها طبيب أسرتكم غير مشمولة بالتأمين الصحي لألبرتا. يجب سداد جميع الرسوم كاملة قبل تسليم المستندات."
+                  : "A number of services your family doctor provides are not covered by Alberta Health Services. All fees must be paid in full before documents are released."
+              }
+              image={approvedManifestAsset("medical-service-uninsured-services")}
+              imageRole="service"
+              preset="service"
+              seed="medical-uninsured-services"
+              imageAlt={{
+                en: "Editorial image of a physician reviewing an administrative medical form with a patient",
+                ar: "صورة تحريرية لطبيبة تراجع نموذجاً طبياً إدارياً مع مريضة",
+              }}
+              locale={locale}
+              ctaLabel={detailsLabel}
+              delay={(medicalServices.length + 1) % 3}
             />
           </div>
         </Container>

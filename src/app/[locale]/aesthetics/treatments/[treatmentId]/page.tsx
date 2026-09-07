@@ -16,6 +16,41 @@ import { resolvePageContent, entityCacheTags } from "@/lib/feelstack/page-resolv
 import { cacheTags } from "@/lib/feelstack/cache-tags";
 import { aestheticTreatmentCmsContract } from "@/features/aesthetics/cms-contract";
 import { aestheticConcernCmsContract, concernCmsPath } from "@/features/concerns/cms-contract";
+import { concernRepoArt } from "@/features/concerns/media";
+import { approvedManifestAsset } from "@/lib/media/image-manifest";
+
+/**
+ * Treatments whose repo-owned artwork OUTRANKS the live CMS assignment.
+ *
+ * This is a deliberate, temporary exception to rule 2 in
+ * `src/lib/feelstack/media-slots.ts` — "a real assignment wins over anything
+ * hardcoded in this repository" — and it is scoped to the single entity that
+ * needs it rather than loosened for everyone.
+ *
+ * WHY. TempSure Vitalia's `hero` assignment points at
+ * `/blue-diamond/technologies/tempsure-vitalia-abstract-card.png`, which is
+ * not a photograph of anything: its own alt text calls it an "Abstract blue
+ * diamond and concentric light rings". It is the placeholder tile the client's
+ * 2026-09-07 image was commissioned to replace, and the replacement is the
+ * same 1254x1254 frame. The correct fix is to re-point that assignment in the
+ * CMS, and it is unavailable: `POST /media/assignments` currently 404s on
+ * every write, including no-op replays of rows that already exist
+ * (docs/MEDIA.md).
+ *
+ * WHY THIS IS NOT THE FAILURE RULE 2 GUARDS AGAINST. That rule exists so this
+ * repository cannot put an UNREVIEWED image over a reviewed CMS decision. The
+ * asset named here is reviewed: imported through FeelStack, approved by the
+ * `bd-media-reviewer` identity, and byte-verified against the client's
+ * manifest. Only the mechanism for recording the placement is broken, not the
+ * review.
+ *
+ * REMOVE THIS as soon as `POST /media/assignments` works: re-point the
+ * TempSure Vitalia hero at media asset
+ * `bceb31bb-e794-4c67-a828-11fa0bd3d264` for BOTH locale rows, then delete
+ * this set and the branch that reads it. The manifest entry can stay — it
+ * becomes an ordinary fallback again.
+ */
+const CMS_SUPERSEDED_BY_REPO_ART = new Set(["tempsure-vitalia"]);
 
 /**
  * /aesthetics/treatments/<slug> serves TWO entity types.
@@ -82,7 +117,12 @@ async function loadTreatment(id: string, locale: Locale) {
       path: cmsPath,
     }),
   });
-  return resolution.source === "not-found" ? undefined : resolution.data;
+  if (resolution.source === "not-found") return undefined;
+  const treatment = resolution.data;
+  const repoArt = approvedManifestAsset(`treatment-${id}`);
+  if (!repoArt) return treatment;
+  if (CMS_SUPERSEDED_BY_REPO_ART.has(id)) return { ...treatment, image: repoArt };
+  return treatment.image ? treatment : { ...treatment, image: repoArt };
 }
 
 /**
@@ -111,7 +151,12 @@ async function loadConcern(id: string, locale: Locale) {
       path: cmsPath,
     }),
   });
-  return resolution.source === "not-found" ? undefined : resolution.data;
+  if (resolution.source === "not-found") return undefined;
+  const concern = resolution.data;
+  /* Same rule as the explorer: the assignment first, the repo's own artwork
+     only for the two concerns that have no publishable CMS entry to carry
+     one. See `concernRepoArt`. */
+  return concern.image ? concern : { ...concern, image: concernRepoArt(id) };
 }
 
 export async function generateMetadata({

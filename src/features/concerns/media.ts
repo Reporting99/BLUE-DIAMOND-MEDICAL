@@ -3,6 +3,7 @@ import { resolveListingMedia, type ListingEntity, type ListingMedia } from "@/li
 import { resolveSlotImage } from "@/lib/feelstack/media-slots";
 import type { Locale } from "@/lib/feelstack/contracts";
 import type { ImageKitAsset } from "@/types/media";
+import { approvedManifestAsset } from "@/lib/media/image-manifest";
 import { CONCERN_FEATURE_SLOTS } from "./media-slots";
 import { concernCmsPath } from "./cms-contract";
 import type { AestheticConcern } from "./types";
@@ -83,11 +84,35 @@ export function concernExplorerImages(
 ): Record<string, ImageKitAsset> {
   const images: Record<string, ImageKitAsset> = {};
   for (const concern of list) {
-    const asset = resolveSlotImage({
-      media: media[concernMediaKey(concern.id)] ?? [],
-      slot: CONCERN_FEATURE_SLOTS,
-    });
+    const asset =
+      resolveSlotImage({
+        media: media[concernMediaKey(concern.id)] ?? [],
+        slot: CONCERN_FEATURE_SLOTS,
+      }) ?? concernRepoArt(concern.id);
     if (asset) images[concern.id] = asset;
   }
   return images;
+}
+
+/**
+ * The approved artwork this repository owns for a concern, if it owns any.
+ *
+ * The CMS is still the first source: `concernExplorerImages` and the detail
+ * page both ask their media assignments first and only land here when the
+ * answer is empty. That ordering matters — it means publishing a real `card`
+ * assignment for one of these concerns later silently takes precedence, and
+ * this fallback retires itself without another code change.
+ *
+ * It exists because two concerns have no publishable CMS entry to carry an
+ * assignment at all: Unwanted Hair has no content entry in the Blue Diamond
+ * project, and Hair Loss exists only as a draft pair the public resolver
+ * 404s. The client supplied artwork for exactly those two on 2026-09-07, and
+ * FeelStack's assignment-write API is currently returning 404 on every write
+ * regardless (see docs/MEDIA.md). Returning `undefined` for every other
+ * concern keeps the "no assignment means no picture" rule intact for them:
+ * their generated manifest entries are `pending` placeholders and this gate
+ * reads `status`, so none of them can leak onto a page.
+ */
+export function concernRepoArt(id: string): ImageKitAsset | undefined {
+  return approvedManifestAsset(`concern-${id}`);
 }
