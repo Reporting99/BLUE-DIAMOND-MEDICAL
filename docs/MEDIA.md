@@ -165,6 +165,23 @@ workaround — they illustrate a **route**, not an entity, so no content entry
 could ever carry them and inventing a content type for navigation artwork would
 model the menu rather than the clinic.
 
+**One of the seven is a supersede, not a fallback.** TempSure Vitalia's
+treatment entity has a live `hero` assignment pointing at
+`/blue-diamond/technologies/tempsure-vitalia-abstract-card.png` — not a
+photograph of anything; its own alt text calls it an "Abstract blue diamond and
+concentric light rings". That is the placeholder tile the client's image was
+commissioned to replace, in the same 1254x1254 frame. Because the assignment
+cannot be re-pointed, `CMS_SUPERSEDED_BY_REPO_ART` in
+`src/app/[locale]/aesthetics/treatments/[treatmentId]/page.tsx` lets the repo
+asset outrank the assignment **for that one entity**. It is a deliberate,
+documented exception to rule 2 in `src/lib/feelstack/media-slots.ts`, scoped to
+one id rather than loosened for everyone, and it is not the failure rule 2
+guards against: the asset is reviewed (imported through FeelStack, approved by
+`bd-media-reviewer`, byte-verified against the client manifest) — only the
+mechanism for recording its placement is broken. Re-point the hero at media
+asset `bceb31bb-e794-4c67-a828-11fa0bd3d264` on both locale rows and delete the
+set.
+
 **To retire the fallbacks once the platform is fixed:** create/publish the four
 missing entities, write the `card` assignments (one row per locale — EN and AR
 carry separate `entityId`s), then set the corresponding manifest entries back
