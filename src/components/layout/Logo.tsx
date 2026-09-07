@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import type { Locale } from "@/types/media";
-import diamondMark from "@/assets/brand/blue-diamond-mark.png";
+import { brandMark } from "@/lib/media/brand-mark";
 
 /**
  * The approved Blue Diamond Medical mark, as supplied by the client on
@@ -16,25 +16,29 @@ import diamondMark from "@/assets/brand/blue-diamond-mark.png";
  * src/assets/brand/README.md for the source file, its checksum and how the
  * cut-out was derived.
  *
+ * Served from ImageKit on the client's instruction (2026-09-07). Which URL
+ * that is -- the CDN copy or the one bundled in the build -- is decided once
+ * in `src/lib/media/brand-mark.ts`, not here; this component only draws it.
+ *
  * A bare `<img>`, not `ImageKitImage` and not `next/image`. This is the one
  * image on the site that is neither: `ImageKitImage` renders the FacetTile
- * placeholder for anything that is not an approved ImageKit asset, which
- * would erase the logo, and `next/image` is banned in `src/` outright
+ * placeholder for anything that is not an approved ImageKit asset, and an
+ * abstract tile where the clinic's logo should be reads as a broken header
+ * rather than a missing photograph; `next/image` is banned in `src/` outright
  * (tests/unit/image-usage.spec.ts) because content imagery must go through
- * ImageKit's own loader. The mark is a bundled brand asset instead: the
- * static import gives its intrinsic size (so no layout shift), the file ships
- * in the build, and nothing about it is fetched, transformed, or approval-
- * gated at runtime. `loading="eager"` because the header lock-up is above the
- * fold on every route.
+ * ImageKit's own loader, and this is not content imagery. `width`/`height`
+ * carry the mark's aspect so nothing shifts while it loads, and
+ * `loading="eager"` because the header lock-up is above the fold on every
+ * route.
  */
 export function DiamondMark({ className }: { className?: string }) {
   return (
     // The brand mark is deliberately not routed through next/image — see above.
     // eslint-disable-next-line @next/next/no-img-element
     <img
-      src={diamondMark.src}
-      width={diamondMark.width}
-      height={diamondMark.height}
+      src={brandMark.src}
+      width={brandMark.width}
+      height={brandMark.height}
       alt=""
       aria-hidden="true"
       className={className}

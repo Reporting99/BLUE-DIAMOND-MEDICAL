@@ -4,7 +4,7 @@ import { treatments } from "@/features/aesthetics/data/treatments";
 import { technologies } from "@/features/technologies/data";
 import { concerns } from "@/features/concerns/data";
 import { medicalServices } from "@/features/medical-services/data";
-import { MEDIA_ROOT } from "@/config/imagekit";
+import { BRAND_MARK_PATH, MEDIA_ROOT } from "@/config/imagekit";
 
 /**
  * Central inventory of every ImageKit asset referenced anywhere on the
@@ -17,6 +17,35 @@ import { MEDIA_ROOT } from "@/config/imagekit";
  * in sync when either changes.
  */
 export const imageManifest: ImageKitAsset[] = [
+  /**
+   * The brand mark, and the only entry here that is not content.
+   *
+   * Every other row names a photograph a page shows; this one names the
+   * clinic's logo, which the header, the footer and the About lock-up all
+   * render on every route. It is inventoried for the same reason as the rest
+   * -- an asset nobody can find in the manifest is an asset nobody can audit
+   * -- and because `src/lib/media/brand-mark.ts` reads `status` from here to
+   * decide between the CDN copy and the copy bundled in the build.
+   *
+   * `approved` is deliberate, and it is the second time this manifest has
+   * carried it (see `our-team-group` below for the first, and the reasoning).
+   * The client supplied the mark on 2026-09-06 and asked on 2026-09-07 for it
+   * to be served from ImageKit; the import left the CMS row `pending`, as an
+   * importer must, and the bytes at this path were then verified against the
+   * committed original with `?tr=orig-true` before this line was written.
+   */
+  {
+    id: "brand-mark",
+    path: BRAND_MARK_PATH,
+    width: 440,
+    height: 515,
+    alt: {
+      en: "Blue Diamond Medical Clinic",
+      ar: "عيادة بلو دايموند الطبية",
+    },
+    role: "logo",
+    status: "approved",
+  },
   {
     id: "homepage-hero",
     // The real approved asset. The previous path, /hero/homepage-hero.jpg,

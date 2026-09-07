@@ -1,3 +1,4 @@
+import { buildSrc } from "@imagekit/javascript";
 import type { Transformation } from "@imagekit/next";
 
 /**
@@ -30,6 +31,20 @@ export const imagekitConfig = {
 } as const;
 
 export const imagekitIsConfigured = imagekitConfig.urlEndpoint.length > 0;
+
+/**
+ * The brand mark's own library path.
+ *
+ * It sits here rather than in a component because the mark is the one image
+ * that is not content: no page owns it, no CMS entry assigns it, and it is
+ * requested from every route. Naming it once keeps the path out of JSX, where
+ * a literal would be a second source of truth for the one asset that must
+ * never silently move. The bytes were imported through the sanctioned door
+ * (FeelStack `POST /admin/v1/projects/:id/media/import`) on 2026-09-07 and the
+ * CDN copy is byte-identical to `src/assets/brand/blue-diamond-mark.png` --
+ * see src/lib/media/brand-mark.ts.
+ */
+export const BRAND_MARK_PATH = `${MEDIA_ROOT}/brand/blue-diamond-mark.png`;
 
 /**
  * Reusable transformation presets, keyed by ImageRole (src/types/media.ts).
@@ -77,3 +92,26 @@ export const imagePresets = {
 } as const satisfies Record<string, Transformation>;
 
 export type ImagePresetKey = keyof typeof imagePresets;
+
+/**
+ * A delivery URL for one library path with a preset applied.
+ *
+ * `ImageKitImage` is still the only way a PAGE gets a picture -- this exists
+ * for the brand mark alone (src/lib/media/brand-mark.ts), which cannot go
+ * through that component: it renders the FacetTile placeholder for anything
+ * not approved, and an abstract tile where the clinic's logo should be is a
+ * visibly broken header rather than a graceful fallback. Building the URL
+ * here rather than in the component is the same rule docs/UI_UX_FOUNDATION.md
+ * §8/§18 states -- transformation URLs are constructed by the centralized
+ * provider config, never at the usage site.
+ *
+ * Uses the official SDK's own builder, so the transformation string is the
+ * SDK's business and not a template literal that drifts from it.
+ */
+export function imagekitSrc(path: string, preset: ImagePresetKey): string {
+  return buildSrc({
+    urlEndpoint: imagekitConfig.urlEndpoint,
+    src: path,
+    transformation: [imagePresets[preset]],
+  });
+}

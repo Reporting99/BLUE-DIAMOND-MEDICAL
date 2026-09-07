@@ -12,10 +12,20 @@ record the derived asset below is cut from.
 
 ## `blue-diamond-mark.png`
 
-The diamond itself, cut out of the source onto transparency — this is what
-`src/components/layout/Logo.tsx` renders, and it replaced the inline SVG
-stand-in that recreated the mark from the brand PDF's coordinates
+The diamond itself, cut out of the source onto transparency. It replaced the
+inline SVG stand-in that recreated the mark from the brand PDF's coordinates
 (docs/MEDIA.md CL-001).
+
+Since 2026-09-07 the site requests this asset from **ImageKit**, on the
+client's instruction: the same bytes were imported through FeelStack's
+`media/import` door to `/blue-diamond/brand/blue-diamond-mark.png`, and the
+CDN's `?tr=orig-true` copy is byte-identical to this file (sha256
+`f467436ad918c33518f99f7294225797ad7269bd499764e1a3294541aec76e9b`; a plain
+CDN URL returns fewer bytes because ImageKit optimises at delivery — compare
+originals or the checksums disagree for the wrong reason). This copy stays in
+the repository, and stays imported by `src/lib/media/brand-mark.ts`, as the
+build-time fallback for the one image whose absence reads as a broken site
+rather than a missing photograph.
 
 It is a **crop with an alpha channel, not a redraw**: every pixel inside the
 diamond is the source file's own pixel, unretouched and unrecolored, so
