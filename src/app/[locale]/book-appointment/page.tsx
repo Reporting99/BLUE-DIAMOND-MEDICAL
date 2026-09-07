@@ -8,6 +8,7 @@ import { getRouteMetadata } from "@/lib/seo/metadata";
 import { getBookingUrl, isBookable, type BookingChannel } from "@/config/booking";
 import { siteConfig } from "@/config/site";
 import { AccessOptions } from "@/components/shared/AccessOptions";
+import { NewPatientNotice } from "@/components/shared/NewPatientNotice";
 
 /** Single source for this page's description: consumed by both generateMetadata
  * and the page's JSON-LD node, so the two can never drift apart (brief §9). */
@@ -115,6 +116,12 @@ export default async function BookAppointmentPage({ params }: { params: Promise<
         breadcrumbs={<Breadcrumbs locale={locale} items={[{ label: ownRoute.title[locale] }]} />}
         size="compact"
       />
+
+      {/* CL-002 — the availability ticker, in the same place as on Home and
+          Medical Care: a full-bleed strip directly under the hero. This is the
+          page whose whole job is getting an appointment, so the walk-in fact
+          and the booking line belong above the channel cards, not below. */}
+      <NewPatientNotice locale={locale} />
 
       <section className="section-y">
       <Container>
