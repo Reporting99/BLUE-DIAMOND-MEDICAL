@@ -203,7 +203,7 @@ Dr. Ahmed Gwea additionally: per brief §12, must use the approved abstract tile
 
 - **SkinMedica product photography (23 SKUs)** — owned by FeelStack, not by this manifest and not by the repository. A product's image is whatever asset is assigned to its `productPrimary` slot; all 23 have one today, under `/blue-diamond/shop/`. 19 are supplied manufacturer packshots and render now; the other 4 are designed tiles imported 2026-09-01 and still `pending`, so they render the Facet Tile until a reviewer approves them. The static `images[]` in `src/features/products/data.ts` is only the fallback for a product with no assignment, and it carries no path — it used to guess `/blue-diamond/products/skinmedica/<slug>.jpg`, a location no asset has ever occupied.
 - **Before/After gallery** — `beforeAfterEnabled: false`, no manifest entries exist because no approved photography exists to reference (brief explicitly forbids fabricating this).
-- **Logo** — recreated as inline SVG (`src/components/layout/Logo.tsx`) from the approved brand PDF's geometry, not an ImageKit raster asset.
+- **Logo** — the client's own supplied file, bundled with the build (`src/assets/brand/`, rendered by `src/components/layout/Logo.tsx`), not an ImageKit asset and no longer the inline SVG recreation. Supplied 2026-09-06, see CL-001 below.
 
 ### Verification
 
@@ -251,7 +251,7 @@ decision, not an import step.
 
 | File | Reason |
 |---|---|
-| `medical/blue-diamond-medical-logo.png` | Low-resolution legacy web logo; superseded by the approved logo PDF's vector geometry already implemented in `src/components/layout/Logo.tsx` |
+| `medical/blue-diamond-medical-logo.png` | Low-resolution legacy web logo; superseded by the mark the client supplied on 2026-09-06, now bundled at `src/assets/brand/blue-diamond-mark.png` |
 | `aesthetics/bluediamondmedicalaesthetics-bold01.png` | Same reason — legacy aesthetics wordmark, not the approved brand asset |
 | `medical/screenshot-2026-01-04-at-12.08.27-pm.png`, `-12.21.51-pm.png`, `-12.32.31-pm.png`, `-12.46.43-pm.png` | Literal browser screenshots of the old site's UI — not photography, not usable as content imagery on the new site |
 | `aesthetics/screenshot-2026-02-13-at-8.45.42-am.png`, `-1.02.15-pm.png` | Same reason |
@@ -341,7 +341,7 @@ The approved ImageKit account/endpoint is `https://ik.imagekit.io/oq92dh6zib`, m
 | Doctors — Dr. Omonijo | Card + profile | Portrait | `/blue-diamond/doctors/omonijo.jpg` | 4:5 | **candidate found, identity unconfirmed** | 2 real female portraits exist in the archive (`medical/blob-0846d7f.png`, `medical/whatsapp-image-2024-12-30-at-17.06.09.jpeg`) with no visible name — client must confirm which (if either) is Dr. Omonijo before either is imported (`docs/CONTENT_MODEL.md`) |
 | Doctors — Dr. Bakare | Card + profile | Portrait | `/blue-diamond/doctors/bakare.jpg` | 4:5 | **candidate found, identity unconfirmed** | 1 real male portrait (`medical/blob-7cc2b3d.png`) — candidate for Dr. Bakare or Dr. Gwea, unconfirmed |
 | Doctors — Dr. Gwea | Card + profile | Portrait | `/blue-diamond/doctors/gwea.jpg` | 4:5 | **candidate found, identity unconfirmed** | Same candidate as above, shared with Dr. Bakare — needs client confirmation either way |
-| Logo (header/footer) | — | Diamond + heartbeat mark | — | — | **functional recreation** | `src/components/layout/Logo.tsx` recreates the mark from the approved PDF's coordinates/colors as inline SVG — no master vector file (SVG/EPS) was supplied. Must be swapped for Decca Design Inc.'s master file before launch. |
+| Logo (header/footer) | — | Diamond + heartbeat mark | — | — | **supplied and in place** | The client supplied the mark on 2026-09-06; `src/components/layout/Logo.tsx` renders it from `src/assets/brand/blue-diamond-mark.png` and the SVG recreation is deleted. Still a raster — Decca Design Inc.'s master vector file (SVG/EPS) supersedes it if it ever arrives. |
 | Before/After gallery (`/aesthetics/before-after`, gated) | — | 15 candidate assets found, none approved | `/blue-diamond/before-after/<pair-id>.jpg` | varies | **flagged, not imported** | Full list with legacy-page context in `docs/MEDIA.md` — every one needs a clinical/marketing reviewer to confirm genuine pairing and claim accuracy before any import |
 | SkinMedica products (23, `/shop/*`, **live**) | Product photography | Bottle/packaging shots | `/blue-diamond/shop/<catalogue-number>_<Product_Name>.jpg`, assigned in FeelStack | 1:1 | **23 of 23 assigned; 19 approved, 4 pending** | None of these came from the licensed legacy archive; they were supplied separately and imported into the media library. 19 render their real packshot on the catalogue and detail pages in both locales. The remaining 4 — Lytera 2.0, Daily Physical Defense SPF 34, Total Defense + Repair SPF 34 (Tinted), Replenish Hydrating Cream — are marked `REVIEW_REQUIRED` in the supplied source manifest: no manufacturer packshot was ever retrieved or rights-confirmed for them. Rather than invent a photograph of a real manufacturer's packaging, each was given a DESIGNED typographic tile carrying its own trademark name, size and category (imported 2026-09-01, `productPrimary` assigned in both locales, `approvalStatus: pending`). A sibling's photograph is still never substituted. Approving the four is the only step left; replace them outright the day a licensed packshot is supplied. |
 
@@ -355,14 +355,16 @@ The approved ImageKit account/endpoint is `https://ik.imagekit.io/oq92dh6zib`, m
 
 ### Automated verification
 
-`tests/unit/image-usage.spec.ts` (built and passing, 4 tests): no component imports `next/image` directly (must go through `ImageKitImage`), no hardcoded `/images/...` local paths, no Unsplash/Pexels/Cloudinary references, every `ImageKitImage path=` used in a page has a matching `image-manifest.ts` entry. `public/` still contains only the unused Next.js default scaffold SVGs; `src/app/favicon.ico` is still the scaffold default and needs replacing with a Blue Diamond favicon derived from the approved mark before launch.
+`tests/unit/image-usage.spec.ts` (built and passing, 4 tests): no component imports `next/image` directly (must go through `ImageKitImage`), no hardcoded `/images/...` local paths, no Unsplash/Pexels/Cloudinary references, every `ImageKitImage path=` used in a page has a matching `image-manifest.ts` entry. `public/` still contains only the unused Next.js default scaffold SVGs. `src/app/favicon.ico` is no longer the scaffold default: it was rebuilt on 2026-09-06 from the supplied mark (16/32/48px, transparent).
 
-## Client-supplied assets outstanding (CL-001, CL-039 – CL-041, CL-043)
+## Client-supplied assets outstanding (CL-039 – CL-041, CL-043; CL-001 resolved)
 
 `BLOCKED_BY_CLIENT_ASSET`. The client change register supplies nine binaries —
-one logo and eight treatment/equipment photographs — by file path. **None of
-those paths exist in this implementation environment**, and none of the eight
-originals is present in the ImageKit archive or in FeelStack. Every path the
+one logo and eight treatment/equipment photographs — by file path. The logo
+(CL-001) arrived on 2026-09-06 as a direct attachment and is in place; the
+eight photographs are still outstanding. **None of the register's paths exist
+in this implementation environment**, and none of the eight originals is
+present in the ImageKit archive or in FeelStack. Every path the
 register gives is rooted at `C:/Users/RAHME/Downloads/…`, a user profile that
 does not exist on the build machine; the secondary reference directory
 (`WhatsApp Unknown 2026-09-04 at 8.08.47 AM/incoming-2026-09-06/…`) is absent
@@ -376,7 +378,7 @@ filename below rather than guessed at.
 
 | ID | Expected original | Destination route | Slot | Notes |
 | --- | --- | --- | --- | --- |
-| CL-001 | `Blue Diamond Medical Clinic-logo2024-01-15_22-09-36-b10847c6-org-427.png` | global brand mark | `src/components/layout/Logo.tsx` | Replaces the inline `DiamondMark` SVG stand-in in `Logo` **and** `BrandLockup` (header, mobile nav, footer, hero lock-up). Preserve aspect ratio; alt text `Blue Diamond Medical Clinic`. |
+| CL-001 | ~~`Blue Diamond Medical Clinic-logo2024-01-15_22-09-36-b10847c6-org-427.png`~~ — **SUPPLIED 2026-09-06**, as a 1536×1024 JPEG attached directly rather than by that filename (`sha256 5a97518c…`, kept verbatim at `src/assets/brand/blue-diamond-logo-source.jpg`) | global brand mark | `src/components/layout/Logo.tsx` | **Done.** `DiamondMark` now renders `src/assets/brand/blue-diamond-mark.png` — the diamond cut out of that file onto transparency, aspect ratio preserved (440×515) — in `Logo` **and** `BrandLockup` (header, mobile nav, footer, hero lock-up), and the SVG stand-in is deleted. The client chose the cut-out over keeping the render's black field or its glow, and chose to keep the live bilingual wordmark over the file's English-only one. Derivation and checksums: `src/assets/brand/README.md`. |
 | CL-039 | `WhatsApp Image 2026-09-04 at 10.47.14 PM.jpeg` | `/aesthetics/treatments/rf-microneedling`, `/aesthetics/technologies/potenza` | `hero` | Current Potenza device/treatment. Supersedes the stale `potenza-device.jpg` candidate above. |
 | CL-039 | `WhatsApp Image 2026-09-04 at 10.47.14 PM (1).jpeg` | same | `gallery` | Supporting frame. **Not** a before/after — must not be labelled as a result. The route's existing before/after content is preserved unchanged. |
 | CL-040 | `WhatsApp Image 2026-09-04 at 10.48.46 PM.jpeg` | `/aesthetics/technologies/elite-iq`, `/aesthetics/treatments/laser-hair-removal` | `hero` | Elite iQ™ equipment. Supersedes `elite-iq-device.jpg`. |
@@ -412,5 +414,6 @@ No code change is required for CL-039 – CL-041 and CL-043 — media is a CMS
 concern (see "Import architecture" above). Upload each original to FeelStack,
 approve it, assign it to the route and slot in the table, and publish; the
 route picks it up on the next revalidation and the `FacetTile` fallback
-disappears on its own. CL-001 is the exception: it is a code change in
-`src/components/layout/Logo.tsx`.
+disappears on its own. CL-001 was the exception — a code change in
+`src/components/layout/Logo.tsx`, made on 2026-09-06 when the client supplied
+the mark. The eight photographs remain outstanding.
