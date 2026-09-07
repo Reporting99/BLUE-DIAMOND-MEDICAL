@@ -15,8 +15,8 @@ const copy = {
     submit: "Request a consultation",
     submitting: "Sending…",
     success: "Thank you — we've received your request.",
-    notConfigured: "This form isn't connected yet. Please call us at 403 247 1418 and we'll help right away.",
-    error: "Something went wrong. Please try again, or call us at 403 247 1418.",
+    notConfigured: "This form isn't connected yet. Please call us at 825 413 1113 and we'll help right away.",
+    error: "Something went wrong. Please try again, or call us at 825 413 1113.",
   },
   ar: {
     name: "الاسم الكامل",
@@ -27,8 +27,8 @@ const copy = {
     submit: "طلب استشارة",
     submitting: "جارٍ الإرسال…",
     success: "شكرًا لكم — تم استلام طلبكم.",
-    notConfigured: "هذا النموذج غير مرتبط بعد. يرجى الاتصال بنا على 403 247 1418 وسنساعدكم فورًا.",
-    error: "حدث خطأ ما. يرجى المحاولة مرة أخرى، أو الاتصال بنا على 403 247 1418.",
+    notConfigured: "هذا النموذج غير مرتبط بعد. يرجى الاتصال بنا على 825 413 1113 وسنساعدكم فورًا.",
+    error: "حدث خطأ ما. يرجى المحاولة مرة أخرى، أو الاتصال بنا على 825 413 1113.",
   },
 } as const;
 

@@ -875,11 +875,12 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           nothing factual lives in the locale dictionaries, which is what
           makes EN and AR structurally incapable of disagreeing.
 
-          On the phone number: this card is the AESTHETICS channel, so it
-          renders the (403) 247-1418 aesthetics line, not the (825) 413-1113
-          medical/walk-in line. Both are approved, published, and deliberately
-          distinct — see docs/SOURCE_CONFLICT_REGISTER.md CONF-001. Do not
-          "reconcile" them.
+          On the phone number: the clinic publishes ONE line, (825) 413-1113,
+          and this card renders it like every other channel. It used to render
+          a separate (403) 247-1418 aesthetics line; the 2026-09-07 client
+          instruction retired that number, which resolved
+          docs/SOURCE_CONFLICT_REGISTER.md CONF-001. Do not reintroduce a
+          second number here.
 
           Hours status is computed from `aestheticsHours`, not the default
           clinic schedule: this card is the aesthetics location and its

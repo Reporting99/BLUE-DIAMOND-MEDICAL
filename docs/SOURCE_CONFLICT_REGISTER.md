@@ -10,7 +10,7 @@ spreadsheets · 3 approved doctor/product records · 4 approved route registry �
 
 | Conflict ID | Field | Source A | Source B | Source precedence | Proposed handling | Client approval required |
 |---|---|---|---|---|---|---|
-| CONF-001 | Clinic telephone | `bluediamondmedical.ca` — **+1 (825) 413-1113** (Home L21/L61, Contact L486, Botox L338) | `bluediamondmedicalaesthetics.ca` — **(403) 247-1418** (Home L586/L610, PRP L1013) | Both are precedence 6; neither supersedes the other | Keep as **two distinct structured facts**: `contact:main-line` (medical, walk-in, medical Botox) and `contact:aesthetics-line` (aesthetics enquiries). Do not merge, do not pick one. Each CTA renders the number that matches its channel | **Yes** — confirm the 403 line is still answered after the domains consolidate, or supply a single number |
+| CONF-001 | Clinic telephone | `bluediamondmedical.ca` — **+1 (825) 413-1113** (Home L21/L61, Contact L486, Botox L338) | `bluediamondmedicalaesthetics.ca` — **(403) 247-1418** (Home L586/L610, PRP L1013) | Precedence 1 — client instruction, 2026-09-07 English content audit | **RESOLVED — single number.** The client supplied the answer this row was waiting for: 825-413-1113 is "the established clinic telephone number", and 403-247-1418 is named among the outdated facts that must not be reintroduced. `siteConfig.aesthetics.phone` now resolves to the clinic line. This was not cosmetic: `primaryLocation` reads those fields, so the homepage location card, its map pin, its phone CTA, `/en/book-appointment`, `/en/botox`, `/en/contact`, and the `MedicalClinic` JSON-LD were all publishing the retired number against the West Springs address. The aesthetics entry survives as a brand/fax identity; only the telephone merged. Euclid Telehealth's 1-800-511-5661 is untouched — it is a genuine partner line | No — resolved by client instruction |
 | CONF-002 | Opening hours | Medical — **08:00–19:00** (L66, L493) | Aesthetics — **09:00–17:00** (L615) | Both precedence 6 | Keep **two schedules** (`hours:main-clinic`, `hours:aesthetics`). Each page renders the schedule for its own service. Open/closed state is always computed live, never printed as static text | **Yes** — confirm aesthetics hours still differ once the sites merge |
 | CONF-003 | Service location | Main clinic — **23-8 Weston Drive SW, Calgary AB T3H 5P2** (L59, L488, L606) | Elite iQ™ — **"exclusively performed at Citizen Studio, 45 Greenbriar Dr NW, Calgary AB T3B 5N4"** (L608, L683) | Both precedence 6; the Citizen Studio statement is explicit and exclusive | Keep as **two distinct location entities**. Laser hair removal and any other Elite iQ™ treatment must state the Citizen Studio address at the point of booking. Never imply an off-site treatment happens at the main clinic. Only the main clinic appears in `MedicalClinic` structured data | **Yes** — confirm the arrangement is current and which treatments it covers |
 | CONF-004 | Copyright year | Medical footer — **© 2026** (L80) | Aesthetics footer — **© 2024** (L621) | Both precedence 6 | Neither is published. The footer year renders from the build date on the single canonical site | No |
@@ -34,9 +34,12 @@ spreadsheets · 3 approved doctor/product records · 4 approved route registry �
 ## Conflicts deliberately **not** resolved in this phase
 
 - **CONF-007 (fax)** — frozen by explicit client instruction.
-- **CONF-001, CONF-002, CONF-003** — the main clinic entity and the
-  service-location exception remain distinct structured facts. Merging them
-  would misrepresent where treatment happens.
+- **CONF-002, CONF-003** — the main clinic entity and the service-location
+  exception remain distinct structured facts. Merging them would misrepresent
+  where treatment happens. (**CONF-001 no longer belongs in this list** — the
+  2026-09-07 client instruction supplied the single number it was waiting for
+  and it is now resolved above. The two *schedules* and the Citizen Studio
+  address stay distinct; only the telephone merged.)
 - Every `NEEDS_CLIENT_APPROVAL` block in the classification matrix stays
   unpublished rather than being resolved by inference.
 

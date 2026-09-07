@@ -143,7 +143,7 @@ export const imageManifest: ImageKitAsset[] = [
     width: 800,
     height: 800,
     aspectRatio: "1:1",
-    alt: { en: "Potenza RF micro-needling device", ar: "جهاز Potenza للإبر الدقيقة" },
+    alt: { en: "Potenza RF microneedling device", ar: "جهاز Potenza للإبر الدقيقة" },
     role: "technology",
     status: "pending",
   },

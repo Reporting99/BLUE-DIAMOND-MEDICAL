@@ -8,7 +8,7 @@ import { aestheticTreatmentCmsContract, treatmentFieldsSchema } from "../../src/
 import { treatments, gatedTreatments } from "../../src/features/aesthetics/data/treatments";
 
 /**
- * Aesthetic treatment canary — RF Micro-Needling.
+ * Aesthetic treatment canary — RF Microneedling.
  *
  * Chosen because it is the only treatment exercising all three relation
  * categories at once: a real doctor relation (target already in the CMS) plus

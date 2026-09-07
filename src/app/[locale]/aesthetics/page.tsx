@@ -25,7 +25,7 @@ export async function generateMetadata({
   const safeLocale: Locale = isLocale(locale) ? locale : "en";
   return getRouteMetadata("aesthetics-hub", safeLocale, {
     description: {
-      en: "Physician-led medical aesthetics at Blue Diamond Medical — RF micro-needling, skin tightening, laser treatments, and Botox, delivered by the same clinical team.",
+      en: "Physician-led medical aesthetics at Blue Diamond Medical — RF microneedling, skin tightening, laser treatments, and Botox, delivered by the same clinical team.",
       ar: "تجميل طبي بإشراف طبي في بلو دايموند الطبية — الإبر الدقيقة بالترددات الراديوية، وشدّ البشرة، وعلاجات الليزر، والبوتوكس، بواسطة نفس الفريق السريري.",
     },
   });

@@ -76,7 +76,7 @@ export interface PrimaryNavLink {
  * THE AESTHETICS "TREATMENTS" COLUMN IS THE PATIENT-CONCERN LIST.
  *
  * Aesthetics used to offer two competing navigation systems side by side: a
- * Treatments column naming devices and procedures (RF Micro-Needling, Radio
+ * Treatments column naming devices and procedures (RF Microneedling, Radio
  * Frequency, Ultra Treatment, PRP …) and a Concerns column naming patient
  * problems (Acne Scars, Skin Laxity …). Both led into the same catalogue, and
  * the visitor had to guess which vocabulary the site wanted from them — while

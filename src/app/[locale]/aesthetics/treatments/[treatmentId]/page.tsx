@@ -58,7 +58,7 @@ const CMS_SUPERSEDED_BY_REPO_ART = new Set(["tempsure-vitalia"]);
  * The Aesthetics IA is concern-first: the Treatments menu lists what a visitor
  * wants treated (Acne Scars, Skin Laxity, …), and each of those concern pages
  * surfaces the treatment options for it. The individual treatment pages
- * (RF Micro-Needling, Laser Skin Treatments, …) are still live and still
+ * (RF Microneedling, Laser Skin Treatments, …) are still live and still
  * indexed at their original URLs — they left the navigation, not the site —
  * so both kinds of page now live in this one segment. See the concern block in
  * src/config/routes.ts, which also asserts at build time that no concern slug

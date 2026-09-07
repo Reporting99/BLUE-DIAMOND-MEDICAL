@@ -69,15 +69,30 @@ export const siteConfig = {
   },
 
   /**
-   * Aesthetics is delivered from the same clinic address for consultations;
-   * the legacy bluediamondmedicalaesthetics.ca site listed a separate
-   * reception line, which is preserved here as a distinct, genuinely
-   * different phone number rather than merged away.
+   * Aesthetics is delivered from the same clinic address, and reached on the
+   * same clinic telephone line.
+   *
+   * The legacy bluediamondmedicalaesthetics.ca site listed a separate
+   * reception line, (403) 247-1418, which this file previously preserved as a
+   * "genuinely different" number. The 2026-09-07 English content audit
+   * retired it: the client's approved instruction names 825-413-1113 as the
+   * established clinic telephone number and lists 403-247-1418 among the
+   * outdated facts that must not be reintroduced. It is Blue Diamond's own
+   * decommissioned line, not a partner's — Euclid Telehealth's
+   * 1-800-511-5661 is the only genuinely third-party number on the site, and
+   * it is held separately.
+   *
+   * This matters more than one card: `primaryLocation` in config/locations.ts
+   * reads these fields, so the homepage location card, its map pin, and its
+   * phone CTA were all publishing the retired number against the West Springs
+   * address. The aesthetics identity is kept as its own entry (the brand and
+   * fax presentation still differ); only the telephone now resolves to the
+   * clinic line.
    */
   aesthetics: {
     name: "Blue Diamond Medical Aesthetics",
-    phone: "+14032471418",
-    phoneDisplay: "(403) 247-1418",
+    phone: "+18254131113",
+    phoneDisplay: "(825) 413-1113",
     fax: "+15874430394",
     // Formatted as the approved aesthetics location card prints it — no "+1"
     // prefix, matching phoneDisplay above. Same fax line as the medical

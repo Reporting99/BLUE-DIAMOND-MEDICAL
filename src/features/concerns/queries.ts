@@ -22,7 +22,7 @@ import type { Technology } from "@/features/technologies/types";
  * (`concern.relatedTreatmentIds` and `treatment.relatedConcernIds`), because
  * the approved source material describes some pairs from the concern's side
  * and others from the treatment's. Reading only one side is what left, for
- * example, Acne Scars listing RF Micro-Needling while PRP Skin Rejuvenation —
+ * example, Acne Scars listing RF Microneedling while PRP Skin Rejuvenation —
  * whose own approved copy names acne scars explicitly — went unlisted. This
  * unions the two, so an edge stated anywhere in the approved content shows up
  * on the page.

@@ -77,7 +77,7 @@ export const treatments: AestheticTreatment[] = [
     slugAr: "علاجات-البشرة-بالليزر",
     title: { en: "Laser Skin Treatments", ar: "علاجات البشرة بالليزر" },
     summary: {
-      en: "State-of-the-art laser equipment for smoother complexions, brightening damaged skin, removing benign pigmented lesions, and treating face and leg veins.",
+      en: "Laser treatment for a smoother complexion, brighter sun-damaged skin, benign pigmented lesions, and visible face and leg veins. Each protocol is tailored to your skin tone and the concern being treated.",
       ar: "معدات ليزر متطورة لتنعيم البشرة، وتفتيح البقع الناتجة عن التلف، وإزالة الآفات الصبغية الحميدة، وعلاج الأوردة في الوجه والساقين.",
     },
     howItWorks: {
@@ -89,7 +89,7 @@ export const treatments: AestheticTreatment[] = [
       ar: "يُنصح بتجنب التعرض للشمس لمدة أسبوع قبل جلسة علاج الوجه بالليزر.",
     },
     suggestedCourse: {
-      en: "Laser Facial: 3–6 treatments usually required for lasting results. Benign pigmented lesions: visible uniformity of color in as little as 2 treatments, full course of 4 treatments at 3–4 week intervals. Vascular treatments (spider veins): eliminated in as little as 2 treatments, spaced 4–8 weeks apart.",
+      en: "Laser Facial: 3–6 treatments usually required for lasting results. Benign pigmented lesions: visible uniformity of colour in as little as 2 treatments, full course of 4 treatments at 3–4 week intervals. Vascular treatments (spider veins): eliminated in as little as 2 treatments, spaced 4–8 weeks apart.",
       ar: "علاج الوجه بالليزر: عادة 3 إلى 6 جلسات لنتائج دائمة. الآفات الصبغية الحميدة: تجانس ملحوظ في اللون خلال جلستين فقط، وبرنامج كامل من 4 جلسات بفاصل 3-4 أسابيع. علاجات الأوعية الدموية (الأوردة العنكبوتية): تُزال خلال جلستين فقط، بفاصل 4-8 أسابيع.",
     },
     faqs: [
@@ -124,7 +124,7 @@ export const treatments: AestheticTreatment[] = [
       {
         question: { en: "How many sessions for pigmented lesions or spider veins specifically?", ar: "كم جلسة تلزم للآفات الصبغية أو الأوردة العنكبوتية تحديدًا؟" },
         answer: {
-          en: "Benign pigmented lesions: visible uniformity of color in as little as 2 treatments, with a full course of 4 at 3–4 week intervals. Vascular treatments (spider veins): eliminated in as little as 2 treatments, spaced 4–8 weeks apart.",
+          en: "Benign pigmented lesions: visible uniformity of colour in as little as 2 treatments, with a full course of 4 at 3–4 week intervals. Vascular treatments (spider veins): eliminated in as little as 2 treatments, spaced 4–8 weeks apart.",
           ar: "الآفات الصبغية الحميدة: تجانس ملحوظ في اللون خلال جلستين فقط، مع برنامج كامل من 4 جلسات بفاصل 3-4 أسابيع. علاجات الأوعية الدموية (الأوردة العنكبوتية): تُزال خلال جلستين فقط، بفاصل 4-8 أسابيع.",
         },
       },
@@ -219,13 +219,13 @@ export const treatments: AestheticTreatment[] = [
     id: "rf-microneedling",
     slug: "rf-microneedling",
     slugAr: "الإبر-الدقيقة-بالترددات-الراديوية",
-    title: { en: "RF Micro-Needling", ar: "الإبر الدقيقة بالترددات الراديوية" },
+    title: { en: "RF Microneedling", ar: "الإبر الدقيقة بالترددات الراديوية" },
     summary: {
       en: "The Potenza RF microneedling system adds radiofrequency energy to mechanical microneedling for enhanced skin tightening alongside the benefits of micro-injury stimulation.",
       ar: "يضيف نظام Potenza طاقة الترددات الراديوية إلى تقنية الإبر الدقيقة الميكانيكية، لشدّ أعمق للبشرة إلى جانب فوائد التحفيز بالإصابات الدقيقة.",
     },
     howItWorks: {
-      en: "RF energy is delivered via small needles deep into the dermis, heating underlying layers to cause tightening and stimulate collagen and elastin production — producing faster, more dramatic results than non-RF micro-needling. Treatments aren't limited to the face and are particularly useful for toning and retracting skin post-weight-loss.",
+      en: "RF energy is delivered via small needles deep into the dermis, heating underlying layers to cause tightening and stimulate collagen and elastin production — producing faster, more dramatic results than non-RF microneedling. Treatments aren't limited to the face and are particularly useful for toning and retracting skin post-weight-loss.",
       ar: "تُوصَّل طاقة الترددات الراديوية عبر إبر دقيقة إلى عمق الأدمة، فتُسخّن الطبقات العميقة وتُحفّز الشدّ وإنتاج الكولاجين والإيلاستين — بنتائج أسرع وأوضح من الإبر الدقيقة التقليدية. لا تقتصر العلاجات على الوجه، وهي مفيدة بشكل خاص لشدّ البشرة بعد فقدان الوزن.",
     },
     concernsTreated: {
@@ -276,7 +276,7 @@ export const treatments: AestheticTreatment[] = [
     relatedConcernIds: ["acne-scars", "dry-skin", "fine-lines-wrinkles", "skin-revitalization"],
     faqs: [
       {
-        question: { en: "Why RF micro-needling vs. non-RF micro-needling?", ar: "لماذا الإبر الدقيقة بالترددات الراديوية بدل الإبر الدقيقة التقليدية؟" },
+        question: { en: "Why RF microneedling vs. non-RF microneedling?", ar: "لماذا الإبر الدقيقة بالترددات الراديوية بدل الإبر الدقيقة التقليدية؟" },
         answer: {
           en: "Potenza delivers focused RF technology to heat the skin, triggering the body's natural response to increase collagen and elastin production, resulting in enhanced skin revitalization.",
           ar: "يوصل جهاز Potenza طاقة ترددات راديوية مركزة لتسخين البشرة، ما يُحفّز استجابة الجسم الطبيعية لزيادة إنتاج الكولاجين والإيلاستين، فتتجدد البشرة بشكل أعمق.",
@@ -442,7 +442,7 @@ export const treatments: AestheticTreatment[] = [
     slugAr: "تمبشور-فيتاليا",
     title: { en: "TempSure Vitalia", ar: "تمبشور فيتاليا" },
     summary: {
-      en: "Equipment addressing many pelvic floor issues and sexual health concerns that women experience at all ages and stages of life — roughly 1 in 3 women, often in silence.",
+      en: "A non-surgical, in-clinic treatment for pelvic floor and sexual health concerns, which roughly 1 in 3 women experience at some stage of life and often live with in silence. A consultation with Dr. Farhat establishes whether it is appropriate for you.",
       ar: "جهاز يُعالج العديد من مشاكل قاع الحوض والصحة الجنسية التي تواجهها النساء في مختلف الأعمار ومراحل الحياة — تعاني منها نحو امرأة من كل ثلاث، وغالبًا بصمت.",
     },
     whoItsFor: {

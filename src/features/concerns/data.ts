@@ -29,7 +29,7 @@ export const concerns: AestheticConcern[] = [
     slugAr: "الشعر-غير-المرغوب-فيه",
     title: { en: "Unwanted Hair", ar: "الشعر غير المرغوب فيه" },
     summary: {
-      en: "Long-lasting hair reduction anywhere on the body using the Cynosure Elite+™ laser system, with the Skintel™ melanin reader allowing safe treatment of all skin types.",
+      en: "Shaving, waxing, plucking, and depilatories are time-consuming and give only temporary results. Laser hair removal at Blue Diamond Medical offers long-lasting reduction anywhere on the body, and the Skintel™ melanin reader allows the laser to be set safely for all skin types.",
       ar: "تقليل دائم لنمو الشعر في أي منطقة من الجسم باستخدام نظام ليزر Cynosure Elite+™، مع قارئ الميلانين Skintel™ الذي يتيح علاجًا آمنًا لجميع أنواع البشرة.",
     },
     commonPresentations: {
@@ -74,7 +74,7 @@ export const concerns: AestheticConcern[] = [
     slugAr: "تساقط-الشعر",
     title: { en: "Hair Loss", ar: "تساقط الشعر" },
     summary: {
-      en: "Platelet-Rich Plasma injected into the scalp to stimulate inactive hair follicles and promote denser, fuller hair growth — performed by Dr. Farhat.",
+      en: "Thinning hair and early hair loss affect both men and women, and often begin gradually enough that they are noticed first in a mirror or a photograph. Blue Diamond Medical offers PRP hair restoration, performed by Dr. Farhat, which may support fuller growth. A consultation establishes the likely cause before any treatment is planned.",
       ar: "حقن البلازما الغنية بالصفائح الدموية في فروة الرأس لتنشيط البصيلات الخاملة وتعزيز نمو شعر أكثف وأكمل — يُجريها الدكتور فرحات.",
     },
     commonPresentations: {
@@ -114,7 +114,7 @@ export const concerns: AestheticConcern[] = [
     slugAr: "ندبات-حب-الشباب",
     title: { en: "Acne Scars", ar: "ندبات حب الشباب" },
     summary: {
-      en: "Comprehensive care for acne scarring — medical consultations, prescriptions where necessary, and RF micro-needling and laser treatments to reduce scarring, under the supervision of one of our physicians.",
+      en: "Comprehensive care for acne scarring — medical consultations, prescriptions where necessary, and RF microneedling and laser treatments to reduce scarring, under the supervision of one of our physicians.",
       ar: "رعاية شاملة لندبات حب الشباب — استشارات طبية، ووصفات عند الحاجة، وعلاجات بالإبر الدقيقة بالترددات الراديوية والليزر لتقليل الندبات، تحت إشراف أحد أطبائنا.",
     },
     relatedTreatmentIds: ["rf-microneedling"],
@@ -122,7 +122,7 @@ export const concerns: AestheticConcern[] = [
       {
         question: { en: "How does care for acne scarring start?", ar: "كيف تبدأ رعاية ندبات حب الشباب؟" },
         answer: {
-          en: "With a medical consultation — from there, a physician may recommend a prescription where necessary, alongside treatments like RF micro-needling and laser.",
+          en: "With a medical consultation — from there, a physician may recommend a prescription where necessary, alongside treatments like RF microneedling and laser.",
           ar: "تبدأ باستشارة طبية — وبناءً عليها، قد يوصي الطبيب بوصفة طبية عند الحاجة، إلى جانب علاجات مثل الإبر الدقيقة بالترددات الراديوية والليزر.",
         },
       },
@@ -136,7 +136,7 @@ export const concerns: AestheticConcern[] = [
       {
         question: { en: "Which treatment is used for acne scarring?", ar: "ما العلاج المستخدم لندبات حب الشباب؟" },
         answer: {
-          en: "RF micro-needling is the treatment linked to this concern; a physician will confirm what's appropriate for your specific scarring during your consultation.",
+          en: "RF microneedling is the treatment linked to this concern; a physician will confirm what's appropriate for your specific scarring during your consultation.",
           ar: "تُستخدم الإبر الدقيقة بالترددات الراديوية لهذه المخاوف؛ وسيؤكد الطبيب ما يناسب حالة ندباتكم تحديدًا خلال الاستشارة.",
         },
       },
@@ -208,7 +208,7 @@ export const concerns: AestheticConcern[] = [
     slugAr: "جفاف-البشرة",
     title: { en: "Dry Skin", ar: "جفاف البشرة" },
     summary: {
-      en: "Calgary's climate is unusually harsh on skin. Using RF micro-needling to infuse topicals — including moisturizers and pigment regulators — we help skin stay nourished and glowing for months after treatment.",
+      en: "Calgary's climate is unusually harsh on skin. Using RF microneedling to infuse topicals — including moisturizers and pigment regulators — we help skin stay nourished and glowing for months after treatment.",
       ar: "يُعد مناخ كالغاري قاسيًا بشكل خاص على البشرة. باستخدام الإبر الدقيقة بالترددات الراديوية لإدخال المستحضرات الموضعية — بما فيها المرطبات ومنظمات الصبغة — نساعد البشرة على البقاء رطبة ومشرقة لأشهر بعد العلاج.",
     },
     relatedTreatmentIds: ["rf-microneedling"],
@@ -221,7 +221,7 @@ export const concerns: AestheticConcern[] = [
         },
       },
       {
-        question: { en: "How does RF micro-needling help with dry skin?", ar: "كيف تساعد الإبر الدقيقة بالترددات الراديوية في علاج جفاف البشرة؟" },
+        question: { en: "How does RF microneedling help with dry skin?", ar: "كيف تساعد الإبر الدقيقة بالترددات الراديوية في علاج جفاف البشرة؟" },
         answer: {
           en: "It's used to infuse topicals — including moisturizers and pigment regulators — helping skin stay nourished for months after treatment.",
           ar: "تُستخدم لإدخال المستحضرات الموضعية — بما فيها المرطبات ومنظمات الصبغة — مما يساعد البشرة على البقاء رطبة لأشهر بعد العلاج.",
@@ -244,7 +244,7 @@ export const concerns: AestheticConcern[] = [
     slugAr: "الخطوط-الدقيقة-والتجاعيد",
     title: { en: "Fine Lines & Wrinkles", ar: "الخطوط الدقيقة والتجاعيد" },
     summary: {
-      en: "State-of-the-art technologies to smooth and erase fine lines and wrinkles, alongside skin-tightening options for all skin types — bespoke treatments as individual as you are.",
+      en: "Fine lines and wrinkles develop as skin gradually loses collagen and elasticity. Blue Diamond Medical offers radiofrequency and RF microneedling treatments that may soften their appearance and firm the skin, planned around your skin type and goals during a consultation.",
       ar: "تقنيات متطورة لتنعيم الخطوط الدقيقة والتجاعيد ومحوها، إلى جانب خيارات شدّ البشرة لمختلف أنواعها — علاجات مخصصة تناسب كل حالة.",
     },
     relatedTreatmentIds: ["rf-microneedling", "radio-frequency"],
@@ -252,7 +252,7 @@ export const concerns: AestheticConcern[] = [
       {
         question: { en: "What treatments address fine lines and wrinkles?", ar: "ما العلاجات التي تعالج الخطوط الدقيقة والتجاعيد؟" },
         answer: {
-          en: "RF micro-needling and radio-frequency skin-tightening are the two treatments connected to this concern, suited to different skin types.",
+          en: "RF microneedling and radio-frequency skin-tightening are the two treatments connected to this concern, suited to different skin types.",
           ar: "الإبر الدقيقة بالترددات الراديوية وشدّ البشرة بالترددات الراديوية هما العلاجان المرتبطان بهذه المخاوف، ويناسبان أنواع بشرة مختلفة.",
         },
       },
@@ -280,7 +280,7 @@ export const concerns: AestheticConcern[] = [
     slugAr: "ترهل-البشرة",
     title: { en: "Skin Laxity", ar: "ترهل البشرة" },
     summary: {
-      en: "Radio-frequency waves promote collagen and elastin production to tighten and smooth skin all over the body — a quick, pain-free treatment (about 15 minutes) with easy, visible results and no downtime.",
+      en: "Skin loses firmness as the collagen and elastin that support it gradually decline. Radiofrequency treatment at Blue Diamond Medical warms the deeper layers of the skin to encourage collagen production, which may help tighten and smooth areas of laxity on the face and body. Sessions take about 15 minutes, most patients find them comfortable, and downtime is usually minimal. Results vary, and a consultation confirms whether the treatment suits you.",
       ar: "تُحفّز موجات الترددات الراديوية إنتاج الكولاجين والإيلاستين لشدّ البشرة وتنعيمها في مختلف مناطق الجسم — علاج سريع وغير مؤلم (نحو 15 دقيقة) بنتائج واضحة ودون تعافٍ.",
     },
     relatedTreatmentIds: ["radio-frequency"],
@@ -302,7 +302,7 @@ export const concerns: AestheticConcern[] = [
       {
         question: { en: "Is there downtime after treatment?", ar: "هل هناك فترة تعافٍ بعد العلاج؟" },
         answer: {
-          en: "No downtime is associated with this treatment.",
+          en: "This treatment is not typically associated with downtime, though your physician will confirm what to expect for the area being treated.",
           ar: "لا يرتبط هذا العلاج بأي فترة تعافٍ.",
         },
       },
@@ -316,7 +316,7 @@ export const concerns: AestheticConcern[] = [
     slugAr: "الأوردة-العنكبوتية",
     title: { en: "Spider Veins", ar: "الأوردة العنكبوتية" },
     summary: {
-      en: "Damaged blood vessels under the skin that can appear red, blue, or purple — generally harmless but unsightly. Laser treatments can remove them from anywhere on the body quickly and painlessly.",
+      en: "Damaged blood vessels under the skin that can appear red, blue, or purple. They are generally harmless, though many patients find them distracting. Laser treatment may reduce their appearance on the face and legs, and most patients describe the sessions as quick and comfortable. Results vary, and a consultation confirms whether it suits you.",
       ar: "أوعية دموية تالفة تحت الجلد قد تظهر باللون الأحمر أو الأزرق أو الأرجواني — غير ضارة عادةً لكنها مزعجة جماليًا. يمكن لعلاجات الليزر إزالتها من أي منطقة في الجسم بسرعة ودون ألم.",
     },
     relatedTreatmentIds: ["laser-skin-treatments"],
@@ -337,7 +337,7 @@ export const concerns: AestheticConcern[] = [
         },
       },
       {
-        question: { en: "What causes the discoloration in spider veins?", ar: "ما سبب تغير اللون في الأوردة العنكبوتية؟" },
+        question: { en: "What causes the discolouration in spider veins?", ar: "ما سبب تغير اللون في الأوردة العنكبوتية؟" },
         answer: {
           en: "They're damaged blood vessels under the skin, which can appear red, blue, or purple.",
           ar: "هي أوعية دموية تالفة تحت الجلد، وقد تظهر باللون الأحمر أو الأزرق أو الأرجواني.",
@@ -353,7 +353,7 @@ export const concerns: AestheticConcern[] = [
     slugAr: "تلف-الشمس-والتصبغ",
     title: { en: "Sun Damage & Pigmentation", ar: "تلف الشمس والتصبغ" },
     summary: {
-      en: "Sun spots and liver spots from time in the sun can be easily reduced using our state-of-the-art laser technologies.",
+      en: "Sun spots, liver spots, and uneven pigmentation build up after years of sun exposure. Laser treatment at Blue Diamond Medical may reduce how visible they are and even out skin tone. The number of sessions depends on the depth and extent of the pigmentation, and results vary between patients.",
       ar: "يمكن تقليل بقع الشمس والبقع الكبدية الناتجة عن التعرض للشمس بسهولة باستخدام تقنيات الليزر المتطورة لدينا.",
     },
     relatedTreatmentIds: ["laser-skin-treatments", "ultra"],
@@ -412,7 +412,7 @@ export const concerns: AestheticConcern[] = [
       {
         question: { en: "Which treatments are used for skin revitalization?", ar: "ما العلاجات المستخدمة لتجديد البشرة؟" },
         answer: {
-          en: "Laser Skin Treatments and RF micro-needling.",
+          en: "Laser Skin Treatments and RF microneedling.",
           ar: "علاجات الليزر للبشرة والإبر الدقيقة بالترددات الراديوية.",
         },
       },
@@ -426,7 +426,7 @@ export const concerns: AestheticConcern[] = [
     slugAr: "حبوب-الحلاقة",
     title: { en: "Razor Bumps", ar: "حبوب الحلاقة" },
     summary: {
-      en: "Uncomfortable and prone to infection when combined with ingrown hairs. Our technologies can remove razor bumps, treat the underlying cause, and give you smoother, softer skin with minimally invasive treatment.",
+      en: "Razor bumps form when shaved hairs curl back into the skin, and they can be uncomfortable and prone to infection where ingrown hairs are also present. Laser hair removal at Blue Diamond Medical addresses the underlying cause by reducing the hair that produces them, which may improve both comfort and skin texture. Results vary, and a consultation confirms whether the treatment suits your skin and hair type.",
       ar: "مزعجة وقابلة للإصابة عند اقترانها بالشعر النامي تحت الجلد. يمكن لتقنياتنا إزالة حبوب الحلاقة، وعلاج السبب الجذري، ومنحكم بشرة أنعم وأكثر نعومة بعلاج طفيف التوغل.",
     },
     relatedTreatmentIds: ["laser-hair-removal"],

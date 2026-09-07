@@ -33,7 +33,7 @@ function mediaItem(over: Record<string, unknown> = {}) {
     height: 941,
     aspectRatio: 1.776833,
     alt: {
-      en: "RF Micro-Needling at Blue Diamond Medical",
+      en: "RF Microneedling at Blue Diamond Medical",
       ar: "الإبر الدقيقة بالترددات الراديوية في بلو دايموند الطبية",
     },
     role: "hero",
@@ -113,7 +113,7 @@ test.describe("invalid media never fails the page", () => {
         resolvedLocale: "en",
         usedFallback: false,
       },
-      data: { id: "entry-1", title: "RF Micro-Needling", fields: {} },
+      data: { id: "entry-1", title: "RF Microneedling", fields: {} },
       relations: { items: [], faqs: [], sections: [], taxonomies: [] },
       media: [{ garbage: true }, mediaItem()],
     };
@@ -229,7 +229,7 @@ test.describe("adapter input", () => {
         resolvedLocale: "en",
         usedFallback: false,
       },
-      data: { id: "entry-1", title: "RF Micro-Needling", fields: {} },
+      data: { id: "entry-1", title: "RF Microneedling", fields: {} },
       media: [mediaItem()],
     });
     const { media } = parseMediaAssignments(envelope.media);
