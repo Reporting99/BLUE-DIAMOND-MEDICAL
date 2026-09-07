@@ -16,7 +16,7 @@ test.describe("Aesthetics — treatments, concerns, technologies", () => {
 
   test("treatment detail page renders rich content and FAQs", async ({ page }) => {
     await page.goto("/en/aesthetics/treatments/rf-microneedling");
-    await expect(page.getByRole("heading", { level: 1 })).toHaveText("RF Micro-Needling");
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("RF Microneedling");
     await expect(page.getByRole("heading", { name: "How it works" })).toBeVisible();
     await expect(page.getByRole("heading", { name: "Safety & contraindications" })).toBeVisible();
   });
@@ -40,7 +40,7 @@ test.describe("Aesthetics — treatments, concerns, technologies", () => {
     // Scoped to the options list: the treatment name also appears as the
     // eyebrow on its card, so an unscoped lookup is ambiguous.
     await expect(
-      page.getByRole("listitem").filter({ hasText: "RF Micro-Needling" }).first(),
+      page.getByRole("listitem").filter({ hasText: "RF Microneedling" }).first(),
     ).toBeVisible();
     await page.getByRole("link", { name: "Read the full treatment page" }).first().click();
     await expect(page).toHaveURL(/\/en\/aesthetics\/treatments\/[a-z-]+\/?$/);

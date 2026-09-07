@@ -76,11 +76,11 @@ export const technologies: Technology[] = [
     title: { en: "Potenza", ar: "بوتنزا" },
     manufacturer: "Cynosure",
     summary: {
-      en: "A one-of-a-kind radio-frequency micro-needling system, ideal for skin tightening and smoothing all over the body — for fine lines or tightening after rapid weight loss or post-birth.",
+      en: "A one-of-a-kind radio-frequency microneedling system, ideal for skin tightening and smoothing all over the body — for fine lines or tightening after rapid weight loss or post-birth.",
       ar: "نظام فريد للإبر الدقيقة بالترددات الراديوية، مثالي لشدّ البشرة وتنعيمها في مختلف مناطق الجسم — للخطوط الدقيقة أو الشدّ بعد فقدان وزن سريع أو بعد الولادة.",
     },
     howItWorks: {
-      en: "Potenza combines micro-needling — fine needles creating controlled micro-injuries in the skin — with radio-frequency energy delivered through those same needles, adding a tightening effect to the skin's natural response to micro-injury.",
+      en: "Potenza combines microneedling — fine needles creating controlled micro-injuries in the skin — with radio-frequency energy delivered through those same needles, adding a tightening effect to the skin's natural response to micro-injury.",
       ar: "يجمع Potenza بين الإبر الدقيقة — إبر رفيعة تُحدث إصابات دقيقة متحكمًا بها في البشرة — وطاقة الترددات الراديوية المُوصَّلة عبر الإبر نفسها، مما يضيف تأثير شدّ إلى استجابة البشرة الطبيعية للإصابة الدقيقة.",
     },
     whatItAddresses: {
@@ -89,9 +89,9 @@ export const technologies: Technology[] = [
     },
     faqs: [
       {
-        question: { en: "What's the difference between Potenza and standard micro-needling?", ar: "ما الفرق بين Potenza والإبر الدقيقة التقليدية؟" },
+        question: { en: "What's the difference between Potenza and standard microneedling?", ar: "ما الفرق بين Potenza والإبر الدقيقة التقليدية؟" },
         answer: {
-          en: "Potenza adds radio-frequency energy delivered through the needles, combining the micro-injury response of standard micro-needling with an additional tightening effect.",
+          en: "Potenza adds radio-frequency energy delivered through the needles, combining the micro-injury response of standard microneedling with an additional tightening effect.",
           ar: "يضيف Potenza طاقة الترددات الراديوية المُوصَّلة عبر الإبر، فيجمع بين استجابة الإصابة الدقيقة للإبر الدقيقة التقليدية وتأثير شدّ إضافي.",
         },
       },
@@ -105,7 +105,7 @@ export const technologies: Technology[] = [
       {
         question: { en: "Which treatment uses the Potenza device?", ar: "أي علاج يستخدم جهاز Potenza؟" },
         answer: {
-          en: "RF Micro-Needling.",
+          en: "RF Microneedling.",
           ar: "الإبر الدقيقة بالترددات الراديوية.",
         },
       },

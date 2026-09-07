@@ -10,18 +10,18 @@
  * So the facts live here once, and both locales read them.
  *
  * Source of truth: the approved Blue Diamond Medical Aesthetics location
- * card (23-8 Weston Drive SW; (403) 247-1418; fax (587) 443-0394; Elite iQ™
- * performed off-site at Citizen Studio). Structured values are re-exported
- * from `siteConfig` rather than retyped, so this file never becomes a second
+ * card (23-8 Weston Drive SW; fax (587) 443-0394; Elite iQ™ performed
+ * off-site at Citizen Studio). Structured values are re-exported from
+ * `siteConfig` rather than retyped, so this file never becomes a second
  * competing copy of the clinic facts.
  *
- * NOTE ON THE TWO PHONE LINES — docs/SOURCE_CONFLICT_REGISTER.md CONF-001.
- * Blue Diamond runs two genuinely different published lines: the medical /
- * walk-in line +1 (825) 413-1113 and the aesthetics line (403) 247-1418.
- * That register's approved resolution is to keep BOTH as distinct structured
- * facts and have each channel render the number matching it — not to merge
- * them. The aesthetics location card below is the aesthetics channel, so it
- * renders the 403 line. Do not "unify" it with the medical line.
+ * NOTE ON THE PHONE LINE — docs/SOURCE_CONFLICT_REGISTER.md CONF-001, now
+ * resolved. Blue Diamond publishes ONE telephone number, +1 (825) 413-1113.
+ * The legacy aesthetics line (403) 247-1418 was retired by the client's
+ * 2026-09-07 instruction, which named it outdated. Because `primaryLocation`
+ * below feeds the homepage card, its map pin, and its phone CTA, that stale
+ * number was reaching patients on the clinic's own address. Do not reintroduce
+ * a second line without a new approved source.
  */
 
 import { siteConfig } from "./site";

@@ -43,7 +43,7 @@ export default async function TechnologiesHubPage({ params }: { params: Promise<
   const intro =
     locale === "ar"
       ? "تضم عيادتنا معدات عالمية المستوى من Cynosure."
-      : "Our clinic houses state-of-the-art, world-class equipment by Cynosure.";
+      : "Our clinic is equipped with a Cynosure treatment platform, and a physician selects the right device for each patient during consultation.";
 
   const ownRoute = getRoute("aesthetics-technologies-hub")!;
 

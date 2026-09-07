@@ -165,7 +165,7 @@ test.describe("Mega menus — desktop interaction (brief §18/§19)", () => {
     await expect(panel.getByRole("link", { name: "Acne Scars" })).toBeVisible();
     await expect(panel.getByRole("link", { name: "Cosmetic Botox" })).toBeVisible();
     // The device pages left the menu; they are reached from the concern pages.
-    await expect(panel.getByRole("link", { name: "RF Micro-Needling" })).toHaveCount(0);
+    await expect(panel.getByRole("link", { name: "RF Microneedling" })).toHaveCount(0);
   });
 
   test("hovering MEDICAL reveals the medical services and a separate Uninsured Services group", async ({ page }) => {
@@ -211,7 +211,7 @@ test.describe("Mega menus — desktop interaction (brief §18/§19)", () => {
     await page.goto("/en/contact");
     await page.locator("header").getByRole("button", { name: "Aesthetics" }).hover();
     // The Aesthetics panel lists CONCERNS (navigation.ts `treatmentsColumn`),
-    // not treatment names — "RF Micro-Needling" has not been a menu row since
+    // not treatment names — "RF Microneedling" has not been a menu row since
     // the concern and treatment catalogues were merged.
     const item = page.getByRole("link", { name: "Acne Scars" });
     await expect(item).toBeVisible();

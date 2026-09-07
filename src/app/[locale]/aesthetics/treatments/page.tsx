@@ -27,7 +27,7 @@ import { siteConfig } from "@/config/site";
  * and that page shows the treatment options Blue Diamond offers for it.
  *
  * So this page lists concerns, and the individual treatment pages
- * (RF Micro-Needling, Laser Skin Treatments, PRP, …) are reached FROM them.
+ * (RF Microneedling, Laser Skin Treatments, PRP, …) are reached FROM them.
  * Those pages are all still live and indexed at their own URLs — they left the
  * navigation, not the site — and every one of them is linked from at least one
  * concern page's "Treatment Options" section or from its technology page, so

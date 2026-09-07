@@ -410,10 +410,10 @@ export const beforeAfterPairs: BeforeAfterPair[] = [
   {
     pairId: "rf-microneedling-01",
     treatmentId: "rf-microneedling",
-    description: { en: "Clinical example published on Blue Diamond’s original RF Micro-Needling page.", ar: "مثال سريري كان منشورًا على صفحة الإبر الدقيقة بالترددات الراديوية في موقع بلو دايموند الأصلي." },
+    description: { en: "Clinical example published on Blue Diamond’s original RF Microneedling page.", ar: "مثال سريري كان منشورًا على صفحة الإبر الدقيقة بالترددات الراديوية في موقع بلو دايموند الأصلي." },
     before: {
       imagekitPath: "/blue-diamond/before-after/rf-microneedling-01-before.png",
-      alt: { en: "Clinical example before RF Micro-Needling — before image", ar: "مثال سريري قبل الإبر الدقيقة بالترددات الراديوية" },
+      alt: { en: "Clinical example before RF Microneedling — before image", ar: "مثال سريري قبل الإبر الدقيقة بالترددات الراديوية" },
       sourceUrl: "https://cdn.commoninja.com/asset/cfd1cc48-37dd-4a8f-9723-df9f6f8d9994.png",
       originalFilename: "cfd1cc48-37dd-4a8f-9723-df9f6f8d9994.png",
       width: 2048,
@@ -422,7 +422,7 @@ export const beforeAfterPairs: BeforeAfterPair[] = [
     },
     after: {
       imagekitPath: "/blue-diamond/before-after/rf-microneedling-01-after.png",
-      alt: { en: "Clinical example after RF Micro-Needling — after image", ar: "مثال سريري بعد الإبر الدقيقة بالترددات الراديوية" },
+      alt: { en: "Clinical example after RF Microneedling — after image", ar: "مثال سريري بعد الإبر الدقيقة بالترددات الراديوية" },
       sourceUrl: "https://cdn.commoninja.com/asset/69543d8d-d873-4561-be13-a3403459ee74.png",
       originalFilename: "69543d8d-d873-4561-be13-a3403459ee74.png",
       width: 2048,
@@ -442,10 +442,10 @@ export const beforeAfterPairs: BeforeAfterPair[] = [
   {
     pairId: "rf-microneedling-02",
     treatmentId: "rf-microneedling",
-    description: { en: "Clinical example published on Blue Diamond’s original RF Micro-Needling page.", ar: "مثال سريري كان منشورًا على صفحة الإبر الدقيقة بالترددات الراديوية في موقع بلو دايموند الأصلي." },
+    description: { en: "Clinical example published on Blue Diamond’s original RF Microneedling page.", ar: "مثال سريري كان منشورًا على صفحة الإبر الدقيقة بالترددات الراديوية في موقع بلو دايموند الأصلي." },
     before: {
       imagekitPath: "/blue-diamond/before-after/rf-microneedling-02-before.png",
-      alt: { en: "Clinical example before RF Micro-Needling — before image", ar: "مثال سريري قبل الإبر الدقيقة بالترددات الراديوية" },
+      alt: { en: "Clinical example before RF Microneedling — before image", ar: "مثال سريري قبل الإبر الدقيقة بالترددات الراديوية" },
       sourceUrl: "https://cdn.commoninja.com/asset/20307aa1-1db5-432a-a5f6-467506e23a98.png",
       originalFilename: "20307aa1-1db5-432a-a5f6-467506e23a98.png",
       width: 2048,
@@ -454,7 +454,7 @@ export const beforeAfterPairs: BeforeAfterPair[] = [
     },
     after: {
       imagekitPath: "/blue-diamond/before-after/rf-microneedling-02-after.png",
-      alt: { en: "Clinical example after RF Micro-Needling — after image", ar: "مثال سريري بعد الإبر الدقيقة بالترددات الراديوية" },
+      alt: { en: "Clinical example after RF Microneedling — after image", ar: "مثال سريري بعد الإبر الدقيقة بالترددات الراديوية" },
       sourceUrl: "https://cdn.commoninja.com/asset/86c6139d-f219-4966-9925-45d5c7ab392d.png",
       originalFilename: "86c6139d-f219-4966-9925-45d5c7ab392d.png",
       width: 2048,

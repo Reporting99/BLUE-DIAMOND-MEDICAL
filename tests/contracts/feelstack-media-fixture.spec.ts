@@ -144,7 +144,7 @@ test.describe("cross-repository media contract fixture", () => {
         resolvedLocale: "en",
         usedFallback: false,
       },
-      data: { id: "entry-1", title: "RF Micro-Needling", fields: {} },
+      data: { id: "entry-1", title: "RF Microneedling", fields: {} },
       relations: { items: [], faqs: [], sections: [], taxonomies: [] },
       media: [...fixture.malformed.map((entry) => entry.record), ...fixture.published],
     };

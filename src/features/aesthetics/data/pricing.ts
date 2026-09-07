@@ -35,15 +35,15 @@ const eliteIqRejuvenation = {
 };
 
 const rfRegular = {
-  en: "RF Micro-Needling — Regular tip",
+  en: "RF Microneedling — Regular tip",
   ar: "الإبر الدقيقة بالترددات الراديوية — رأس عادي",
 };
 const rfBody = {
-  en: "RF Micro-Needling — Body",
+  en: "RF Microneedling — Body",
   ar: "الإبر الدقيقة بالترددات الراديوية — الجسم",
 };
 const rfFusion = {
-  en: "RF Micro-Needling — Fusion / Infusion",
+  en: "RF Microneedling — Fusion / Infusion",
   ar: "الإبر الدقيقة بالترددات الراديوية — Fusion / Infusion",
 };
 const ultraGroup = { en: "Ultra Treatment", ar: "علاج الترا" };
@@ -59,7 +59,7 @@ const prpInjections = { en: "PRP Injections", ar: "حقن البلازما" };
 const addOn = { en: "Ampoule / Addition", ar: "أمبولة / إضافة" };
 
 export const aestheticPriceRows: AestheticPriceRow[] = [
-  // ── RF Micro-Needling · Potenza — workbook rows 5–20 ──────────────────────
+  // ── RF Microneedling · Potenza — workbook rows 5–20 ──────────────────────
   { id: "PR-001", treatmentId: "rf-microneedling", group: rfRegular, area: { en: "Perioral (smile lines)", ar: "حول الفم (خطوط الابتسامة)" }, priceCents: 35000, notes: potenza, technologyIds: ["potenza"], publicDisplay: true, source: "workbook" },
   { id: "PR-002", treatmentId: "rf-microneedling", group: rfRegular, area: { en: "Periorbital (eyes)", ar: "حول العينين" }, priceCents: 35000, notes: potenza, technologyIds: ["potenza"], publicDisplay: true, source: "workbook" },
   { id: "PR-003", treatmentId: "rf-microneedling", group: rfRegular, area: { en: "Full Face", ar: "كامل الوجه" }, priceCents: 75000, notes: potenza, technologyIds: ["potenza"], publicDisplay: true, source: "workbook" },
