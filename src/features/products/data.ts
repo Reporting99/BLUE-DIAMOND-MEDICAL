@@ -1681,6 +1681,10 @@ export const products: Product[] = [
       },
     ],
     manufacturerComparison: {
+      source: {
+        path: "/blue-diamond/products/myriade/c-eye-contour/before-after/c-eye-contour-before-after-source.jpg",
+        alt: { en: "The C Eye Contour manufacturer-supplied before and after example", ar: "The C Eye Contour manufacturer-supplied before and after example" },
+      },
       before: {
         path: "/blue-diamond/products/myriade/c-eye-contour/before-after/c-eye-contour-before.jpg",
         alt: { en: "The C Eye Contour manufacturer-supplied before view", ar: "The C Eye Contour manufacturer-supplied before view" },
@@ -1689,6 +1693,7 @@ export const products: Product[] = [
         path: "/blue-diamond/products/myriade/c-eye-contour/before-after/c-eye-contour-after.jpg",
         alt: { en: "The C Eye Contour manufacturer-supplied after view", ar: "The C Eye Contour manufacturer-supplied after view" },
       },
+      caption: { en: "Two weeks of use of The C Eye Contour", ar: "Two weeks of use of The C Eye Contour" },
       attribution: { en: "Manufacturer-supplied clinical example from Concept Myriade. This is not Blue Diamond Medical patient photography.", ar: "Manufacturer-supplied clinical example from Concept Myriade. This is not Blue Diamond Medical patient photography." },
       resultsVary: { en: "Individual results vary.", ar: "Individual results vary." },
     },

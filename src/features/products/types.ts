@@ -157,10 +157,25 @@ export interface Product {
    * `attribution` and `resultsVary` are REQUIRED, not optional. These are
    * manufacturer clinical examples, never Blue Diamond patient photography,
    * and both statements must render wherever the pair does.
+   *
+   * `source` is the manufacturer's OWN untouched composite — the single image
+   * as it appears in the supplied brochure, privacy bars, printed labels and
+   * all. It is kept alongside the split halves rather than instead of them:
+   * the split pair is what the accessible side-by-side comparison needs, and
+   * the composite is the evidence that the split was not re-cropped or
+   * re-ordered. Rendering it first preserves the supplied manifest's own
+   * ordering (source, then before, then after).
+   *
+   * `caption` is REQUIRED and carries the manufacturer's stated treatment
+   * duration ("Two weeks of use of …"). A result photograph with no stated
+   * interval invites the reader to supply their own, so the interval travels
+   * with the pictures for the same reason the attribution does.
    */
   manufacturerComparison?: {
+    source?: { path: string; alt: Bilingual };
     before: { path: string; alt: Bilingual };
     after: { path: string; alt: Bilingual };
+    caption: Bilingual;
     attribution: Bilingual;
     resultsVary: Bilingual;
   };

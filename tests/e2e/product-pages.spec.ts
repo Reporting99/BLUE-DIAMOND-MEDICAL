@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { products } from "../../src/features/products/data";
+import { imagekitIsConfigured } from "../../src/config/imagekit";
 
 /**
  * "COMPLETE SKINMEDICA NAVIGATION AND PRODUCT-DETAIL FLOW" — every
@@ -145,5 +146,78 @@ test.describe("Product page structure", () => {
     await page.goto("/en/shop/facial-cleanser");
     const title2 = await page.title();
     expect(title1).not.toBe(title2);
+  });
+});
+
+/**
+ * CL-042 — the C Eye Contour manufacturer comparison, on the live page.
+ *
+ * The unit contract in tests/unit/skinmedica-catalogue.spec.ts already pins
+ * the DATA (three distinct paths, the caption, the attribution). It cannot
+ * see whether any of that reaches a reader: a record can be perfect while the
+ * template renders two of the three images, or renders them at a status that
+ * makes ImageKitImage draw the placeholder instead. These tests assert the
+ * rendered page, in both locales, and — the half that actually matters
+ * clinically — that a manufacturer's result photograph appears on no other
+ * product's page.
+ */
+test.describe("C Eye Contour manufacturer comparison", () => {
+  const COMPARISON_DIR = "/products/myriade/c-eye-contour/before-after/";
+
+  for (const locale of ["en", "ar"] as const) {
+    test(`${locale}: all three supplied images are placed, with the caption and attribution`, async ({ page }) => {
+      await page.goto(`/${locale}/shop/c-eye-contour`);
+
+      // Forks on the CDN exactly as tests/e2e/gated-routes.spec.ts does, and
+      // for the same reason: CI has no .env, so `imagekitIsConfigured` is
+      // false there and ImageKitImage renders the FacetTile placeholder. An
+      // unconditional CDN assertion would fail in CI for a reason that has
+      // nothing to do with where these three images are placed.
+      const srcs = await page
+        .locator("img")
+        .evaluateAll((els) => els.map((e) => decodeURIComponent((e as HTMLImageElement).src)));
+      const comparison = srcs.filter((s) => s.includes(COMPARISON_DIR));
+
+      if (imagekitIsConfigured) {
+        expect(comparison.length, "three supplied comparison images").toBe(3);
+        for (const kind of ["-before-after-source", "-before.jpg", "-after.jpg"]) {
+          expect(comparison.some((s) => s.includes(kind)), kind).toBe(true);
+        }
+        // A src is not a rendered image — an ImageKit 404 has one too.
+        const decoded = await page.evaluate(
+          (dir) =>
+            Array.from(document.images)
+              .filter((i) => decodeURIComponent(i.src).includes(dir))
+              .every((i) => i.complete && i.naturalWidth > 0),
+          COMPARISON_DIR,
+        );
+        expect(decoded, "every comparison image decodes").toBe(true);
+      } else {
+        expect(comparison.length, "unconfigured build must not emit a CDN src").toBe(0);
+        const broken = await page.locator("img").evaluateAll((nodes) =>
+          nodes.filter(
+            (n) => !(n as HTMLImageElement).complete || (n as HTMLImageElement).naturalWidth === 0,
+          ).length,
+        );
+        expect(broken, "unconfigured build must not emit a broken image").toBe(0);
+      }
+
+      // The words are not CDN-dependent, and they are the half that makes
+      // publishing someone else's clinical photographs honest. They are
+      // asserted in BOTH locales because the Myriade records deliberately
+      // repeat the approved English (see the CL-042 Arabic contract) — the
+      // disclaimer must still be on the Arabic page, not silently dropped.
+      const html = await page.content();
+      expect(html).toContain("Two weeks of use of The C Eye Contour");
+      expect(html).toContain("not Blue Diamond Medical patient photography");
+      expect(html).toContain("Individual results vary");
+    });
+  }
+
+  test("no other product page carries the comparison", async ({ request }) => {
+    for (const p of products.filter((x) => x.id !== "c-eye-contour")) {
+      const html = await (await request.get(`/en/shop/${p.slug}`)).text();
+      expect(html, `${p.slug} shows the C Eye comparison`).not.toContain(COMPARISON_DIR);
+    }
   });
 });

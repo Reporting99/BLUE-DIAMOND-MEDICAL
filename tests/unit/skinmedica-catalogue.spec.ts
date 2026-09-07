@@ -404,6 +404,22 @@ test("CL-042: the manufacturer comparison is on exactly one product, correctly o
   expect(c.before.path).toContain("-before");
   expect(c.after.path).toContain("-after");
   expect(c.before.path).not.toBe(c.after.path);
+  // All THREE supplied files are placed, not just the split pair. The
+  // untouched composite is what proves the halves were not re-cropped or
+  // swapped, so losing it silently would remove the evidence and leave the
+  // claim. Three distinct paths, all in this product's own folder.
+  expect(c.source, "the supplied source composite is not placed").toBeDefined();
+  expect(c.source!.path).toContain("-before-after-source");
+  const comparisonPaths = [c.source!.path, c.before.path, c.after.path];
+  expect(new Set(comparisonPaths).size).toBe(3);
+  for (const p of comparisonPaths) {
+    expect(p).toContain("/products/myriade/c-eye-contour/before-after/");
+  }
+  // The manufacturer's stated interval travels with the pictures. Without
+  // it a reader supplies their own, which is exactly the implied-outcome
+  // claim `resultsVary` exists to prevent.
+  expect(c.caption.en).toMatch(/two weeks of use/i);
+  expect(c.caption.ar).toMatch(/two weeks of use/i);
   // Both statements are load-bearing: these are the manufacturer's clinical
   // examples, and presenting them as our own patients' results would be a
   // false claim about Blue Diamond's outcomes.
