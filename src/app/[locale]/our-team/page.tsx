@@ -6,7 +6,7 @@ import { SectionTransition } from "@/components/layout/SectionTransition";
 import { ImageKitImage } from "@/components/shared/ImageKitImage";
 import { isLocale, type Locale } from "@/i18n/config";
 import { getRoute } from "@/lib/routing";
-import { doctors, portraitForLocale } from "@/features/doctors";
+import { doctorsInTeamOrder as orderedDoctors, portraitForLocale } from "@/features/doctors";
 import { resolveListingMedia } from "@/lib/feelstack/listing-media";
 import { resolveSlotImageRef, cmsAlt } from "@/lib/feelstack/media-slots";
 import { cacheTags } from "@/lib/feelstack/cache-tags";
@@ -32,27 +32,6 @@ export async function generateMetadata({
   });
 }
 
-/**
- * The client-approved presentation order for the team grid. Display order
- * only: it reorders the same six roster records, and every other doctor
- * surface (homepage trio, detail pages) keeps reading `doctors` directly.
- * Any roster id not listed here still renders, appended after the ordered
- * ones, so a future addition can never silently disappear from the page.
- */
-const TEAM_DISPLAY_ORDER = [
-  "mohamed-farhat",
-  "reem-hamdi",
-  "bakare",
-  "omonijo",
-  "omaima-saeed",
-  "ahmed-gwea",
-];
-const orderedDoctors = [...doctors].sort((a, b) => {
-  const ai = TEAM_DISPLAY_ORDER.indexOf(a.id);
-  const bi = TEAM_DISPLAY_ORDER.indexOf(b.id);
-  return (ai === -1 ? TEAM_DISPLAY_ORDER.length : ai) - (bi === -1 ? TEAM_DISPLAY_ORDER.length : bi);
-});
-
 export default async function DoctorsIndexPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale: rawLocale } = await params;
   const locale: Locale = isLocale(rawLocale) ? rawLocale : "en";
@@ -72,7 +51,7 @@ export default async function DoctorsIndexPage({ params }: { params: Promise<{ l
       : "Meet the team behind Blue Diamond Medical — six family physicians providing comprehensive care for your family, several also delivering medical aesthetics and Botox.";
 
   const ownRoute = getRoute("doctors-index")!;
-  // Built from the same `doctors` array the grid below maps over, so the
+  // Built from the same `orderedDoctors` array the grid below maps over, so the
   // structured list can never drift from the visibly rendered one.
   const items = orderedDoctors.flatMap((doctor) => {
     const route = getRoute(doctor.routeId);
@@ -124,12 +103,21 @@ export default async function DoctorsIndexPage({ params }: { params: Promise<{ l
           ar: "عيادة بلو دايموند الطبية، ويست سبرينغز، كالغاري",
         }}
         breadcrumbs={<Breadcrumbs locale={locale} items={[{ label: ownRoute.title[locale] }]} />}
+        /* An equal half for the photograph rather than a content-sized track.
+           The team picture is this page's subject, not an ornament beside it,
+           and on the content-sized track it sat centred in a wider column with
+           slack on both edges — smaller than the space it was given. */
+        asideBalance="half"
         aside={
-          /* No width on this wrapper beyond a cap: PageHero's aside column
-             centres its content and absorbs the leftover width, so sizing it
-             here would fight that. The cap is 560px against a 600px original
-             — the picture is never asked to fill more than it has. */
-          <div className="w-full max-w-[560px] drop-shadow-[0_18px_40px_rgba(29,86,120,0.20)]">
+          /* The wrapper fills its half, capped at the asset's NATIVE 600px
+             (src/lib/media/image-manifest.ts). The cap is what keeps `half`
+             from becoming an upscale: at the 1280px container a half is ~592px,
+             so the picture reaches its full size and stops there rather than
+             being stretched on a wider viewport. Raise this only when a
+             higher-resolution original is supplied — together with the
+             "team-group" preset width in src/config/imagekit.ts, never one
+             without the other. */
+          <div className="w-full max-w-[600px] drop-shadow-[0_18px_40px_rgba(29,86,120,0.20)]">
             {/* `facet-corner` is the same diamond cut the doctor portraits
                 carry, so the hero visual belongs to the page it opens rather
                 than floating above it as a plain rectangle. drop-shadow, not

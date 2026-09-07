@@ -15,7 +15,7 @@ import { FaqPageSchema } from "@/components/shared/schema";
 import { ConcernExplorer } from "@/features/concerns";
 import { concerns } from "@/features/concerns/data";
 import { concernExplorerImages, concernListingEntities } from "@/features/concerns/media";
-import { doctors, portraitForLocale } from "@/features/doctors";
+import { doctorsInTeamOrder, portraitForLocale } from "@/features/doctors";
 import { NewPatientNotice } from "@/components/shared/NewPatientNotice";
 import { AccessOptions } from "@/components/shared/AccessOptions";
 import { ScrollCue } from "@/components/layout/ScrollCue";
@@ -80,7 +80,9 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const copy = homepageCopy[locale];
   const bookingHub = getRoute("book-appointment")!;
   const status = getOpenStatus(aestheticsHours);
-  const featuredDoctors = doctors.slice(0, 3);
+  // The first three of the client-approved team order, so the homepage trio
+  // and the /our-team grid always lead with the same physicians.
+  const featuredDoctors = doctorsInTeamOrder.slice(0, 3);
 
   const { serviceCards, techShowcase, treatmentShowcase, productShowcase } = getHomeShowcases(locale);
 
@@ -471,7 +473,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           <h2 data-reveal="up" className="mt-3 text-display-2 font-heading lg:text-display-2-lg">{copy.findByNeedHeading}</h2>
           <p data-reveal="up" className="mt-3 max-w-2xl text-body text-text-secondary">{copy.findByNeedIntro}</p>
 
-          <div className="mt-8 grid gap-px overflow-hidden rounded-lg border border-border bg-border sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-8 grid gap-px overflow-hidden rounded-lg border border-border bg-border md:grid-cols-3">
             {copy.findByNeed.map((item, i) => {
               const Icon = findByNeedIcon[item.icon];
               return (

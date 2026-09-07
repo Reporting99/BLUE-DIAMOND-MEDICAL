@@ -160,6 +160,38 @@ const focusClasses: Record<PageHeroImageFocus, string> = {
   "top-left": "[&>img]:object-[15%_20%]",
 };
 
+/**
+ * How much vertical room the FULL-BLEED backdrop photograph is given.
+ *
+ * `content` is CL-032's rule and stays the default: the hero is exactly as
+ * tall as its copy. That rule exists because a reserved band under a hero
+ * whose photography has not been shot yet is an empty band — the FacetTile
+ * stand-in has nothing to reveal, so height bought it nothing.
+ *
+ * `tall` is for the routes where that premise does not hold: the backdrop is
+ * an APPROVED photograph and it is carrying information, not atmosphere. On
+ * /contact it is an aerial map of West Springs — at copy height a 16:9 map
+ * renders as a ~230px strip in which no landmark, road or river is legible,
+ * which is the same as having no map. Reserving height here does not
+ * reintroduce the empty band CL-032 removed, because the picture fills every
+ * pixel of what is reserved.
+ *
+ * Deliberately opt-in per page rather than "tall whenever the asset is
+ * approved": /about, /medical, /patient-resources and /careers also carry
+ * approved backdrops, and whether their picture is information or atmosphere
+ * is an art-direction call, not something a status field can answer.
+ */
+type PageHeroBackdrop = "content" | "tall";
+
+const backdropClasses: Record<PageHeroBackdrop, string> = {
+  content: "",
+  /* Against the 1672x941 (16:9) assets these routes use, 520px is a little
+     under two thirds of the height the picture would occupy at a 1440px
+     viewport — enough for the map's roads and river to read, while still
+     leaving the hero a hero rather than a full-screen splash. */
+  tall: "min-h-[320px] md:min-h-[420px] lg:min-h-[520px]",
+};
+
 const sizeClasses: Record<PageHeroSize, string> = {
   // Utility and transactional routes — cart, checkout, legal, shipping.
   compact: "pt-8 pb-2 lg:pt-10 lg:pb-3",
@@ -252,6 +284,29 @@ export interface PageHeroProps {
   mediaLayout?: PageHeroMediaLayout;
   /** CL-033 — where a cover-cropped split image is anchored. Defaults to centre. */
   imageFocus?: PageHeroImageFocus;
+  /**
+   * How the two columns of an `aside` hero divide the container.
+   *
+   * `content` (the default) is the original behaviour and what /about needs:
+   * the copy takes a fixed 42% and the visual's column is content-sized,
+   * absorbing the rest and centring whatever it holds. A brand lock-up has an
+   * intrinsic size and must not be stretched to a layout's width, so it stays
+   * on this.
+   *
+   * `half` gives each column an equal half of the row, so a PHOTOGRAPH in the
+   * aside fills its side instead of floating centred in a wider track with
+   * slack on both edges. Only for an aside whose content is a picture that can
+   * legitimately grow to the column — the call site still caps it at the
+   * asset's native width, because a half is a maximum, never a licence to
+   * upscale.
+   */
+  asideBalance?: "content" | "half";
+  /**
+   * Reserve height for the full-bleed backdrop so its photograph is legible.
+   * See `PageHeroBackdrop`. Ignored by the `split` and `aside` layouts, whose
+   * picture has a column of its own and is never cropped to the copy's height.
+   */
+  backdrop?: PageHeroBackdrop;
 }
 
 export function PageHero({
@@ -273,6 +328,8 @@ export function PageHero({
   align = "start",
   mediaLayout = "bleed",
   imageFocus = "center",
+  asideBalance = "content",
+  backdrop = "content",
 }: PageHeroProps) {
   const centered = align === "center";
   /**
@@ -493,6 +550,10 @@ export function PageHero({
         className={cn(
           "flex flex-col justify-center",
           sizeClasses[size],
+          /* Only the bleed layout crops its picture to the copy's height, so
+             only it has anything to reserve. `justify-center` above then keeps
+             the copy centred in the taller band instead of pinned to its top. */
+          !aside && backdropClasses[backdrop],
           !aside && measureClasses[measure],
           centered && !aside && "items-center text-center",
         )}
@@ -520,11 +581,21 @@ export function PageHero({
                 visual's column absorbs the difference, which it has room for:
                 the floor only binds at widths where the lock-up is at its
                 smallest. */}
-            <div className="md:w-[42%] md:min-w-min">{copy}</div>
-            {/* Growing rather than a fixed percentage is what keeps the visual
-                centred in the leftover space instead of pinned beside the
-                copy or against the container's inline-end edge. */}
-            <div className="flex justify-center md:shrink-0 md:grow">{aside}</div>
+            <div className={cn("md:min-w-min", asideBalance === "half" ? "md:w-1/2" : "md:w-[42%]")}>{copy}</div>
+            {/* `content`: growing rather than a fixed percentage is what keeps
+                the visual centred in the leftover space instead of pinned
+                beside the copy or against the container's inline-end edge.
+                `half`: an equal track that does not grow, so the picture it
+                holds is measured against the container rather than against
+                whatever the copy happened to leave. */}
+            <div
+              className={cn(
+                "flex justify-center md:shrink-0",
+                asideBalance === "half" ? "md:w-1/2" : "md:grow",
+              )}
+            >
+              {aside}
+            </div>
           </div>
         ) : (
           copy
