@@ -18,11 +18,9 @@ export interface Dictionary {
     medicalAesthetics: string;
     medical: string;
     aesthetics: string;
-    concerns: string;
     technologies: string;
     uninsuredServices: string;
     viewAllMedical: string;
-    viewAllConcerns: string;
     viewAllTechnologies: string;
     ourTeam: string;
     about: string;
@@ -92,11 +90,9 @@ const en: Dictionary = {
     contact: "Contact",
     medical: "Medical",
     aesthetics: "Aesthetics",
-    concerns: "Concerns",
     technologies: "Technologies",
     uninsuredServices: "Uninsured Services",
     viewAllMedical: "View all medical care",
-    viewAllConcerns: "View all concerns",
     viewAllTechnologies: "View all technologies",
     viewAllTreatments: "View all treatments",
     openMenu: "Open menu",
@@ -119,10 +115,10 @@ const en: Dictionary = {
       "Physician-led RF micro-needling, skin tightening, laser treatments, and Botox — delivered by the same clinical team.",
     servicesTitle: "What we offer",
     servicesBody:
-      "Our practice opened on July 4, 2022 in West Springs and has consistently welcomed walk-in patients ever since. Founded by Dr. Mohamed Farhat, who brings more than 28 years of family medicine experience, Blue Diamond Medical now houses six family physicians.",
+      "Our practice opened on July 4, 2022 in West Springs and has consistently welcomed walk-in patients ever since. Founded by Dr. Mohamed Farhat, who brings over 30 years of family medicine experience, Blue Diamond Medical now houses six family physicians.",
     botoxTitle: "Medical Botox",
     botoxBody:
-      "Botox for migraines, bruxism, and hyperhidrosis, alongside cosmetic Botox — administered by Dr. Farhat, starting with a consultation.",
+      "Botox for migraines, bruxism, and hyperhidrosis, alongside cosmetic Botox — administered by Dr. Farhat and Dr. Hamdi, starting with a consultation.",
     doctorsTitle: "Blue Diamond Medical Team",
     doctorsBody: "Six family physicians, one clinic, one standard of care.",
     locationTitle: "Visit us in West Springs",

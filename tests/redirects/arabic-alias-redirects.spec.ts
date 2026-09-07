@@ -23,7 +23,7 @@ const MARKER = "x-bd-arabic-rewrite";
 
 const localized = routes.filter((r) => r.path.ar !== r.path.en);
 /** A representative slice — one hub, one deep detail page, one doctor. */
-const SAMPLES = ["/our-team", "/aesthetics/concerns/acne-scars", "/medical"].filter((en) =>
+const SAMPLES = ["/our-team", "/aesthetics/treatments/acne-scars", "/medical"].filter((en) =>
   localized.some((r) => r.path.en === en),
 );
 

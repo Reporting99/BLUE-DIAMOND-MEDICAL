@@ -7,7 +7,7 @@ import { ContactForm } from "@/features/contact";
 import { isLocale, type Locale } from "@/i18n/config";
 import { getRouteMetadata } from "@/lib/seo/metadata";
 import { siteConfig } from "@/config/site";
-import { getOpenStatus, statutoryHolidayNotice } from "@/config/clinic-hours";
+import { ClinicHoursBlock } from "@/components/shared/ClinicHoursBlock";
 import { getProduct } from "@/features/products";
 
 /** Single source for this page's description: consumed by both generateMetadata
@@ -42,7 +42,6 @@ export default async function ContactPage({
 }) {
   const { locale: rawLocale } = await params;
   const locale: Locale = isLocale(rawLocale) ? rawLocale : "en";
-  const status = getOpenStatus();
 
   // Validated against the real product registry — an unrecognized,
   // malformed, or injected value is silently ignored (no error shown, no
@@ -173,11 +172,27 @@ export default async function ContactPage({
                 {siteConfig.clinic.address.region} {siteConfig.clinic.address.postalCode}
               </dd>
             </div>
+            {/* CL-042 - two published lines, each named for what it
+                answers. The Contact page previously showed only the medical
+                number under a bare "Phone" label, which both hid the
+                aesthetics line and left the one it did show unattributed. */}
             <div>
-              <dt className="text-sm text-text-secondary">{locale === "ar" ? "الهاتف" : "Phone"}</dt>
+              <dt className="text-sm text-text-secondary">
+                {locale === "ar" ? "الهاتف — العيادة الطبية وحجوزات المرضى" : "Phone — medical clinic and patient bookings"}
+              </dt>
               <dd>
                 <a className="ltr-run hover:text-primary" href={`tel:${siteConfig.clinic.phone}`}>
                   {siteConfig.clinic.phoneDisplay}
+                </a>
+              </dd>
+            </div>
+            <div>
+              <dt className="text-sm text-text-secondary">
+                {locale === "ar" ? "الهاتف — التجميل الطبي" : "Phone — medical aesthetics"}
+              </dt>
+              <dd>
+                <a className="ltr-run hover:text-primary" href={`tel:${siteConfig.aesthetics.phone}`}>
+                  {siteConfig.aesthetics.phoneDisplay}
                 </a>
               </dd>
             </div>
@@ -187,8 +202,12 @@ export default async function ContactPage({
             </div>
             <div>
               <dt className="text-sm text-text-secondary">{locale === "ar" ? "ساعات العمل" : "Hours"}</dt>
+              {/* CL-009/CL-010 — the full published schedule, rendered from
+                  src/config/clinic-hours.ts. It used to show only a computed
+                  "Open now / Closed now" line, which never told a visitor
+                  which days or which hours. */}
               <dd>
-                {status.label[locale]} · {statutoryHolidayNotice[locale]}
+                <ClinicHoursBlock locale={locale} className="max-w-xs" />
               </dd>
             </div>
           </dl>

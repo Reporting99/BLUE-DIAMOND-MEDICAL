@@ -31,9 +31,9 @@ test.describe("Homepage — SkinMedica preview", () => {
     }
   });
 
-  test('"View All SkinMedica Products" opens the catalogue, not Contact', async ({ page }) => {
+  test('"View All Products" opens the catalogue, not Contact', async ({ page }) => {
     await page.goto("/en");
-    const cta = page.getByRole("link", { name: "View All SkinMedica Products" });
+    const cta = page.getByRole("link", { name: "View All Products" });
     await expect(cta).toBeVisible();
     await expect(cta).toHaveAttribute("href", "/en/shop");
   });

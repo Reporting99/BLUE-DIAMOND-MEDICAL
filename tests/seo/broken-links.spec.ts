@@ -8,7 +8,7 @@ import { features } from "../../src/config/features";
  * brief's "broken-link scan" requirement. Deliberately request-based (no
  * browser rendering per link) so it stays fast enough to run the full set.
  *
- * External links (mika.care, janeapp.com, tel:, mailto:, etc.) are
+ * External links (app.mikatahealth.com, euclidtelehealth.org, tel:, mailto:, etc.) are
  * intentionally out of scope — those are covered by
  * tests/security/booking-allowlist.spec.ts instead, since verifying a
  * third party's uptime isn't this site's responsibility.

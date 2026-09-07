@@ -6,6 +6,7 @@ import { siteConfig } from "@/config/site";
 import { href, getRoute } from "@/lib/routing";
 import { getDictionary, type Locale } from "@/i18n/config";
 import { features } from "@/config/features";
+import { ClinicHoursBlock } from "@/components/shared/ClinicHoursBlock";
 
 /**
  * Dark premium footer — homepage surface rhythm §6 of the correction
@@ -24,7 +25,7 @@ export function Footer({ locale }: { locale: Locale }) {
     },
     {
       heading: locale === "ar" ? "التجميل الطبي" : "Medical Aesthetics",
-      routeIds: ["aesthetics-hub", "aesthetics-treatments-hub", "aesthetics-concerns-hub", "aesthetics-technologies-hub"],
+      routeIds: ["aesthetics-hub", "aesthetics-treatments-hub", "aesthetics-technologies-hub"],
     },
     {
       heading: locale === "ar" ? "بلو دايموند" : "Blue Diamond",
@@ -77,6 +78,15 @@ export function Footer({ locale }: { locale: Locale }) {
             >
               {siteConfig.clinic.phoneDisplay}
             </a>
+          </div>
+          {/* CL-009 — the footer renders on every page, so the published
+              schedule is one click from nowhere. Same source as the Contact
+              page and the JSON-LD: src/config/clinic-hours.ts. */}
+          <div>
+            <p className="text-xs font-semibold tracking-[0.1em] uppercase" style={{ color: "var(--footer-heading)" }}>
+              {locale === "ar" ? "ساعات العمل" : "Hours"}
+            </p>
+            <ClinicHoursBlock locale={locale} tone="reversed" className="mt-2 max-w-xs" />
           </div>
           <div className="flex items-center gap-3">
             <a

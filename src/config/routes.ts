@@ -138,26 +138,39 @@ export const routes: RouteEntry[] = [
       parentId: "aesthetics-treatments-hub",
     }),
   ),
-  {
-    id: "aesthetics-concerns-hub",
-    templateType: "hub",
-    path: { en: "/aesthetics/concerns", ar: "/التجميل-الطبي/المخاوف-الجمالية" },
-    title: { en: "Concerns", ar: "المخاوف الجمالية" },
-    indexing: "index",
-    inSitemap: true,
-    inNav: false,
-    parentId: "aesthetics-hub",
-  },
+  /**
+   * Concern pages live UNDER /aesthetics/treatments, not under a separate
+   * /aesthetics/concerns branch.
+   *
+   * The Aesthetics IA is concern-first: a visitor picks the problem they want
+   * treated, and the treatment options for it are surfaced inside that page.
+   * "Treatments" and "Concerns" as two parallel branches were two competing
+   * navigation systems for the same catalogue, and the URL tree said so. So
+   * the concern IS the treatment entry point, and its URL says that too.
+   *
+   * The old /aesthetics/concerns/* URLs are 301'd here, in one hop, from
+   * src/lib/routing/moved-routes.ts — including the Arabic ones, whose slugs
+   * are unchanged, only their parent segment.
+   *
+   * Note the ID stays `concern-*` and the CMS path stays
+   * /aesthetics/concerns/<slug>: FeelStack registered those routes and this
+   * repository does not get to rename them unilaterally. Public URL and CMS
+   * path are deliberately decoupled here — see the loader in
+   * app/[locale]/aesthetics/treatments/[treatmentId]/page.tsx.
+   *
+   * No slug collides with a treatment slug; a build-time assertion at the
+   * bottom of this file keeps it that way.
+   */
   ...concerns.map(
     (c): RouteEntry => ({
       id: `concern-${c.id}`,
       templateType: "concern",
-      path: { en: `/aesthetics/concerns/${c.slug}`, ar: `/التجميل-الطبي/المخاوف-الجمالية/${c.slugAr}` },
+      path: { en: `/aesthetics/treatments/${c.slug}`, ar: `/التجميل-الطبي/العلاجات/${c.slugAr}` },
       title: c.title,
       indexing: "index",
       inSitemap: true,
       inNav: false,
-      parentId: "aesthetics-concerns-hub",
+      parentId: "aesthetics-treatments-hub",
     }),
   ),
   {
@@ -365,14 +378,20 @@ export const routes: RouteEntry[] = [
     inNav: true,
   },
   // Live — "COMPLETE SKINMEDICA NAVIGATION AND PRODUCT-DETAIL FLOW" pass.
-  // Title is "SkinMedica Products" (not generic "Shop") since this
-  // catalogue carries SkinMedica exclusively — used in breadcrumbs and
-  // nav, so it needed to be accurate, not just gated content.
+  //
+  // The title was "SkinMedica Products" while the catalogue carried
+  // SkinMedica exclusively. CL-036/CL-037/CL-038 added two client-supplied
+  // professional peels that are NOT SkinMedica and carry no stated brand at
+  // all, and this string is the breadcrumb and nav label above every product
+  // page — leaving it would attribute a manufacturer to two records whose
+  // brand the client never supplied. "Products" is the accurate label for a
+  // catalogue with more than one source; the SkinMedica line is still named
+  // in the hub's own intro copy, where it is true.
   {
     id: "shop-hub",
     templateType: "static",
     path: { en: "/shop", ar: "/المتجر" },
-    title: { en: "SkinMedica Products", ar: "منتجات SkinMedica" },
+    title: { en: "Products", ar: "المنتجات" },
     requiresFeature: "shopEnabled",
     indexing: "index",
     inSitemap: true,
@@ -467,3 +486,29 @@ export const routes: RouteEntry[] = [
     inNav: true,
   },
 ];
+
+/**
+ * Concern pages and treatment pages now share the /aesthetics/treatments
+ * namespace (see the concern block above), in both locales. A duplicate path
+ * would mean two RouteEntries answering for one URL, and whichever
+ * `routes.find()` reached first would silently win — a 404, a wrong canonical,
+ * or a wrong Arabic rewrite depending on which caller lost.
+ *
+ * Runs at module load, i.e. at build time: adding a concern whose slug
+ * collides with a treatment's fails the build rather than shipping.
+ */
+{
+  const seen = new Map<string, string>();
+  for (const route of routes) {
+    for (const locale of ["en", "ar"] as const) {
+      const key = `${locale}:${route.path[locale]}`;
+      const owner = seen.get(key);
+      if (owner) {
+        throw new Error(
+          `src/config/routes.ts: duplicate ${locale} path "${route.path[locale]}" — claimed by both "${owner}" and "${route.id}"`,
+        );
+      }
+      seen.set(key, route.id);
+    }
+  }
+}

@@ -37,9 +37,14 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
       missionHeading: "Our Mission",
       mission:
         'Blue Diamond Medical is built on the ethos of exceptional patient care in a family-based environment. We are committed to meeting the needs of all our patients in a friendly, timely, and efficient manner. We believe "prevention is better than cure," and work hard to give our patients access to resources that help them lead healthier lives. Blue Diamond Medical — compassion, caring, and wellbeing for all.',
+      aestheticsHeading: "Expanding Our Clinic with a New Aesthetic Medicine Department",
+      aestheticsBody: [
+        "Blue Diamond Medical has proudly expanded its services to include physician\u2011led medical aesthetics in response to growing patient demand. Alongside our comprehensive family medicine care, we now offer a range of advanced aesthetic treatments designed to improve skin health, enhance confidence, and support overall well\u2011being.",
+        "Our aesthetic services include laser hair removal, hair restoration using laser therapy and/or PRP, and a variety of skin\u2011rejuvenation treatments focused on improving texture, tone, and vitality. These additions allow us to provide patients with safe, effective, and medically supervised solutions for both skin and hair concerns — all within the trusted environment of our clinic. With our commitment to high\u2011quality care and continuous innovation, Blue Diamond Medical remains dedicated to meeting the evolving needs of our community while ensuring every patient receives personalized, professional treatment.",
+      ],
       storyHeading: "Our story",
       story:
-        "Our practice opened on July 4, 2022 in West Springs and has consistently welcomed walk-in patients ever since. Founded by Dr. Mohamed Farhat, who brings more than 28 years of family medicine experience, Blue Diamond Medical now houses six family physicians and continues to grow at a safe, steady pace.",
+        "Our practice opened on July 4, 2022 in West Springs and has consistently welcomed walk-in patients ever since. Founded by Dr. Mohamed Farhat, who brings over 30 years of family medicine experience, Blue Diamond Medical now houses six family physicians and continues to grow at a safe, steady pace.",
       teamCta: "Meet our team",
     },
     ar: {
@@ -47,9 +52,20 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
       missionHeading: "رسالتنا",
       mission:
         'تأسّست بلو دايموند الطبية على مبدأ الرعاية الاستثنائية ضمن بيئة عائلية دافئة. نلتزم بتلبية احتياجات جميع مرضانا بأسلوب ودود وسريع وفعّال. نؤمن بأن "الوقاية خير من العلاج"، ونعمل جاهدين لمنح مرضانا الوصول إلى موارد تساعدهم على حياة أكثر صحة. بلو دايموند الطبية — رحمة ورعاية وعافية للجميع.',
+      /**
+       * CL-031 — ARABIC IS A CLIENT DEPENDENCY.
+       *
+       * The client supplied this section's exact English heading and body and
+       * no Arabic rendering. A machine translation of clinical/aesthetic
+       * service copy is exactly what docs/CONTENT_MODEL.md forbids, so the
+       * Arabic page omits the section until approved Arabic arrives, rather
+       * than publishing invented copy or English text under /ar.
+       */
+      aestheticsHeading: null,
+      aestheticsBody: null,
       storyHeading: "قصتنا",
       story:
-        "افتُتحت عيادتنا في 4 يوليو 2022 في حي ويست سبرينغز، وما زالت تستقبل مرضى بدون موعد مسبق منذ ذلك الحين. أسّسها الدكتور محمد فرحات بخبرة تتجاوز 28 عامًا في طب الأسرة، وتضم عيادة بلو دايموند اليوم ستة أطباء أسرة، وتواصل نموها بخطى ثابتة وآمنة.",
+        "افتُتحت عيادتنا في 4 يوليو 2022 في حي ويست سبرينغز، وما زالت تستقبل مرضى بدون موعد مسبق منذ ذلك الحين. أسّسها الدكتور محمد فرحات بخبرة تتجاوز 30 عامًا في طب الأسرة، وتضم عيادة بلو دايموند اليوم ستة أطباء أسرة، وتواصل نموها بخطى ثابتة وآمنة.",
       teamCta: "تعرّفوا على فريقنا",
     },
   }[locale];
@@ -124,6 +140,19 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
       <Container className="max-w-3xl">
         <h2 data-reveal="up" className="text-h3 font-heading">{copy.missionHeading}</h2>
         <p data-reveal="up" className="mt-3 text-body-lg text-text-secondary">{copy.mission}</p>
+
+        {/* CL-031 — placed after the mission/introduction and before the
+            team-facing content, which is where the client asked for it. */}
+        {copy.aestheticsHeading && copy.aestheticsBody ? (
+          <section>
+            <h2 data-reveal="up" className="mt-10 text-h3 font-heading">{copy.aestheticsHeading}</h2>
+            {copy.aestheticsBody.map((paragraph) => (
+              <p key={paragraph.slice(0, 24)} data-reveal="up" className="mt-3 text-body-lg text-text-secondary">
+                {paragraph}
+              </p>
+            ))}
+          </section>
+        ) : null}
 
         <h2 data-reveal="up" className="mt-10 text-h3 font-heading">{copy.storyHeading}</h2>
         <p data-reveal="up" className="mt-3 text-body-lg text-text-secondary">{copy.story}</p>

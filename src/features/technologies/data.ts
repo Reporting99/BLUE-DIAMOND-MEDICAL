@@ -60,8 +60,8 @@ export const technologies: Technology[] = [
       {
         question: { en: "How do I book a consultation for a treatment using this device?", ar: "كيف أحجز استشارة لعلاج يستخدم هذا الجهاز؟" },
         answer: {
-          en: "Book a consultation through Jane App — see the laser hair removal treatment page for the direct link.",
-          ar: "احجزوا استشارة عبر تطبيق Jane — راجعوا صفحة علاج إزالة الشعر بالليزر للرابط المباشر.",
+          en: "Book a consultation through Mikata — see the laser hair removal treatment page for the direct link.",
+          ar: "احجزوا استشارة عبر نظام Mikata — راجعوا صفحة علاج إزالة الشعر بالليزر للرابط المباشر.",
         },
       },
     ],

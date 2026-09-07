@@ -1,17 +1,18 @@
 import type { Metadata } from "next";
 import { Container } from "@/components/layout/Container";
-import { PageHero } from "@/components/layout/PageHero";
+import { AestheticsHero } from "@/features/aesthetics/components/AestheticsHero";
 import { SectionTransition } from "@/components/layout/SectionTransition";
 import { Button } from "@/components/ui/button";
 import { isLocale, type Locale } from "@/i18n/config";
 import { getRouteMetadata } from "@/lib/seo/metadata";
 import { getBookingUrl } from "@/config/booking";
+import { siteConfig } from "@/config/site";
 
 /** Single source for this page's description: consumed by both generateMetadata
  * and the page's JSON-LD node, so the two can never drift apart (brief §9). */
 const PAGE_DESCRIPTION = {
-      en: "Medical Botox for migraine, hyperhidrosis, and bruxism, plus cosmetic Botox — administered by Dr. Farhat at Blue Diamond Medical Clinic.",
-      ar: "بوتوكس طبي لعلاج الشقيقة والتعرق الزائد وصرير الأسنان، إلى جانب البوتوكس التجميلي — يُجريه الدكتور فرحات في عيادة بلو دايموند الطبية.",
+      en: "Medical Botox for migraine, hyperhidrosis, and bruxism at Blue Diamond Medical Clinic. Cosmetic Botox is provided by Dr. Mohamed Farhat and Dr. Reem Hamdi.",
+      ar: "بوتوكس طبي لعلاج الشقيقة والتعرق الزائد وصرير الأسنان في عيادة بلو دايموند الطبية. ويقدّم البوتوكس التجميلي الدكتور محمد فرحات والدكتورة ريم حمدي.",
     } as const;
 
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
@@ -22,6 +23,17 @@ import { resolvePageHeroImage } from "@/lib/feelstack/page-hero-media";
 const medicalConditions = {
   en: ["Migraine treatment", "Hyperhidrosis", "Bruxism (TMJ) & jaw pain"],
   ar: ["علاج الشقيقة (الصداع النصفي)", "التعرق الزائد", "صرير الأسنان (TMJ) وألم الفك"],
+};
+
+/**
+ * CL-024 — cosmetic Botox is the ONE stated provider-specific exception.
+ * It names both approved providers. This restriction is about cosmetic Botox
+ * only: it says nothing about chronic care, minor procedures or general
+ * family medicine, all of which every clinic family physician provides.
+ */
+const cosmeticProviders = {
+  en: "Cosmetic Botox is provided by Dr. Mohamed Farhat and Dr. Reem Hamdi.",
+  ar: "يقدّم البوتوكس التجميلي كل من الدكتور محمد فرحات والدكتورة ريم حمدي.",
 };
 
 const cosmeticAreas = {
@@ -68,22 +80,31 @@ export default async function BotoxHubPage({ params }: { params: Promise<{ local
     en: {
       title: "Botox",
       intro:
-        "Dr. Farhat is highly skilled in administering Botox for both medical and cosmetic purposes. Every treatment begins with a consultation — most procedures are efficient \"lunchtime\" visits with minimal recovery time.",
+        "Dr. Farhat and Dr. Hamdi are both highly skilled in administering Botox. Every treatment begins with a consultation — most procedures are efficient \"lunchtime\" visits with minimal recovery time.",
       coverageNote:
         "Botox for migraines, bruxism, and hyperhidrosis is covered by a combination of provincial health insurance and either private insurance or the clinic's compassionate program, open to all Albertans whether registered with the clinic or not.",
       medicalHeading: "Medical Botox",
       cosmeticHeading: "Cosmetic Botox",
       cta: "Call to book",
+      /* The Botox-only phone sentence that used to sit here is gone: it
+         labelled the general medical number as a Botox booking line. Both
+         published lines are now stated with their real purpose. */
+      contactHeading: "Contact us",
+      medicalLabel: "Medical Clinic",
+      aestheticLabel: "Aesthetic Clinic",
     },
     ar: {
       title: "البوتوكس",
       intro:
-        "يتمتع الدكتور فرحات بمهارة عالية في إجراء البوتوكس لأغراض طبية وتجميلية. يبدأ كل علاج باستشارة — ومعظم الإجراءات سريعة ولا تحتاج إلا لوقت تعافٍ قصير.",
+        "يتمتع الدكتور فرحات والدكتورة ريم حمدي بمهارة عالية في إجراء البوتوكس. يبدأ كل علاج باستشارة — ومعظم الإجراءات سريعة ولا تحتاج إلا لوقت تعافٍ قصير.",
       coverageNote:
         "يُغطّى بوتوكس الشقيقة وصرير الأسنان والتعرق الزائد جزئيًا بالتأمين الصحي الحكومي، إلى جانب التأمين الخاص أو برنامج العيادة التعاطفي، وهو متاح لجميع سكان ألبرتا سواء كانوا مسجّلين في العيادة أم لا.",
       medicalHeading: "البوتوكس الطبي",
       cosmeticHeading: "البوتوكس التجميلي",
       cta: "اتصل للحجز",
+      contactHeading: "تواصلوا معنا",
+      medicalLabel: "العيادة الطبية",
+      aestheticLabel: "عيادة التجميل",
     },
   }[locale];
 
@@ -99,7 +120,7 @@ export default async function BotoxHubPage({ params }: { params: Promise<{ local
         description={PAGE_DESCRIPTION[locale]}
         path={ownRoute.path[locale]}
       />
-      <PageHero
+      <AestheticsHero
         locale={locale}
         title={copy.title}
         body={copy.intro}
@@ -112,8 +133,8 @@ export default async function BotoxHubPage({ params }: { params: Promise<{ local
         }}
         breadcrumbs={<Breadcrumbs locale={locale} items={[{ label: ownRoute.title[locale] }]} />}
         actions={
-          <Button size="lg" render={<a href={phone.href} />}>
-            {copy.cta}: <span className="ltr-run ms-1">825 413 1113</span>
+          <Button size="lg" render={<a href={phone.href!} />}>
+            {copy.cta}: <span className="ltr-run ms-1">{siteConfig.clinic.phoneDisplay}</span>
           </Button>
         }
       />
@@ -139,9 +160,37 @@ export default async function BotoxHubPage({ params }: { params: Promise<{ local
                 </li>
               ))}
             </ul>
+            {/* CL-042 — both published lines, each labelled with what it
+                answers, so neither number reads as a Botox-only or a
+                single-purpose line. Numbers come from siteConfig, never
+                hardcoded. */}
+            <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:gap-10">
+              <div>
+                <p className="text-sm text-text-secondary">{copy.medicalLabel}</p>
+                <a
+                  href={`tel:${siteConfig.clinic.phone}`}
+                  className="ltr-run text-sm font-medium text-primary underline-offset-4 hover:underline"
+                >
+                  {siteConfig.clinic.phoneDisplay}
+                </a>
+              </div>
+              <div>
+                <p className="text-sm text-text-secondary">{copy.aestheticLabel}</p>
+                <a
+                  href={`tel:${siteConfig.aesthetics.phone}`}
+                  className="ltr-run text-sm font-medium text-primary underline-offset-4 hover:underline"
+                >
+                  {siteConfig.aesthetics.phoneDisplay}
+                </a>
+              </div>
+            </div>
           </div>
           <div data-reveal="up" data-reveal-delay="1">
             <h2 className="text-h3 font-heading">{copy.cosmeticHeading}</h2>
+            {/* CL-024 — both approved cosmetic-Botox providers, named. */}
+            <p className="mt-3 rounded-md border border-border bg-surface px-4 py-3 text-sm">
+              {cosmeticProviders[locale]}
+            </p>
             <ul className="mt-4 flex flex-wrap gap-2">
               {cosmeticAreas[locale].map((item) => (
                 <li key={item} className="rounded-full border border-border px-3 py-1.5 text-sm">

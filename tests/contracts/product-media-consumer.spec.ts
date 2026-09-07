@@ -78,10 +78,30 @@ test("a product with no assignment renders a placeholder, never an image", () =>
 });
 
 test("no static product record fabricates an ImageKit path", () => {
-  // The static catalogue is a fallback for products the CMS has not reached.
-  // A fallback may say "no image"; it may not claim to know where one lives.
+  // This guard was written when the static catalogue GUESSED paths like
+  // `/blue-diamond/products/skinmedica/<slug>.jpg`, a location no asset ever
+  // occupied. The rule it encoded — "a fallback may say 'no image'; it may
+  // not claim to know where one lives" — was right for a guess.
+  //
+  // CL-042 changed the fact, not the principle. The 31 Myriade packshots were
+  // uploaded to ImageKit through FeelStack, checksum-verified on both sides
+  // and individually confirmed to return 200; their paths are recorded in
+  // evidence/myriade-media-mapping.json. Those are known locations, not
+  // guesses, so they may be stated and approved.
+  //
+  // The principle now reads: a static path is allowed ONLY under the verified
+  // Myriade packshot prefix. SkinMedica records must stay pathless, because
+  // their imagery still comes from CMS assignments and a static path there
+  // would be the original bug returning.
+  const VERIFIED_PREFIX = "/blue-diamond/products/myriade/";
   for (const product of products) {
     for (const image of product.images) {
+      if (product.brandId === "myriade" && image.path) {
+        expect(image.path, `${product.id} must use a verified packshot path`).toContain(
+          VERIFIED_PREFIX,
+        );
+        continue;
+      }
       expect(image.path, `${product.id} must not guess an image path`).toBe("");
       expect(image.status, `${product.id} static record must stay unapproved`).not.toBe("approved");
     }

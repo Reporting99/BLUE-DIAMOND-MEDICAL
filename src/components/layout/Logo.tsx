@@ -1,38 +1,50 @@
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import type { Locale } from "@/types/media";
+import { brandMark } from "@/lib/media/brand-mark";
 
 /**
- * Inline recreation of the approved Blue Diamond Medical mark (4-facet
- * diamond + heartbeat line, 4-blue variant), built to the exact facet
- * numbering and RGB values in BLUE DIAMOND LOGO DOCUMENT[10519].pdf.
+ * The approved Blue Diamond Medical mark, as supplied by the client on
+ * 2026-09-06 — docs/MEDIA.md CL-001. This replaced the inline SVG stand-in
+ * that recreated the mark from the brand PDF's coordinates; that recreation
+ * is gone and must not come back.
  *
- * This is a functional stand-in until Decca Design Inc.'s master vector
- * file (SVG/EPS) is supplied — see docs/MEDIA.md. It
- * must be swapped for the real file before launch and must never be
- * redrawn, recolored, or modified beyond that swap — docs/UI_UX_FOUNDATION.md §1.1.
+ * The asset is the client's own file with the render's black field cut away
+ * to transparency, so it sits on the white header, the dark blue footer and
+ * the About hero alike. Every pixel of the diamond is theirs — nothing is
+ * redrawn, recolored, or restyled, per docs/UI_UX_FOUNDATION.md §1.1. See
+ * src/assets/brand/README.md for the source file, its checksum and how the
+ * cut-out was derived.
+ *
+ * Served from ImageKit on the client's instruction (2026-09-07). Which URL
+ * that is -- the CDN copy or the one bundled in the build -- is decided once
+ * in `src/lib/media/brand-mark.ts`, not here; this component only draws it.
+ *
+ * A bare `<img>`, not `ImageKitImage` and not `next/image`. This is the one
+ * image on the site that is neither: `ImageKitImage` renders the FacetTile
+ * placeholder for anything that is not an approved ImageKit asset, and an
+ * abstract tile where the clinic's logo should be reads as a broken header
+ * rather than a missing photograph; `next/image` is banned in `src/` outright
+ * (tests/unit/image-usage.spec.ts) because content imagery must go through
+ * ImageKit's own loader, and this is not content imagery. `width`/`height`
+ * carry the mark's aspect so nothing shifts while it loads, and
+ * `loading="eager"` because the header lock-up is above the fold on every
+ * route.
  */
 export function DiamondMark({ className }: { className?: string }) {
   return (
-    <svg
-      viewBox="0 0 100 130"
-      className={className}
-      role="img"
+    // The brand mark is deliberately not routed through next/image — see above.
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={brandMark.src}
+      width={brandMark.width}
+      height={brandMark.height}
+      alt=""
       aria-hidden="true"
-    >
-      <polygon points="50,5 50,65 5,65" fill="#88B9D7" />
-      <polygon points="50,5 95,65 50,65" fill="#5999BF" />
-      <polygon points="50,65 5,65 50,125" fill="#1D5678" />
-      <polygon points="50,65 50,125 95,65" fill="#296589" />
-      <path
-        d="M 50 15 L 50 50 L 40 50 L 46 38 L 54 68 L 60 50 L 50 50 L 50 115"
-        fill="none"
-        stroke="#FFFFFF"
-        strokeWidth="3.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
+      className={className}
+      loading="eager"
+      decoding="async"
+    />
   );
 }
 
@@ -72,8 +84,11 @@ export function Logo({
  *
  * It is not a second logo and nothing here is redrawn: it is `DiamondMark`
  * plus the same wordmark, in the same order, the same `--blue-3`, and the
- * same proportions the header sets — mark width 1.648× the wordmark's font
- * size (27.69/16.8), gap 0.595× (10/16.8). Those two ratios are the only
+ * same proportions the header sets — mark width 1.831× the wordmark's font
+ * size (30.76/16.8), gap 0.595× (10/16.8). The mark ratio moved from 1.648
+ * when the inline SVG's 100:130 box was replaced by the supplied asset's
+ * 440:515: the header sizes the mark by height (`h-9`), so a wider asset at
+ * the same height is a wider mark, and this lock-up has to follow it. Those two ratios are the only
  * reason this is a component rather than a `className` on `Logo`: scaling a
  * lock-up whose parts are pinned in px (`h-9`, `gap-2.5`, `1.05rem`) means
  * re-spacing it by hand at every size, and re-spacing the lock-up is exactly
@@ -81,8 +96,8 @@ export function Logo({
  * variable keeps the geometry identical at any size.
  *
  * Callers set `--bd-lockup` to the lock-up's *rendered* width; everything
- * else follows from it, so `height` is never specified and the mark's 100:130
- * viewBox ratio is what decides it. The three coefficients below are the two
+ * else follows from it, so `height` is never specified and the mark asset's
+ * own 440:515 ratio is what decides it. The three coefficients below are the two
  * ratios above divided through by the wordmark's measured advance width
  * (~10.1em in IBM Plex Sans SemiBold at `tracking-tight`), which is what makes
  * the box come out at `--bd-lockup` rather than a tenth under it.
@@ -100,7 +115,7 @@ export function BrandLockup({ locale, className }: { locale: Locale; className?:
       className={cn("flex items-center", className)}
       style={{ gap: "calc(var(--bd-lockup) * 0.0493)" }}
     >
-      <span className="block shrink-0" style={{ width: "calc(var(--bd-lockup) * 0.1367)" }}>
+      <span className="block shrink-0" style={{ width: "calc(var(--bd-lockup) * 0.1518)" }}>
         <DiamondMark className="block h-auto w-full" />
       </span>
       <span

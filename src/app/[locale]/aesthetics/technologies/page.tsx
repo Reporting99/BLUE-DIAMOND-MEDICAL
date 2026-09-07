@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Container } from "@/components/layout/Container";
-import { PageHero } from "@/components/layout/PageHero";
+import { AestheticsHero } from "@/features/aesthetics/components/AestheticsHero";
+import { getBookingUrl } from "@/config/booking";
+import { Button } from "@/components/ui/button";
 import { SectionTransition } from "@/components/layout/SectionTransition";
 import { MediaCard } from "@/components/shared/MediaCard";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
@@ -35,6 +37,7 @@ export async function generateMetadata({
 export default async function TechnologiesHubPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale: rawLocale } = await params;
   const locale: Locale = isLocale(rawLocale) ? rawLocale : "en";
+  const consult = getBookingUrl("aesthetics-consultation");
   const aestheticsRoute = getRoute("aesthetics-hub")!;
   const title = locale === "ar" ? "التقنيات" : "Technologies";
   const intro =
@@ -71,13 +74,22 @@ export default async function TechnologiesHubPage({ params }: { params: Promise<
         path={ownRoute.path[locale]}
         items={listItems}
       />
-      <PageHero
+      <AestheticsHero
         locale={locale}
         title={title}
         body={intro}
         image={hero}
         imageRole="technology"
         seed="technologies-hub"
+        /* CL-033 — the same approved consultation CTA the parent Aesthetics
+           hub and every detail page already use. Nothing new is authored: the
+           label and destination both come from config/booking.ts, so the split
+           hero's copy column carries an action on every Aesthetics route. */
+        actions={
+          <Button size="lg" render={<a href={consult.href!} target="_blank" rel="noopener noreferrer" />}>
+            {consult.label[locale]}
+          </Button>
+        }
         imageAlt={{
           en: "An abstract blue diamond above concentric rings of light",
           ar: "ماسة زرقاء مجردة فوق حلقات ضوئية متحدة المركز",

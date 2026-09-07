@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Container } from "@/components/layout/Container";
-import { PageHero } from "@/components/layout/PageHero";
+import { AestheticsHero } from "@/features/aesthetics/components/AestheticsHero";
 import { SectionTransition } from "@/components/layout/SectionTransition";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
 import { isLocale, type Locale } from "@/i18n/config";
@@ -10,6 +10,8 @@ import { features } from "@/config/features";
 import { aestheticsPricingGroups, PricingTable } from "@/features/aesthetics";
 import { getRouteMetadata } from "@/lib/seo/metadata";
 import { resolvePageHeroImage } from "@/lib/feelstack/page-hero-media";
+import { Button } from "@/components/ui/button";
+import { getBookingUrl } from "@/config/booking";
 
 /**
  * The published aesthetic price list — every `publicDisplay` row of the
@@ -54,12 +56,13 @@ export default async function AestheticsPricingPage({ params }: { params: Promis
       : "Customized treatment packages are available based on individual client needs. Please contact our team for a personalized treatment plan and package pricing.";
   const ownRoute = getRoute("aesthetics-pricing")!;
   const hero = await resolvePageHeroImage(ownRoute.path.en, locale);
+  const consult = getBookingUrl("aesthetics-consultation");
 
   return (
     <>
       {/* Compact: a price list is a reference document, and a full-height
           hero above it puts the first row of prices below the fold. */}
-      <PageHero
+      <AestheticsHero
         locale={locale}
         title={title}
         body={intro}
@@ -70,8 +73,12 @@ export default async function AestheticsPricingPage({ params }: { params: Promis
           en: "Consultation room at Blue Diamond Medical Aesthetics",
           ar: "غرفة الاستشارات في بلو دايموند للتجميل الطبي",
         }}
+        actions={
+          <Button size="lg" render={<a href={consult.href!} target="_blank" rel="noopener noreferrer" />}>
+            {consult.label[locale]}
+          </Button>
+        }
         breadcrumbs={<Breadcrumbs locale={locale} items={[{ label: aestheticsRoute.title[locale], href: href("aesthetics-hub", locale) }, { label: title }]} />}
-        size="compact"
       />
 
       <section className="section-y">

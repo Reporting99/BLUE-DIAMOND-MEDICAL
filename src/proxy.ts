@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { defaultLocale, isLocale } from "@/i18n/config";
-import { legacyRedirects } from "@/lib/routing";
+import { legacyRedirects, movedRoutes } from "@/lib/routing";
 import { routes } from "@/lib/routing";
 import { localizedEntityRoutes } from "@/config/localized-entity-routes.generated";
 import { isSiteLaunched, PRE_LAUNCH_ROBOTS_HEADER } from "@/config/launch";
@@ -75,9 +75,21 @@ const englishSlugToArabicPath = new Map(
  * It is set on the REQUEST headers of the rewrite only. No Server Component
  * reads it, so it cannot flip a statically prerendered route to dynamic the
  * way a headers() call in not-found.tsx did.
+ *
+ * It is generated LAZILY, on the first request that needs it, rather than at
+ * module load. Some runtimes refuse to evaluate a module that draws randomness
+ * in global scope, and a top-level crypto.randomUUID() would make this proxy --
+ * and therefore the whole app -- unbootable there. Deferring costs one nullish
+ * check per rewrite and changes nothing else: the value is still generated once
+ * per process, still never appears in any response, and is still unguessable,
+ * so the client-controllable-marker hole stays closed.
  */
 const ARABIC_REWRITE_MARKER = "x-bd-arabic-rewrite";
-const ARABIC_REWRITE_NONCE = crypto.randomUUID();
+let cachedArabicRewriteNonce: string | undefined;
+
+function arabicRewriteNonce(): string {
+  return (cachedArabicRewriteNonce ??= crypto.randomUUID());
+}
 
 /**
  * Stamps the pre-launch noindex header on every response this proxy returns.
@@ -182,6 +194,19 @@ export function proxy(request: NextRequest) {
     return withIndexingGuard(NextResponse.redirect(url, 301));
   }
 
+  // 1a. URLs this app itself used to serve and has since moved — currently
+  // the concern pages, which left /aesthetics/concerns when the Aesthetics IA
+  // became concern-first. Checked here, immediately after the legacy table and
+  // before locale handling, for the same reason: an old path must never
+  // round-trip through the Arabic rewrite, which would try to resolve it
+  // against a folder that no longer exists. Exact match, one hop, no chains.
+  const movedTarget = movedRoutes[decodedPathname] ?? movedRoutes[pathname];
+  if (movedTarget) {
+    const url = new URL(movedTarget, request.url);
+    if (search) url.search = search;
+    return withIndexingGuard(NextResponse.redirect(url, 301));
+  }
+
   // 1b. Safety net for the legacy SkinMedica sub-page collection
   // (/about-skinmedica-products/f/<product-slug>) — brief §3 forbids
   // leaving any discovered legacy URL as a 404. Known slugs are mapped
@@ -225,7 +250,7 @@ export function proxy(request: NextRequest) {
       // exactly such a path -- redirecting it would bounce straight back and
       // loop.
       const alreadyRewritten =
-        request.headers.get(ARABIC_REWRITE_MARKER) === ARABIC_REWRITE_NONCE;
+        request.headers.get(ARABIC_REWRITE_MARKER) === arabicRewriteNonce();
       const approvedArabic = alreadyRewritten
         ? undefined
         : englishSlugToArabicPath.get(withoutLocale);
@@ -240,7 +265,7 @@ export function proxy(request: NextRequest) {
         const url = new URL(`/ar${canonical}`, request.url);
         if (search) url.search = search;
         const headers = new Headers(request.headers);
-        headers.set(ARABIC_REWRITE_MARKER, ARABIC_REWRITE_NONCE);
+        headers.set(ARABIC_REWRITE_MARKER, arabicRewriteNonce());
         return withIndexingGuard(
           NextResponse.rewrite(url, { request: { headers } }),
         );

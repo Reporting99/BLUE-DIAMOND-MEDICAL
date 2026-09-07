@@ -3,6 +3,7 @@ import { defineEntityContract, localizedBilingual, localizedBilingualList, adapt
 import { resolveSlotImage } from "@/lib/feelstack/media-slots";
 import type { BookingChannel } from "@/config/booking";
 import type { MedicalServiceContent } from "./types";
+import { medicalServices } from "./data";
 
 /**
  * MedicalServiceContent <- FeelStack `medical-service` content type.
@@ -26,7 +27,8 @@ import type { MedicalServiceContent } from "./types";
  * not one free-form metadata blob.
  */
 
-const bookingChannelSchema = z.enum(["family-doctor", "eye-screening", "phone-medical-botox"]);
+// "minor-procedures" — CL-018: phone/in-person only, no online booking.
+const bookingChannelSchema = z.enum(["family-doctor", "eye-screening", "phone-medical-botox", "minor-procedures"]);
 
 export const medicalServiceFieldsSchema = z.object({
   service_id: z.string().min(1),
@@ -58,6 +60,46 @@ export const medicalServiceFieldsSchema = z.object({
 
 export type MedicalServiceFields = z.infer<typeof medicalServiceFieldsSchema>;
 
+/**
+ * CL-018 — the booking channel is CLINICAL POLICY, not editable copy.
+ *
+ * `FEELSTACK_CONTENT_MODE=hybrid` lets a CMS record override the static one,
+ * which is right for wording and wrong for a rule the change register exists
+ * to enforce. This was not hypothetical: the published CMS record for
+ * `/medical/minor-procedures` still carried `booking_channel: "family-doctor"`,
+ * so the page offered "Book with your doctor" and a walk-in queue link on the
+ * one service the client said must never be bookable online — silently
+ * re-opening CL-018 while this repository's own data was correct.
+ *
+ * So for any service this repository defines, the STATIC channel wins. An
+ * editor can still change every word on the page; they cannot re-route a
+ * procedure into an online queue. A service the CMS knows about and we do not
+ * keeps the CMS value, since there is no policy here to defend.
+ *
+ * THE STORED VALUE IS STILL WRONG, AND THIS IS NOT THE FIX FOR THAT.
+ *
+ * Re-checked 2026-09-07 against the live resolver: `/medical/minor-procedures`
+ * and its Arabic counterpart still hold `booking_channel: "family-doctor"`.
+ * OP-002 and OP-012 in content/feelstack/republish-operations.json correct
+ * them to "minor-procedures"; both report READY, and both are among the six
+ * operations still waiting on a publisher identity. So the data and the
+ * rendered behaviour disagree today, and what closes that gap is applying
+ * those two operations -- not deleting this function.
+ *
+ * This override is deliberately NOT temporary and must survive that fix. It
+ * defends a clinical rule against the next edit, not against one stale row: an
+ * editor with legitimate CMS access can set booking_channel to anything the
+ * schema allows, and "the field happens to be right today" is not a control.
+ * Removing it once the data is corrected would re-open CL-018 the first time
+ * someone changes that field for a reason that looks sensible in an admin UI.
+ */
+function authoritativeBookingChannel(serviceId: string, fromCms: BookingChannel): BookingChannel {
+  // Matched on id, which is what the CMS field carries. ids and slugs happen
+  // to be identical today; relying on that would break silently if one changed.
+  const known = medicalServices.find((service) => service.id === serviceId);
+  return known ? known.bookingChannel : fromCms;
+}
+
 export const medicalServiceCmsContract = defineEntityContract<MedicalServiceFields, MedicalServiceContent>({
   contentType: "medical-service",
   fields: medicalServiceFieldsSchema,
@@ -72,7 +114,7 @@ export const medicalServiceCmsContract = defineEntityContract<MedicalServiceFiel
       title: localizedBilingual(locale, title ?? ""),
       summary: localizedBilingual(locale, f.summary),
       relatedDoctorIds: f.related_doctor_ids ?? [],
-      bookingChannel: f.booking_channel as BookingChannel,
+      bookingChannel: authoritativeBookingChannel(f.service_id, f.booking_channel as BookingChannel),
       sourceVerified: f.source_verified,
     };
     if (f.who_its_for) service.whoItsFor = localizedBilingual(locale, f.who_its_for);

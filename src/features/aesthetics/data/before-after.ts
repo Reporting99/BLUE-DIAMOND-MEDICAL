@@ -274,7 +274,11 @@ export const beforeAfterPairs: BeforeAfterPair[] = [
     approvalStatus: "approved",
   },
   {
-    pairId: "prp-skin-rejuvenation-01",
+    // The pair id names the treatment this scalp-density pair belongs to.
+    // Its two CDN files keep their historical `prp-skin-rejuvenation-01-*`
+    // names — those are storage keys that were checksum-verified on upload,
+    // not a claim about which treatment the pair shows.
+    pairId: "prp-hair-restoration-01",
     treatmentId: "prp-hair-restoration",
     description: { en: "Clinical example published on Blue Diamond’s original PRP therapy page.", ar: "مثال سريري كان منشورًا على صفحة العلاج بالبلازما في موقع بلو دايموند الأصلي." },
     before: {

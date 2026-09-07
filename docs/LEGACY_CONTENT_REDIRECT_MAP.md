@@ -52,7 +52,7 @@ driven by the same table so the two never drift.
 |---|---|---|---|---|---|
 | bluediamondmedicalaesthetics.ca | `/` | `https://bluediamondmedical.ca/en/aesthetics` | 301 **PROPOSED** | Domain root currently has no mapping. Without it the whole aesthetics site keeps resolving as a second canonical website | Yes — highest priority test |
 | bluediamondmedicalaesthetics.ca | `/treatments` | `/en/aesthetics/treatments` | 301 (Live) | Treatments hub | Yes |
-| bluediamondmedicalaesthetics.ca | `/area-concern` | `/en/aesthetics/concerns` | 301 (Live) | Legacy page was a JS hover module with no body content; the Concerns hub is the real equivalent | Yes |
+| bluediamondmedicalaesthetics.ca | `/area-concern` | `/en/aesthetics/treatments` | 301 (Live) | Legacy page was a JS hover module with no body content; the Concerns hub is the real equivalent | Yes |
 | bluediamondmedicalaesthetics.ca | `/laser-hair-removal` | `/en/aesthetics/treatments/laser-hair-removal` | 301 (Live) | Direct match | Yes |
 | bluediamondmedicalaesthetics.ca | `/laser-treatment-1` | `/en/aesthetics/treatments/laser-skin-treatments` | 301 (Live) | `-1` suffix retired | Yes |
 | bluediamondmedicalaesthetics.ca | `/radio-frequency` | `/en/aesthetics/treatments/radio-frequency` | 301 (Live) | Direct match | Yes |
@@ -63,15 +63,15 @@ driven by the same table so the two never drift.
 | bluediamondmedicalaesthetics.ca | `/vitalia` | `/en/aesthetics/treatments/tempsure-vitalia` | 301 (Live) | Real pelvic-floor/RF content found by live crawl; matches the approved Vitalia treatment | Yes |
 | bluediamondmedicalaesthetics.ca | `/our-technologies` | `/en/aesthetics/technologies` | 301 (Live) | Technologies hub | Yes |
 | bluediamondmedicalaesthetics.ca | `/our-team` | `/en/our-team` | 301 **PROPOSED** | Cross-host equivalent of the Site A rule; the two duplicate biographies now live on the canonical doctor index | Yes |
-| bluediamondmedicalaesthetics.ca | `/acne-scar-removal` | `/en/aesthetics/concerns/acne-scars` | 301 (Live) | Reclassified treatment → concern | Yes |
-| bluediamondmedicalaesthetics.ca | `/rosacea-abatement` | `/en/aesthetics/concerns/rosacea-redness` | 301 (Live) | Reclassified treatment → concern | Yes |
-| bluediamondmedicalaesthetics.ca | `/dry-skin-remediation` | `/en/aesthetics/concerns/dry-skin` | 301 (Live) | Reclassified treatment → concern | Yes |
-| bluediamondmedicalaesthetics.ca | `/fineline-and-wrinkle` | `/en/aesthetics/concerns/fine-lines-wrinkles` | 301 (Live) | Reclassified treatment → concern | Yes |
-| bluediamondmedicalaesthetics.ca | `/non-invasive-skin` | `/en/aesthetics/concerns/skin-laxity` | 301 (Live) | Reclassified; the concern is skin laxity, not the modality | Yes |
-| bluediamondmedicalaesthetics.ca | `/spider-vein` | `/en/aesthetics/concerns/spider-veins` | 301 (Live) | Reclassified treatment → concern | Yes |
-| bluediamondmedicalaesthetics.ca | `/sun-damage` | `/en/aesthetics/concerns/sun-damage-pigmentation` | 301 (Live) | Reclassified treatment → concern | Yes |
-| bluediamondmedicalaesthetics.ca | `/skin-revitalization` | `/en/aesthetics/concerns/skin-revitalization` | 301 (Live) | Reclassified treatment → concern | Yes |
-| bluediamondmedicalaesthetics.ca | `/razor-bumps` | `/en/aesthetics/concerns/razor-bumps` | 301 (Live) | Reclassified treatment → concern | Yes |
+| bluediamondmedicalaesthetics.ca | `/acne-scar-removal` | `/en/aesthetics/treatments/acne-scars` | 301 (Live) | Reclassified treatment → concern | Yes |
+| bluediamondmedicalaesthetics.ca | `/rosacea-abatement` | `/en/aesthetics/treatments/rosacea-redness` | 301 (Live) | Reclassified treatment → concern | Yes |
+| bluediamondmedicalaesthetics.ca | `/dry-skin-remediation` | `/en/aesthetics/treatments/dry-skin` | 301 (Live) | Reclassified treatment → concern | Yes |
+| bluediamondmedicalaesthetics.ca | `/fineline-and-wrinkle` | `/en/aesthetics/treatments/fine-lines-wrinkles` | 301 (Live) | Reclassified treatment → concern | Yes |
+| bluediamondmedicalaesthetics.ca | `/non-invasive-skin` | `/en/aesthetics/treatments/skin-laxity` | 301 (Live) | Reclassified; the concern is skin laxity, not the modality | Yes |
+| bluediamondmedicalaesthetics.ca | `/spider-vein` | `/en/aesthetics/treatments/spider-veins` | 301 (Live) | Reclassified treatment → concern | Yes |
+| bluediamondmedicalaesthetics.ca | `/sun-damage` | `/en/aesthetics/treatments/sun-damage-pigmentation` | 301 (Live) | Reclassified treatment → concern | Yes |
+| bluediamondmedicalaesthetics.ca | `/skin-revitalization` | `/en/aesthetics/treatments/skin-revitalization` | 301 (Live) | Reclassified treatment → concern | Yes |
+| bluediamondmedicalaesthetics.ca | `/razor-bumps` | `/en/aesthetics/treatments/razor-bumps` | 301 (Live) | Reclassified treatment → concern | Yes |
 | bluediamondmedicalaesthetics.ca | `/terms-and-conditions` | `/en/terms` | 301 (Live) | Points at the real final canonical route. **Currently resolves through the gated 404 boundary** because no approved legal copy exists — more honest than landing a visitor on an unrelated marketing page. Must be re-tested the moment `legalPagesEnabled` flips | Yes — re-test on flag flip (GAP-001) |
 | bluediamondmedicalaesthetics.ca | `/privacy-policy` | `/en/privacy-policy` | 301 (Live) | Same as above | Yes — re-test on flag flip (GAP-002) |
 
@@ -93,7 +93,7 @@ driven by the same table so the two never drift.
 | A12 Products | Redirect → hub (+ 6 per-product legacy redirects) | `/en/shop` |
 | B1 Home | Redirect → hub | `/en/aesthetics` |
 | B2 Treatments | Redirect → hub | `/en/aesthetics/treatments` |
-| B3 Area Concern | **Redirect-only** (no publishable content) | `/en/aesthetics/concerns` |
+| B3 Area Concern | **Redirect-only** (no publishable content) | `/en/aesthetics/treatments` |
 | B4 Laser Hair Removal | Redirect → detail page | `/en/aesthetics/treatments/laser-hair-removal` |
 | B5 Laser Treatment | Redirect → detail page | `/en/aesthetics/treatments/laser-skin-treatments` |
 | B6 Radio Frequency | Redirect → detail page | `/en/aesthetics/treatments/radio-frequency` |
@@ -102,7 +102,7 @@ driven by the same table so the two never drift.
 | B9 PRP Therapy | Redirect → detail page (content split across 2) | `/en/aesthetics/treatments/prp-skin-rejuvenation` |
 | B10 Our Technologies | Redirect → hub | `/en/aesthetics/technologies` |
 | B11 Our Team | **Redirect-only** (duplicate content merged) | `/en/our-team` |
-| B12–B20 (9 concern pages) | Redirect → detail page | `/en/aesthetics/concerns/*` |
+| B12–B20 (9 concern pages) | Redirect → detail page | `/en/aesthetics/treatments/*` |
 | B21 Terms and Conditions | **Redirect-only, gated target** | `/en/terms` |
 | B22 Privacy Policy | **Redirect-only, gated target** | `/en/privacy-policy` |
 

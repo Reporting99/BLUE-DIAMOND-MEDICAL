@@ -44,7 +44,7 @@ export function SiteClosingExperience({ locale, variant = "light" }: { locale: L
 
   return (
     <section
-      className="relative isolate overflow-hidden px-4 py-[clamp(2.75rem,5.5vw,4.75rem)] text-center lg:px-6"
+      className="relative isolate overflow-hidden px-4 py-[clamp(0.75rem,1.5vw,1rem)] text-center lg:px-6"
       style={{
         background: `radial-gradient(ellipse at 18% 12%, rgba(136,185,215,0.26) 0%, rgba(136,185,215,0.09) 34%, transparent 62%),
           radial-gradient(ellipse at 84% 60%, rgba(89,153,191,0.18) 0%, transparent 55%),

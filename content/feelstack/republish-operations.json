@@ -1,0 +1,883 @@
+{
+  "generatedAt": "2026-09-06T19:52:35.694Z",
+  "generator": "regenerated deterministically from evidence/cms-live/{raw,approved-static}.json — approved static record vs live published CMS, field by field, the same comparison tests/contracts/{medical-service,doctor}-canary.spec.ts assert",
+  "siteKey": "blue-diamond-medical",
+  "baselineCapture": {
+    "capturedAt": "2026-09-06T19:52:35.694Z",
+    "source": "GET /public/v1/sites/blue-diamond-medical/resolve (public, unauthenticated)"
+  },
+  "counts": {
+    "applicable": 63,
+    "excluded": 6
+  },
+  "operations": [
+    {
+      "opId": "OP-001",
+      "applicable": true,
+      "kind": "entry.field.set",
+      "recordId": "dc849465-c82e-4e6d-8572-4c2a2d02c6de",
+      "route": "/medical/minor-procedures",
+      "locale": "en",
+      "field": "summary",
+      "from": "AHS-insured minor procedures including suture removal and application, with Dr. Bakare additionally offering in-house minor skin lesion excision and joint injections.",
+      "to": "AHS-insured minor procedures performed in-house — suture removal and application, minor skin lesion excision, and joint injections. All of our family physicians provide these procedures. Minor procedures are booked by phone or in person, not online."
+    },
+    {
+      "opId": "OP-002",
+      "applicable": true,
+      "kind": "entry.field.set",
+      "recordId": "dc849465-c82e-4e6d-8572-4c2a2d02c6de",
+      "route": "/medical/minor-procedures",
+      "locale": "en",
+      "field": "booking_channel",
+      "from": "family-doctor",
+      "to": "minor-procedures"
+    },
+    {
+      "opId": "OP-003",
+      "applicable": true,
+      "kind": "entry.field.set",
+      "recordId": "dc849465-c82e-4e6d-8572-4c2a2d02c6de",
+      "route": "/medical/minor-procedures",
+      "locale": "en",
+      "field": "whats_included",
+      "from": [
+        "Suture removal and application",
+        "Minor skin lesion excision (Dr. Bakare)",
+        "Intra-articular injections for degenerative knee, shoulder, and ankle conditions (Dr. Bakare)"
+      ],
+      "to": [
+        "Suture removal and application",
+        "Minor skin lesion excision",
+        "Intra-articular injections for degenerative knee, shoulder, and ankle conditions"
+      ]
+    },
+    {
+      "opId": "OP-004",
+      "applicable": true,
+      "kind": "entry.field.set",
+      "recordId": "dc849465-c82e-4e6d-8572-4c2a2d02c6de",
+      "route": "/medical/minor-procedures",
+      "locale": "en",
+      "field": "related_doctor_ids",
+      "from": [
+        "bakare"
+      ],
+      "to": []
+    },
+    {
+      "opId": "OP-005",
+      "applicable": true,
+      "kind": "faq.update",
+      "recordId": "dc849465-c82e-4e6d-8572-4c2a2d02c6de",
+      "faqId": "93c0059c-65c6-4478-a79f-4ffb90672be9",
+      "route": "/medical/minor-procedures",
+      "locale": "en",
+      "field": "answer",
+      "from": "Suture removal and application are available generally, and Dr. Bakare additionally offers minor skin lesion excision and intra-articular injections for degenerative knee, shoulder, and ankle conditions.",
+      "to": "Suture removal and application, minor skin lesion excision, and intra-articular injections for degenerative knee, shoulder, and ankle conditions. All of our family physicians provide these."
+    },
+    {
+      "opId": "OP-006",
+      "applicable": true,
+      "kind": "faq.update",
+      "recordId": "dc849465-c82e-4e6d-8572-4c2a2d02c6de",
+      "faqId": "994516a4-2caa-4558-9c4d-6c8a44ccea59",
+      "route": "/medical/minor-procedures",
+      "locale": "en",
+      "field": "question",
+      "from": "Do I need to see Dr. Bakare specifically?",
+      "to": "How do I book a minor procedure?"
+    },
+    {
+      "opId": "OP-007",
+      "applicable": true,
+      "kind": "faq.update",
+      "recordId": "dc849465-c82e-4e6d-8572-4c2a2d02c6de",
+      "faqId": "994516a4-2caa-4558-9c4d-6c8a44ccea59",
+      "route": "/medical/minor-procedures",
+      "locale": "en",
+      "field": "answer",
+      "from": "For skin lesion excision and joint injections, yes — these are offered by Dr. Bakare in-house. Suture care is available more generally; ask at booking.",
+      "to": "Minor procedures cannot be booked online. Call the clinic or come in to reception, and we will schedule the procedure with one of our family physicians."
+    },
+    {
+      "opId": "OP-008",
+      "applicable": true,
+      "kind": "faq.update",
+      "recordId": "dc849465-c82e-4e6d-8572-4c2a2d02c6de",
+      "faqId": "df10d22f-8c3f-4a50-a62c-90070f4c6970",
+      "route": "/medical/minor-procedures",
+      "locale": "en",
+      "field": "question",
+      "from": "How do I book a minor procedure?",
+      "to": "Is this the same as a walk-in visit?"
+    },
+    {
+      "opId": "OP-009",
+      "applicable": true,
+      "kind": "faq.update",
+      "recordId": "dc849465-c82e-4e6d-8572-4c2a2d02c6de",
+      "faqId": "df10d22f-8c3f-4a50-a62c-90070f4c6970",
+      "route": "/medical/minor-procedures",
+      "locale": "en",
+      "field": "answer",
+      "from": "Book through Mika. If you specifically need Dr. Bakare for a skin lesion or joint injection, mention that when booking.",
+      "to": "No — minor procedures are scheduled appointments rather than walk-in visits. Arrange one by calling the clinic or asking at reception."
+    },
+    {
+      "opId": "OP-010",
+      "applicable": true,
+      "kind": "faq.archive",
+      "recordId": "dc849465-c82e-4e6d-8572-4c2a2d02c6de",
+      "faqId": "ec3dac68-212b-4d83-8140-3563c307b742",
+      "route": "/medical/minor-procedures",
+      "locale": "en",
+      "field": "status",
+      "from": "published",
+      "to": "archived"
+    },
+    {
+      "opId": "OP-011",
+      "applicable": true,
+      "kind": "entry.field.set",
+      "recordId": "879ad279-36b3-43d2-8636-553e703cfacf",
+      "route": "/الرعاية-الطبية/الإجراءات-البسيطة",
+      "locale": "ar",
+      "field": "summary",
+      "from": "إجراءات بسيطة مشمولة بالتأمين الصحي تشمل إزالة الغرز وتركيبها، إضافةً إلى استئصال الآفات الجلدية البسيطة والحقن المفصلية داخل العيادة مع الدكتور باكاري.",
+      "to": "إجراءات بسيطة مشمولة بالتأمين الصحي تُجرى داخل العيادة — إزالة الغرز وتركيبها، واستئصال الآفات الجلدية البسيطة، والحقن المفصلية. ويقدّم جميع أطباء الأسرة لدينا هذه الإجراءات. تُحجز الإجراءات البسيطة عبر الهاتف أو بالحضور شخصيًا، وليس عبر الإنترنت."
+    },
+    {
+      "opId": "OP-012",
+      "applicable": true,
+      "kind": "entry.field.set",
+      "recordId": "879ad279-36b3-43d2-8636-553e703cfacf",
+      "route": "/الرعاية-الطبية/الإجراءات-البسيطة",
+      "locale": "ar",
+      "field": "booking_channel",
+      "from": "family-doctor",
+      "to": "minor-procedures"
+    },
+    {
+      "opId": "OP-013",
+      "applicable": true,
+      "kind": "entry.field.set",
+      "recordId": "879ad279-36b3-43d2-8636-553e703cfacf",
+      "route": "/الرعاية-الطبية/الإجراءات-البسيطة",
+      "locale": "ar",
+      "field": "whats_included",
+      "from": [
+        "إزالة الغرز وتركيبها",
+        "استئصال الآفات الجلدية البسيطة (الدكتور باكاري)",
+        "حقن مفصلية لحالات تنكس الركبة والكتف والكاحل (الدكتور باكاري)"
+      ],
+      "to": [
+        "إزالة الغرز وتركيبها",
+        "استئصال الآفات الجلدية البسيطة",
+        "حقن مفصلية لحالات تنكس الركبة والكتف والكاحل"
+      ]
+    },
+    {
+      "opId": "OP-014",
+      "applicable": true,
+      "kind": "entry.field.set",
+      "recordId": "879ad279-36b3-43d2-8636-553e703cfacf",
+      "route": "/الرعاية-الطبية/الإجراءات-البسيطة",
+      "locale": "ar",
+      "field": "related_doctor_ids",
+      "from": [
+        "bakare"
+      ],
+      "to": []
+    },
+    {
+      "opId": "OP-015",
+      "applicable": true,
+      "kind": "faq.update",
+      "recordId": "879ad279-36b3-43d2-8636-553e703cfacf",
+      "faqId": "58878029-e62e-4146-a160-0c694bb4ebec",
+      "route": "/الرعاية-الطبية/الإجراءات-البسيطة",
+      "locale": "ar",
+      "field": "answer",
+      "from": "إزالة الغرز وتركيبها متاحة بشكل عام، ويقدّم الدكتور باكاري إضافةً إلى ذلك استئصال الآفات الجلدية البسيطة والحقن المفصلية لحالات تنكس الركبة والكتف والكاحل.",
+      "to": "إزالة الغرز وتركيبها، واستئصال الآفات الجلدية البسيطة، والحقن المفصلية لحالات تنكس الركبة والكتف والكاحل. ويقدّمها جميع أطباء الأسرة لدينا."
+    },
+    {
+      "opId": "OP-016",
+      "applicable": true,
+      "kind": "faq.update",
+      "recordId": "879ad279-36b3-43d2-8636-553e703cfacf",
+      "faqId": "cdbc04a1-6df6-45cb-96cc-48c77ff2b717",
+      "route": "/الرعاية-الطبية/الإجراءات-البسيطة",
+      "locale": "ar",
+      "field": "question",
+      "from": "هل يجب أن أراجع الدكتور باكاري تحديدًا؟",
+      "to": "كيف أحجز موعدًا لإجراء بسيط؟"
+    },
+    {
+      "opId": "OP-017",
+      "applicable": true,
+      "kind": "faq.update",
+      "recordId": "879ad279-36b3-43d2-8636-553e703cfacf",
+      "faqId": "cdbc04a1-6df6-45cb-96cc-48c77ff2b717",
+      "route": "/الرعاية-الطبية/الإجراءات-البسيطة",
+      "locale": "ar",
+      "field": "answer",
+      "from": "بالنسبة لاستئصال الآفات الجلدية والحقن المفصلية، نعم — يقدّمها الدكتور باكاري داخل العيادة. أما رعاية الغرز فمتاحة بشكل أعم؛ يُرجى الاستفسار عند الحجز.",
+      "to": "لا يمكن حجز الإجراءات البسيطة عبر الإنترنت. اتصلوا بالعيادة أو توجّهوا إلى الاستقبال، وسنحدد لكم موعد الإجراء مع أحد أطباء الأسرة لدينا."
+    },
+    {
+      "opId": "OP-018",
+      "applicable": true,
+      "kind": "faq.update",
+      "recordId": "879ad279-36b3-43d2-8636-553e703cfacf",
+      "faqId": "f33eaa11-2360-4980-88fd-d315c6ea3502",
+      "route": "/الرعاية-الطبية/الإجراءات-البسيطة",
+      "locale": "ar",
+      "field": "question",
+      "from": "كيف أحجز موعدًا لإجراء بسيط؟",
+      "to": "هل هذا مماثل لزيارة بدون موعد مسبق؟"
+    },
+    {
+      "opId": "OP-019",
+      "applicable": true,
+      "kind": "faq.update",
+      "recordId": "879ad279-36b3-43d2-8636-553e703cfacf",
+      "faqId": "f33eaa11-2360-4980-88fd-d315c6ea3502",
+      "route": "/الرعاية-الطبية/الإجراءات-البسيطة",
+      "locale": "ar",
+      "field": "answer",
+      "from": "احجزوا عبر نظام Mika. وإذا كنتم بحاجة تحديدًا إلى الدكتور باكاري لآفة جلدية أو حقنة مفصلية، يُرجى ذكر ذلك عند الحجز.",
+      "to": "لا — الإجراءات البسيطة مواعيد مجدولة وليست زيارات بدون موعد. رتّبوا موعدًا بالاتصال بالعيادة أو بالاستفسار في الاستقبال."
+    },
+    {
+      "opId": "OP-020",
+      "applicable": true,
+      "kind": "faq.archive",
+      "recordId": "879ad279-36b3-43d2-8636-553e703cfacf",
+      "faqId": "12784c2e-61ba-41bb-8e58-d105210137eb",
+      "route": "/الرعاية-الطبية/الإجراءات-البسيطة",
+      "locale": "ar",
+      "field": "status",
+      "from": "published",
+      "to": "archived"
+    },
+    {
+      "opId": "OP-021",
+      "applicable": true,
+      "kind": "entry.field.set",
+      "recordId": "298dddc5-2baa-47f6-b52d-a8e25f8c7d9a",
+      "route": "/medical/chronic-disease-management",
+      "locale": "en",
+      "field": "summary",
+      "from": "AHS-insured, ongoing management of chronic conditions through your family physician, with Dr. Bakare's particular focus on chronic disease management and palliative care.",
+      "to": "AHS-insured, ongoing management of chronic conditions through your family physician. Any Blue Diamond family physician can provide chronic-disease management."
+    },
+    {
+      "opId": "OP-022",
+      "applicable": true,
+      "kind": "entry.field.set",
+      "recordId": "298dddc5-2baa-47f6-b52d-a8e25f8c7d9a",
+      "route": "/medical/chronic-disease-management",
+      "locale": "en",
+      "field": "related_doctor_ids",
+      "from": [
+        "bakare"
+      ],
+      "to": []
+    },
+    {
+      "opId": "OP-023",
+      "applicable": true,
+      "kind": "faq.update",
+      "recordId": "298dddc5-2baa-47f6-b52d-a8e25f8c7d9a",
+      "faqId": "4a1df9a4-0dfd-4da3-a965-64bb68bdcb10",
+      "route": "/medical/chronic-disease-management",
+      "locale": "en",
+      "field": "question",
+      "from": "Does Dr. Bakare only see patients for chronic disease management?",
+      "to": "Do I need to see a particular physician for chronic disease management?"
+    },
+    {
+      "opId": "OP-024",
+      "applicable": true,
+      "kind": "faq.update",
+      "recordId": "298dddc5-2baa-47f6-b52d-a8e25f8c7d9a",
+      "faqId": "4a1df9a4-0dfd-4da3-a965-64bb68bdcb10",
+      "route": "/medical/chronic-disease-management",
+      "locale": "en",
+      "field": "answer",
+      "from": "No — chronic disease management is one of Dr. Bakare's particular clinical interests, alongside palliative care, but any of our family physicians can provide this care.",
+      "to": "No — every Blue Diamond family physician provides chronic-disease management as part of general family medicine. See whichever of our family physicians you are registered with."
+    },
+    {
+      "opId": "OP-025",
+      "applicable": true,
+      "kind": "faq.update",
+      "recordId": "298dddc5-2baa-47f6-b52d-a8e25f8c7d9a",
+      "faqId": "05db8d4c-3ddb-4ffb-8de1-aeec476fe0fe",
+      "route": "/medical/chronic-disease-management",
+      "locale": "en",
+      "field": "answer",
+      "from": "Book with your family doctor through Mika, the same system used for all family-medicine appointments at our clinic.",
+      "to": "If you are already registered with one of our family physicians, book with your doctor through Mikata. New patients and walk-ins can book online through Skip the Waiting Room, call the clinic, or come in — walk-ins are welcome."
+    },
+    {
+      "opId": "OP-026",
+      "applicable": true,
+      "kind": "entry.field.set",
+      "recordId": "47578522-b3e4-467b-96e4-b5e72fa37942",
+      "route": "/الرعاية-الطبية/إدارة-الأمراض-المزمنة",
+      "locale": "ar",
+      "field": "summary",
+      "from": "إدارة مستمرة للأمراض المزمنة مشمولة بالتأمين الصحي عبر طبيب أسرتكم، مع تركيز خاص من الدكتور باكاري على إدارة الأمراض المزمنة والرعاية التلطيفية.",
+      "to": "إدارة مستمرة للأمراض المزمنة مشمولة بالتأمين الصحي عبر طبيب أسرتكم. ويمكن لأي من أطباء الأسرة في بلو دايموند تقديم إدارة الأمراض المزمنة."
+    },
+    {
+      "opId": "OP-027",
+      "applicable": true,
+      "kind": "entry.field.set",
+      "recordId": "47578522-b3e4-467b-96e4-b5e72fa37942",
+      "route": "/الرعاية-الطبية/إدارة-الأمراض-المزمنة",
+      "locale": "ar",
+      "field": "related_doctor_ids",
+      "from": [
+        "bakare"
+      ],
+      "to": []
+    },
+    {
+      "opId": "OP-028",
+      "applicable": true,
+      "kind": "faq.update",
+      "recordId": "47578522-b3e4-467b-96e4-b5e72fa37942",
+      "faqId": "001e3de7-b688-4e0d-937d-3c217577b8ca",
+      "route": "/الرعاية-الطبية/إدارة-الأمراض-المزمنة",
+      "locale": "ar",
+      "field": "question",
+      "from": "هل يستقبل الدكتور باكاري مرضى إدارة الأمراض المزمنة فقط؟",
+      "to": "هل أحتاج إلى مراجعة طبيب معيّن لإدارة الأمراض المزمنة؟"
+    },
+    {
+      "opId": "OP-029",
+      "applicable": true,
+      "kind": "faq.update",
+      "recordId": "47578522-b3e4-467b-96e4-b5e72fa37942",
+      "faqId": "001e3de7-b688-4e0d-937d-3c217577b8ca",
+      "route": "/الرعاية-الطبية/إدارة-الأمراض-المزمنة",
+      "locale": "ar",
+      "field": "answer",
+      "from": "لا — إدارة الأمراض المزمنة هي أحد اهتمامات الدكتور باكاري السريرية الخاصة، إلى جانب الرعاية التلطيفية، لكن أيًا من أطباء الأسرة لدينا يمكنه تقديم هذه الرعاية.",
+      "to": "لا — يقدّم جميع أطباء الأسرة في بلو دايموند إدارة الأمراض المزمنة كجزء من طب الأسرة العام. راجعوا الطبيب المسجّلين لديه من أطباء الأسرة في العيادة."
+    },
+    {
+      "opId": "OP-030",
+      "applicable": true,
+      "kind": "faq.update",
+      "recordId": "47578522-b3e4-467b-96e4-b5e72fa37942",
+      "faqId": "b5aaf9d9-ef0b-4b53-81d9-de8d077a34df",
+      "route": "/الرعاية-الطبية/إدارة-الأمراض-المزمنة",
+      "locale": "ar",
+      "field": "answer",
+      "from": "احجزوا مع طبيب أسرتكم عبر نظام Mika، وهو النظام نفسه المستخدم لجميع مواعيد طب الأسرة في عيادتنا.",
+      "to": "إذا كنتم مسجّلين بالفعل لدى أحد أطباء الأسرة لدينا، فاحجزوا مع طبيبكم عبر نظام Mikata. ويمكن للمرضى الجدد والزيارات بدون موعد الحجز عبر الإنترنت من خلال Skip the Waiting Room، أو الاتصال بالعيادة، أو الحضور مباشرة — الزيارات بدون موعد مُرحَّب بها."
+    },
+    {
+      "opId": "OP-031",
+      "applicable": true,
+      "kind": "entry.field.set",
+      "recordId": "28158c82-399b-458b-9e6d-0699d3fc9172",
+      "route": "/medical/after-hours-care",
+      "locale": "en",
+      "field": "related_doctor_ids",
+      "from": [
+        "reem-hamdi",
+        "mohamed-farhat"
+      ],
+      "to": []
+    },
+    {
+      "opId": "OP-032",
+      "applicable": true,
+      "kind": "entry.partnerNote.set",
+      "recordId": "28158c82-399b-458b-9e6d-0699d3fc9172",
+      "route": "/medical/after-hours-care",
+      "locale": "en",
+      "partnerIndex": 0,
+      "field": "external_partners[0].note",
+      "from": "For Dr. Hamdi's patients.",
+      "to": "For Dr. Reem Hamdi's patients."
+    },
+    {
+      "opId": "OP-033",
+      "applicable": true,
+      "kind": "entry.partnerNote.set",
+      "recordId": "28158c82-399b-458b-9e6d-0699d3fc9172",
+      "route": "/medical/after-hours-care",
+      "locale": "en",
+      "partnerIndex": 1,
+      "field": "external_partners[1].note",
+      "from": "For Dr. Farhat's patients.",
+      "to": "For patients of all other Blue Diamond family physicians."
+    },
+    {
+      "opId": "OP-034",
+      "applicable": true,
+      "kind": "faq.update",
+      "recordId": "28158c82-399b-458b-9e6d-0699d3fc9172",
+      "faqId": "482e5391-9348-4e99-87ca-4c3f15f1dcf6",
+      "route": "/medical/after-hours-care",
+      "locale": "en",
+      "field": "answer",
+      "from": "It depends on your family doctor: Dr. Hamdi's patients are referred to Mosaic Primary Care Network, and Dr. Farhat's patients to Calgary West Central Primary Care Network.",
+      "to": "It depends on your family doctor: Dr. Reem Hamdi's patients are referred to Mosaic Primary Care Network, and patients of all other Blue Diamond family physicians are referred to Calgary West Central Primary Care Network."
+    },
+    {
+      "opId": "OP-035",
+      "applicable": true,
+      "kind": "faq.update",
+      "recordId": "28158c82-399b-458b-9e6d-0699d3fc9172",
+      "faqId": "da22ae62-f1b3-4b83-98c8-f63240e2c306",
+      "route": "/medical/after-hours-care",
+      "locale": "en",
+      "field": "answer",
+      "from": "The after-hours pathway described here is documented for patients of Dr. Hamdi and Dr. Farhat specifically. If your family doctor is someone else, ask at your next visit which after-hours option applies to you.",
+      "to": "Yes. Every Blue Diamond patient has an after-hours pathway: Dr. Reem Hamdi's patients are referred to Mosaic Primary Care Network, and patients of all other Blue Diamond family physicians are referred to Calgary West Central Primary Care Network."
+    },
+    {
+      "opId": "OP-036",
+      "applicable": true,
+      "kind": "entry.field.set",
+      "recordId": "c812c29a-829d-4b5a-8f30-b50a32009a23",
+      "route": "/الرعاية-الطبية/الرعاية-خارج-أوقات-الدوام",
+      "locale": "ar",
+      "field": "related_doctor_ids",
+      "from": [
+        "reem-hamdi",
+        "mohamed-farhat"
+      ],
+      "to": []
+    },
+    {
+      "opId": "OP-037",
+      "applicable": true,
+      "kind": "entry.partnerNote.set",
+      "recordId": "c812c29a-829d-4b5a-8f30-b50a32009a23",
+      "route": "/الرعاية-الطبية/الرعاية-خارج-أوقات-الدوام",
+      "locale": "ar",
+      "partnerIndex": 0,
+      "field": "external_partners[0].note",
+      "from": "لمرضى الدكتورة حمدي.",
+      "to": "لمرضى الدكتورة ريم حمدي."
+    },
+    {
+      "opId": "OP-038",
+      "applicable": true,
+      "kind": "entry.partnerNote.set",
+      "recordId": "c812c29a-829d-4b5a-8f30-b50a32009a23",
+      "route": "/الرعاية-الطبية/الرعاية-خارج-أوقات-الدوام",
+      "locale": "ar",
+      "partnerIndex": 1,
+      "field": "external_partners[1].note",
+      "from": "لمرضى الدكتور فرحات.",
+      "to": "لمرضى جميع أطباء الأسرة الآخرين في بلو دايموند."
+    },
+    {
+      "opId": "OP-039",
+      "applicable": true,
+      "kind": "faq.update",
+      "recordId": "c812c29a-829d-4b5a-8f30-b50a32009a23",
+      "faqId": "007f31d3-7658-42d4-bd2b-e4e1f48463af",
+      "route": "/الرعاية-الطبية/الرعاية-خارج-أوقات-الدوام",
+      "locale": "ar",
+      "field": "answer",
+      "from": "يعتمد ذلك على طبيب أسرتكم: يُحال مرضى الدكتورة حمدي إلى شبكة Mosaic للرعاية الأولية، بينما يُحال مرضى الدكتور فرحات إلى شبكة Calgary West Central للرعاية الأولية.",
+      "to": "يعتمد ذلك على طبيب أسرتكم: يُحال مرضى الدكتورة ريم حمدي إلى شبكة Mosaic للرعاية الأولية، بينما يُحال مرضى جميع أطباء الأسرة الآخرين في بلو دايموند إلى شبكة Calgary West Central للرعاية الأولية."
+    },
+    {
+      "opId": "OP-040",
+      "applicable": true,
+      "kind": "faq.update",
+      "recordId": "c812c29a-829d-4b5a-8f30-b50a32009a23",
+      "faqId": "9ec286e0-9c17-417c-91c2-96d420f2d7ea",
+      "route": "/الرعاية-الطبية/الرعاية-خارج-أوقات-الدوام",
+      "locale": "ar",
+      "field": "answer",
+      "from": "المسار الموضّح هنا موثّق لمرضى الدكتورة حمدي والدكتور فرحات تحديدًا. إذا كان طبيب أسرتكم غير ذلك، يُرجى الاستفسار في زيارتكم القادمة عن خيار الرعاية خارج أوقات الدوام الخاص بكم.",
+      "to": "نعم. لكل مريض في بلو دايموند مسار للرعاية خارج أوقات الدوام: يُحال مرضى الدكتورة ريم حمدي إلى شبكة Mosaic للرعاية الأولية، ويُحال مرضى جميع أطباء الأسرة الآخرين في بلو دايموند إلى شبكة Calgary West Central للرعاية الأولية."
+    },
+    {
+      "opId": "OP-041",
+      "applicable": true,
+      "kind": "entry.field.set",
+      "recordId": "eec7dcb1-ddaf-477a-bd6a-e10454de33a9",
+      "route": "/medical/preventive-care",
+      "locale": "en",
+      "field": "whats_included",
+      "from": [
+        "Vaccination",
+        "Preventive medicine and early-intervention care (Dr. Saeed)",
+        "Referral for AHS-covered eye disease screening"
+      ],
+      "to": [
+        "Vaccination",
+        "Preventive medicine and early-intervention care",
+        "Referral for AHS-covered eye disease screening"
+      ]
+    },
+    {
+      "opId": "OP-042",
+      "applicable": true,
+      "kind": "faq.update",
+      "recordId": "eec7dcb1-ddaf-477a-bd6a-e10454de33a9",
+      "faqId": "04215a46-463b-435b-aed4-aa2e9a5ba9ef",
+      "route": "/medical/preventive-care",
+      "locale": "en",
+      "field": "answer",
+      "from": "Book with your family doctor through Mika.",
+      "to": "If you are registered with one of our family physicians, book with your doctor through Mikata. New patients and walk-ins can book online through Skip the Waiting Room, call the clinic, or come in."
+    },
+    {
+      "opId": "OP-043",
+      "applicable": true,
+      "kind": "entry.field.set",
+      "recordId": "b0b69800-096f-4c02-9408-a55f396f749d",
+      "route": "/الرعاية-الطبية/الرعاية-الوقائية",
+      "locale": "ar",
+      "field": "whats_included",
+      "from": [
+        "التطعيمات",
+        "الطب الوقائي والرعاية بالتدخل المبكر (الدكتورة سعيد)",
+        "الإحالة لفحص أمراض العين المشمول بالتأمين الصحي"
+      ],
+      "to": [
+        "التطعيمات",
+        "الطب الوقائي والرعاية بالتدخل المبكر",
+        "الإحالة لفحص أمراض العين المشمول بالتأمين الصحي"
+      ]
+    },
+    {
+      "opId": "OP-044",
+      "applicable": true,
+      "kind": "faq.update",
+      "recordId": "b0b69800-096f-4c02-9408-a55f396f749d",
+      "faqId": "f4d1807e-5d41-43b4-ba28-a9ce6dd9e93f",
+      "route": "/الرعاية-الطبية/الرعاية-الوقائية",
+      "locale": "ar",
+      "field": "answer",
+      "from": "احجزوا مع طبيب أسرتكم عبر نظام Mika.",
+      "to": "إذا كنتم مسجّلين لدى أحد أطباء الأسرة لدينا، فاحجزوا مع طبيبكم عبر نظام Mikata. ويمكن للمرضى الجدد والزيارات بدون موعد الحجز عبر الإنترنت من خلال Skip the Waiting Room، أو الاتصال بالعيادة، أو الحضور مباشرة."
+    },
+    {
+      "opId": "OP-045",
+      "applicable": true,
+      "kind": "faq.update",
+      "recordId": "95d32601-f641-4605-85a1-97ef236a2c88",
+      "faqId": "53c5ef03-ce70-4be4-aa1c-0a8f7cac0a43",
+      "route": "/medical/pain-management",
+      "locale": "en",
+      "field": "answer",
+      "from": "Dr. Bakare offers intra-articular injections for degenerative knee, shoulder, and ankle conditions in-house — see the Minor Procedures page for detail.",
+      "to": "Our family physicians perform intra-articular injections for degenerative knee, shoulder, and ankle conditions in-house — see the Minor Procedures page for detail. These are booked by phone or in person, not online."
+    },
+    {
+      "opId": "OP-046",
+      "applicable": true,
+      "kind": "faq.update",
+      "recordId": "95d32601-f641-4605-85a1-97ef236a2c88",
+      "faqId": "f6a6d84c-fa70-48cb-8aaf-375829a3b226",
+      "route": "/medical/pain-management",
+      "locale": "en",
+      "field": "answer",
+      "from": "Book with your family doctor through Mika.",
+      "to": "If you are registered with one of our family physicians, book with your doctor through Mikata. New patients and walk-ins can book online through Skip the Waiting Room, call the clinic, or come in."
+    },
+    {
+      "opId": "OP-047",
+      "applicable": true,
+      "kind": "faq.update",
+      "recordId": "2d1700b0-c0f7-436c-afce-5761e2f7bc61",
+      "faqId": "7f398a40-d4db-4a54-8929-89f9c7867e02",
+      "route": "/الرعاية-الطبية/إدارة-الألم",
+      "locale": "ar",
+      "field": "answer",
+      "from": "يقدّم الدكتور باكاري حقنًا مفصلية لحالات تنكس الركبة والكتف والكاحل داخل العيادة — راجعوا صفحة الإجراءات البسيطة للتفاصيل.",
+      "to": "يُجري أطباء الأسرة لدينا حقنًا مفصلية لحالات تنكس الركبة والكتف والكاحل داخل العيادة — راجعوا صفحة الإجراءات البسيطة للتفاصيل. وتُحجز هذه الإجراءات عبر الهاتف أو بالحضور شخصيًا، وليس عبر الإنترنت."
+    },
+    {
+      "opId": "OP-048",
+      "applicable": true,
+      "kind": "faq.update",
+      "recordId": "2d1700b0-c0f7-436c-afce-5761e2f7bc61",
+      "faqId": "75a0e68d-588e-4d44-b06f-5ae861ec84cd",
+      "route": "/الرعاية-الطبية/إدارة-الألم",
+      "locale": "ar",
+      "field": "answer",
+      "from": "احجزوا مع طبيب أسرتكم عبر نظام Mika.",
+      "to": "إذا كنتم مسجّلين لدى أحد أطباء الأسرة لدينا، فاحجزوا مع طبيبكم عبر نظام Mikata. ويمكن للمرضى الجدد والزيارات بدون موعد الحجز عبر الإنترنت من خلال Skip the Waiting Room، أو الاتصال بالعيادة، أو الحضور مباشرة."
+    },
+    {
+      "opId": "OP-049",
+      "applicable": true,
+      "kind": "faq.update",
+      "recordId": "e9e9ecca-2d0e-4629-ac2b-853a5ab62922",
+      "faqId": "9fe43b7d-f15c-4f52-9e4c-249f232a2bd3",
+      "route": "/medical/weight-management",
+      "locale": "en",
+      "field": "answer",
+      "from": "Book with your family doctor through Mika.",
+      "to": "If you are registered with one of our family physicians, book with your doctor through Mikata. New patients and walk-ins can book online through Skip the Waiting Room, call the clinic, or come in."
+    },
+    {
+      "opId": "OP-050",
+      "applicable": true,
+      "kind": "faq.update",
+      "recordId": "e6b67740-b69b-44a4-b665-573f91a06e4e",
+      "faqId": "b08db2cc-136c-4e2e-b18c-8ee8e2bd80d2",
+      "route": "/الرعاية-الطبية/إدارة-الوزن",
+      "locale": "ar",
+      "field": "answer",
+      "from": "احجزوا مع طبيب أسرتكم عبر نظام Mika.",
+      "to": "إذا كنتم مسجّلين لدى أحد أطباء الأسرة لدينا، فاحجزوا مع طبيبكم عبر نظام Mikata. ويمكن للمرضى الجدد والزيارات بدون موعد الحجز عبر الإنترنت من خلال Skip the Waiting Room، أو الاتصال بالعيادة، أو الحضور مباشرة."
+    },
+    {
+      "opId": "OP-051",
+      "applicable": true,
+      "kind": "person.biography.set",
+      "recordId": "aed7273b-16fe-47a8-8742-9bdfe3ed0489",
+      "route": "/our-team/mohamed-farhat",
+      "locale": "en",
+      "field": "biography",
+      "from": "Dr. Mohamed Farhat is a family physician with more than 28 years of experience. He founded Blue Diamond Medical in West Springs in 2022 and has a wide range of skills across family practice, minor surgical procedures, and cosmetic services, including Botox and PRP therapy.",
+      "to": "Dr. Mohamed Farhat is a highly experienced family physician with over 30 years of dedicated practice. He is known for his exceptional clinical expertise, compassionate approach, and commitment to delivering high‑quality care to every patient. Over the course of his career, Dr. Farhat has developed extensive skills in managing a wide range of medical conditions, performing minor surgical procedures, and providing comprehensive family medicine services.\n\nAlongside his strong medical background, Dr. Farhat has completed advanced training in cosmetic medicine. He offers a variety of aesthetic treatments, including Botox, dermal fillers, RF microneedling, and laser therapies for multiple skin concerns such as aging, pigmentation, scarring, and texture irregularities.\n\nDr. Farhat also specializes in hair restoration treatments. He provides laser hair restoration combined with PRP, PRP‑only hair restoration, and PRP injections for enhanced scalp health and hair regrowth. In addition, he performs PRP injections under the eyes to improve dark circles, rejuvenate the skin, and restore a brighter, refreshed appearance. These treatments can be complemented with microneedling for optimal skin renewal and collagen stimulation.\n\nWith a blend of medical precision and aesthetic artistry, Dr. Farhat is dedicated to helping patients look and feel their best. His warm manner, attention to detail, and patient‑centered approach make him a trusted physician within the community."
+    },
+    {
+      "opId": "OP-052",
+      "applicable": true,
+      "kind": "person.biography.set",
+      "recordId": "1daa9dba-024b-493b-88ec-0c519b2edbbf",
+      "route": "/فريقنا/محمد-فرحات",
+      "locale": "ar",
+      "field": "biography",
+      "from": "الدكتور محمد فرحات طبيب أسرة بخبرة تتجاوز 28 عامًا. أسّس عيادة بلو دايموند الطبية في ويست سبرينغز عام 2022، ولديه خبرة واسعة في طب الأسرة، والإجراءات الجراحية البسيطة، والخدمات التجميلية بما فيها البوتوكس وعلاج البلازما الغنية بالصفائح الدموية (PRP).",
+      "to": "الدكتور محمد فرحات طبيب أسرة بخبرة تتجاوز 30 عامًا. أسّس عيادة بلو دايموند الطبية في ويست سبرينغز عام 2022، ولديه خبرة واسعة في طب الأسرة، والإجراءات الجراحية البسيطة، والخدمات التجميلية بما فيها البوتوكس وعلاج البلازما الغنية بالصفائح الدموية (PRP)."
+    },
+    {
+      "opId": "OP-053",
+      "applicable": true,
+      "kind": "person.biography.set",
+      "recordId": "ce09aa53-0f1e-4d95-b5a9-3d2a7cfed4c4",
+      "route": "/our-team/omaima-saeed",
+      "locale": "en",
+      "field": "biography",
+      "from": "Dr. Omaima Saeed is a family physician with postgraduate training in Family Medicine from Pakistan, now practicing in Calgary. She provides comprehensive, patient-centred care across all ages, with clinical interests in preventive medicine, women's health, and compassionate, stigma-free mental health support.",
+      "to": "Dr. Omaima Saeed is a family physician with postgraduate training in Family Medicine from Pakistan, now practicing in Calgary. She provides comprehensive, patient-centred care across all ages, with clinical interests in preventive medicine, women's health, and compassionate, stigma-free mental health support. She is one of the physicians leading Blue Diamond Medical's full-time Walk-In Clinic."
+    },
+    {
+      "opId": "OP-054",
+      "applicable": true,
+      "kind": "person.biography.set",
+      "recordId": "50fda02a-593c-47e3-9815-bf141d0acaef",
+      "route": "/فريقنا/أميمة-سعيد",
+      "locale": "ar",
+      "field": "biography",
+      "from": "الدكتورة أميمة سعيد طبيبة أسرة حاصلة على تدريب عالٍ في طب الأسرة من باكستان، وتمارس حاليًا في كالغاري. تقدّم رعاية شاملة تتمحور حول المريض لجميع الأعمار، وتهتم سريريًا بالطب الوقائي وصحة المرأة والدعم النفسي المتعاطف الخالي من الوصم.",
+      "to": "الدكتورة أميمة سعيد طبيبة أسرة حاصلة على تدريب عالٍ في طب الأسرة من باكستان، وتمارس حاليًا في كالغاري. تقدّم رعاية شاملة تتمحور حول المريض لجميع الأعمار، وتهتم سريريًا بالطب الوقائي وصحة المرأة والدعم النفسي المتعاطف الخالي من الوصم. وهي من الأطباء الذين يقودون العيادة بدون موعد بدوام كامل في بلو دايموند الطبية."
+    },
+    {
+      "opId": "OP-055",
+      "applicable": true,
+      "kind": "person.biography.set",
+      "recordId": "ee9fb76a-2468-478f-b0d5-fd95a33c7b48",
+      "route": "/our-team/reem-hamdi",
+      "locale": "en",
+      "field": "biography",
+      "from": "Dr. Reem Hamdi has practiced family medicine since 2015, graduating from the Family Medicine Residency Program at the University of Calgary with additional training in maternity and newborn care. She holds a Master's degree in health science education from the University of Alberta.",
+      "to": "Dr. Hamdi finished her Family Medicine Residency at the University of Calgary in 2015 followed by additional training (R3) in maternity and newborn care. She has been practicing Family Medicine in Calgary since then and she joined our clinic in 2023.\n\nShe also works at Peter Lougheed Hospital in Labour and Delivery unit and she has a shared care practice with the Lougheed Maternity Group (LMG).\n\nDr. Hamdi is board certified from the College of Family Physicians of Canada (CFPC) and has been granted Fellowship in the College of Family Physicians of Canada (FCFP). She is also an Assistant Clinical Professor at the University of Calgary and has Masters in Health Science Education from the University of Alberta.\n\nShe manages a wide range of health conditions including chronic disease, women health (including contraceptive management and IUD insertion, menopause, prenatal and maternity care), well child visits and mental health. She is also certified for Botox injections for pain management in addition to cosmetic indications.\n\nBlue Diamond Medical is proud to have her as part of our team."
+    },
+    {
+      "opId": "OP-056",
+      "applicable": true,
+      "kind": "person.biography.set",
+      "recordId": "40ce8071-5abc-4cfe-9863-df428f01cd20",
+      "route": "/our-team/omonijo",
+      "locale": "en",
+      "field": "biography",
+      "from": "Dr. Omonijo has 12 years of experience across community and hospital settings and completed her Family Medicine residency in the United Kingdom. She is part of Blue Diamond Medical's full-time Walk-In Clinic team.",
+      "to": "Dr. Omonijo has 12 years of experience across community and hospital settings and completed her Family Medicine residency in the United Kingdom. She is one of the physicians leading Blue Diamond Medical's full-time Walk-In Clinic."
+    },
+    {
+      "opId": "OP-057",
+      "applicable": true,
+      "kind": "person.biography.set",
+      "recordId": "b6446dd6-aa8d-4c96-8cc8-d9c9ab147f48",
+      "route": "/فريقنا/أومونيجو",
+      "locale": "ar",
+      "field": "biography",
+      "from": "تتمتع الدكتورة أومونيجو بخبرة 12 عامًا في المجتمعات الطبية والمستشفيات، وأكملت إقامتها في طب الأسرة في المملكة المتحدة. وهي جزء من فريق العيادة بدون موعد بدوام كامل في بلو دايموند الطبية.",
+      "to": "تتمتع الدكتورة أومونيجو بخبرة 12 عامًا في المجتمعات الطبية والمستشفيات، وأكملت إقامتها في طب الأسرة في المملكة المتحدة. وهي من الأطباء الذين يقودون العيادة بدون موعد بدوام كامل في بلو دايموند الطبية."
+    },
+    {
+      "opId": "OP-058",
+      "applicable": true,
+      "kind": "person.biography.set",
+      "recordId": "e1285ddb-1ae4-473e-b85b-5150beef59b6",
+      "route": "/our-team/ahmed-gwea",
+      "locale": "en",
+      "field": "biography",
+      "from": "Dr. Ahmed Gwea completed his Family Medicine residency at Hamad Medical Corporation in Qatar and holds a Diploma in Dermatology from the Royal College of Physicians of Ireland. His clinical interests include dermatology, preventive medicine, health promotion, and chronic disease management.",
+      "to": "Dr. Ahmed Gwea completed his Family Medicine residency at Hamad Medical Corporation in Qatar and holds a Diploma in Dermatology from the Royal College of Physicians of Ireland. He is dedicated to providing compassionate, patient-centred care, with a focus on preventive health, health promotion, chronic disease management, and mental well-being. His clinical interests include dermatology, dermatological and minor office-based procedures, and plasma therapy, with an emphasis on helping patients feel comfortable, informed, and supported in their care. He is one of the physicians leading Blue Diamond Medical's full-time Walk-In Clinic."
+    },
+    {
+      "opId": "OP-059",
+      "applicable": true,
+      "kind": "person.biography.set",
+      "recordId": "1c0d472e-5527-47c1-945b-e138f7a0b1e0",
+      "route": "/فريقنا/أحمد-جويع",
+      "locale": "ar",
+      "field": "biography",
+      "from": "أكمل الدكتور أحمد جويع إقامته في طب الأسرة في مؤسسة حمد الطبية بقطر، ويحمل دبلومًا في الأمراض الجلدية من الكلية الملكية للأطباء في أيرلندا. تشمل اهتماماته السريرية الأمراض الجلدية والطب الوقائي وتعزيز الصحة وإدارة الأمراض المزمنة.",
+      "to": "أكمل الدكتور أحمد جويع إقامته في طب الأسرة في مؤسسة حمد الطبية بقطر، ويحمل دبلومًا في الأمراض الجلدية من الكلية الملكية للأطباء في أيرلندا. تشمل اهتماماته السريرية الأمراض الجلدية والطب الوقائي وتعزيز الصحة وإدارة الأمراض المزمنة. وهو من الأطباء الذين يقودون العيادة بدون موعد بدوام كامل في بلو دايموند الطبية."
+    },
+    {
+      "opId": "EX-001",
+      "applicable": false,
+      "kind": "verified.no-change",
+      "recordId": "a64fe8ed-aeef-4ddd-9ae3-06423d47f6d8",
+      "route": "/aesthetics/treatments/prp-skin-rejuvenation",
+      "locale": "en",
+      "field": "related_doctor_ids",
+      "from": [
+        "mohamed-farhat"
+      ],
+      "to": [
+        "mohamed-farhat"
+      ],
+      "reason": "PRP provider attribution is Dr. Mohamed Farhat and is verified correct as published. Carried so it is not generalised by momentum while working down the provider-neutrality list. Never apply."
+    },
+    {
+      "opId": "EX-002",
+      "applicable": false,
+      "kind": "verified.no-change",
+      "recordId": "189dac66-3916-46e3-973e-26e147e431a0",
+      "route": "/التجميل-الطبي/العلاجات/تجديد-البشرة-بالبلازما",
+      "locale": "ar",
+      "field": "related_doctor_ids",
+      "from": [
+        "mohamed-farhat"
+      ],
+      "to": [
+        "mohamed-farhat"
+      ],
+      "reason": "Arabic counterpart of EX-001. Verified correct as published. Never apply."
+    },
+    {
+      "opId": "EX-003",
+      "applicable": false,
+      "kind": "manual.relation.delete",
+      "recordId": "dc849465-c82e-4e6d-8572-4c2a2d02c6de",
+      "route": "/medical/minor-procedures",
+      "locale": "en",
+      "field": "relations.doctors",
+      "relationRowId": "a1da453b-27de-409e-9dee-f31a64e0dcd5",
+      "relationKey": "doctors",
+      "targetType": "person_profile",
+      "targetId": "003739b5-88d6-4f12-9e93-0f8a45582a32",
+      "sortOrder": 1,
+      "from": "present",
+      "to": "removed",
+      "reason": "Obsolete Dr. Bakare relation edge. The admin API has GET/POST for content relations but no DELETE, so no supported API call removes it. Admin UI only — docs/FEELSTACK_MANUAL_RELATION_CLEANUP.md. Rendering is unaffected: the frontend reads related_doctor_ids, which OP cleared."
+    },
+    {
+      "opId": "EX-004",
+      "applicable": false,
+      "kind": "manual.relation.delete",
+      "recordId": "879ad279-36b3-43d2-8636-553e703cfacf",
+      "route": "/الرعاية-الطبية/الإجراءات-البسيطة",
+      "locale": "ar",
+      "field": "relations.doctors",
+      "relationRowId": "1e7a1078-fb0f-4092-991f-6b591c65d4af",
+      "relationKey": "doctors",
+      "targetType": "person_profile",
+      "targetId": "df9768f4-98d0-4f38-bd64-5b36dda9d9e7",
+      "sortOrder": 1,
+      "from": "present",
+      "to": "removed",
+      "reason": "Arabic counterpart of EX-003. Separate record with a DIFFERENT person_profile target; removing one does not remove the other."
+    },
+    {
+      "opId": "EX-005",
+      "applicable": false,
+      "kind": "manual.no-op",
+      "recordId": "5ef125a2-edfd-415a-b377-ed9113b650f0",
+      "route": "/patient-resources",
+      "locale": "en",
+      "field": "body",
+      "from": null,
+      "to": null,
+      "reason": "No-op for the live site: /patient-resources renders from the static Next.js page, not from the CMS body. Queued only so the two cannot diverge if the route is ever switched to CMS rendering."
+    },
+    {
+      "opId": "EX-006",
+      "applicable": false,
+      "kind": "manual.no-op",
+      "recordId": "17d23cf5-7671-47e9-8b52-39945b9d65e8",
+      "route": "/patient-resources",
+      "locale": "ar",
+      "field": "body",
+      "from": null,
+      "to": null,
+      "reason": "Arabic counterpart of EX-005. Page records carry ASCII slugSegment in both locales and are disambiguated by locale."
+    },
+    {
+      "opId": "OP-060",
+      "applicable": true,
+      "kind": "entry.seo.set",
+      "reason": "Clinic-wide care attributed to one named physician in crawler-facing metadata. The visible page copy was corrected by OP-001/OP-011/OP-021/OP-026, but seo.description is a separate stored field and was left behind, so a search result still says it. The replacement is the approved clinic-wide wording, EN and AR aligned, under 160 characters -- the two English values were additionally stored truncated mid-word at exactly 160.",
+      "recordId": "dc849465-c82e-4e6d-8572-4c2a2d02c6de",
+      "route": "/medical/minor-procedures",
+      "locale": "en",
+      "field": "description",
+      "from": "AHS-insured minor procedures including suture removal and application, with Dr. Bakare additionally offering in-house minor skin lesion excision and joint injec",
+      "to": "AHS-insured minor procedures performed in-house — suture removal, minor skin lesion excision and joint injections. All of our family physicians provide them."
+    },
+    {
+      "opId": "OP-061",
+      "applicable": true,
+      "kind": "entry.seo.set",
+      "reason": "Clinic-wide care attributed to one named physician in crawler-facing metadata. The visible page copy was corrected by OP-001/OP-011/OP-021/OP-026, but seo.description is a separate stored field and was left behind, so a search result still says it. The replacement is the approved clinic-wide wording, EN and AR aligned, under 160 characters -- the two English values were additionally stored truncated mid-word at exactly 160.",
+      "recordId": "879ad279-36b3-43d2-8636-553e703cfacf",
+      "route": "/الرعاية-الطبية/الإجراءات-البسيطة",
+      "locale": "ar",
+      "field": "description",
+      "from": "إجراءات بسيطة مشمولة بالتأمين الصحي تشمل إزالة الغرز وتركيبها، إضافةً إلى استئصال الآفات الجلدية البسيطة والحقن المفصلية داخل العيادة مع الدكتور باكاري.",
+      "to": "إجراءات بسيطة مشمولة بالتأمين الصحي تُجرى داخل العيادة — إزالة الغرز واستئصال الآفات الجلدية البسيطة والحقن المفصلية. ويقدّمها جميع أطباء الأسرة لدينا."
+    },
+    {
+      "opId": "OP-062",
+      "applicable": true,
+      "kind": "entry.seo.set",
+      "reason": "Clinic-wide care attributed to one named physician in crawler-facing metadata. The visible page copy was corrected by OP-001/OP-011/OP-021/OP-026, but seo.description is a separate stored field and was left behind, so a search result still says it. The replacement is the approved clinic-wide wording, EN and AR aligned, under 160 characters -- the two English values were additionally stored truncated mid-word at exactly 160.",
+      "recordId": "298dddc5-2baa-47f6-b52d-a8e25f8c7d9a",
+      "route": "/medical/chronic-disease-management",
+      "locale": "en",
+      "field": "description",
+      "from": "AHS-insured, ongoing management of chronic conditions through your family physician, with Dr. Bakare's particular focus on chronic disease management and pallia",
+      "to": "AHS-insured, ongoing management of chronic conditions through your family physician. Any Blue Diamond family physician can provide chronic-disease management."
+    },
+    {
+      "opId": "OP-063",
+      "applicable": true,
+      "kind": "entry.seo.set",
+      "reason": "Clinic-wide care attributed to one named physician in crawler-facing metadata. The visible page copy was corrected by OP-001/OP-011/OP-021/OP-026, but seo.description is a separate stored field and was left behind, so a search result still says it. The replacement is the approved clinic-wide wording, EN and AR aligned, under 160 characters -- the two English values were additionally stored truncated mid-word at exactly 160.",
+      "recordId": "47578522-b3e4-467b-96e4-b5e72fa37942",
+      "route": "/الرعاية-الطبية/إدارة-الأمراض-المزمنة",
+      "locale": "ar",
+      "field": "description",
+      "from": "إدارة مستمرة للأمراض المزمنة مشمولة بالتأمين الصحي عبر طبيب أسرتكم، مع تركيز خاص من الدكتور باكاري على إدارة الأمراض المزمنة والرعاية التلطيفية.",
+      "to": "إدارة مستمرة للأمراض المزمنة مشمولة بالتأمين الصحي عبر طبيب أسرتكم. ويمكن لأي من أطباء الأسرة في بلو دايموند تقديم إدارة الأمراض المزمنة."
+    }
+  ],
+  "note": "Repository-controlled CMS correction set, read by scripts/feelstack-republish.mjs. Tracked: it used to live under the gitignored evidence/, so the script it drives could not run from a fresh checkout at all. Every from/to pair was captured from the PUBLIC resolver and is re-checked against the live value before any write."
+}

@@ -7,12 +7,24 @@ import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
 import { PageHero } from "@/components/layout/PageHero";
 import { MedicalWebPageSchema } from "@/components/shared/schema";
 import { FaqPageSchema } from "@/components/shared/schema";
-import { getBookingUrl } from "@/config/booking";
+import { getBookingUrl, isBookable } from "@/config/booking";
+import { AccessOptions, type AccessAudience } from "@/components/shared/AccessOptions";
 import { getRoute, href } from "@/lib/routing";
 import { doctors } from "@/features/doctors";
 import type { MedicalServiceContent } from "@/features/medical-services/types";
 import type { Locale } from "@/i18n/config";
 
+/*
+ * CL-032 — `first:mt-0` on every optional sub-section below.
+ *
+ * These blocks are rendered conditionally, so which one is FIRST differs per
+ * service. Whichever it is used to carry a 40px top margin on top of the
+ * article's own top padding, which put ~53px between the hero and the first
+ * heading on pages like Minor Procedures. `first:mt-0` is `:first-child`, so
+ * it follows the rendered DOM rather than the source order and the 40px rhythm
+ * BETWEEN sub-sections — internal spacing the client asked to keep — is
+ * untouched.
+ */
 /**
  * Reusable "medical service" page template — brief §26. Renders only the
  * sections that have real source-backed content for a given service; a
@@ -27,7 +39,30 @@ export function MedicalServiceTemplate({
   locale: Locale;
 }) {
   const booking = getBookingUrl(service.bookingChannel);
-  const relatedDoctors = doctors.filter((d) => service.relatedDoctorIds.includes(d.id));
+  /**
+   * CL-012 / CL-015 / CL-016 — a service marked as provided by every family
+   * physician lists the whole current roster, derived rather than authored,
+   * so it cannot go stale and no single physician is promoted as the one who
+   * provides a general family-medicine service.
+   */
+  const relatedDoctors =
+    service.relatedDoctorScope === "all-family-physicians"
+      ? doctors
+      : doctors.filter((d) => service.relatedDoctorIds.includes(d.id));
+  /**
+   * CL-005 / CL-018 — which online channels this service offers. Minor
+   * procedures offer none by policy; the eye-screening pathway is its own
+   * external channel; everything else is the registered / new-patient pair.
+   */
+  const accessChannels: { channel: typeof service.bookingChannel; audience: AccessAudience }[] =
+    service.bookingChannel === "minor-procedures"
+      ? []
+      : service.bookingChannel === "family-doctor"
+        ? [
+            { channel: "family-doctor", audience: "registered" },
+            { channel: "walk-in", audience: "new-patient" },
+          ]
+        : [{ channel: service.bookingChannel, audience: "none" }];
   const medicalRoute = getRoute("medical-hub")!;
   // This template serves both regular medical-service pages and gated
   // medical-Botox condition pages, which live under different route-id
@@ -89,9 +124,20 @@ export function MedicalServiceTemplate({
           />
         }
         actions={
-          <Button size="lg" render={<a href={booking.href} target="_blank" rel="noopener noreferrer" />}>
-            {booking.label[locale]}
-          </Button>
+          isBookable(booking) ? (
+            <Button
+              size="lg"
+              render={
+                booking.type === "phone" ? (
+                  <a href={booking.href} />
+                ) : (
+                  <a href={booking.href} target="_blank" rel="noopener noreferrer" />
+                )
+              }
+            >
+              {booking.label[locale]}
+            </Button>
+          ) : null
         }
       />
 
@@ -105,14 +151,14 @@ export function MedicalServiceTemplate({
         ) : null}
 
         {service.whoItsFor ? (
-          <section data-reveal="up" className="mt-10">
+          <section data-reveal="up" className="mt-10 first:mt-0">
             <h2 className="text-h4 font-heading">{labels.whoItsFor}</h2>
             <p className="mt-2 text-body text-text-secondary">{service.whoItsFor[locale]}</p>
           </section>
         ) : null}
 
         {service.whatsIncluded ? (
-          <section data-reveal="up" className="mt-10">
+          <section data-reveal="up" className="mt-10 first:mt-0">
             <h2 className="text-h4 font-heading">{labels.whatsIncluded}</h2>
             <ul className="mt-3 space-y-2">
               {service.whatsIncluded[locale].map((item) => (
@@ -125,14 +171,14 @@ export function MedicalServiceTemplate({
         ) : null}
 
         {service.howAppointmentsWork ? (
-          <section data-reveal="up" className="mt-10">
+          <section data-reveal="up" className="mt-10 first:mt-0">
             <h2 className="text-h4 font-heading">{labels.howAppointmentsWork}</h2>
             <p className="mt-2 text-body text-text-secondary">{service.howAppointmentsWork[locale]}</p>
           </section>
         ) : null}
 
         {service.externalPartners?.length ? (
-          <section data-reveal="up" className="mt-10">
+          <section data-reveal="up" className="mt-10 first:mt-0">
             <ul className="space-y-3">
               {service.externalPartners.map((partner) => (
                 <li key={partner.name} className="rounded-md border border-border bg-surface px-4 py-3">
@@ -152,7 +198,7 @@ export function MedicalServiceTemplate({
         ) : null}
 
         {relatedDoctors.length ? (
-          <section data-reveal="up" className="mt-10">
+          <section data-reveal="up" className="mt-10 first:mt-0">
             <h2 className="text-h4 font-heading">{labels.relatedDoctors}</h2>
             <ul className="mt-3 flex flex-wrap gap-3">
               {relatedDoctors.map((doctor) => {
@@ -172,8 +218,12 @@ export function MedicalServiceTemplate({
           </section>
         ) : null}
 
+        {/* CL-005 / CL-007 / CL-018 — every service page states all three ways
+            in, and which patient type each online route serves. */}
+        <AccessOptions locale={locale} className="mt-10 first:mt-0" channels={accessChannels} />
+
         {service.faqs?.length ? (
-          <section data-reveal="up" className="mt-10">
+          <section data-reveal="up" className="mt-10 first:mt-0">
             <h2 className="text-h4 font-heading">{labels.faqs}</h2>
             <dl className="mt-3 space-y-4">
               {service.faqs.map((faq) => (

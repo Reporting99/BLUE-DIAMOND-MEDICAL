@@ -44,7 +44,14 @@ export function doctorEntityId(doctor: Pick<Doctor, "id">): string {
  * Order follows `medicalServices` so output is deterministic across builds.
  */
 export function servicesForDoctor(doctorId: string): MedicalServiceContent[] {
-  return medicalServices.filter((service) => service.relatedDoctorIds.includes(doctorId));
+  return medicalServices.filter(
+    (service) =>
+      // CL-012/CL-015/CL-016: a service marked as provided by every family
+      // physician relates to all of them, derived from the roster rather than
+      // from a hand-maintained id list that goes stale.
+      service.relatedDoctorScope === "all-family-physicians" ||
+      service.relatedDoctorIds.includes(doctorId),
+  );
 }
 
 /** Absolute, locale-correct URL for a medical-service detail page. */

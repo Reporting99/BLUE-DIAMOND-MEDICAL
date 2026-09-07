@@ -2,13 +2,16 @@
   "name": "blue-diamond-medical",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=20.19.5 <21"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "test:e2e": "./scripts/run-playwright.sh",
+    "test:e2e": "bash scripts/run-playwright.sh",
     "validate:secrets": "node scripts/validate-no-secrets.mjs",
     "validate": "npm run typecheck && npm run lint && npm run validate:secrets && npm run build"
   },

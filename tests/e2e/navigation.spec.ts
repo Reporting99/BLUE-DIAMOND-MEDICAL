@@ -36,7 +36,7 @@ const REPRESENTATIVE_PAGES = [
   "/en/aesthetics/treatments",
   "/en/aesthetics/treatments/radio-frequency",
   "/en/aesthetics",
-  "/en/aesthetics/concerns/acne-scars",
+  "/en/aesthetics/treatments/acne-scars",
   "/en/aesthetics/technologies/potenza",
   "/en/our-team/mohamed-farhat",
   "/en/shop/tns-eye-repair",
@@ -146,14 +146,26 @@ test.describe("Arabic desktop navigation — mirrored order and layout", () => {
 test.describe("Mega menus — desktop interaction (brief §18/§19)", () => {
   test.use({ viewport: { width: 1440, height: 900 } });
 
-  test("hovering AESTHETICS reveals the Treatments/Concerns/Technologies columns", async ({ page }) => {
+  /**
+   * The Aesthetics menu is two groups, and its Treatments group lists patient
+   * CONCERNS rather than devices — the site's information architecture is
+   * concern-first. There is deliberately no third "Concerns" column any more:
+   * two parallel columns leading into the same catalogue asked the visitor to
+   * guess which vocabulary the site wanted from them.
+   */
+  test("hovering AESTHETICS reveals a concern-first Treatments group and Technologies", async ({ page }) => {
     await page.goto("/en/contact");
     await page.locator("header").getByRole("button", { name: "Aesthetics" }).hover();
     const panel = page.locator("[data-slot='navigation-menu-content']");
     await expect(panel.getByText("Treatments", { exact: true })).toBeVisible();
-    await expect(panel.getByText("Concerns", { exact: true })).toBeVisible();
     await expect(panel.getByText("Technologies", { exact: true })).toBeVisible();
-    await expect(page.getByRole("link", { name: "RF Micro-Needling" })).toBeVisible();
+    await expect(panel.getByText("Concerns", { exact: true })).toHaveCount(0);
+    // A patient concern, not a device — and Cosmetic Botox as the one
+    // standalone treatment that is not filed under a concern.
+    await expect(panel.getByRole("link", { name: "Acne Scars" })).toBeVisible();
+    await expect(panel.getByRole("link", { name: "Cosmetic Botox" })).toBeVisible();
+    // The device pages left the menu; they are reached from the concern pages.
+    await expect(panel.getByRole("link", { name: "RF Micro-Needling" })).toHaveCount(0);
   });
 
   test("hovering MEDICAL reveals the medical services and a separate Uninsured Services group", async ({ page }) => {
@@ -198,7 +210,10 @@ test.describe("Mega menus — desktop interaction (brief §18/§19)", () => {
   test("moving the pointer from a trigger into its panel does not close it (close delay)", async ({ page }) => {
     await page.goto("/en/contact");
     await page.locator("header").getByRole("button", { name: "Aesthetics" }).hover();
-    const item = page.getByRole("link", { name: "RF Micro-Needling" });
+    // The Aesthetics panel lists CONCERNS (navigation.ts `treatmentsColumn`),
+    // not treatment names — "RF Micro-Needling" has not been a menu row since
+    // the concern and treatment catalogues were merged.
+    const item = page.getByRole("link", { name: "Acne Scars" });
     await expect(item).toBeVisible();
     await item.hover();
     await expect(item).toBeVisible();
@@ -286,13 +301,16 @@ test.describe("Mobile navigation", () => {
     }
     // Nothing inside a care area is exposed until its group is opened —
     // brief §20's "no huge uncontrolled link lists".
-    await expect(dialog.getByRole("link", { name: "RF Micro-Needling" })).toBeHidden();
+    await expect(dialog.getByRole("link", { name: "Acne Scars" })).toBeHidden();
     await dialog.getByRole("button", { name: "Aesthetics" }).click();
-    await expect(dialog.getByRole("link", { name: "RF Micro-Needling" })).toBeVisible();
+    // Mobile carries the same concern-first Treatments list as desktop, from
+    // the one shared definition in src/config/navigation.ts.
+    await expect(dialog.getByRole("link", { name: "Acne Scars" })).toBeVisible();
     await expect(dialog.getByRole("link", { name: "View all treatments" })).toBeVisible();
     // …and the sub-groups stay labelled rather than merging into one list.
-    await expect(dialog.getByText("Concerns", { exact: true })).toBeVisible();
+    await expect(dialog.getByText("Treatments", { exact: true })).toBeVisible();
     await expect(dialog.getByText("Technologies", { exact: true })).toBeVisible();
+    await expect(dialog.getByText("Concerns", { exact: true })).toHaveCount(0);
   });
 
   test("Booking and the language switch are reachable without expanding anything", async ({ page }) => {

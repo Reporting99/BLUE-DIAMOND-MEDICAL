@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Container } from "@/components/layout/Container";
-import { PageHero } from "@/components/layout/PageHero";
+import { AestheticsHero } from "@/features/aesthetics/components/AestheticsHero";
 import { SectionTransition } from "@/components/layout/SectionTransition";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
 import { ConsultationRequestForm } from "@/features/booking";
@@ -44,20 +44,18 @@ export default async function ConsultationRequestPage({ params }: { params: Prom
 
   return (
     <>
-      <PageHero
+      <AestheticsHero
         locale={locale}
         title={title}
         body={intro}
         image={hero}
         imageRole="treatment"
         seed="aesthetics-consultation"
-        measure="form"
         imageAlt={{
           en: "A physician consulting with a patient at Blue Diamond Medical",
           ar: "طبيبة تستشير مريضة في بلو دايموند الطبية",
         }}
         breadcrumbs={<Breadcrumbs locale={locale} items={[{ label: aestheticsRoute.title[locale], href: href("aesthetics-hub", locale) }, { label: title }]} />}
-        size="compact"
       />
 
       <section className="section-y">

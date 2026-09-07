@@ -43,7 +43,9 @@ export interface BookingAllowlistViolation {
 export function findBookingAllowlistViolations(): BookingAllowlistViolation[] {
   const violations: BookingAllowlistViolation[] = [];
   for (const destination of Object.values(bookingDestinations)) {
-    if (destination.type !== "url") continue; // tel: links aren't host-checked
+    // tel: links aren't host-checked, and a "pending" channel (CL-007) has no
+    // URL to check — it renders no link at all until one is supplied.
+    if (destination.type !== "url" || destination.href === null) continue;
     if (!isAllowedBookingHost(destination.href)) {
       violations.push({ channel: destination.channel, href: destination.href });
     }

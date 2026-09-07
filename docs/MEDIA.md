@@ -38,7 +38,8 @@ NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT=https://ik.imagekit.io/oq92dh6zib
 
 `NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY` is **not required for image delivery** — the
 root layout's `ImageKitProvider` takes only `urlEndpoint`, and
-`imagekitIsConfigured` tests only that. A public key would only be needed if an
+`imagekitIsConfigured` tests only that. Setting the endpoint is what switches
+ImageKit on; leaving it unset is a supported state, not a broken one. A public key would only be needed if an
 authenticated *browser-upload* flow were added later, which this build does not
 have. `IMAGEKIT_PRIVATE_KEY` must never appear in this repository's environment
 in any form: the only process that holds one is the FeelStack backend, using the
@@ -73,8 +74,20 @@ fact below is carried over verbatim from the source noted at each section.
 The approved account/endpoint is **`https://ik.imagekit.io/oq92dh6zib`**, media
 root **`/blue-diamond/`** — e.g. `/blue-diamond/home/home-hero-blue-diamond.png`.
 `src/config/imagekit.ts` defaults `NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT` to this
-value and exports `MEDIA_ROOT` for every content file that builds a path, so no
-environment variable is required just to point at the right account.
+value and exports `MEDIA_ROOT` for every content file that builds a path, so a
+deployment that sets the variable to nothing still builds URLs against the right
+account rather than an empty origin.
+
+**That default is not the same as being configured, and this used to be
+conflated.** `imagekitIsConfigured` was derived from the endpoint *field*, which
+falls back to the constant above, so it was true in every environment including
+ones with no ImageKit at all — a CI build with no `.env` emitted live CDN URLs
+and fetched them over the network, while the fallback branch that exists for
+exactly that case was unreachable. Configured-ness now comes from the
+environment variable alone, trimmed, with a blank string treated as absent.
+**An environment that does not set `NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT` renders
+no CDN image**: the FacetTile placeholder everywhere, and the copy bundled into
+the build for the brand mark. Set it, or accept the fallback deliberately.
 
 **This repository holds no ImageKit credential, and does not need one.** The
 private key lives in FeelStack's per-project media-provider configuration and
@@ -113,7 +126,7 @@ asset just because a file appeared in the account. That is what keeps
 
 Generated from `src/lib/media/image-manifest.ts` (source of truth — regenerate this file by hand whenever it changes). Every path is relative to the approved ImageKit account/media root (brief §12): **`https://ik.imagekit.io/oq92dh6zib`**, root **`/blue-diamond/`**. This is the audit-trail view the brief asks for (path, page, section, alt text EN/AR, dimensions, aspect ratio, focal point, priority, approval status); `docs/MEDIA.md` and `docs/MEDIA.md` carry the deeper planning/evidence layer (which real source-archive file is a candidate for which entry).
 
-**The counts and rows in this section are maintained by hand and currently lag `src/lib/media/image-manifest.ts`, which is the source of truth — reconcile against it, not against this table.** What has changed since the counts below were written: the manifest is no longer "0 approved". `our-team-group` (the clinic-supplied Our Team group photograph) and `doctor-omaima-saeed-identity` (Dr. Saeed's non-photographic identity card) are both `approved` and both render real bytes. The first row of the table below is also stale — the homepage hero's registered path is `/blue-diamond/home/home-hero-blue-diamond.png`, not the `/blue-diamond/hero/...` path shown, which named a directory the library never had. Historic counts, unreconciled: *41 registered assets. 0 approved, 4 identity-confirmed and ready to import, 3 candidate-but-unconfirmed, 1 permanently disabled (photo declined), 33 pending.* Every `ImageKitImage` usage across the site resolves to one of these entries or renders the FacetTile placeholder — `tests/unit/image-usage.spec.ts` enforces there is no third option (no hardcoded local path, no unmapped path).
+**The counts and rows in this section are maintained by hand and currently lag `src/lib/media/image-manifest.ts`, which is the source of truth — reconcile against it, not against this table.** What has changed since the counts below were written: the manifest is no longer "0 approved". `our-team-group` (the clinic-supplied Our Team group photograph), `doctor-omaima-saeed-identity` (Dr. Saeed's non-photographic identity card) and `brand-mark` (the logo itself) are all `approved` and all render real bytes. The first row of the table below is also stale — the homepage hero's registered path is `/blue-diamond/home/home-hero-blue-diamond.png`, not the `/blue-diamond/hero/...` path shown, which named a directory the library never had. Historic counts, unreconciled: *41 registered assets. 0 approved, 4 identity-confirmed and ready to import, 3 candidate-but-unconfirmed, 1 permanently disabled (photo declined), 33 pending.* Every `ImageKitImage` usage across the site resolves to one of these entries or renders the FacetTile placeholder — `tests/unit/image-usage.spec.ts` enforces there is no third option (no hardcoded local path, no unmapped path).
 
 Focal point: `undefined` on every entry below — real photography doesn't exist yet, so no deliberate crop/focus decision has been made (the type supports `{x, y}` once one is). Priority: not a manifest field — it's the `preload` prop passed at each usage site (only the homepage hero uses it; every other image lazy-loads).
 
@@ -123,6 +136,7 @@ Focal point: `undefined` on every entry below — real photography doesn't exist
 |---|---|---|---|---|---|---|---|
 | `/blue-diamond/hero/homepage-hero.jpg` | Homepage | Hero | Blue Diamond Medical Clinic, West Springs, Calgary | عيادة بلو دايموند الطبية، ويست سبرينغز، كالغاري | 1920×1080 | 16:9 | pending — candidate: `medical/3p0a4142.jpg` (clinic interior signage), not an exact hero-crop match |
 | `/blue-diamond/shared/our-team-group.webp` | Our Team (`/our-team`) | Hero — inline visual in the `aside` column, beside the copy | The Blue Diamond Medical team at the West Springs clinic | فريق بلو دايموند الطبي في عيادة ويست سبرينغز | 600×451 | 4:3 | **approved** — clinic-supplied, imported via FeelStack `media/import`, sha256 `fcf6372a…54f42`. Rendered through the `team-group` preset, pinned to the 600px original so it is never upscaled |
+| `/blue-diamond/brand/blue-diamond-mark.png` | Every route | Header lock-up, footer lock-up, About hero lock-up | Blue Diamond Medical Clinic | عيادة بلو دايموند الطبية | 440×515 | — | **approved** — client-supplied 2026-09-06, imported via FeelStack `media/import` 2026-09-07, sha256 `f467436a…6e9b`, CDN original verified byte-identical with `?tr=orig-true`. Rendered through the `logo` preset by `src/components/layout/Logo.tsx`, not `ImageKitImage` |
 | `/blue-diamond/clinic/west-springs-exterior.jpg` | Homepage / About | Location | Blue Diamond Medical Clinic exterior, West Springs | واجهة عيادة بلو دايموند الطبية، ويست سبرينغز | 800×1000 | 4:5 | pending |
 | `/blue-diamond/clinic/map-placeholder.jpg` | Contact | Location | Map to Blue Diamond Medical Clinic | خريطة الوصول إلى عيادة بلو دايموند الطبية | 800×600 | 4:3 | pending |
 | `/blue-diamond/pathways/medical-care.jpg` | Homepage | Two Care Pathways (hero composition) | Physician with patient at Blue Diamond Medical | طبيب مع مريض في بلو دايموند الطبية | 900×700 | 9:7 | pending |
@@ -174,15 +188,17 @@ Dr. Ahmed Gwea additionally: per brief §12, must use the approved abstract tile
 
 | ImageKit path | Page | EN alt | AR alt | W×H | Aspect | Status |
 |---|---|---|---|---|---|---|
-| `/blue-diamond/concerns/acne-scars.jpg` | `/aesthetics/concerns/acne-scars` | Acne Scars — Blue Diamond Medical Aesthetics | ندبات حب الشباب — بلو دايموند للتجميل الطبي | 900×900 | 1:1 | pending |
-| `/blue-diamond/concerns/rosacea-redness.jpg` | `/aesthetics/concerns/rosacea-redness` | Rosacea & Redness — Blue Diamond Medical Aesthetics | الوردية والاحمرار — بلو دايموند للتجميل الطبي | 900×900 | 1:1 | pending |
-| `/blue-diamond/concerns/dry-skin.jpg` | `/aesthetics/concerns/dry-skin` | Dry Skin — Blue Diamond Medical Aesthetics | جفاف البشرة — بلو دايموند للتجميل الطبي | 900×900 | 1:1 | pending |
-| `/blue-diamond/concerns/fine-lines-wrinkles.jpg` | `/aesthetics/concerns/fine-lines-wrinkles` | Fine Lines & Wrinkles — Blue Diamond Medical Aesthetics | خطوط التجاعيد الدقيقة — بلو دايموند للتجميل الطبي | 900×900 | 1:1 | pending |
-| `/blue-diamond/concerns/skin-laxity.jpg` | `/aesthetics/concerns/skin-laxity` | Skin Laxity — Blue Diamond Medical Aesthetics | ترهل الجلد — بلو دايموند للتجميل الطبي | 900×900 | 1:1 | pending |
-| `/blue-diamond/concerns/spider-veins.jpg` | `/aesthetics/concerns/spider-veins` | Spider Veins — Blue Diamond Medical Aesthetics | الأوردة العنكبوتية — بلو دايموند للتجميل الطبي | 900×900 | 1:1 | pending |
-| `/blue-diamond/concerns/sun-damage-pigmentation.jpg` | `/aesthetics/concerns/sun-damage-pigmentation` | Sun Damage & Pigmentation — Blue Diamond Medical Aesthetics | ضرر الشمس والتصبغ — بلو دايموند للتجميل الطبي | 900×900 | 1:1 | pending |
-| `/blue-diamond/concerns/skin-revitalization.jpg` | `/aesthetics/concerns/skin-revitalization` | Skin Revitalization — Blue Diamond Medical Aesthetics | تجديد البشرة — بلو دايموند للتجميل الطبي | 900×900 | 1:1 | pending |
-| `/blue-diamond/concerns/razor-bumps.jpg` | `/aesthetics/concerns/razor-bumps` | Razor Bumps — Blue Diamond Medical Aesthetics | نتوءات الحلاقة — بلو دايموند للتجميل الطبي | 900×900 | 1:1 | pending |
+| `/blue-diamond/concerns/unwanted-hair.jpg` | `/aesthetics/treatments/unwanted-hair` | Unwanted Hair — Blue Diamond Medical Aesthetics | الشعر غير المرغوب فيه — بلو دايموند للتجميل الطبي | 900×900 | 1:1 | pending |
+| `/blue-diamond/concerns/hair-loss.jpg` | `/aesthetics/treatments/hair-loss` | Hair Loss — Blue Diamond Medical Aesthetics | تساقط الشعر — بلو دايموند للتجميل الطبي | 900×900 | 1:1 | pending |
+| `/blue-diamond/concerns/acne-scars.jpg` | `/aesthetics/treatments/acne-scars` | Acne Scars — Blue Diamond Medical Aesthetics | ندبات حب الشباب — بلو دايموند للتجميل الطبي | 900×900 | 1:1 | pending |
+| `/blue-diamond/concerns/rosacea-redness.jpg` | `/aesthetics/treatments/rosacea-redness` | Rosacea & Redness — Blue Diamond Medical Aesthetics | الوردية والاحمرار — بلو دايموند للتجميل الطبي | 900×900 | 1:1 | pending |
+| `/blue-diamond/concerns/dry-skin.jpg` | `/aesthetics/treatments/dry-skin` | Dry Skin — Blue Diamond Medical Aesthetics | جفاف البشرة — بلو دايموند للتجميل الطبي | 900×900 | 1:1 | pending |
+| `/blue-diamond/concerns/fine-lines-wrinkles.jpg` | `/aesthetics/treatments/fine-lines-wrinkles` | Fine Lines & Wrinkles — Blue Diamond Medical Aesthetics | خطوط التجاعيد الدقيقة — بلو دايموند للتجميل الطبي | 900×900 | 1:1 | pending |
+| `/blue-diamond/concerns/skin-laxity.jpg` | `/aesthetics/treatments/skin-laxity` | Skin Laxity — Blue Diamond Medical Aesthetics | ترهل الجلد — بلو دايموند للتجميل الطبي | 900×900 | 1:1 | pending |
+| `/blue-diamond/concerns/spider-veins.jpg` | `/aesthetics/treatments/spider-veins` | Spider Veins — Blue Diamond Medical Aesthetics | الأوردة العنكبوتية — بلو دايموند للتجميل الطبي | 900×900 | 1:1 | pending |
+| `/blue-diamond/concerns/sun-damage-pigmentation.jpg` | `/aesthetics/treatments/sun-damage-pigmentation` | Sun Damage & Pigmentation — Blue Diamond Medical Aesthetics | ضرر الشمس والتصبغ — بلو دايموند للتجميل الطبي | 900×900 | 1:1 | pending |
+| `/blue-diamond/concerns/skin-revitalization.jpg` | `/aesthetics/treatments/skin-revitalization` | Skin Revitalization — Blue Diamond Medical Aesthetics | تجديد البشرة — بلو دايموند للتجميل الطبي | 900×900 | 1:1 | pending |
+| `/blue-diamond/concerns/razor-bumps.jpg` | `/aesthetics/treatments/razor-bumps` | Razor Bumps — Blue Diamond Medical Aesthetics | نتوءات الحلاقة — بلو دايموند للتجميل الطبي | 900×900 | 1:1 | pending |
 
 ### Medical services (7 live + uninsured-services — `src/features/medical-services/data.ts`)
 
@@ -201,7 +217,7 @@ Dr. Ahmed Gwea additionally: per brief §12, must use the approved abstract tile
 
 - **SkinMedica product photography (23 SKUs)** — owned by FeelStack, not by this manifest and not by the repository. A product's image is whatever asset is assigned to its `productPrimary` slot; all 23 have one today, under `/blue-diamond/shop/`. 19 are supplied manufacturer packshots and render now; the other 4 are designed tiles imported 2026-09-01 and still `pending`, so they render the Facet Tile until a reviewer approves them. The static `images[]` in `src/features/products/data.ts` is only the fallback for a product with no assignment, and it carries no path — it used to guess `/blue-diamond/products/skinmedica/<slug>.jpg`, a location no asset has ever occupied.
 - **Before/After gallery** — `beforeAfterEnabled: false`, no manifest entries exist because no approved photography exists to reference (brief explicitly forbids fabricating this).
-- **Logo** — recreated as inline SVG (`src/components/layout/Logo.tsx`) from the approved brand PDF's geometry, not an ImageKit raster asset.
+- **Logo** — the client's own supplied file, **served from ImageKit** at `/blue-diamond/brand/blue-diamond-mark.png` (imported 2026-09-07 on the client's instruction) and no longer the inline SVG recreation. The one asset that does NOT go through `ImageKitImage`: the mark resolves in `src/lib/media/brand-mark.ts`, which falls back to the copy bundled at `src/assets/brand/blue-diamond-mark.png` if the manifest entry is ever set back to `pending` — a FacetTile in place of the logo would read as a broken header on every route, which is not a graceful degradation. See CL-001 below.
 
 ### Verification
 
@@ -249,7 +265,7 @@ decision, not an import step.
 
 | File | Reason |
 |---|---|
-| `medical/blue-diamond-medical-logo.png` | Low-resolution legacy web logo; superseded by the approved logo PDF's vector geometry already implemented in `src/components/layout/Logo.tsx` |
+| `medical/blue-diamond-medical-logo.png` | Low-resolution legacy web logo; superseded by the mark the client supplied on 2026-09-06, now bundled at `src/assets/brand/blue-diamond-mark.png` |
 | `aesthetics/bluediamondmedicalaesthetics-bold01.png` | Same reason — legacy aesthetics wordmark, not the approved brand asset |
 | `medical/screenshot-2026-01-04-at-12.08.27-pm.png`, `-12.21.51-pm.png`, `-12.32.31-pm.png`, `-12.46.43-pm.png` | Literal browser screenshots of the old site's UI — not photography, not usable as content imagery on the new site |
 | `aesthetics/screenshot-2026-02-13-at-8.45.42-am.png`, `-1.02.15-pm.png` | Same reason |
@@ -339,7 +355,7 @@ The approved ImageKit account/endpoint is `https://ik.imagekit.io/oq92dh6zib`, m
 | Doctors — Dr. Omonijo | Card + profile | Portrait | `/blue-diamond/doctors/omonijo.jpg` | 4:5 | **candidate found, identity unconfirmed** | 2 real female portraits exist in the archive (`medical/blob-0846d7f.png`, `medical/whatsapp-image-2024-12-30-at-17.06.09.jpeg`) with no visible name — client must confirm which (if either) is Dr. Omonijo before either is imported (`docs/CONTENT_MODEL.md`) |
 | Doctors — Dr. Bakare | Card + profile | Portrait | `/blue-diamond/doctors/bakare.jpg` | 4:5 | **candidate found, identity unconfirmed** | 1 real male portrait (`medical/blob-7cc2b3d.png`) — candidate for Dr. Bakare or Dr. Gwea, unconfirmed |
 | Doctors — Dr. Gwea | Card + profile | Portrait | `/blue-diamond/doctors/gwea.jpg` | 4:5 | **candidate found, identity unconfirmed** | Same candidate as above, shared with Dr. Bakare — needs client confirmation either way |
-| Logo (header/footer) | — | Diamond + heartbeat mark | — | — | **functional recreation** | `src/components/layout/Logo.tsx` recreates the mark from the approved PDF's coordinates/colors as inline SVG — no master vector file (SVG/EPS) was supplied. Must be swapped for Decca Design Inc.'s master file before launch. |
+| Logo (header/footer) | — | Diamond + heartbeat mark | `/blue-diamond/brand/blue-diamond-mark.png` | — | **supplied, imported and in place** | The client supplied the mark on 2026-09-06 and asked on 2026-09-07 for it to be served from ImageKit; `src/components/layout/Logo.tsx` renders the CDN copy through the `logo` preset, with the committed original as the build-time fallback, and the SVG recreation is deleted. Still a raster — Decca Design Inc.'s master vector file (SVG/EPS) supersedes it if it ever arrives. |
 | Before/After gallery (`/aesthetics/before-after`, gated) | — | 15 candidate assets found, none approved | `/blue-diamond/before-after/<pair-id>.jpg` | varies | **flagged, not imported** | Full list with legacy-page context in `docs/MEDIA.md` — every one needs a clinical/marketing reviewer to confirm genuine pairing and claim accuracy before any import |
 | SkinMedica products (23, `/shop/*`, **live**) | Product photography | Bottle/packaging shots | `/blue-diamond/shop/<catalogue-number>_<Product_Name>.jpg`, assigned in FeelStack | 1:1 | **23 of 23 assigned; 19 approved, 4 pending** | None of these came from the licensed legacy archive; they were supplied separately and imported into the media library. 19 render their real packshot on the catalogue and detail pages in both locales. The remaining 4 — Lytera 2.0, Daily Physical Defense SPF 34, Total Defense + Repair SPF 34 (Tinted), Replenish Hydrating Cream — are marked `REVIEW_REQUIRED` in the supplied source manifest: no manufacturer packshot was ever retrieved or rights-confirmed for them. Rather than invent a photograph of a real manufacturer's packaging, each was given a DESIGNED typographic tile carrying its own trademark name, size and category (imported 2026-09-01, `productPrimary` assigned in both locales, `approvalStatus: pending`). A sibling's photograph is still never substituted. Approving the four is the only step left; replace them outright the day a licensed packshot is supplied. |
 
@@ -353,4 +369,65 @@ The approved ImageKit account/endpoint is `https://ik.imagekit.io/oq92dh6zib`, m
 
 ### Automated verification
 
-`tests/unit/image-usage.spec.ts` (built and passing, 4 tests): no component imports `next/image` directly (must go through `ImageKitImage`), no hardcoded `/images/...` local paths, no Unsplash/Pexels/Cloudinary references, every `ImageKitImage path=` used in a page has a matching `image-manifest.ts` entry. `public/` still contains only the unused Next.js default scaffold SVGs; `src/app/favicon.ico` is still the scaffold default and needs replacing with a Blue Diamond favicon derived from the approved mark before launch.
+`tests/unit/image-usage.spec.ts` (built and passing): no component imports `next/image` directly (must go through `ImageKitImage`), no hardcoded `/images/...` local paths, no Unsplash/Pexels/Cloudinary references, every `ImageKitImage path=` used in a page has a matching `image-manifest.ts` entry, and every approved entry sits in a namespace the library actually has (`brand` was added to that list when the logo was imported). `tests/e2e/brand-mark.spec.ts` covers the logo itself: header, footer and the About lock-up must render a decoded `<img>` of the mark in both locales — never the FacetTile — and the favicon must not be the Next.js scaffold default. `public/` still contains only the unused Next.js default scaffold SVGs. `src/app/favicon.ico` is no longer the scaffold default: it was rebuilt on 2026-09-06 from the supplied mark (16/32/48px, transparent).
+
+## Client-supplied assets outstanding (CL-039 – CL-041, CL-043; CL-001 resolved)
+
+`BLOCKED_BY_CLIENT_ASSET`. The client change register supplies nine binaries —
+one logo and eight treatment/equipment photographs — by file path. The logo
+(CL-001) arrived on 2026-09-06 as a direct attachment and is in place; the
+eight photographs are still outstanding. **None of the register's paths exist
+in this implementation environment**, and none of the eight originals is
+present in the ImageKit archive or in FeelStack. Every path the
+register gives is rooted at `C:/Users/RAHME/Downloads/…`, a user profile that
+does not exist on the build machine; the secondary reference directory
+(`WhatsApp Unknown 2026-09-04 at 8.08.47 AM/incoming-2026-09-06/…`) is absent
+for the same reason.
+
+Nothing here was substituted, approximated, or sourced from the web. Per the
+register's own instruction, each missing original is reported by its exact
+filename below rather than guessed at.
+
+### What is missing, and where each file goes once supplied
+
+| ID | Expected original | Destination route | Slot | Notes |
+| --- | --- | --- | --- | --- |
+| CL-001 | ~~`Blue Diamond Medical Clinic-logo2024-01-15_22-09-36-b10847c6-org-427.png`~~ — **SUPPLIED 2026-09-06**, as a 1536×1024 JPEG attached directly rather than by that filename (`sha256 5a97518c…`, kept verbatim at `src/assets/brand/blue-diamond-logo-source.jpg`) | global brand mark | `src/components/layout/Logo.tsx` | **Done.** `DiamondMark` now renders `src/assets/brand/blue-diamond-mark.png` — the diamond cut out of that file onto transparency, aspect ratio preserved (440×515) — in `Logo` **and** `BrandLockup` (header, mobile nav, footer, hero lock-up), and the SVG stand-in is deleted. The client chose the cut-out over keeping the render's black field or its glow, and chose to keep the live bilingual wordmark over the file's English-only one. Derivation and checksums: `src/assets/brand/README.md`. **Served from ImageKit since 2026-09-07** at `/blue-diamond/brand/blue-diamond-mark.png` (media asset `75a1e861-…d729`, CMS row `pending` as every import is; the manifest entry is the approval that matters here). |
+| CL-039 | `WhatsApp Image 2026-09-04 at 10.47.14 PM.jpeg` | `/aesthetics/treatments/rf-microneedling`, `/aesthetics/technologies/potenza` | `hero` | Current Potenza device/treatment. Supersedes the stale `potenza-device.jpg` candidate above. |
+| CL-039 | `WhatsApp Image 2026-09-04 at 10.47.14 PM (1).jpeg` | same | `gallery` | Supporting frame. **Not** a before/after — must not be labelled as a result. The route's existing before/after content is preserved unchanged. |
+| CL-040 | `WhatsApp Image 2026-09-04 at 10.48.46 PM.jpeg` | `/aesthetics/technologies/elite-iq`, `/aesthetics/treatments/laser-hair-removal` | `hero` | Elite iQ™ equipment. Supersedes `elite-iq-device.jpg`. |
+| CL-040 | `WhatsApp Image 2026-09-04 at 10.49.19 PM.jpeg` | same | `gallery` | **Requires a cleaned derivative** — see below. Keep the untouched source in the archive alongside it. |
+| CL-041 | `WhatsApp Image 2026-09-04 at 10.51.04 PM.jpeg` | `/aesthetics/treatments/radio-frequency`, `/aesthetics/technologies/tempsure` | `hero` | TempSure Envi. Do **not** map to Ultra. |
+| CL-041 | `WhatsApp Image 2026-09-04 at 10.51.05 PM.jpeg` | same | `gallery` | TempSure Envi. |
+| CL-041 | `WhatsApp Image 2026-09-04 at 10.51.34 PM.jpeg` | `/aesthetics/treatments/ultra`, `/aesthetics/technologies/ultra` | `hero` | LaseMD Ultra machine. |
+| CL-041 | `WhatsApp Image 2026-09-04 at 10.51.34 PM (1).jpeg` | `/aesthetics/treatments/ultra` | `gallery` / before-after | LaseMD Ultra before/after. Preserve its labels, ordering, privacy bars, attribution ("Courtesy of W. Loverme MD") and aspect ratio exactly. Never reverse Before/After, never retouch, never imply a guaranteed outcome. |
+
+### CL-040 cleaned derivative
+
+The `10.49.19 PM` original carries burnt-in promotional text (`ELITE iQ`,
+`TREAT ANY SKIN TYPE`, `Any Time of Year`) and a decorative rule frame. A clean
+derivative is required before publication, retaining the underlying
+laser-treatment scene and natural anatomy. Acceptance: no fragment of any of
+those three strings and no part of the frame remains at ANY rendered size; the
+image is not half-cropped through the wording, not blurred wholesale, and no
+treatment result is invented. Verify at the `treatment` preset's rendered sizes.
+Both files are kept — untouched source and cleaned derivative.
+
+### CL-043 consequence
+
+Because none of the eight originals is present, the audit of stale/duplicated
+equipment imagery across the Aesthetics routes could not be closed by
+replacement. No known-wrong device photograph is being shown in the meantime:
+the affected slots have no CMS assignment and render the seeded `FacetTile`
+brand fallback (`MediaCard`, `AestheticsHero`), which is a designed stand-in
+rather than an incorrect device.
+
+### How to complete once the files arrive
+
+No code change is required for CL-039 – CL-041 and CL-043 — media is a CMS
+concern (see "Import architecture" above). Upload each original to FeelStack,
+approve it, assign it to the route and slot in the table, and publish; the
+route picks it up on the next revalidation and the `FacetTile` fallback
+disappears on its own. CL-001 was the exception — a code change in
+`src/components/layout/Logo.tsx`, made on 2026-09-06 when the client supplied
+the mark. The eight photographs remain outstanding.

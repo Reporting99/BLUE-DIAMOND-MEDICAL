@@ -13,6 +13,101 @@ import type { AestheticConcern } from "./types";
  * `correctedFromSource: true`. See docs/CONTENT_MODEL.md.
  */
 export const concerns: AestheticConcern[] = [
+  /**
+   * Unwanted Hair and Hair Loss are concern-level entry points added when the
+   * Aesthetics IA became concern-first — the "Treatments" menu IS the concern
+   * list, so the two hair problems a visitor actually arrives with needed a
+   * door of their own. Neither entry invents anything: every sentence below is
+   * approved Laser Hair Removal / PRP Hair Restoration content from
+   * Blue-Diamond-Medical-Website-Content-Extraction_1.docx, restated as the
+   * patient's problem rather than as the device. The treatment pages stay live
+   * and carry the full detail — src/features/aesthetics/data/treatments.ts.
+   */
+  {
+    id: "unwanted-hair",
+    slug: "unwanted-hair",
+    slugAr: "الشعر-غير-المرغوب-فيه",
+    title: { en: "Unwanted Hair", ar: "الشعر غير المرغوب فيه" },
+    summary: {
+      en: "Long-lasting hair reduction anywhere on the body using the Cynosure Elite+™ laser system, with the Skintel™ melanin reader allowing safe treatment of all skin types.",
+      ar: "تقليل دائم لنمو الشعر في أي منطقة من الجسم باستخدام نظام ليزر Cynosure Elite+™، مع قارئ الميلانين Skintel™ الذي يتيح علاجًا آمنًا لجميع أنواع البشرة.",
+    },
+    commonPresentations: {
+      en: "Unwanted hair is treated on the face, back, legs, chest, underarms, bikini area, and upper lip — the Elite iQ™ device can be used anywhere on the body.",
+      ar: "يُعالَج الشعر غير المرغوب فيه في الوجه، والظهر، والساقين، والصدر، والإبطين، ومنطقة البكيني، والشفة العليا — ويمكن استخدام جهاز Elite iQ™ في أي منطقة من الجسم.",
+    },
+    contributingFactors: {
+      en: "Hair grows in a three-phase cycle — anagen (active growth), catagen, and telogen (resting). Only follicles in the anagen phase respond fully to laser energy, which is why hair returns between sessions and why a course of treatments is needed.",
+      ar: "ينمو الشعر ضمن دورة من ثلاث مراحل — النمو النشط، ثم مرحلة الانتقال، ثم مرحلة الراحة. ولا تستجيب لطاقة الليزر بشكل كامل سوى البصيلات في مرحلة النمو النشط، ولهذا يعود الشعر بين الجلسات ويلزم إجراء سلسلة منها.",
+    },
+    relatedTreatmentIds: ["laser-hair-removal"],
+    relatedConcernIds: ["razor-bumps"],
+    faqs: [
+      {
+        question: { en: "How does Elite iQ™ work?", ar: "كيف يعمل جهاز Elite iQ™؟" },
+        answer: {
+          en: "It uses the Skintel™ device — the first Health Canada and FDA cleared melanin reader on the market — allowing safe treatment of all skin types and areas.",
+          ar: "يستخدم جهاز Skintel™ — أول قارئ ميلانين معتمد من هيئة الصحة الكندية وإدارة الغذاء والدواء الأمريكية — مما يتيح علاجًا آمنًا لجميع أنواع البشرة والمناطق.",
+        },
+      },
+      {
+        question: { en: "How many treatments will I need?", ar: "كم عدد الجلسات التي سأحتاجها؟" },
+        answer: {
+          en: "Treatment times vary by area but typically take less than 30 minutes. Multiple sessions are needed since not all hairs are actively growing at once. Speak to your provider for a consultation to discuss treatment areas.",
+          ar: "تختلف مدة الجلسة حسب المنطقة، لكنها عادة أقل من 30 دقيقة. ويلزم عدة جلسات لأن الشعر لا ينمو كله في وقت واحد. تحدثوا مع مقدم الرعاية لتحديد استشارة ومناقشة المناطق المطلوب علاجها.",
+        },
+      },
+      {
+        question: { en: "Where are these treatments performed?", ar: "أين تُجرى هذه العلاجات؟" },
+        answer: {
+          en: "All Elite iQ™ treatments are performed exclusively at Citizen Studio, 45 Greenbriar Dr NW, Calgary, AB T3B 5N4 — not at the West Springs clinic.",
+          ar: "تُجرى جميع علاجات Elite iQ™ حصريًا في Citizen Studio، 45 Greenbriar Dr NW، كالغاري، AB T3B 5N4 — وليس في عيادة ويست سبرينغز.",
+        },
+      },
+    ],
+    relatedDoctorIds: ["mohamed-farhat"],
+    sourceVerified: true,
+  },
+  {
+    id: "hair-loss",
+    slug: "hair-loss",
+    slugAr: "تساقط-الشعر",
+    title: { en: "Hair Loss", ar: "تساقط الشعر" },
+    summary: {
+      en: "Platelet-Rich Plasma injected into the scalp to stimulate inactive hair follicles and promote denser, fuller hair growth — performed by Dr. Farhat.",
+      ar: "حقن البلازما الغنية بالصفائح الدموية في فروة الرأس لتنشيط البصيلات الخاملة وتعزيز نمو شعر أكثف وأكمل — يُجريها الدكتور فرحات.",
+    },
+    commonPresentations: {
+      en: "Individuals noticing thinning hair or early hair loss.",
+      ar: "الأشخاص الذين يلاحظون ترقق الشعر أو تساقطه المبكر.",
+    },
+    relatedTreatmentIds: ["prp-hair-restoration"],
+    faqs: [
+      {
+        question: { en: "How does PRP address hair loss?", ar: "كيف تعالج البلازما تساقط الشعر؟" },
+        answer: {
+          en: "PRP is a regenerative serum created from the patient's own blood. After a blood draw, plasma is separated and concentrated into a serum rich in growth factors that stimulate inactive hair follicles and improve scalp blood circulation.",
+          ar: "البلازما الغنية بالصفائح الدموية مصل تجديدي يُستخرج من دم المريض نفسه. بعد سحب عينة دم، يُفصَل البلازما ويُركَّز في مصل غني بعوامل النمو التي تُنشّط بصيلات الشعر الخاملة وتُحسّن الدورة الدموية في فروة الرأس.",
+        },
+      },
+      {
+        question: { en: "Who performs PRP at Blue Diamond Medical?", ar: "من يُجري علاج البلازما في بلو دايموند الطبية؟" },
+        answer: {
+          en: "PRP treatments are performed by Dr. Farhat, combining advanced technique with personalized care.",
+          ar: "يُجري الدكتور فرحات علاجات البلازما، جامعًا بين التقنية المتقدمة والرعاية الشخصية.",
+        },
+      },
+      {
+        question: { en: "How many sessions will I need?", ar: "كم عدد الجلسات التي سأحتاجها؟" },
+        answer: {
+          en: "Most people benefit from a series of 3–4 treatments spaced a few weeks apart; maintenance sessions may be recommended. Each session takes 30 to 60 minutes depending on the treatment area, with little to no downtime.",
+          ar: "يستفيد معظم الأشخاص من سلسلة من 3 إلى 4 جلسات بفاصل بضعة أسابيع؛ قد يُنصح بجلسات صيانة لاحقًا. وتستغرق كل جلسة من 30 إلى 60 دقيقة حسب المنطقة المعالجة، مع تعافٍ محدود أو معدوم.",
+        },
+      },
+    ],
+    relatedDoctorIds: ["mohamed-farhat"],
+    sourceVerified: true,
+  },
   {
     id: "acne-scars",
     slug: "acne-scars",
@@ -55,8 +150,8 @@ export const concerns: AestheticConcern[] = [
       {
         question: { en: "How do I book a consultation?", ar: "كيف أحجز استشارة؟" },
         answer: {
-          en: "Through Jane App, our external booking system for aesthetics consultations.",
-          ar: "عبر تطبيق Jane، نظام الحجز الخارجي الخاص باستشارات التجميل الطبي لدينا.",
+          en: "Through Mikata, our external booking system. For all aesthetic treatment appointments, book a 20-minute consultation with Dr. Farhat.",
+          ar: "عبر نظام Mikata، نظام الحجز الخارجي الخاص بنا. تبدأ جميع مواعيد العلاجات التجميلية باستشارة مع الطبيب.",
         },
       },
     ],

@@ -9,7 +9,7 @@ export function GET() {
 
 > Family medicine, walk-in care, and physician-led medical aesthetics in West Springs, Calgary, Alberta, Canada.
 
-Blue Diamond Medical Clinic opened July 4, 2022 in West Springs, Calgary, founded by Dr. Mohamed Farhat (28+ years in family medicine). The clinic now has six family physicians providing AHS-insured family medicine, walk-in visits, and physician-led medical aesthetics including RF micro-needling, skin tightening, laser treatments, and medical/cosmetic Botox.
+Blue Diamond Medical Clinic opened July 4, 2022 in West Springs, Calgary, founded by Dr. Mohamed Farhat (30+ years in family medicine). The clinic now has six family physicians providing AHS-insured family medicine, walk-in visits, and physician-led medical aesthetics including RF micro-needling, skin tightening, laser treatments, and medical/cosmetic Botox.
 
 ## Languages
 - English: ${siteConfig.url}/en

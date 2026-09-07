@@ -70,7 +70,7 @@ export function HealthHubArticleTemplate({ article, locale }: { article: HealthH
         <div data-reveal="up" className="whitespace-pre-line text-body text-text-body">{article.body[locale]}</div>
 
         {article.faqs?.length ? (
-          <section data-reveal="up" className="mt-10">
+          <section data-reveal="up" className="mt-10 first:mt-0">
             <h2 className="text-h4 font-heading">{t.faqs}</h2>
             <dl className="mt-3 space-y-4">
               {article.faqs.map((faq) => (

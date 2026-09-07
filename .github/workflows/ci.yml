@@ -16,19 +16,32 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Read from .nvmrc rather than a literal, so the pin cannot drift from
+      # package.json `engines`, ops/deploy/deploy-blue-diamond and the systemd
+      # unit. This said "20" while every other pin said 20.19.5, which meant CI
+      # could validate a release on a Node minor the production host never runs
+      # -- exactly the mismatch docs/DEPLOYMENT.md claims does not exist.
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version-file: ".nvmrc"
           cache: "npm"
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Typecheck
-        run: npm run typecheck
-
       - name: Lint
         run: npm run lint
+
+      # BEFORE Build, and that ordering is the point rather than an accident.
+      # `next build` writes next-env.d.ts, which carries the
+      # `next/image-types/global` reference that makes a static image import
+      # type-check. Running the typecheck first is what proved that reference
+      # was missing from the tracked sources (fixed in src/types/static-assets.d.ts):
+      # on any machine that had ever built, the generated file was lying around
+      # and the error could not reproduce. Keep this step above Build so a
+      # fresh checkout stays the thing CI actually validates.
+      - name: Typecheck
+        run: npm run typecheck
 
       - name: Secret scan
         run: npm run validate:secrets
@@ -41,6 +54,28 @@ jobs:
           # these are unset, per docs/DEPLOYMENT.md.
           NEXT_PUBLIC_SITE_URL: https://bluediamondmedical.ca
 
+      # next.config.ts sets `output: "standalone"`, and the Playwright harness
+      # serves `.next/standalone/server.js` with --no-build. If the build ever
+      # stops emitting it -- a dropped `output` setting, a Next major that
+      # renames the directory -- the first symptom is Playwright reporting that
+      # its web server did not start, several minutes later and with the cause
+      # nowhere in the log. Assert it here, where the build that produced it is
+      # still the subject.
+      - name: Verify standalone output
+        shell: bash
+        run: |
+          set -euo pipefail
+          for path in .next/standalone/server.js .next/BUILD_ID; do
+            if [ ! -s "$path" ]; then
+              echo "::error::missing $path -- next build did not emit standalone output"
+              echo "contents of .next:"
+              ls -la .next || echo "  (.next does not exist)"
+              exit 1
+            fi
+            echo "ok: $path ($(wc -c < "$path") bytes)"
+          done
+          test -d .next/static
+
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
 
@@ -51,6 +86,18 @@ jobs:
         run: npm run test:e2e
         env:
           CI: true
+
+      # The HTML report is the readable one; the raw log is the one that
+      # carries the real exit code and the server's own stderr, which is where
+      # a "web server did not start" failure explains itself.
+      - name: Upload Playwright log on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-log
+          path: /tmp/bd-playwright-full.log
+          if-no-files-found: warn
+          retention-days: 7
 
       - name: Upload Playwright report on failure
         if: failure()

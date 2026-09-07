@@ -28,6 +28,12 @@ const PREFIX_BY_TYPE: Readonly<Record<string, string>> = {
   page: "",
   "medical-service": "/medical",
   "aesthetic-treatment": "/aesthetics/treatments",
+  // CMS prefix, not the public one. Concern pages are published at
+  // /aesthetics/treatments/<slug> since the Aesthetics IA turned concern-first,
+  // but FeelStack still lists them under /aesthetics/concerns and these keys
+  // are matched against ITS route list — changing this to the public prefix
+  // would match nothing and 404 every concern preview. The editor lands on the
+  // right page via the 301 in src/lib/routing/moved-routes.ts.
   "aesthetic-concern": "/aesthetics/concerns",
   technology: "/aesthetics/technologies",
   product: "/shop",

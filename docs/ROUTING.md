@@ -17,7 +17,7 @@ See `docs/ROUTING.md` for the complete existing table — verified current and a
 |---|---|---|
 | Home | `/` | `/` |
 | Medical | `/medical` (+7 services, +1 pricing) | `/الرعاية-الطبية` |
-| Aesthetics | `/aesthetics` (+ treatments/concerns/technologies hubs and 22 leaf pages) | `/التجميل-الطبي` |
+| Aesthetics | `/aesthetics` (+ treatments and technologies hubs and 24 leaf pages) | `/التجميل-الطبي` |
 | Botox | `/botox` | `/بوتوكس` |
 | Doctors | `/doctors` (+6 profiles) | `/الأطباء` |
 | Patient Resources | `/patient-resources` | `/موارد-المرضى` |
@@ -63,8 +63,7 @@ Single source of truth is `src/config/routes.ts` — this document mirrors it in
 | `medical-eye-screening`, `medical-after-hours-care`, `medical-chronic-disease-management`, `medical-preventive-care`, `medical-weight-management`, `medical-pain-management`, `medical-minor-procedures` (×7) | `/medical/<slug>` | `/الرعاية-الطبية/<slug>` | medical-service | — |
 | `medical-uninsured-services` | `/medical/uninsured-services` | `/الرعاية-الطبية/الخدمات-غير-المشمولة` | pricing | — |
 | `aesthetics-hub` | `/aesthetics` | `/التجميل-الطبي` | hub | ✅ |
-| `aesthetics-treatments-hub` + 8 treatments | `/aesthetics/treatments[/<slug>]` | `/التجميل-الطبي/العلاجات[/<slug>]` | hub + aesthetic-treatment | — |
-| `aesthetics-concerns-hub` + 9 concerns | `/aesthetics/concerns[/<slug>]` | `/التجميل-الطبي/المخاوف-الجمالية[/<slug>]` | hub + concern | — |
+| `aesthetics-treatments-hub` + 8 treatments + 11 concerns | `/aesthetics/treatments[/<slug>]` | `/التجميل-الطبي/العلاجات[/<slug>]` | hub + aesthetic-treatment + concern | — |
 | `aesthetics-technologies-hub` + 5 technologies | `/aesthetics/technologies[/<slug>]` | `/التجميل-الطبي/التقنيات[/<slug>]` | hub + technology | — |
 | `botox-hub` | `/botox` | `/بوتوكس` | hub | ✅ |
 | `doctors-index` + 6 doctors | `/our-team[/<slug>]` | `/فريقنا[/<slug>]` | hub + doctor-profile | ✅ (index only) |
@@ -152,7 +151,7 @@ served — is asserted in `tests/contracts/prelaunch-route-architecture.spec.ts`
 | Rule | Checked against | Result |
 |---|---|---|
 | One authoritative page per doctor | 6 `doctor-*` routes in `src/config/routes.ts`, each a unique id/path generated from `src/features/doctors/data.ts` | **Compliant** — no duplicates possible by construction (routes are generated 1:1 from the doctors array) |
-| Treatments and concerns remain separate | `treatment-*` vs `concern-*` route id prefixes, separate hubs (`/aesthetics/treatments` vs `/aesthetics/concerns`) | **Compliant** |
+| Concerns and treatments are one journey, not two catalogues | `treatment-*` and `concern-*` route ids share the `/aesthetics/treatments` namespace, with the hub listing concerns and each concern page listing its treatment options (`src/features/concerns/queries.ts`). A build-time assertion in `src/config/routes.ts` rejects a slug collision between the two. | **Compliant** |
 | Technologies remain separate from treatments | `technology-*` route prefix, separate hub (`/aesthetics/technologies`) | **Compliant** |
 | Medical Botox remains separate from cosmetic Botox | `medical-botox-*` (AHS-insured conditions, gated) vs `treatment-cosmetic-botox` (gated) vs `botox-hub` (live, unified overview covering both) are three distinct route trees | **Compliant** |
 | Doctors must not be duplicated under Medical and Aesthetics | `doctors-index` is one top-level section; Medical and Aesthetics pages *link* to doctor profiles, none re-publish a duplicate profile under their own path | **Compliant** |
@@ -226,6 +225,42 @@ Source of truth: `src/lib/routing/legacy-redirects.ts`, consumed by `src/proxy.t
 | `/about-skinmedica-products/f/ahabha-exfoliating-cleanser` | `/en/shop/aha-bha-exfoliating-cleanser` |
 | `/about-skinmedica-products/f/*` (any other/undiscovered slug) | `/en/shop` *(safety-net prefix rule in `src/proxy.ts` — no 404 possible under this legacy path even for a slug not individually mapped above)* |
 
+### In-app moved routes — `src/lib/routing/moved-routes.ts`
+
+Distinct from the legacy tables above, which map URLs of the *previous
+websites*. This one maps URLs **this app itself used to serve**.
+
+The single migration in it is the Aesthetics IA becoming concern-first. Skin
+concerns stopped being a parallel `/aesthetics/concerns` branch and became the
+Treatments entry points themselves, so every concern page changed address in
+both locales:
+
+| Old path | New path |
+|---|---|
+| `/en/aesthetics/concerns` | `/en/aesthetics/treatments` |
+| `/en/aesthetics/concerns/<slug>` | `/en/aesthetics/treatments/<slug>` |
+| `/ar/التجميل-الطبي/المخاوف-الجمالية[/<slugAr>]` | `/ar/التجميل-الطبي/العلاجات[/<slugAr>]` |
+| `/ar/aesthetics/concerns[/<slug>]` (Latin alias) | the approved Arabic path above |
+
+Generated from the `concerns` registry, not hand-listed. Checked in
+`src/proxy.ts` immediately after the legacy table and **before** locale
+handling, so an old path never round-trips through the Arabic rewrite and hit a
+folder that no longer exists.
+
+Three things this deliberately does NOT do:
+
+- **It does not leave the old URLs to 404.** Nine of them are the live targets
+  of legacy 301s from the old aesthetics site and carry that equity.
+- **It does not chain.** Those legacy entries were re-pointed at the new URLs in
+  the same pass, so an inbound visitor still arrives in one hop.
+- **It does not rename the CMS paths.** FeelStack still registers concerns under
+  `/aesthetics/concerns/<slug>`; public URL and CMS path are decoupled through
+  `CONCERN_CMS_PREFIX` (`src/features/concerns/cms-contract.ts`), which the page
+  loader, the listing-media fan-out and the publish webhook all read.
+
+`tests/redirects/moved-routes.spec.ts` asserts every row is a single 301 onto a
+live 200, and that no legacy entry still points into the retired branch.
+
 ### bluediamondmedicalaesthetics.ca (separate legacy domain — cannot be caught by this app's proxy)
 
 This app's `src/proxy.ts` only runs for requests to `bluediamondmedical.ca`. Redirecting the old aesthetics domain requires host-level configuration — see `docs/DEPLOYMENT.md`. The intended target mapping (same table this app's proxy would use if it ever received these hosts) is:
@@ -234,7 +269,7 @@ This app's `src/proxy.ts` only runs for requests to `bluediamondmedical.ca`. Red
 |---|---|
 | `/` | `/en/aesthetics` |
 | `/treatments` | `/en/aesthetics/treatments` |
-| `/area-concern` | `/en/aesthetics/concerns` |
+| `/area-concern` | `/en/aesthetics/treatments` |
 | `/laser-hair-removal` | `/en/aesthetics/treatments/laser-hair-removal` |
 | `/laser-treatment-1` | `/en/aesthetics/treatments/laser-skin-treatments` |
 | `/radio-frequency` | `/en/aesthetics/treatments/radio-frequency` |
@@ -243,15 +278,15 @@ This app's `src/proxy.ts` only runs for requests to `bluediamondmedical.ca`. Red
 | `/prp-therapy` | `/en/aesthetics/treatments/prp-skin-rejuvenation` *(the legacy page covered both hair and skin PRP in one page; split per brief §15 into `prp-hair-restoration` and `prp-skin-rejuvenation` — this legacy path lands on the skin-rejuvenation half, which is closer to the original page's primary framing)* |
 | `/our-technologies` | `/en/aesthetics/technologies` |
 | `/our-team` | `/en/our-team` |
-| `/acne-scar-removal` | `/en/aesthetics/concerns/acne-scars` |
-| `/rosacea-abatement` | `/en/aesthetics/concerns/rosacea-redness` |
-| `/dry-skin-remediation` | `/en/aesthetics/concerns/dry-skin` |
-| `/fineline-and-wrinkle` | `/en/aesthetics/concerns/fine-lines-wrinkles` |
-| `/non-invasive-skin` | `/en/aesthetics/concerns/skin-laxity` |
-| `/spider-vein` | `/en/aesthetics/concerns/spider-veins` |
-| `/sun-damage` | `/en/aesthetics/concerns/sun-damage-pigmentation` |
-| `/skin-revitalization` | `/en/aesthetics/concerns/skin-revitalization` |
-| `/razor-bumps` | `/en/aesthetics/concerns/razor-bumps` |
+| `/acne-scar-removal` | `/en/aesthetics/treatments/acne-scars` |
+| `/rosacea-abatement` | `/en/aesthetics/treatments/rosacea-redness` |
+| `/dry-skin-remediation` | `/en/aesthetics/treatments/dry-skin` |
+| `/fineline-and-wrinkle` | `/en/aesthetics/treatments/fine-lines-wrinkles` |
+| `/non-invasive-skin` | `/en/aesthetics/treatments/skin-laxity` |
+| `/spider-vein` | `/en/aesthetics/treatments/spider-veins` |
+| `/sun-damage` | `/en/aesthetics/treatments/sun-damage-pigmentation` |
+| `/skin-revitalization` | `/en/aesthetics/treatments/skin-revitalization` |
+| `/razor-bumps` | `/en/aesthetics/treatments/razor-bumps` |
 | `/terms-and-conditions` | `/en/terms` *(fixed during route-tree validation — previously pointed at the unrelated `/en/aesthetics` page; now points at the real final canonical route, which itself 404s until `legalPagesEnabled` — see `docs/CONTENT_MODEL.md`)* |
 | `/privacy-policy` | `/en/privacy-policy` *(same fix)* |
 | `/vitalia` | `/en/aesthetics/treatments/tempsure-vitalia` *(found via live `sitemap.website.xml` crawl this pass — not in the original DOCX-derived inventory. Page content confirmed by direct fetch: pelvic-floor/vaginal-tightening RF treatment — the exact subject already covered by the published TempSure Vitalia page, not a duplicate)* |
@@ -296,7 +331,7 @@ referenced by earlier revisions of this section no longer exists — see the
 |---|---|---|
 | Home | `home` | — |
 | Medical | `medical-hub` | **Medical**: the 7 built medical-service pages + Botox hub + "View all medical care". **Uninsured Services**: the fees page (grouped separately per §18/§33). |
-| Aesthetics | `aesthetics-hub` | **Treatments** (9 + view all) · **Concerns** (9 + view all) · **Technologies** (5 + view all) — the three kept visually distinct per §11/§19. |
+| Aesthetics | `aesthetics-hub` | **Treatments** (11 patient concerns + Cosmetic Botox + view all) · **Technologies** (5 + view all). The Treatments group IS the concern list — Aesthetics is concern-first, so there is no separate Concerns column; device pages are reached from the concern that recommends them. |
 | Our Team | `doctors-index` | — |
 | About | `about` | — |
 | Contact | `contact` | — |
@@ -305,9 +340,11 @@ Both mega-menu labels are real `<a href>` links as well as disclosure
 triggers: clicking or pressing Enter goes to the hub, hovering or focusing
 opens the panel first.
 
-The Concerns and Technologies columns are generated from `concerns` and
+The Treatments and Technologies columns are generated from `concerns` and
 `technologies` rather than hand-listed, so a page cannot exist and be missing
-from the menu.
+from the menu. Cosmetic Botox is the one hand-added row: no approved source
+files it under a single concern, so it stays a standalone entry pointing at the
+live Botox hub.
 
 **Deliberately not in the Medical menu:** General Family Medicine,
 Vaccination, Onsite Paediatrician, Mental Health and Women's Health. On the

@@ -62,9 +62,27 @@ test.describe("medical service canary — live envelope", () => {
   test("first-class FAQs and doctor relations both resolve", () => {
     const env = feelstackResolveEnvelopeSchema.parse(fixture("en"));
     expect(env.relations?.faqs.length).toBe(staticService.faqs!.length);
-    expect(env.relations?.items.length).toBe(staticService.relatedDoctorIds.length);
+
+    // Relation ROWS are the CMS-side graph; the frontend routes doctors by the
+    // typed `related_doctor_ids` field instead — see the long comment in
+    // src/features/medical-services/cms-contract.ts explaining why the two
+    // representations serve different consumers.
+    //
+    // This used to assert `items.length === staticService.relatedDoctorIds.length`.
+    // That coupling broke on 2026-09-06 for a legitimate reason: after-hours
+    // care is published clinic-wide (`relatedDoctorScope:
+    // "all-family-physicians"`, so `relatedDoctorIds` is empty by design), and
+    // the CMS relation rows naming two physicians cannot be removed — the
+    // structured-content API exposes no DELETE for content relations, only for
+    // faq-assignments. Keeping the old assertion would have made an
+    // unremovable CMS artifact look like an application defect.
+    //
+    // So: the rows must still be well-formed, and the field the frontend
+    // ACTUALLY consumes must match the approved record exactly.
     expect(env.relations?.items.every((r) => r.targetType === "person_profile")).toBe(true);
     expect(env.relations?.items.every((r) => r.relationKey === "doctors")).toBe(true);
+    const fields = medicalServiceFieldsSchema.parse(entityPayload(env));
+    expect(fields.related_doctor_ids ?? []).toEqual(staticService.relatedDoctorIds);
   });
 });
 

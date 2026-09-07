@@ -87,6 +87,9 @@ test.describe("every CMS route has an Arabic mapping this build can resolve", ()
   });
 
   test("entity families that exist in the CMS are all represented", () => {
+    // CMS path families, not public URLs — concerns are still registered under
+    // /aesthetics/concerns in FeelStack even though their public URL moved into
+    // /aesthetics/treatments. See CONCERN_CMS_PREFIX.
     const families = ["/aesthetics/treatments/", "/aesthetics/concerns/", "/aesthetics/technologies/", "/medical/", "/shop/", "/our-team/"];
     for (const family of families) {
       const inCms = cmsRoutes.filter((r) => r.en.startsWith(family) && r.ar);

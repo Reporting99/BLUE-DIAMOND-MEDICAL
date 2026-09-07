@@ -20,6 +20,23 @@ import type { AestheticConcern } from "./types";
  * exactly as `related_doctor_ids` was added during the services phase.
  */
 
+/**
+ * The CMS path prefix for concerns — deliberately NOT their public URL prefix.
+ *
+ * FeelStack registered these entries under /aesthetics/concerns/<slug> and this
+ * repository does not get to rename someone else's routes. The public URLs
+ * moved into /aesthetics/treatments on their own when the Aesthetics IA turned
+ * concern-first (see src/config/routes.ts), so the two namespaces diverged and
+ * every caller that talks to the CMS about a concern — the page loader, the
+ * listing-media fan-out, the publish webhook — has to use THIS one. Exported
+ * from a single place so a fourth caller cannot quietly reintroduce the public
+ * path and resolve nothing.
+ */
+export const CONCERN_CMS_PREFIX = "/aesthetics/concerns/";
+
+/** The CMS path for one concern, by its id. */
+export const concernCmsPath = (id: string) => `${CONCERN_CMS_PREFIX}${id}`;
+
 export const concernFieldsSchema = z.object({
   concern_id: z.string().min(1),
   summary: z.string().min(1),
@@ -42,7 +59,7 @@ export const aestheticConcernCmsContract = defineEntityContract<ConcernFields, A
   adapt: ({ locale, title, fields: f, faqs, path, media }) => {
     const concern: AestheticConcern = {
       id: f.concern_id,
-      slug: entitySlug(path, locale, "/aesthetics/concerns/"),
+      slug: entitySlug(path, locale, CONCERN_CMS_PREFIX),
       // Arabic public URLs stay frontend-owned; the CMS slug is ASCII.
       slugAr: "",
       title: localizedBilingual(locale, title ?? ""),

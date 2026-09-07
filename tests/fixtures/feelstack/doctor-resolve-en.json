@@ -1,5 +1,6 @@
 {
   "type": "person_profile",
+  "status": "published",
   "route": {
     "id": "fef3a6bc-857c-4d55-a64d-1695d9252589",
     "path": "/our-team/mohamed-farhat",
@@ -10,7 +11,7 @@
     "alternates": [
       {
         "locale": "ar",
-        "path": "/our-team/mohamed-farhat"
+        "path": "/فريقنا/محمد-فرحات"
       },
       {
         "locale": "en",
@@ -18,13 +19,13 @@
       }
     ],
     "sectionId": null,
-    "updatedAt": "2026-08-23T10:08:57.442Z"
+    "updatedAt": "2026-09-01T21:44:11.191Z"
   },
   "data": {
     "id": "aed7273b-16fe-47a8-8742-9bdfe3ed0489",
     "displayName": "Dr. Mohamed Farhat",
     "professionalTitle": "Family Physician · Founder",
-    "biography": "Dr. Mohamed Farhat is a family physician with more than 28 years of experience. He founded Blue Diamond Medical in West Springs in 2022 and has a wide range of skills across family practice, minor surgical procedures, and cosmetic services, including Botox and PRP therapy.",
+    "biography": "Dr. Mohamed Farhat is a highly experienced family physician with over 30 years of dedicated practice. He is known for his exceptional clinical expertise, compassionate approach, and commitment to delivering high‑quality care to every patient. Over the course of his career, Dr. Farhat has developed extensive skills in managing a wide range of medical conditions, performing minor surgical procedures, and providing comprehensive family medicine services.\n\nAlongside his strong medical background, Dr. Farhat has completed advanced training in cosmetic medicine. He offers a variety of aesthetic treatments, including Botox, dermal fillers, RF microneedling, and laser therapies for multiple skin concerns such as aging, pigmentation, scarring, and texture irregularities.\n\nDr. Farhat also specializes in hair restoration treatments. He provides laser hair restoration combined with PRP, PRP‑only hair restoration, and PRP injections for enhanced scalp health and hair regrowth. In addition, he performs PRP injections under the eyes to improve dark circles, rejuvenate the skin, and restore a brighter, refreshed appearance. These treatments can be complemented with microneedling for optimal skin renewal and collagen stimulation.\n\nWith a blend of medical precision and aesthetic artistry, Dr. Farhat is dedicated to helping patients look and feel their best. His warm manner, attention to detail, and patient‑centered approach make him a trusted physician within the community.",
     "email": null,
     "phone": null,
     "mediaAssetId": null,
@@ -38,7 +39,7 @@
     },
     "translationGroupId": "30be3cc8-45a8-4de0-bfa7-8037c65ee91c",
     "publishedAt": "2026-08-23T10:08:57.441Z",
-    "updatedAt": "2026-08-23T10:10:26.600Z"
+    "updatedAt": "2026-09-07T05:44:05.494Z"
   },
   "seo": {
     "title": "Dr. Mohamed Farhat",
@@ -49,5 +50,23 @@
     "faqs": [],
     "sections": [],
     "taxonomies": []
-  }
+  },
+  "media": [
+    {
+      "id": "39c34d76-e134-413f-8853-9fd35ec2bed0",
+      "path": "/blue-diamond/shared/legacy/094975f21717-Dr.Farhat.jpg",
+      "width": 800,
+      "height": 800,
+      "aspectRatio": 1,
+      "alt": {
+        "ar": "صورة الدكتور محمد فرحات",
+        "en": "Portrait of Dr. Mohamed Farhat"
+      },
+      "role": "doctorPortrait",
+      "slot": "doctorPortrait",
+      "approvalStatus": "approved",
+      "sortOrder": 0,
+      "localeMode": "shared"
+    }
+  ]
 }

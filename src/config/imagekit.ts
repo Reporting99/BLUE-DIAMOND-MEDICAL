@@ -1,3 +1,4 @@
+import { buildSrc } from "@imagekit/javascript";
 import type { Transformation } from "@imagekit/next";
 
 /**
@@ -24,12 +25,79 @@ const DEFAULT_URL_ENDPOINT = "https://ik.imagekit.io/oq92dh6zib";
  * e.g. `/blue-diamond/home/home-hero-blue-diamond.png`. */
 export const MEDIA_ROOT = "/blue-diamond";
 
+/**
+ * Normalize one ImageKit environment value into "configured" or "not".
+ *
+ * Exported, and taking the raw value rather than reading the environment, so
+ * both states are directly testable without mutating `process.env` — the same
+ * shape `isSiteLaunched` uses in src/config/launch.ts.
+ *
+ * `??` is deliberately NOT the test. Next inlines `process.env.NEXT_PUBLIC_*`
+ * at build time, and a variable that is declared-but-blank — an empty line in
+ * a slot runtime file, a GitHub Actions `vars.` entry that exists with no
+ * value, `NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT=` in a hand-edited .env — arrives
+ * as `""`, not `undefined`. `??` passes `""` straight through, so a blank
+ * value would be treated as a configured endpoint and every image URL would
+ * be built against an empty origin. Trimming first also catches the trailing
+ * space a copy-paste leaves behind. A trailing slash is stripped so
+ * `https://ik.imagekit.io/x` and `https://ik.imagekit.io/x/` are one value and
+ * cannot produce a double slash in a delivery URL.
+ */
+export function normalizeImagekitEndpoint(raw: string | undefined | null): string | null {
+  const trimmed = (raw ?? "").trim().replace(/\/+$/, "");
+  return trimmed.length > 0 ? trimmed : null;
+}
+
+/**
+ * The endpoint an operator actually configured, or `null` when none is.
+ *
+ * The member expression is written out in full because webpack replaces
+ * `process.env.NEXT_PUBLIC_…` textually; reading it through a variable or a
+ * destructure would leave it unsubstituted in the client bundle.
+ */
+const CONFIGURED_URL_ENDPOINT = normalizeImagekitEndpoint(
+  process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT,
+);
+
+/**
+ * Whether ImageKit delivery is available in THIS environment.
+ *
+ * This is the environment's answer, not the constant's. It used to be
+ * `imagekitConfig.urlEndpoint.length > 0`, which — because `urlEndpoint` falls
+ * back to `DEFAULT_URL_ENDPOINT` — could only ever be `true`. So an
+ * environment with no ImageKit at all still reported itself configured, and a
+ * CI build with no `.env` emitted live `https://ik.imagekit.io/…` URLs: the
+ * brand mark's bundled-copy fallback was never exercised there, and the suite
+ * that claims to cover it was in fact asserting against real CDN delivery over
+ * the network. Verified 2026-09-07 by building this branch with no `.env`:
+ * the prerendered `/en` carried the ImageKit `src`, not
+ * `/_next/static/media/blue-diamond-mark.<hash>.png`.
+ *
+ * `DEFAULT_URL_ENDPOINT` stays as the endpoint URLs are BUILT from, so a
+ * configured deployment that omits the variable still resolves the approved
+ * account. What changed is that it no longer answers "is ImageKit set up
+ * here?" — only a real environment value does.
+ */
+export const imagekitIsConfigured = CONFIGURED_URL_ENDPOINT !== null;
+
 export const imagekitConfig = {
-  urlEndpoint: process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT ?? DEFAULT_URL_ENDPOINT,
-  publicKey: process.env.NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY ?? "",
+  urlEndpoint: CONFIGURED_URL_ENDPOINT ?? DEFAULT_URL_ENDPOINT,
+  publicKey: normalizeImagekitEndpoint(process.env.NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY) ?? "",
 } as const;
 
-export const imagekitIsConfigured = imagekitConfig.urlEndpoint.length > 0;
+/**
+ * The brand mark's own library path.
+ *
+ * It sits here rather than in a component because the mark is the one image
+ * that is not content: no page owns it, no CMS entry assigns it, and it is
+ * requested from every route. Naming it once keeps the path out of JSX, where
+ * a literal would be a second source of truth for the one asset that must
+ * never silently move. The bytes were imported through the sanctioned door
+ * (FeelStack `POST /admin/v1/projects/:id/media/import`) on 2026-09-07 and the
+ * CDN copy is byte-identical to `src/assets/brand/blue-diamond-mark.png` --
+ * see src/lib/media/brand-mark.ts.
+ */
+export const BRAND_MARK_PATH = `${MEDIA_ROOT}/brand/blue-diamond-mark.png`;
 
 /**
  * Reusable transformation presets, keyed by ImageRole (src/types/media.ts).
@@ -77,3 +145,26 @@ export const imagePresets = {
 } as const satisfies Record<string, Transformation>;
 
 export type ImagePresetKey = keyof typeof imagePresets;
+
+/**
+ * A delivery URL for one library path with a preset applied.
+ *
+ * `ImageKitImage` is still the only way a PAGE gets a picture -- this exists
+ * for the brand mark alone (src/lib/media/brand-mark.ts), which cannot go
+ * through that component: it renders the FacetTile placeholder for anything
+ * not approved, and an abstract tile where the clinic's logo should be is a
+ * visibly broken header rather than a graceful fallback. Building the URL
+ * here rather than in the component is the same rule docs/UI_UX_FOUNDATION.md
+ * §8/§18 states -- transformation URLs are constructed by the centralized
+ * provider config, never at the usage site.
+ *
+ * Uses the official SDK's own builder, so the transformation string is the
+ * SDK's business and not a template literal that drifts from it.
+ */
+export function imagekitSrc(path: string, preset: ImagePresetKey): string {
+  return buildSrc({
+    urlEndpoint: imagekitConfig.urlEndpoint,
+    src: path,
+    transformation: [imagePresets[preset]],
+  });
+}

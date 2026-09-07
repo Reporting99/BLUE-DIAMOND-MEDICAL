@@ -5,7 +5,20 @@ the host until the canonical domain is connected.
 
 ## The canonical-domain vhost (launch)
 
-Still to be written. Launch requires:
+**Written 2026-09-07** — `bluediamondmedical.ca.conf` and
+`bluediamondmedicalaesthetics.ca.conf` in this directory, with the full cutover
+procedure, the real DNS values and the email records that must NOT change in
+`DOMAIN_CUTOVER.md`.
+
+They are deliberately **not installed**. An `ssl_certificate` line pointing at a
+file that does not exist yet fails `nginx -t`, and on this shared host that
+blocks the reload for every other tenant — so the vhosts go in only after the
+certificate exists, which needs DNS pointing here first. Both files were
+syntax-checked with `nginx -t` against an isolated config, and functionally
+verified end-to-end on ports 8081/8444 with Host headers against the running
+application, without touching the live config or DNS.
+
+Launch requires:
 
 1. A vhost for the canonical domain whose `location /` proxies to
    `blue_diamond_app`, plus a `location = /api/feelstack/revalidate` so
@@ -31,6 +44,32 @@ Until step 3 lands, the application emits a site-wide robots.txt `Disallow`, a
 sitemap. Canonical, hreflang and OG URLs continue to point at the real launch
 domain -- they are stable and correct, and nothing anywhere emits a temporary or
 runtime hostname.
+
+### TLS
+
+Certificates are obtained and renewed on the server; none is ever committed
+here. A `.pem`, `.key` or fullchain file in git is a private key published to
+every clone of the repository, and `.gitignore` refuses `*.pem` for that reason.
+
+The host already runs other tenants behind this nginx, so the certificate is
+issued with the webroot challenge rather than certbot's standalone mode --
+standalone binds :80 itself and would take every other site on the box down for
+the duration of the renewal:
+
+```
+certbot certonly --webroot -w /var/www/letsencrypt   -d bluediamondmedical.ca -d www.bluediamondmedical.ca
+```
+
+The canonical vhost then references `/etc/letsencrypt/live/bluediamondmedical.ca/`,
+redirects `:80` to `:443` apart from `/.well-known/acme-challenge/`, and enables
+HSTS only after the site has served correctly over HTTPS -- an HSTS header sent
+during a broken first launch pins that breakage into every visitor's browser for
+its `max-age`.
+
+Renewal is certbot's own systemd timer. Its deploy hook must reload nginx, not
+restart it: a restart drops in-flight connections, and a reload is enough for a
+new certificate. Renewal is independent of Blue/Green -- the certificate belongs
+to the host and the vhost, not to a release, so a slot switch never touches it.
 
 ### There is no temporary webhook hostname
 

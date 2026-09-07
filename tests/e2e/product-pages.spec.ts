@@ -9,6 +9,17 @@ import { products } from "../../src/features/products/data";
  * interactive checks use real page rendering.
  */
 
+/**
+ * CL-036/CL-037/CL-038 — two contracts, because there are two kinds of record.
+ *
+ * A SkinMedica record carries researched `detail` (and therefore an FAQ
+ * section) and the standard availability notice. A client-supplied record
+ * carries the structured copy the client actually sent — subtitle, Benefits,
+ * Key features — and, while a required input is outstanding, an explicit
+ * "not purchasable" note IN PLACE OF the availability notice, because it must
+ * make no availability claim at all. Asserting the SkinMedica shape on both
+ * would have forced an invented FAQ set onto the peels.
+ */
 test.describe("Every product page — English", () => {
   for (const product of products) {
     test(`${product.slug}: 200, correct H1, FAQ heading present`, async ({ request }) => {
@@ -16,8 +27,30 @@ test.describe("Every product page — English", () => {
       expect(res.status(), product.slug).toBe(200);
       const html = await res.text();
       expect(html, `${product.slug}: H1`).toContain(product.name.en);
-      expect(html, `${product.slug}: FAQ heading`).toContain("Questions and Answers About This Product");
-      expect(html, `${product.slug}: availability notice`).toContain("confirmed directly with Blue Diamond Medical Clinic");
+
+      if (product.purchaseBlocked) {
+        // Assert the record's OWN note rather than one hardcoded phrase. The
+        // CL-042 Myriade records state a different, truer reason (a
+        // professional-use product is not blocked for a missing photograph),
+        // and pinning the old wording would have forced every future blocked
+        // product to repeat a sentence that does not apply to it.
+        const note = product.purchaseBlocked.en.split(" — ")[0].slice(0, 60);
+        expect(html, `${product.slug}: blocked-purchase note`).toContain(note);
+        expect(html, `${product.slug}: must claim no availability`).not.toContain(
+          "confirmed directly with Blue Diamond Medical Clinic",
+        );
+        // Only assert a list the record actually has. The 8 Myriade kits carry
+        // Contents and Directions instead of Benefits/Key features, and
+        // demanding the SkinMedica shape of them would fabricate a
+        // requirement the source never met.
+        if (product.benefits) expect(html, `${product.slug}: Benefits`).toContain("Benefits");
+        if (product.keyFeatures) expect(html, `${product.slug}: Key features`).toContain("Key features");
+        if (product.kitContents) expect(html, `${product.slug}: kit contents`).toContain("What&#x27;s in this kit");
+        if (product.directions) expect(html, `${product.slug}: Directions`).toContain("Directions");
+      } else {
+        expect(html, `${product.slug}: FAQ heading`).toContain("Questions and Answers About This Product");
+        expect(html, `${product.slug}: availability notice`).toContain("confirmed directly with Blue Diamond Medical Clinic");
+      }
     });
   }
 });
@@ -29,17 +62,19 @@ test.describe("Every product page — Arabic (pretty URL)", () => {
       expect(res.status(), product.slugAr).toBe(200);
       const html = await res.text();
       expect(html, `${product.slugAr}: H1`).toContain(product.name.ar);
-      expect(html, `${product.slugAr}: FAQ heading`).toContain("أسئلة وأجوبة حول هذا المنتج");
+      if (!product.purchaseBlocked) {
+        expect(html, `${product.slugAr}: FAQ heading`).toContain("أسئلة وأجوبة حول هذا المنتج");
+      }
     });
   }
 });
 
 test.describe("Product page structure", () => {
-  test("breadcrumbs read Home → SkinMedica Products → product name", async ({ page }) => {
+  test("breadcrumbs read Home → Products → product name", async ({ page }) => {
     await page.goto("/en/shop/retinol-complex-0-5");
     const nav = page.getByRole("navigation", { name: "Breadcrumb" });
     await expect(nav.getByRole("link", { name: "Home" })).toBeVisible();
-    await expect(nav.getByRole("link", { name: "SkinMedica Products" })).toBeVisible();
+    await expect(nav.getByRole("link", { name: "Products", exact: true })).toBeVisible();
     await expect(nav.getByText("Retinol Complex 0.5")).toBeVisible();
   });
 
@@ -47,7 +82,7 @@ test.describe("Product page structure", () => {
     await page.goto("/ar/المتجر/مركب-الريتينول-٠٫٥");
     const nav = page.getByRole("navigation", { name: "مسار التصفح" });
     await expect(nav.getByRole("link", { name: "الرئيسية" })).toBeVisible();
-    await expect(nav.getByRole("link", { name: "منتجات SkinMedica" })).toBeVisible();
+    await expect(nav.getByRole("link", { name: "المنتجات" })).toBeVisible();
   });
 
   test("FAQ schema exactly matches the visible FAQ questions", async ({ page }) => {
@@ -55,7 +90,10 @@ test.describe("Product page structure", () => {
     const scripts = await page.locator('script[type="application/ld+json"]').allTextContents();
     const faqSchema = scripts.map((s) => JSON.parse(s)).find((s) => s["@type"] === "FAQPage");
     expect(faqSchema).toBeTruthy();
-    const visibleQuestions = await page.locator("dl dt").allTextContents();
+    // Scoped to <main>: the site footer now publishes the clinic's opening
+    // hours as its own definition list (CL-009), so an unscoped "dl dt" would
+    // sweep "Monday - Saturday" into this page's FAQ questions.
+    const visibleQuestions = await page.locator("main dl dt").allTextContents();
     const schemaQuestions = faqSchema.mainEntity.map((q: { name: string }) => q.name);
     expect(schemaQuestions).toEqual(visibleQuestions);
     expect(schemaQuestions.length).toBeGreaterThanOrEqual(6);

@@ -57,9 +57,25 @@ export function BackToTop({ locale }: { locale: Locale }) {
     if (!rail) return;
 
     let frame = 0;
-    // Mirrors the rendered state so the effect can compare without reading
+    // Mirrors the RENDERED state so the effect can compare without reading
     // `visible` from the closure, which would go stale between renders.
-    let shown = window.scrollY > REVEAL_AFTER;
+    //
+    // It starts `false` because that is what `useState(false)` above has
+    // rendered -- NOT `window.scrollY > REVEAL_AFTER`, which is what it used to
+    // be and which was the bug. Seeding it from the scroll position made the
+    // mirror disagree with React whenever the page arrived already scrolled:
+    // `shown` was true, React had rendered false, so the first `update()` below
+    // found `next === shown`, skipped `setVisible`, and the control stayed
+    // inert and invisible until the reader happened to cross the threshold
+    // again. That is exactly the case the comment on `update()` claims to
+    // handle -- a reload landing mid-page, a back/forward restore -- and it was
+    // the one case that did not work.
+    //
+    // Reproduced by loading `/en`, scrolling past the threshold before
+    // hydration, and reading the button: `inert=""` at scrollY 1400. It also
+    // surfaced as an intermittent failure of the Back-to-top spec under a
+    // loaded machine, where hydration lands after the test's own scroll.
+    let shown = false;
 
     const update = () => {
       frame = 0;

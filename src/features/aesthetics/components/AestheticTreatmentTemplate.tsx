@@ -4,13 +4,13 @@ import { MapPin } from "lucide-react";
 import { Container } from "@/components/layout/Container";
 import { SectionTransition } from "@/components/layout/SectionTransition";
 import { Button } from "@/components/ui/button";
-import { PageHero } from "@/components/layout/PageHero";
+import { AestheticsHero } from "./AestheticsHero";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
 import { MedicalWebPageSchema } from "@/components/shared/schema";
 import { FaqPageSchema } from "@/components/shared/schema";
 import { getBookingUrl } from "@/config/booking";
 import { getRoute, href } from "@/lib/routing";
-import { concerns, getConcern } from "@/features/concerns/data";
+import { getConcernsForTreatment, getTreatmentsForConcern } from "@/features/concerns/queries";
 import { getTechnology } from "@/features/technologies/data";
 import { getTreatment } from "@/features/aesthetics/data/treatments";
 import { getBeforeAfterPairs } from "@/features/aesthetics/data/before-after";
@@ -111,28 +111,29 @@ export function AestheticTreatmentTemplate({
   const pricingGroups = getTreatmentPricing(treatment.id);
   /**
    * Treatment -> Concern and Treatment -> Treatment (brief §12/§27).
-   * Authored ids win. When a treatment has none, both lists are derived by
-   * walking the concern registry, which authors the relationship in the
-   * other direction: a concern that recommends this treatment IS a concern
-   * this treatment addresses, and two treatments recommended for the same
-   * concern ARE alternatives worth showing side by side. Both are
-   * restatements of already-approved data, not new clinical claims.
    *
-   * Before this, a treatment whose ids were simply never filled in
-   * rendered neither section, so the treatment page became a leaf with no
-   * route back into the concern-led journey — half of the two-way linking
-   * the brief asks for existed only where someone had typed it out.
+   * This page is no longer in the navigation — Aesthetics is concern-first,
+   * and a visitor reaches it from the concern that recommends it — so the
+   * route back into that journey is the whole point of these two sections,
+   * not a nicety.
+   *
+   * Both come from the same helper the concern page uses
+   * (features/concerns/queries.ts), which unions the concern->treatment edge
+   * as it is authored on BOTH sides. That guarantees the two pages agree: every
+   * concern whose "Treatment Options" lists this treatment links back from
+   * here. Reading only `treatment.relatedConcernIds` used to drop the concerns
+   * that named the treatment from their own side.
+   *
+   * Alternatives are then the other treatments those same concerns offer —
+   * two treatments recommended for one concern ARE alternatives worth showing
+   * side by side. A restatement of approved data, never a new clinical claim.
    */
-  const concernsAddressing = concerns.filter((concern) => concern.relatedTreatmentIds.includes(treatment.id));
-
-  const relatedConcerns = treatment.relatedConcernIds?.length
-    ? (treatment.relatedConcernIds.map(getConcern).filter(Boolean) as typeof concernsAddressing)
-    : concernsAddressing;
+  const relatedConcerns = getConcernsForTreatment(treatment.id);
 
   const derivedTreatmentIds = Array.from(
     new Set(
-      concernsAddressing
-        .flatMap((concern) => concern.relatedTreatmentIds)
+      relatedConcerns
+        .flatMap((concern) => getTreatmentsForConcern(concern.id).map((tr) => tr.id))
         .filter((id) => id !== treatment.id),
     ),
   );
@@ -156,19 +157,28 @@ export function AestheticTreatmentTemplate({
           asset when there is one and the branded facet visual when there is
           not, so the page has a top either way, and the caption travels with
           the image rather than being lost in the promotion. */}
-      <PageHero
+      <AestheticsHero
         locale={locale}
         title={treatment.title[locale]}
         body={treatment.summary[locale]}
         image={treatment.image}
         imageRole="treatment"
         seed={treatment.id}
-        measure="article"
         imageAlt={{
           en: treatment.title.en || treatment.id,
           ar: treatment.title.ar || treatment.id,
         }}
         imageCaption={treatment.image?.caption}
+        /* CL-033 — the CTA moves into the hero's copy column, beside the
+           image, rather than sitting a screen below it in the article body.
+           Same button, same label, same destination; only its position
+           changes, so the hero now carries breadcrumb, H1, summary and action
+           together as the shared composition requires. */
+        actions={
+          <Button size="lg" render={<a href={booking.href!} target="_blank" rel="noopener noreferrer" />}>
+            {t.consultCta}
+          </Button>
+        }
         breadcrumbs={
           <Breadcrumbs
             locale={locale}
@@ -189,10 +199,6 @@ export function AestheticTreatmentTemplate({
             <p>{treatment.serviceLocationNote[locale]}</p>
           </div>
         ) : null}
-
-        <Button size="lg" className="mt-8" render={<a href={booking.href} target="_blank" rel="noopener noreferrer" />}>
-          {t.consultCta}
-        </Button>
 
         {treatment.whoItsFor ? <Section title={t.concernsTreated}>{treatment.whoItsFor[locale]}</Section> : null}
         {treatment.concernsTreated ? (

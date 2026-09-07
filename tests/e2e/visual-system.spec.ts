@@ -19,20 +19,18 @@ import { test, expect, chromium, type Page } from "@playwright/test";
  * actually moves the seam — not whether the result looks good.
  */
 
-/** Routes that open with a `PageHero`, i.e. everything except the exceptions
- *  listed in HERO_EXCEPTIONS below and the homepage, which has its own. */
+/** Routes that open with a full-bleed `PageHero`, i.e. everything except the
+ *  Aesthetics heroes (AESTHETICS_HERO_ROUTES), the exceptions listed in
+ *  HERO_EXCEPTIONS below, and the homepage, which has its own.
+ *
+ *  No Aesthetics route appears here any more. They used to, on the days their
+ *  hero photograph had not been approved yet, because the old split layout
+ *  degraded to full-bleed without one — which is precisely the inconsistency
+ *  `AestheticsHero` was written to remove. Membership of that list is now
+ *  decided by the route's section, never by the state of the media library. */
 const HERO_ROUTES: Array<{ en: string; ar: string; label: string }> = [
   { label: "medical hub", en: "/en/medical", ar: "/ar/الرعاية-الطبية" },
-  { label: "aesthetics hub", en: "/en/aesthetics", ar: "/ar/التجميل-الطبي" },
-  { label: "treatments index", en: "/en/aesthetics/treatments", ar: "/ar/التجميل-الطبي/العلاجات" },
-  { label: "technologies index", en: "/en/aesthetics/technologies", ar: "/ar/التجميل-الطبي/التقنيات" },
-  { label: "concerns index", en: "/en/aesthetics/concerns", ar: "/ar/التجميل-الطبي/المخاوف-الجمالية" },
-  { label: "before/after", en: "/en/aesthetics/before-after", ar: "/ar/التجميل-الطبي/قبل-وبعد" },
-  { label: "pricing", en: "/en/aesthetics/pricing", ar: "/ar/التجميل-الطبي/الأسعار" },
-  { label: "treatment detail", en: "/en/aesthetics/treatments/rf-microneedling", ar: "/ar/التجميل-الطبي/العلاجات/الإبر-الدقيقة-بالترددات-الراديوية" },
-  { label: "technology detail", en: "/en/aesthetics/technologies/potenza", ar: "/ar/التجميل-الطبي/التقنيات/بوتنزا" },
   { label: "medical service detail", en: "/en/medical/eye-screening", ar: "/ar/الرعاية-الطبية/فحص-العين" },
-  { label: "botox hub", en: "/en/botox", ar: "/ar/بوتوكس" },
   { label: "our team index", en: "/en/our-team", ar: "/ar/فريقنا" },
   { label: "about", en: "/en/about", ar: "/ar/من-نحن" },
   { label: "contact", en: "/en/contact", ar: "/ar/تواصل-معنا" },
@@ -62,6 +60,40 @@ const HERO_EXCEPTIONS = [
 /** The visual a hero renders: a real ImageKit `<img>`, or the branded SVG
  *  FacetTile that stands in until one is uploaded and approved. */
 const VISUAL = "img, svg[role='img'], svg[aria-hidden='true']";
+
+/**
+ * The Aesthetics master hero (`features/aesthetics/components/AestheticsHero.tsx`).
+ *
+ * EVERY Aesthetics route — with an approved photograph or without one — opens
+ * on ONE shared composition: a copy column carrying the breadcrumb, H1,
+ * summary and CTA, and a media column carrying this page's own visual. The
+ * word doing the work is "every": the previous implementation was conditional
+ * on the photograph being approved, so neighbouring pages opened on two
+ * different heroes and each publish moved the boundary. The list below
+ * therefore samples one route of each kind — hub, all four listings, and one
+ * of each detail template — and the assertions are the template's fixed
+ * parts: side, proportion, and that no copy is laid over the picture.
+ */
+const AESTHETICS_HERO_ROUTES: Array<{ en: string; ar: string; label: string }> = [
+  { label: "aesthetics hub", en: "/en/aesthetics", ar: "/ar/التجميل-الطبي" },
+  { label: "treatments index", en: "/en/aesthetics/treatments", ar: "/ar/التجميل-الطبي/العلاجات" },
+  { label: "technologies index", en: "/en/aesthetics/technologies", ar: "/ar/التجميل-الطبي/التقنيات" },
+  { label: "treatment detail", en: "/en/aesthetics/treatments/rf-microneedling", ar: "/ar/التجميل-الطبي/العلاجات/الإبر-الدقيقة-بالترددات-الراديوية" },
+  { label: "technology detail", en: "/en/aesthetics/technologies/potenza", ar: "/ar/التجميل-الطبي/التقنيات/بوتنزا" },
+  { label: "concern detail", en: "/en/aesthetics/treatments/acne-scars", ar: "/ar/التجميل-الطبي/العلاجات/ندبات-حب-الشباب" },
+  // The four that used to degrade to full-bleed for want of an approved
+  // photograph. They are the reason this list is asserted unconditionally.
+  { label: "before/after", en: "/en/aesthetics/before-after", ar: "/ar/التجميل-الطبي/قبل-وبعد" },
+  { label: "pricing", en: "/en/aesthetics/pricing", ar: "/ar/التجميل-الطبي/الأسعار" },
+  // NOT listed: /aesthetics/consultation. It is gated behind
+  // `consultationFormEnabled`, which is false because no approved
+  // consultation-request flow has been supplied — so the route
+  // deliberately `notFound()`s and nothing links to it. Asserting a 200
+  // here demanded that an unpublished route render (CL-033/CL-044: an
+  // intentional non-destination is not a broken one). Restore this line
+  // when the flag is turned on.
+  { label: "botox hub", en: "/en/botox", ar: "/ar/بوتوكس" },
+];
 
 /**
  * Scrolls the page in overlapping half-viewport steps, then waits for every
@@ -184,6 +216,122 @@ test.describe("Heroes", () => {
     }
   }
 
+  for (const route of AESTHETICS_HERO_ROUTES) {
+    for (const locale of ["en", "ar"] as const) {
+      test(`${locale}: ${route.label} opens with the shared Aesthetics hero`, async ({ page }) => {
+        const response = await page.goto(route[locale]);
+        expect(response?.status(), `${route[locale]} must render`).toBe(200);
+
+        const hero = page.locator("[data-hero='aesthetics']");
+        await expect(
+          hero,
+          `${route.label} must use the shared Aesthetics hero. Unlike the layout it replaced, this one ` +
+            `has no fallback composition: a CMS outage changes what is inside the media column, never ` +
+            `the column, so a failure here is a wiring mistake on this route rather than a media one.`,
+        ).toHaveCount(1);
+
+        const copy = hero.locator("[data-hero-col='copy']");
+        const media = hero.locator("[data-hero-col='media']");
+        await expect(copy).toHaveCount(1);
+        await expect(media).toHaveCount(1);
+
+        // The media column is filled and its visual is named — by the
+        // photograph where one is approved, by the warm FacetTile standing in
+        // for it where one is not. Both fill the same half at the same size,
+        // which is the property that keeps the twenty-odd heroes identical.
+        const visual = media.locator(VISUAL);
+        await expect(visual).toHaveCount(1);
+        const img = media.locator("img");
+        if (await img.count()) {
+          await expect(img).toHaveAttribute("alt", /\S/);
+          const loaded = await img.evaluate((el: HTMLImageElement) => el.naturalWidth > 0);
+          expect(loaded, `${route.label} (${locale}) hero image must actually load`).toBe(true);
+          expect(await img.evaluate((el) => getComputedStyle(el).objectFit)).toBe("cover");
+        } else {
+          await expect(media.locator("svg[role='img']")).toHaveAttribute("aria-label", /\S/);
+        }
+
+        // The split is a `md` composition. Under the mobile project the same
+        // route stacks instead, and that arrangement has its own test below —
+        // so the side-by-side facts are asserted at the width they describe.
+        const viewport = page.viewportSize()!;
+        const copyBox = (await copy.boundingBox())!;
+        const mediaBox = (await media.boundingBox())!;
+        const heroBox = (await hero.boundingBox())!;
+
+        if (viewport.width >= 768) {
+          // Two columns, balanced, side by side.
+          const share = copyBox.width / (copyBox.width + mediaBox.width);
+          expect(share, `${route.label} (${locale}) columns must be roughly balanced`).toBeGreaterThan(0.4);
+          expect(share).toBeLessThan(0.6);
+
+          // Copy on the side the language starts at; picture opposite.
+          if (locale === "en") {
+            expect(copyBox.x, "EN: copy column is on the left").toBeLessThan(mediaBox.x);
+          } else {
+            expect(copyBox.x, "AR: copy column is on the right").toBeGreaterThan(mediaBox.x);
+          }
+
+          // THE HALF-PANEL. The picture is not a card inside the hero, it IS
+          // the hero's other half: exactly half the viewport wide, the hero's
+          // full height, flush to its top and bottom edge and running off the
+          // page's outer edge. Every one of these was false while the media
+          // column sat inside the Container's gutter, which is what made the
+          // image read as a floating rectangle on a beige ground.
+          expect(
+            Math.abs(mediaBox.width - viewport.width / 2),
+            `${route.label} (${locale}) picture must span half the viewport`,
+          ).toBeLessThan(2);
+          expect(
+            Math.abs(mediaBox.height - heroBox.height),
+            `${route.label} (${locale}) picture must run the hero's full height`,
+          ).toBeLessThan(2);
+          expect(Math.abs(mediaBox.y - heroBox.y), "picture touches the hero's top edge").toBeLessThan(2);
+          const outerEdge = locale === "en" ? viewport.width - (mediaBox.x + mediaBox.width) : mediaBox.x;
+          expect(outerEdge, "picture touches the outer page edge").toBeLessThan(2);
+        }
+
+        // No card treatment, at any width: no rounding, no shadow, no inset.
+        const skin = await media.evaluate((el) => {
+          const cs = getComputedStyle(el);
+          return { radius: cs.borderRadius, shadow: cs.boxShadow, padding: cs.padding, margin: cs.margin };
+        });
+        expect(skin.radius.replace(/0px|\s/g, ""), "hero picture must not be rounded").toBe("");
+        expect(skin.shadow).toBe("none");
+        expect(skin.padding.replace(/0px|\s/g, "")).toBe("");
+        expect(skin.margin.replace(/0px|\s/g, "")).toBe("");
+
+        // The H1 lives in the copy column, so no text is laid over the picture.
+        const h1 = page.getByRole("heading", { level: 1 }).first();
+        await expect(h1).toBeVisible();
+        expect(await h1.evaluate((el) => !!el.closest("[data-hero-col='copy']"))).toBe(true);
+
+        // And the hero introduces the page rather than opening on a bare title.
+        await expect(hero.locator("[data-hero-body]")).not.toBeEmpty();
+      });
+    }
+  }
+
+  for (const route of AESTHETICS_HERO_ROUTES) {
+    test(`${route.label}: Aesthetics hero stacks copy above image at 375px`, async ({ page }) => {
+      await page.setViewportSize({ width: 375, height: 812 });
+      const response = await page.goto(route.en);
+      expect(response?.status()).toBe(200);
+      const copy = page.locator("[data-hero-col='copy']");
+      const media = page.locator("[data-hero-col='media']");
+      await expect(copy).toHaveCount(1);
+      await expect(media).toHaveCount(1);
+      const copyBox = (await copy.boundingBox())!;
+      const mediaBox = (await media.boundingBox())!;
+      expect(copyBox.y, "copy must come first at 375px").toBeLessThan(mediaBox.y);
+      // Stacked, and the picture is still a full-bleed band rather than a
+      // card: it starts at the viewport's edge and spans its whole width, so
+      // the Container gutter that indents the copy never indents the image.
+      expect(mediaBox.x, "the picture must start at the viewport edge").toBeLessThan(2);
+      expect(Math.abs(mediaBox.width - 375), "the picture must span the viewport").toBeLessThan(2);
+    });
+  }
+
   for (const exception of HERO_EXCEPTIONS) {
     test(`${exception.label} is a deliberate exception: image-led, not hero-led`, async ({ page }) => {
       await page.goto(exception.path);
@@ -225,7 +373,13 @@ test.describe("Listing cards carry imagery", () => {
    */
   const LISTINGS = [
     { label: "medical services", path: "/en/medical", cards: "#main-content a:has(h3)", min: 6 },
-    { label: "treatments", path: "/en/aesthetics/treatments", cards: "#main-content a:has(h2)", min: 6 },
+  // NOT listed: /en/aesthetics/treatments. It is no longer an image-card
+  // grid. Since the concern and treatment catalogues were merged it renders
+  // `ConcernExplorer`: ONE large media panel that follows the hovered or
+  // focused entry, beside a list of text cards. The selector below found
+  // zero cards there because those cards use <h3>, and had it matched, the
+  // per-card image rule would have been the wrong rule for that layout. Its
+  // own shape is asserted separately, below.
     { label: "technologies", path: "/en/aesthetics/technologies", cards: "#main-content a:has(h2)", min: 4 },
     { label: "products", path: "/en/shop", cards: "#main-content li.group > a", min: 8 },
     { label: "our team", path: "/en/our-team", cards: "#main-content a:has(h2)", min: 6 },
@@ -233,6 +387,14 @@ test.describe("Listing cards carry imagery", () => {
 
   for (const listing of LISTINGS) {
     test(`every ${listing.label} card renders a visual`, async ({ page }) => {
+      // BUDGET, NOT ASSERTION. This test walks an entire listing page in
+      // half-viewport steps and then waits for every card's image to decode.
+      // The products listing grew from 23 cards to 54 with the Myriade
+      // catalogue (CL-042), so the same work now takes roughly 2.3x as long
+      // and overran the 30s default on chromium-mobile — for a page in which
+      // nothing was wrong. Nothing this test checks is relaxed; it is simply
+      // given time to finish the walk it has always done.
+      test.setTimeout(90_000);
       await page.goto(listing.path);
       await scrollThroughAndSettle(page);
 
@@ -256,7 +418,26 @@ test.describe("Listing cards carry imagery", () => {
       expect(result.total, `${listing.label} should render at least ${listing.min} cards`).toBeGreaterThanOrEqual(listing.min);
       expect(result.missing, `these ${listing.label} cards render no image and no fallback visual`).toEqual([]);
     });
+
   }
+
+  /**
+   * The treatments index carries its imagery in one preview panel rather than
+   * per card, so it gets the assertion that actually matches it: the panel
+   * renders a real visual (an approved ImageKit <img> or the FacetTile stand-in
+   * — never an empty frame), and the entries that drive it are all present.
+   */
+  test("the treatments explorer renders a media panel and its full entry list", async ({ page }) => {
+    await page.goto("/en/aesthetics/treatments");
+    await scrollThroughAndSettle(page);
+
+    const panel = page.locator("#main-content .facet-corner").first();
+    await expect(panel).toBeVisible();
+    await expect(panel.locator(VISUAL).first()).toBeVisible();
+
+    const entries = page.locator("#main-content li > a:has(h3)");
+    expect(await entries.count()).toBeGreaterThanOrEqual(6);
+  });
 
   /**
    * Every real ImageKit asset on a listing must actually have decoded.
@@ -271,6 +452,14 @@ test.describe("Listing cards carry imagery", () => {
    */
   for (const listing of LISTINGS) {
     test(`every real image on ${listing.label} decodes`, async ({ page }) => {
+      // BUDGET, NOT ASSERTION. This test walks an entire listing page in
+      // half-viewport steps and then waits for every card's image to decode.
+      // The products listing grew from 23 cards to 54 with the Myriade
+      // catalogue (CL-042), so the same work now takes roughly 2.3x as long
+      // and overran the 30s default on chromium-mobile — for a page in which
+      // nothing was wrong. Nothing this test checks is relaxed; it is simply
+      // given time to finish the walk it has always done.
+      test.setTimeout(90_000);
       await page.goto(listing.path);
       await scrollThroughAndSettle(page);
 
@@ -647,6 +836,38 @@ test.describe("Back-to-top arrow", () => {
 
       await button.click();
       await expect.poll(() => page.evaluate(() => Math.round(window.scrollY)), { timeout: 4000 }).toBeLessThanOrEqual(2);
+    });
+
+    test(`${locale}: a page that ARRIVES scrolled offers the arrow immediately`, async ({ page }) => {
+      // A reload landing mid-page and a back/forward restore both hand the
+      // component a window that is already scrolled past the reveal threshold
+      // before its effect ever runs. That case was broken: the effect seeded
+      // its "currently shown" mirror from `window.scrollY` while React had
+      // rendered `false`, so the first update found no change, never called
+      // `setVisible`, and the control stayed inert and invisible — on exactly
+      // the pages where a reader is furthest from the top and most likely to
+      // want it.
+      //
+      // `waitUntil: "commit"` then scrolling BEFORE networkidle is what puts
+      // the scroll ahead of hydration deterministically. Waiting for the load
+      // first and scrolling after — what the test above does — only reproduces
+      // it when the machine is loaded enough for hydration to land late, which
+      // is why this arrived as an intermittent failure rather than a bug
+      // report.
+      await page.goto(`/${locale}`, { waitUntil: "commit" });
+      await page.evaluate(() => window.scrollTo(0, 1400));
+      await page.waitForLoadState("networkidle");
+
+      // The precondition is asserted, not assumed: if the page were too short
+      // to scroll, or the scroll were undone, this test would otherwise pass
+      // while proving nothing.
+      await expect
+        .poll(() => page.evaluate(() => Math.round(window.scrollY)), { timeout: 5000 })
+        .toBeGreaterThan(100);
+
+      const button = page.locator("[data-back-to-top]");
+      await expect(button).not.toHaveAttribute("inert", "");
+      await expect(button).toBeVisible();
     });
 
     test(`${locale}: the arrow stays legible over the footer, not just over light sections`, async ({ page }) => {

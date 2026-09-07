@@ -1,5 +1,6 @@
 {
   "type": "content_entry",
+  "status": "published",
   "route": {
     "id": "a4cdb4c3-c4ab-46d8-8ec1-a02f4804574c",
     "path": "/medical/after-hours-care",
@@ -10,7 +11,7 @@
     "alternates": [
       {
         "locale": "ar",
-        "path": "/medical/after-hours-care"
+        "path": "/الرعاية-الطبية/الرعاية-خارج-أوقات-الدوام"
       },
       {
         "locale": "en",
@@ -34,22 +35,19 @@
         {
           "url": "https://mosaicpcn.ca",
           "name": "Mosaic Primary Care Network",
-          "note": "For Dr. Hamdi's patients."
+          "note": "For Dr. Reem Hamdi's patients."
         },
         {
           "url": "https://cwcpcn.com",
           "name": "Calgary West Central Primary Care Network",
-          "note": "For Dr. Farhat's patients."
+          "note": "For patients of all other Blue Diamond family physicians."
         }
       ],
-      "related_doctor_ids": [
-        "reem-hamdi",
-        "mohamed-farhat"
-      ]
+      "related_doctor_ids": []
     },
     "translationGroupId": "8a5a02ef-5fa9-407b-9aff-d23f08765cbc",
     "publishedAt": "2026-08-23T10:37:59.532Z",
-    "updatedAt": "2026-08-23T10:39:42.991Z"
+    "updatedAt": "2026-09-07T05:44:04.676Z"
   },
   "seo": {
     "title": "After-Hours Care",
@@ -85,13 +83,13 @@
         "id": "482e5391-9348-4e99-87ca-4c3f15f1dcf6",
         "key": "after-hours-care-faq-2",
         "question": "Which Primary Care Network do I contact?",
-        "answer": "It depends on your family doctor: Dr. Hamdi's patients are referred to Mosaic Primary Care Network, and Dr. Farhat's patients to Calgary West Central Primary Care Network."
+        "answer": "It depends on your family doctor: Dr. Reem Hamdi's patients are referred to Mosaic Primary Care Network, and patients of all other Blue Diamond family physicians are referred to Calgary West Central Primary Care Network."
       },
       {
         "id": "da22ae62-f1b3-4b83-98c8-f63240e2c306",
         "key": "after-hours-care-faq-3",
         "question": "Does this apply to every patient at the clinic?",
-        "answer": "The after-hours pathway described here is documented for patients of Dr. Hamdi and Dr. Farhat specifically. If your family doctor is someone else, ask at your next visit which after-hours option applies to you."
+        "answer": "Yes. Every Blue Diamond patient has an after-hours pathway: Dr. Reem Hamdi's patients are referred to Mosaic Primary Care Network, and patients of all other Blue Diamond family physicians are referred to Calgary West Central Primary Care Network."
       },
       {
         "id": "55dadb74-cca4-4c3e-88c4-ed45c999f2e1",
@@ -108,5 +106,23 @@
     ],
     "sections": [],
     "taxonomies": []
-  }
+  },
+  "media": [
+    {
+      "id": "af363e3c-1517-442a-bcc8-5fa1e0b59c68",
+      "path": "/blue-diamond/home/medical/blue-diamond-home-medical-evening-compassionate-consultation-card.png",
+      "width": 1122,
+      "height": 1402,
+      "aspectRatio": 0.800285,
+      "alt": {
+        "ar": "طبيبة تتحدث مع مريضة جالسة على طاولة الفحص في المساء، خلفهما ساعة حائط ونوافذ مدينة مضاءة",
+        "en": "A doctor speaking with a patient seated on an examination table in the evening, with a wall clock and lit city windows behind them"
+      },
+      "role": "card",
+      "slot": "card",
+      "approvalStatus": "approved",
+      "sortOrder": 0,
+      "localeMode": "shared"
+    }
+  ]
 }

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Container } from "@/components/layout/Container";
-import { PageHero } from "@/components/layout/PageHero";
+import { AestheticsHero } from "@/features/aesthetics/components/AestheticsHero";
 import { SectionTransition } from "@/components/layout/SectionTransition";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
 import { BeforeAfterGallery } from "@/features/aesthetics";
@@ -11,6 +11,8 @@ import { features } from "@/config/features";
 import { getBeforeAfterPairs } from "@/features/aesthetics";
 import { getRouteMetadata } from "@/lib/seo/metadata";
 import { resolvePageHeroImage } from "@/lib/feelstack/page-hero-media";
+import { Button } from "@/components/ui/button";
+import { getBookingUrl } from "@/config/booking";
 
 /**
  * Feature-flagged off (`beforeAfterEnabled`) — no approved before/after
@@ -45,13 +47,14 @@ export default async function BeforeAfterPage({ params }: { params: Promise<{ lo
       : "Drag the handle across any image to move between the before and after state within the same frame.";
   const ownRoute = getRoute("aesthetics-before-after")!;
   const hero = await resolvePageHeroImage(ownRoute.path.en, locale);
+  const consult = getBookingUrl("aesthetics-consultation");
 
   return (
     <>
       {/* The hero subtitle explains the interaction rather than the results:
           a comparison slider is only obvious once you have used one, and this
           is the page where every card on the screen is one. */}
-      <PageHero
+      <AestheticsHero
         locale={locale}
         title={title}
         body={intro}
@@ -67,8 +70,12 @@ export default async function BeforeAfterPage({ params }: { params: Promise<{ lo
           en: "Medical aesthetics treatment room at Blue Diamond Medical",
           ar: "غرفة علاجات التجميل الطبي في بلو دايموند الطبية",
         }}
+        actions={
+          <Button size="lg" render={<a href={consult.href!} target="_blank" rel="noopener noreferrer" />}>
+            {consult.label[locale]}
+          </Button>
+        }
         breadcrumbs={<Breadcrumbs locale={locale} items={[{ label: aestheticsRoute.title[locale], href: href("aesthetics-hub", locale) }, { label: title }]} />}
-        size="compact"
       />
 
       <section className="section-y">

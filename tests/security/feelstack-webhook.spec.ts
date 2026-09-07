@@ -711,7 +711,7 @@ test.describe("Taxonomy invalidation (consumer side)", () => {
   test("EN: invalidates the tagged entity's surfaces", async () => {
     const { result, fx } = await post(taxonomyEnvelope());
     expect(result.outcome).toBe("revalidated");
-    expect(fx.revalidatedPaths).toContain("/en/aesthetics/concerns/acne-scars");
+    expect(fx.revalidatedPaths).toContain("/en/aesthetics/treatments/acne-scars");
     expect(fx.revalidatedTags.some((t) => t.startsWith("feelstack-concern:"))).toBe(true);
     expect(fx.revalidatedTags.some((t) => t.startsWith("feelstack-concerns:"))).toBe(true);
   });
@@ -720,7 +720,7 @@ test.describe("Taxonomy invalidation (consumer side)", () => {
     const { result, fx } = await post(taxonomyEnvelope({ locale: "ar" }));
     expect(result.outcome).toBe("revalidated");
     expect(fx.revalidatedTags.every((t) => !t.includes(":en:"))).toBe(true);
-    expect(fx.revalidatedPaths).not.toContain("/en/aesthetics/concerns/acne-scars");
+    expect(fx.revalidatedPaths).not.toContain("/en/aesthetics/treatments/acne-scars");
   });
 
   test("the term id never selects a surface", async () => {
@@ -768,7 +768,7 @@ test.describe("FAQ fan-out (consumer side)", () => {
   test("FAQ UPDATE: the assigned target's surfaces are invalidated", async () => {
     const { result, fx } = await post(faqTargetEnvelope());
     expect(result.outcome).toBe("revalidated");
-    expect(fx.revalidatedPaths).toContain("/en/aesthetics/concerns/acne-scars");
+    expect(fx.revalidatedPaths).toContain("/en/aesthetics/treatments/acne-scars");
     expect(fx.revalidatedTags.some((t) => t.startsWith("feelstack-concern:"))).toBe(true);
   });
 
@@ -780,7 +780,7 @@ test.describe("FAQ fan-out (consumer side)", () => {
       faqTargetEnvelope({ data: { relation: "faq", faqId: "3f1c2e64-6b1d-4a7f-9c2e-1b8a5d4e7f00", removed: true } }),
     );
     expect(result.outcome).toBe("revalidated");
-    expect(fx.revalidatedPaths).toContain("/en/aesthetics/concerns/acne-scars");
+    expect(fx.revalidatedPaths).toContain("/en/aesthetics/treatments/acne-scars");
   });
 
   test("AR fan-out never touches EN surfaces", async () => {
@@ -789,7 +789,7 @@ test.describe("FAQ fan-out (consumer side)", () => {
     );
     expect(result.outcome).toBe("revalidated");
     expect(fx.revalidatedTags.every((t) => !t.includes(":en:"))).toBe(true);
-    expect(fx.revalidatedPaths).not.toContain("/en/aesthetics/concerns/acne-scars");
+    expect(fx.revalidatedPaths).not.toContain("/en/aesthetics/treatments/acne-scars");
   });
 
   test("EN fan-out never touches AR surfaces", async () => {

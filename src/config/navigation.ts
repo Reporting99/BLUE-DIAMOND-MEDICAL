@@ -1,5 +1,5 @@
 import { getRoute, href } from "@/lib/routing";
-import { treatments, gatedTreatments } from "@/features/aesthetics/data/treatments";
+import { gatedTreatments } from "@/features/aesthetics/data/treatments";
 import { concerns } from "@/features/concerns/data";
 import { technologies } from "@/features/technologies/data";
 import { medicalServices } from "@/features/medical-services/data";
@@ -25,9 +25,13 @@ import type { Locale } from "@/i18n/config";
  *   (+ BOOK APPOINTMENT and EN | العربية, which live in Header.tsx)
  *
  * Everything that used to be top level is still one interaction away,
- * inside the mega menu of the half it belongs to. Nothing was removed and
- * no route was renamed — this file only decides which existing routes
- * appear where.
+ * inside the mega menu of the half it belongs to.
+ *
+ * A LATER PASS then made Aesthetics concern-first. Its menu is now two groups,
+ * TREATMENTS and TECHNOLOGIES, where the Treatments group lists patient
+ * concerns rather than devices — see the comment on `treatmentsColumn`. The
+ * device pages it used to list are still live at their own URLs; they moved out
+ * of the menu, not off the site.
  *
  * Every href resolves through getRoute()/href(), and the assertions at the
  * bottom run at module load (i.e. at build time), so a nav entry pointing
@@ -46,10 +50,17 @@ export interface NavMenuLink {
 /** One labelled column inside a mega menu. */
 export interface NavMenuColumn {
   id: string;
-  headingKey: "treatments" | "concerns" | "technologies" | "medical" | "uninsuredServices";
+  headingKey: "treatments" | "technologies" | "medical" | "uninsuredServices";
   links: NavMenuLink[];
+  /**
+   * Render this column's links in two sub-columns where there is room.
+   * For a long list (the 13-row Aesthetics Treatments column) a single stack
+   * runs past the fold on a laptop; splitting it keeps the whole menu
+   * scannable at a glance. Ignored on mobile, which is a single stack anyway.
+   */
+  split?: boolean;
   /** Optional "View all …" row rendered under the column. */
-  viewAll?: { routeId: string; labelKey: "viewAllTreatments" | "viewAllConcerns" | "viewAllTechnologies" | "viewAllMedical" };
+  viewAll?: { routeId: string; labelKey: "viewAllTreatments" | "viewAllTechnologies" | "viewAllMedical" };
 }
 
 export interface PrimaryNavLink {
@@ -61,48 +72,53 @@ export interface PrimaryNavLink {
   columns?: NavMenuColumn[];
 }
 
-function treatmentLink(id: string): NavMenuLink {
-  const t = treatments.find((x) => x.id === id);
-  if (t) return { id, routeId: `treatment-${t.id}` };
-  // Cosmetic Botox and Skin Tightening are `gatedTreatments`: their approved
-  // source content is not unique to them (it duplicates the Botox hub and
-  // Radio Frequency respectively — see treatments.ts and docs/CONTENT_MODEL.md),
-  // so the menu shows their approved display name but points at the real live
-  // page that already carries that content, instead of a thin duplicate.
-  const g = gatedTreatments.find((x) => x.id === id);
-  if (!g) throw new Error(`src/config/navigation.ts: unknown treatment id "${id}"`);
-  return {
-    id,
-    label: g.title,
-    routeId: id === "cosmetic-botox" ? "botox-hub" : "treatment-radio-frequency",
-  };
-}
-
+/**
+ * THE AESTHETICS "TREATMENTS" COLUMN IS THE PATIENT-CONCERN LIST.
+ *
+ * Aesthetics used to offer two competing navigation systems side by side: a
+ * Treatments column naming devices and procedures (RF Micro-Needling, Radio
+ * Frequency, Ultra Treatment, PRP …) and a Concerns column naming patient
+ * problems (Acne Scars, Skin Laxity …). Both led into the same catalogue, and
+ * the visitor had to guess which vocabulary the site wanted from them — while
+ * almost everyone arrives knowing the problem, not the device.
+ *
+ * There is now one journey: PATIENT PROBLEM -> TREATMENT OPTIONS -> TECHNOLOGY.
+ * This column lists what a visitor wants treated, straight from the concern
+ * registry rather than a hand-typed list, so a concern cannot exist as a page
+ * and be missing from the menu. The device pages are still live and indexed at
+ * their own URLs; they are reached from the concern page that recommends them
+ * (`getTreatmentsForConcern`) or from their technology page, not from here.
+ *
+ * Cosmetic Botox is the deliberate exception, appended last: no approved source
+ * files it under a single concern, so filing it under one would be an invented
+ * indication and hiding it would make it undiscoverable. It stays a standalone
+ * row pointing at the live Botox hub, which is where its approved content is.
+ */
 const treatmentsColumn: NavMenuColumn = {
   id: "aesthetics-treatments",
   headingKey: "treatments",
   links: [
-    treatmentLink("laser-hair-removal"),
-    treatmentLink("laser-skin-treatments"),
-    treatmentLink("rf-microneedling"),
-    treatmentLink("radio-frequency"),
-    treatmentLink("ultra"),
-    treatmentLink("prp-hair-restoration"),
-    treatmentLink("prp-skin-rejuvenation"),
-    treatmentLink("tempsure-vitalia"),
-    treatmentLink("cosmetic-botox"),
+    ...concerns.map((c) => ({ id: c.id, routeId: `concern-${c.id}` })),
+    cosmeticBotoxLink(),
   ],
+  // 13 rows is too tall for one menu column; the freed space left by the
+  // removed Concerns column is spent widening this one into two.
+  split: true,
   viewAll: { routeId: "aesthetics-treatments-hub", labelKey: "viewAllTreatments" },
 };
 
-const concernsColumn: NavMenuColumn = {
-  id: "aesthetics-concerns",
-  headingKey: "concerns",
-  // Straight from the concern registry rather than a hand-typed list, so a
-  // concern can never exist as a page and be missing from the menu.
-  links: concerns.map((c) => ({ id: c.id, routeId: `concern-${c.id}` })),
-  viewAll: { routeId: "aesthetics-concerns-hub", labelKey: "viewAllConcerns" },
-};
+/**
+ * Cosmetic Botox is a `gatedTreatment`: its approved source content is not
+ * unique to it (it duplicates the Botox hub — see treatments.ts and
+ * docs/CONTENT_MODEL.md), so the menu shows its approved display name but
+ * points at the real live page that already carries that content, instead of a
+ * thin duplicate.
+ */
+function cosmeticBotoxLink(): NavMenuLink {
+  const g = gatedTreatments.find((x) => x.id === "cosmetic-botox");
+  if (!g) throw new Error('src/config/navigation.ts: gated treatment "cosmetic-botox" is missing');
+  return { id: g.id, label: g.title, routeId: "botox-hub" };
+}
 
 const technologiesColumn: NavMenuColumn = {
   id: "aesthetics-technologies",
@@ -115,8 +131,8 @@ const technologiesColumn: NavMenuColumn = {
  * The Medical mega menu — brief §18. The seven built medical-service pages
  * plus the medical Botox hub. The AHS-insured services that exist only as
  * approved list items and not as pages of their own (General Family
- * Medicine, Vaccination, Onsite Paediatrician, Mental Health, Women's
- * Health) are deliberately NOT in this menu: they are rendered as a labelled
+ * Medicine, Vaccination, Mental Health, Women's Health — CL-023 removed
+ * the onsite-paediatrician claim from that list) are deliberately NOT in this menu: they are rendered as a labelled
  * list on the Medical hub itself, which is where their approved source
  * content actually is. A menu row has to lead somewhere real (§54: no dead
  * ends), and inventing five thin pages to fill out a menu would mean writing
@@ -146,7 +162,7 @@ export const primaryNavLinks: PrimaryNavLink[] = [
     id: "nav-aesthetics",
     labelKey: "aesthetics",
     routeId: "aesthetics-hub",
-    columns: [treatmentsColumn, concernsColumn, technologiesColumn],
+    columns: [treatmentsColumn, technologiesColumn],
   },
   { id: "nav-our-team", labelKey: "ourTeam", routeId: "doctors-index" },
   { id: "nav-about", labelKey: "about", routeId: "about" },

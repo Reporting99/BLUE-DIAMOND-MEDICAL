@@ -25,7 +25,7 @@
  * differ in hue exactly as much as the palette allows and no more.
  */
 
-import { imageRoleTint } from "@/lib/media/facet-tile-tints";
+import { aestheticsWarmTint, imageRoleTint } from "@/lib/media/facet-tile-tints";
 import { facetTileArtColors, facetTileVariantFor, facetTileVariantIndex } from "@/lib/media/facet-tile-art";
 import type { ImageRole } from "@/types/media";
 
@@ -47,10 +47,21 @@ interface FacetTileProps {
    * for a lone tile, which then gets the composition chosen for its role.
    */
   seed?: string | number;
+  /**
+   * Which colour set the tile draws in.
+   *
+   * `brand` (the default, and what every existing caller gets) takes the
+   * role's blue triple from `imageRoleTint`. `warm` takes the single
+   * Aesthetics cream/beige triple instead — the /aesthetics section is
+   * art-directed warm, and a blue stand-in tile inside a warm hero reads as
+   * the wrong page rather than as a missing photograph. Only the Aesthetics
+   * hero passes it; the geometry, gradients and glow are identical either way.
+   */
+  palette?: "brand" | "warm";
 }
 
-export function FacetTile({ role = "doctor", className, alt, decorative, seed }: FacetTileProps) {
-  const tint = imageRoleTint[role];
+export function FacetTile({ role = "doctor", className, alt, decorative, seed, palette = "brand" }: FacetTileProps) {
+  const tint = palette === "warm" ? aestheticsWarmTint : imageRoleTint[role];
   const variant = facetTileVariantFor(role, seed);
   const tone = { mid: tint.mid, deep: tint.deep };
 
@@ -63,7 +74,7 @@ export function FacetTile({ role = "doctor", className, alt, decorative, seed }:
    * mean a different id on the server than on the client — a hydration
    * mismatch on a component that renders dozens of times per page.
    */
-  const key = `${role}-${facetTileVariantIndex(variant)}`;
+  const key = `${palette}-${role}-${facetTileVariantIndex(variant)}`;
 
   return (
     <svg

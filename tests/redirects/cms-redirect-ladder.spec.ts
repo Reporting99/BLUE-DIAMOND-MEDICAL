@@ -91,8 +91,8 @@ test.describe("the locale is always sent, and always scopes the answer", () => {
         ? jsonResponse({ destination: "/التجميل-الطبي/ندبات", enabled: true })
         : jsonResponse({}, 404),
     );
-    const ar = await resolveFeelstackRedirect("/ar/aesthetics/concerns/acne-scars", "ar");
-    const en = await resolveFeelstackRedirect("/en/aesthetics/concerns/acne-scars", "en");
+    const ar = await resolveFeelstackRedirect("/ar/aesthetics/treatments/acne-scars", "ar");
+    const en = await resolveFeelstackRedirect("/en/aesthetics/treatments/acne-scars", "en");
     expect(ar?.destination).toBe("/ar/التجميل-الطبي/ندبات");
     expect(en).toBeNull();
   });

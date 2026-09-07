@@ -6,7 +6,7 @@ import { SectionTransition } from "@/components/layout/SectionTransition";
 import { ImageKitImage } from "@/components/shared/ImageKitImage";
 import { isLocale, type Locale } from "@/i18n/config";
 import { getRoute } from "@/lib/routing";
-import { doctors } from "@/features/doctors";
+import { doctors, portraitForLocale } from "@/features/doctors";
 import { resolveListingMedia } from "@/lib/feelstack/listing-media";
 import { resolveSlotImageRef, cmsAlt } from "@/lib/feelstack/media-slots";
 import { cacheTags } from "@/lib/feelstack/cache-tags";
@@ -32,6 +32,27 @@ export async function generateMetadata({
   });
 }
 
+/**
+ * The client-approved presentation order for the team grid. Display order
+ * only: it reorders the same six roster records, and every other doctor
+ * surface (homepage trio, detail pages) keeps reading `doctors` directly.
+ * Any roster id not listed here still renders, appended after the ordered
+ * ones, so a future addition can never silently disappear from the page.
+ */
+const TEAM_DISPLAY_ORDER = [
+  "mohamed-farhat",
+  "reem-hamdi",
+  "bakare",
+  "omonijo",
+  "omaima-saeed",
+  "ahmed-gwea",
+];
+const orderedDoctors = [...doctors].sort((a, b) => {
+  const ai = TEAM_DISPLAY_ORDER.indexOf(a.id);
+  const bi = TEAM_DISPLAY_ORDER.indexOf(b.id);
+  return (ai === -1 ? TEAM_DISPLAY_ORDER.length : ai) - (bi === -1 ? TEAM_DISPLAY_ORDER.length : bi);
+});
+
 export default async function DoctorsIndexPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale: rawLocale } = await params;
   const locale: Locale = isLocale(rawLocale) ? rawLocale : "en";
@@ -40,7 +61,7 @@ export default async function DoctorsIndexPage({ params }: { params: Promise<{ l
   // whose detail page one click away renders a real portrait -- same person,
   // same assignment, different consumer. See lib/feelstack/listing-media.ts.
   const listingMedia = await resolveListingMedia(
-    doctors.map((d) => ({ id: d.id, englishPath: `/our-team/${d.id}` })),
+    orderedDoctors.map((d) => ({ id: d.id, englishPath: `/our-team/${d.id}` })),
     locale,
     [cacheTags.doctorsIndex(process.env.FEELSTACK_SITE_KEY ?? "", locale)],
   );
@@ -53,7 +74,7 @@ export default async function DoctorsIndexPage({ params }: { params: Promise<{ l
   const ownRoute = getRoute("doctors-index")!;
   // Built from the same `doctors` array the grid below maps over, so the
   // structured list can never drift from the visibly rendered one.
-  const items = doctors.flatMap((doctor) => {
+  const items = orderedDoctors.flatMap((doctor) => {
     const route = getRoute(doctor.routeId);
     return route ? [{ name: doctor.name[locale], url: `${siteConfig.url}/${locale}${route.path[locale]}` }] : [];
   });
@@ -138,15 +159,18 @@ export default async function DoctorsIndexPage({ params }: { params: Promise<{ l
       <section className="section-y">
       <Container>
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-          {doctors.map((doctor, index) => {
+          {orderedDoctors.map((doctor, index) => {
             const route = getRoute(doctor.routeId)!;
             // photoDeclined / disabled still beat the assignment, evaluated in
             // the same central resolver the detail page uses.
+            // CL-025 — the locale gate runs BEFORE the CMS resolver, so a
+            // restricted asset can never be re-introduced by an assignment.
+            const localePortrait = portraitForLocale(doctor, locale);
             const portrait = resolveSlotImageRef({
               media: listingMedia[doctor.id] ?? [],
               slot: "doctorPortrait",
-              override: doctor.image,
-              fallback: doctor.image,
+              override: localePortrait,
+              fallback: localePortrait,
             });
             const assigned = (listingMedia[doctor.id] ?? []).find((m) => m.slot === "doctorPortrait");
             return (
