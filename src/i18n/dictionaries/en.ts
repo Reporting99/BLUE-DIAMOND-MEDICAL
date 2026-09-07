@@ -63,7 +63,7 @@ export interface Dictionary {
 
 const en: Dictionary = {
   common: {
-    bookAppointment: "Book Appointment",
+    bookAppointment: "Book an Appointment",
     learnMore: "Learn more",
     call: "Call",
     address: "Address",

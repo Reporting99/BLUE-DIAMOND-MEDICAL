@@ -49,21 +49,21 @@ export const treatments: AestheticTreatment[] = [
       {
         question: { en: "How does Elite iQ™ work?", ar: "كيف يعمل جهاز Elite iQ™؟" },
         answer: {
-          en: "It uses the Skintel™ device — the first Health Canada and FDA cleared melanin reader on the market — allowing safe treatment of all skin types and areas.",
+          en: "It uses the Skintel™ device — the first melanin reader on the market cleared by both Health Canada and the FDA — allowing safe treatment of all skin types and areas.",
           ar: "يستخدم جهاز Skintel™ — أول قارئ ميلانين معتمد من هيئة الصحة الكندية وإدارة الغذاء والدواء الأمريكية — مما يتيح علاجًا آمنًا لجميع أنواع البشرة والمناطق.",
         },
       },
       {
         question: { en: "Is this treatment right for me?", ar: "هل هذا العلاج مناسب لي؟" },
         answer: {
-          en: "The Elite iQ™ device can be safely used on all skin types and anywhere on the body. Talk with your provider to discuss candidacy.",
+          en: "The Elite iQ™ device can be safely used on all skin types and anywhere on the body. Talk with your provider about whether it is right for you.",
           ar: "يمكن استخدام جهاز Elite iQ™ بأمان على جميع أنواع البشرة وفي أي منطقة من الجسم. ناقشوا ملاءمته لكم مع مقدم الرعاية.",
         },
       },
       {
         question: { en: "How many treatments will I need?", ar: "كم عدد الجلسات التي سأحتاجها؟" },
         answer: {
-          en: "Treatment times vary by area but typically take less than 30 minutes. Speak to your provider for a consultation to discuss treatment areas.",
+          en: "Treatment times vary by area, but a session usually takes less than 30 minutes. Book a consultation to discuss the areas you would like treated.",
           ar: "تختلف مدة الجلسة حسب المنطقة، لكنها عادة أقل من 30 دقيقة. تحدثوا مع مقدم الرعاية لتحديد استشارة ومناقشة المناطق المطلوب علاجها.",
         },
       },
@@ -89,7 +89,7 @@ export const treatments: AestheticTreatment[] = [
       ar: "يُنصح بتجنب التعرض للشمس لمدة أسبوع قبل جلسة علاج الوجه بالليزر.",
     },
     suggestedCourse: {
-      en: "Laser Facial: 3–6 treatments usually required for lasting results. Benign pigmented lesions: visible uniformity of colour in as little as 2 treatments, full course of 4 treatments at 3–4 week intervals. Vascular treatments (spider veins): eliminated in as little as 2 treatments, spaced 4–8 weeks apart.",
+      en: "Laser Facial: 3–6 treatments usually required for lasting results. Benign pigmented lesions: more even colour is often visible in as few as 2 treatments, with a full course of 4 at 3–4 week intervals. Vascular treatments (spider veins): often clear in as few as 2 treatments, spaced 4–8 weeks apart.",
       ar: "علاج الوجه بالليزر: عادة 3 إلى 6 جلسات لنتائج دائمة. الآفات الصبغية الحميدة: تجانس ملحوظ في اللون خلال جلستين فقط، وبرنامج كامل من 4 جلسات بفاصل 3-4 أسابيع. علاجات الأوعية الدموية (الأوردة العنكبوتية): تُزال خلال جلستين فقط، بفاصل 4-8 أسابيع.",
     },
     faqs: [
@@ -124,7 +124,7 @@ export const treatments: AestheticTreatment[] = [
       {
         question: { en: "How many sessions for pigmented lesions or spider veins specifically?", ar: "كم جلسة تلزم للآفات الصبغية أو الأوردة العنكبوتية تحديدًا؟" },
         answer: {
-          en: "Benign pigmented lesions: visible uniformity of colour in as little as 2 treatments, with a full course of 4 at 3–4 week intervals. Vascular treatments (spider veins): eliminated in as little as 2 treatments, spaced 4–8 weeks apart.",
+          en: "Benign pigmented lesions: more even colour is often visible in as few as 2 treatments, with a full course of 4 at 3–4 week intervals. Vascular treatments (spider veins): often clear in as few as 2 treatments, spaced 4–8 weeks apart.",
           ar: "الآفات الصبغية الحميدة: تجانس ملحوظ في اللون خلال جلستين فقط، مع برنامج كامل من 4 جلسات بفاصل 3-4 أسابيع. علاجات الأوعية الدموية (الأوردة العنكبوتية): تُزال خلال جلستين فقط، بفاصل 4-8 أسابيع.",
         },
       },
@@ -154,7 +154,7 @@ export const treatments: AestheticTreatment[] = [
       ar: "يُمرَّر جهاز محمول موجات الترددات الراديوية على المنطقة المعالجة بحركة دائرية، مما يرفع درجة حرارة البشرة تدريجيًا. تُحفّز الحرارة الناتجة إنتاج الكولاجين والإيلاستين لبشرة أكثر تماسكًا وشبابًا.",
     },
     comfortLevel: {
-      en: "Not painful — most patients report a therapeutic, massage-like effect.",
+      en: "Most patients find it comfortable, and often describe a warm, massage-like sensation.",
       ar: "غير مؤلم — يصف معظم المرضى شعورًا علاجيًا يشبه التدليك.",
     },
     duration: {
@@ -177,7 +177,7 @@ export const treatments: AestheticTreatment[] = [
       {
         question: { en: "Does Radio Frequency treatment hurt?", ar: "هل علاج الترددات الراديوية مؤلم؟" },
         answer: {
-          en: "It's not painful — most patients report a therapeutic, massage-like effect.",
+          en: "Most patients find it comfortable and describe a warm, massage-like sensation rather than pain.",
           ar: "غير مؤلم — يصف معظم المرضى شعورًا علاجيًا يشبه التدليك.",
         },
       },
@@ -245,7 +245,7 @@ export const treatments: AestheticTreatment[] = [
       ar: "غالبًا ما تظهر النتائج فورًا، لكن جلسة واحدة لا تكفي لنتائج دائمة.",
     },
     suggestedCourse: {
-      en: "3- and 5-session packages are recommended for continuous, rejuvenated, firm skin.",
+      en: "Three- and five-session packages are recommended to build and maintain firmer, refreshed-looking skin.",
       ar: "يُنصح ببرامج من 3 أو 5 جلسات للحصول على بشرة متجددة ومتماسكة بشكل مستمر.",
     },
     downtime: {
@@ -353,7 +353,7 @@ export const treatments: AestheticTreatment[] = [
     slugAr: "استعادة-الشعر-بالبلازما",
     title: { en: "PRP Hair Restoration", ar: "استعادة الشعر بالبلازما" },
     summary: {
-      en: "Platelet-Rich Plasma injected into the scalp to stimulate inactive hair follicles and promote denser, fuller hair growth — performed by Dr. Farhat.",
+      en: "Platelet-rich plasma injected into the scalp to stimulate inactive hair follicles and support denser, fuller growth. Performed by Dr. Farhat; results vary between patients.",
       ar: "حقن البلازما الغنية بالصفائح الدموية في فروة الرأس لتنشيط البصيلات الخاملة وتعزيز نمو شعر أكثف وأكمل — يُجريها الدكتور فرحات.",
     },
     howItWorks: {

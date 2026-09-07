@@ -46,14 +46,14 @@ export const concerns: AestheticConcern[] = [
       {
         question: { en: "How does Elite iQ™ work?", ar: "كيف يعمل جهاز Elite iQ™؟" },
         answer: {
-          en: "It uses the Skintel™ device — the first Health Canada and FDA cleared melanin reader on the market — allowing safe treatment of all skin types and areas.",
+          en: "It uses the Skintel™ device — the first melanin reader on the market cleared by both Health Canada and the FDA — allowing safe treatment of all skin types and areas.",
           ar: "يستخدم جهاز Skintel™ — أول قارئ ميلانين معتمد من هيئة الصحة الكندية وإدارة الغذاء والدواء الأمريكية — مما يتيح علاجًا آمنًا لجميع أنواع البشرة والمناطق.",
         },
       },
       {
         question: { en: "How many treatments will I need?", ar: "كم عدد الجلسات التي سأحتاجها؟" },
         answer: {
-          en: "Treatment times vary by area but typically take less than 30 minutes. Multiple sessions are needed since not all hairs are actively growing at once. Speak to your provider for a consultation to discuss treatment areas.",
+          en: "Treatment times vary by area, but a session usually takes less than 30 minutes. Multiple sessions are needed because not all hairs are actively growing at once. Book a consultation to discuss the areas you would like treated.",
           ar: "تختلف مدة الجلسة حسب المنطقة، لكنها عادة أقل من 30 دقيقة. ويلزم عدة جلسات لأن الشعر لا ينمو كله في وقت واحد. تحدثوا مع مقدم الرعاية لتحديد استشارة ومناقشة المناطق المطلوب علاجها.",
         },
       },
@@ -208,7 +208,7 @@ export const concerns: AestheticConcern[] = [
     slugAr: "جفاف-البشرة",
     title: { en: "Dry Skin", ar: "جفاف البشرة" },
     summary: {
-      en: "Calgary's climate is unusually harsh on skin. Using RF microneedling to infuse topicals — including moisturizers and pigment regulators — we help skin stay nourished and glowing for months after treatment.",
+      en: "Calgary's climate is unusually harsh on skin. Using RF microneedling to infuse topicals — including moisturizers and pigment regulators — we help skin stay nourished and comfortable for months after treatment.",
       ar: "يُعد مناخ كالغاري قاسيًا بشكل خاص على البشرة. باستخدام الإبر الدقيقة بالترددات الراديوية لإدخال المستحضرات الموضعية — بما فيها المرطبات ومنظمات الصبغة — نساعد البشرة على البقاء رطبة ومشرقة لأشهر بعد العلاج.",
     },
     relatedTreatmentIds: ["rf-microneedling"],
@@ -259,7 +259,7 @@ export const concerns: AestheticConcern[] = [
       {
         question: { en: "Is treatment the same for everyone?", ar: "هل العلاج نفسه لكل الأشخاص؟" },
         answer: {
-          en: "No — treatments are bespoke, tailored to your specific skin during a consultation.",
+          en: "No — each treatment is planned around your own skin during a consultation.",
           ar: "لا — العلاجات مخصصة وتُصمَّم بحسب بشرتكم تحديدًا خلال الاستشارة.",
         },
       },
@@ -390,7 +390,7 @@ export const concerns: AestheticConcern[] = [
     slugAr: "تجديد-البشرة",
     title: { en: "Skin Revitalization", ar: "تجديد البشرة" },
     summary: {
-      en: "Harsh weather and daily stresses can leave skin looking tired. We can refresh skin in under 45 minutes, exposing a natural glow and reducing the appearance of fine lines and wrinkles.",
+      en: "Harsh weather and daily stresses can leave skin looking tired. A session takes under 45 minutes and can leave skin looking refreshed, with a natural glow and a softer appearance to fine lines and wrinkles.",
       ar: "قد يترك الطقس القاسي وضغوط الحياة اليومية أثرهما على مظهر البشرة. يمكننا تجديد نضارة البشرة خلال أقل من 45 دقيقة، وإظهار توهجها الطبيعي، وتقليل ظهور الخطوط الدقيقة والتجاعيد.",
     },
     relatedTreatmentIds: ["laser-skin-treatments", "rf-microneedling"],

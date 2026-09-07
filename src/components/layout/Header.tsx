@@ -311,7 +311,7 @@ export function Header({ locale }: { locale: Locale }) {
             inline-start in RTL. */}
         <div className="flex items-center gap-2">
           <LanguageSwitch locale={locale} />
-          {/* CL-005 / CL-007 — "Book Appointment" is the one booking control on
+          {/* CL-005 / CL-007 — "Book an Appointment" is the one booking control on
             the site whose visitor has NOT told us their patient type, so it must
             not pick one for them. It used to open the tokenized Mikata link
             directly, which is the REGISTERED-patient system: a new patient
