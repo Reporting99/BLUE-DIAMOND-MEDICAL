@@ -9,13 +9,12 @@ import { ImageKitImage } from "@/components/shared/ImageKitImage";
 import { FacetTile } from "@/components/shared/FacetTile";
 import { resolveListingMedia } from "@/lib/feelstack/listing-media";
 import { cacheTags } from "@/lib/feelstack/cache-tags";
-import { cmsAlt, resolveSlotImageRef } from "@/lib/feelstack/media-slots";
+import { cmsAlt } from "@/lib/feelstack/media-slots";
 import { ClinicSchema } from "@/components/shared/schema";
 import { FaqPageSchema } from "@/components/shared/schema";
 import { ConcernExplorer } from "@/features/concerns";
 import { concerns } from "@/features/concerns/data";
 import { concernExplorerImages, concernListingEntities } from "@/features/concerns/media";
-import { doctorsInTeamOrder, portraitForLocale } from "@/features/doctors";
 import { NewPatientNotice } from "@/components/shared/NewPatientNotice";
 import { AccessOptions } from "@/components/shared/AccessOptions";
 import { ScrollCue } from "@/components/layout/ScrollCue";
@@ -80,10 +79,6 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const copy = homepageCopy[locale];
   const bookingHub = getRoute("book-appointment")!;
   const status = getOpenStatus(aestheticsHours);
-  // The first three of the client-approved team order, so the homepage trio
-  // and the /our-team grid always lead with the same physicians.
-  const featuredDoctors = doctorsInTeamOrder.slice(0, 3);
-
   const { serviceCards, techShowcase, treatmentShowcase, productShowcase } = getHomeShowcases(locale);
 
   // Home's own hero, plus the media for every entity this page features.
@@ -110,7 +105,6 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
     ...serviceCards.map((c) => ({ id: `service:${c.id}`, englishPath: `/medical/${c.id}` })),
     ...treatmentShowcase.map((t) => ({ id: `treatment:${t.id}`, englishPath: `/aesthetics/treatments/${t.id}` })),
     ...techShowcase.map((t) => ({ id: `tech:${t.id}`, englishPath: `/aesthetics/technologies/${t.id}` })),
-    ...featuredDoctors.map((d) => ({ id: `doctor:${d.id}`, englishPath: `/our-team/${d.id}` })),
     ...productShowcase.map((pr) => ({ id: `product:${pr.id}`, englishPath: `/shop/${pr.slug}` })),
     /* Section 6's concern explorer. It was the last listing on this page still
        asking the CMS for nothing: nine concerns with approved, assigned
@@ -121,7 +115,6 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
     ...concernListingEntities(concerns),
   ];
   const homeMedia = await resolveListingMedia(homeEntities, locale, [
-    cacheTags.doctorsIndex(process.env.FEELSTACK_SITE_KEY ?? "", locale),
     cacheTags.medicalServicesIndex(process.env.FEELSTACK_SITE_KEY ?? "", locale),
     cacheTags.aestheticTreatmentsIndex(process.env.FEELSTACK_SITE_KEY ?? "", locale),
     cacheTags.technologiesIndex(process.env.FEELSTACK_SITE_KEY ?? "", locale),
@@ -694,62 +687,14 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
             <p className="mt-3 text-body text-text-secondary">{dict.home.doctorsBody}</p>
           </div>
 
-          <div className="mt-10 grid gap-6 sm:grid-cols-3">
-            {featuredDoctors.map((doctor, i) => {
-              const route = getRoute(doctor.routeId)!;
-              return (
-                <Link
-                  key={doctor.id}
-                  data-reveal="scale"
-                  data-reveal-delay={String(Math.min(i, 3))}
-                  href={`/${locale}${route.path[locale]}`}
-                  className="group block overflow-hidden rounded-lg border border-border bg-background"
-                >
-                  <div className="facet-corner-sm relative aspect-[4/5] overflow-hidden">
-                    <ImageKitImage
-                      path={
-                        resolveSlotImageRef({
-                          media: homeMedia[`doctor:${doctor.id}`] ?? [],
-                          slot: "doctorPortrait",
-                          override: portraitForLocale(doctor, locale),
-                          fallback: portraitForLocale(doctor, locale),
-                        }).path
-                      }
-                      preset="doctor-card"
-                      role="doctor"
-                      status={
-                        resolveSlotImageRef({
-                          media: homeMedia[`doctor:${doctor.id}`] ?? [],
-                          slot: "doctorPortrait",
-                          override: portraitForLocale(doctor, locale),
-                          fallback: portraitForLocale(doctor, locale),
-                        }).status
-                      }
-                      alt={
-                        cmsAlt(featured(`doctor:${doctor.id}`, "doctorPortrait")) ?? {
-                          en: `Portrait of ${doctor.name.en}`,
-                          ar: `صورة ${doctor.name.ar}`,
-                        }
-                      }
-                      locale={locale}
-                      width={480}
-                      height={600}
-                      className="h-full w-full transition-transform duration-300 group-hover:scale-[1.03]"
-                    />
-                  </div>
-                  <div className="p-4">
-                    <p className="font-heading text-h4">{doctor.name[locale]}</p>
-                    <p className="mt-1 text-sm text-text-secondary">{doctor.credentials[locale]}</p>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
+          {/* No portraits here. The homepage introduces the team in words and
+              sends the visitor to /our-team for the faces and the bios, so the
+              physicians' photography lives in exactly one place. */}
           <div data-reveal="up" className="mt-8 text-center">
-            <Link href={href("doctors-index", locale)} className="inline-flex items-center gap-1 text-sm font-semibold text-primary hover:text-primary-hover">
-              {dict.common.learnMore} <span className="sr-only">{locale === "ar" ? "عن أطبائنا" : "about our doctors"}</span>{" "}
-              <ArrowRight className="size-4 rtl:rotate-180" />
-            </Link>
+            <Button size="lg" render={<Link href={href("doctors-index", locale)} />}>
+              {dict.nav.ourTeam}
+              <ArrowRight className="ms-1 size-4 rtl:rotate-180" />
+            </Button>
           </div>
         </Container>
       </section>
