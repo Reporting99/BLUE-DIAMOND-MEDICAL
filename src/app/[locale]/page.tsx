@@ -354,26 +354,28 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       <SectionTransition from="var(--surface-blue-soft)" to="var(--background)" />
 
       {/* ============ SECTION 2 — TWO CLEAR CARE PATHWAYS ============ */}
-      {/* Asymmetric weight on desktop: medical takes the wider column
-          text-and-image editorial treatment; aesthetics leads with a
-          larger image-led panel. Order reverses in RTL automatically via
-          the grid's natural flow direction — no JS mirroring needed. */}
+      {/* The two pathways are peers, so the cards are peers: equal columns,
+          the same 4:3 tile, the same padding, and copy anchored to the bottom
+          of both so the headings, body and links sit on one line across the
+          pair. Order reverses in RTL automatically via the grid's natural flow
+          direction — no JS mirroring needed. */}
       <section className="section-y">
         <Container>
           <h2 data-reveal="up" className="text-display-2 font-heading lg:text-display-2-lg">
             {dict.home.pathwaysTitle}
           </h2>
-          <div className="mt-8 grid gap-6 lg:grid-cols-[5fr_7fr]">
-            {/* MEDICAL CARE CARD. Mirrors the aesthetics card's treatment —
-                photograph, the same Blue Diamond overlay, white text — while
-                keeping this card's own structure (centred content, p-8, its
-                existing inner link). The overlay is a render-time layer so the
-                approved asset stays clean: nothing is baked into the source.
-                With no assignment the card falls back to its original bordered
-                panel rather than an empty box. */}
+          <div className="mt-8 grid gap-6 lg:grid-cols-2">
+            {/* MEDICAL CARE CARD. Matches the aesthetics card exactly —
+                same 4:3 box, same p-9, same bottom-anchored stack, same Blue
+                Diamond overlay, white text — so neither pathway reads as the
+                lesser one. It keeps its own inner link rather than becoming
+                one. The overlay is a render-time layer so the approved asset
+                stays clean: nothing is baked into the source. With no
+                assignment the card falls back to its bordered panel rather
+                than an empty box. */}
             <div
               data-reveal="start"
-              className={`relative isolate flex flex-col justify-center overflow-hidden rounded-lg p-8 ${
+              className={`relative isolate flex aspect-[4/3] flex-col justify-end overflow-hidden rounded-lg p-9 ${
                 medicalPathwayMedia ? "text-white" : "border border-border"
               }`}
             >
@@ -393,7 +395,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                     locale={locale}
                     width={medicalPathwayMedia.width}
                     height={medicalPathwayMedia.height}
-                    sizes="(min-width: 1024px) 42vw, 100vw"
+                    sizes="(min-width: 1024px) 50vw, 100vw"
                     className="absolute inset-0 -z-20 h-full w-full"
                   />
                   <div
@@ -404,8 +406,13 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                 </>
               ) : null}
               <Stethoscope className={medicalPathwayMedia ? "size-7" : "size-7 text-primary"} aria-hidden="true" />
-              <h3 className="mt-4 text-h3 font-heading">{dict.home.pathwaysMedicalTitle}</h3>
-              <p className={`mt-3 text-body ${medicalPathwayMedia ? "text-white/90" : "text-text-secondary"}`}>{dict.home.pathwaysMedicalBody}</p>
+              {/* `text-white` is explicit, not inherited: globals.css gives
+                  every h1/h2/h3 `color: var(--text-primary)` in the base
+                  layer, which beats the card's inherited white and left this
+                  heading dark blue over the photograph while the aesthetics
+                  heading — which always set the colour itself — was white. */}
+              <h3 className={`mt-4 text-h3 font-heading ${medicalPathwayMedia ? "text-white" : ""}`}>{dict.home.pathwaysMedicalTitle}</h3>
+              <p className={`mt-3 max-w-sm text-body ${medicalPathwayMedia ? "text-white/90" : "text-text-secondary"}`}>{dict.home.pathwaysMedicalBody}</p>
               <Link href={href("medical-hub", locale)} className={`mt-6 inline-flex items-center gap-1 text-sm font-semibold ${medicalPathwayMedia ? "tracking-wide text-white hover:text-white/90" : "text-primary hover:text-primary-hover"}`}>
                 {copy.finalActions.explorMedical} <ArrowRight className="size-4 rtl:rotate-180" />
               </Link>
@@ -435,7 +442,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                   locale={locale}
                   width={aestheticsPathwayMedia.width}
                   height={aestheticsPathwayMedia.height}
-                  sizes="(min-width: 1024px) 58vw, 100vw"
+                  sizes="(min-width: 1024px) 50vw, 100vw"
                   className="absolute inset-0 -z-20 h-full w-full"
                 />
               ) : (
