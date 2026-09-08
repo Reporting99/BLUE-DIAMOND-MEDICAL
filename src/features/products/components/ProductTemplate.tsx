@@ -226,7 +226,7 @@ export function ProductTemplate({ product, locale }: { product: Product; locale:
           never one concatenated paragraph. Rendered outside the `detail`
           block because the peel records carry no SkinMedica-style research
           `detail` and must not be given an invented one. */}
-      {product.benefits || product.keyFeatures || product.kitContents || product.directions || product.keyIngredients || product.manufacturerComparison ? (
+      {product.benefits || product.keyFeatures || product.kitContents || product.safetyWarnings || product.directions || product.keyIngredients || product.manufacturerComparison ? (
         <Container className="mt-4 max-w-3xl">
           {product.benefits ? (
             <DetailSection heading={t.benefits}>
@@ -256,6 +256,13 @@ export function ProductTemplate({ product, locale }: { product: Product; locale:
                 {product.kitContents[locale].map((item) => (
                   <li key={item}>{item}</li>
                 ))}
+              </ul>
+            </DetailSection>
+          ) : null}
+          {product.safetyWarnings?.[locale].length ? (
+            <DetailSection heading={t.warnings}>
+              <ul className="list-disc space-y-1 ps-5">
+                {product.safetyWarnings[locale].map((item) => <li key={item}>{item}</li>)}
               </ul>
             </DetailSection>
           ) : null}

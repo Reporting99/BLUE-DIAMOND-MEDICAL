@@ -29,11 +29,11 @@ export const concerns: AestheticConcern[] = [
     slugAr: "الشعر-غير-المرغوب-فيه",
     title: { en: "Unwanted Hair", ar: "الشعر غير المرغوب فيه" },
     summary: {
-      en: "Shaving, waxing, plucking, and depilatories are time-consuming and give only temporary results. Laser hair removal at Blue Diamond Medical offers long-lasting reduction anywhere on the body, and the Skintel™ melanin reader allows the laser to be set safely for all skin types.",
+      en: "Shaving, waxing, plucking and depilatories give temporary results. Laser hair removal offers long-lasting hair reduction on a range of body areas. The Skintel™ melanin reader helps the practitioner select settings for your skin; suitability is assessed before treatment.",
       ar: "تقليل دائم لنمو الشعر في أي منطقة من الجسم باستخدام نظام ليزر Cynosure Elite+™، مع قارئ الميلانين Skintel™ الذي يتيح علاجًا آمنًا لجميع أنواع البشرة.",
     },
     commonPresentations: {
-      en: "Unwanted hair is treated on the face, back, legs, chest, underarms, bikini area, and upper lip — the Elite iQ™ device can be used anywhere on the body.",
+      en: "Treatment areas include the face, back, legs, chest, underarms, bikini area and upper lip. Your practitioner will assess whether treatment is suitable for the area you have in mind.",
       ar: "يُعالَج الشعر غير المرغوب فيه في الوجه، والظهر، والساقين، والصدر، والإبطين، ومنطقة البكيني، والشفة العليا — ويمكن استخدام جهاز Elite iQ™ في أي منطقة من الجسم.",
     },
     contributingFactors: {
@@ -46,7 +46,7 @@ export const concerns: AestheticConcern[] = [
       {
         question: { en: "How does Elite iQ™ work?", ar: "كيف يعمل جهاز Elite iQ™؟" },
         answer: {
-          en: "It uses the Skintel™ device — the first melanin reader on the market cleared by both Health Canada and the FDA — allowing safe treatment of all skin types and areas.",
+          en: "Elite iQ™ uses the Skintel™ melanin reader to help the practitioner select settings for your skin. Suitability depends on your skin, hair and treatment area.",
           ar: "يستخدم جهاز Skintel™ — أول قارئ ميلانين معتمد من هيئة الصحة الكندية وإدارة الغذاء والدواء الأمريكية — مما يتيح علاجًا آمنًا لجميع أنواع البشرة والمناطق.",
         },
       },
@@ -86,14 +86,14 @@ export const concerns: AestheticConcern[] = [
       {
         question: { en: "How does PRP address hair loss?", ar: "كيف تعالج البلازما تساقط الشعر؟" },
         answer: {
-          en: "PRP is a regenerative serum created from the patient's own blood. After a blood draw, plasma is separated and concentrated into a serum rich in growth factors that stimulate inactive hair follicles and improve scalp blood circulation.",
+          en: "Platelet-rich plasma (PRP) is prepared from the patient's own blood. After a blood draw, the blood is processed to concentrate platelets in plasma. The platelets release growth factors involved in tissue repair. PRP is injected into the scalp to support hair growth; results vary.",
           ar: "البلازما الغنية بالصفائح الدموية مصل تجديدي يُستخرج من دم المريض نفسه. بعد سحب عينة دم، يُفصَل البلازما ويُركَّز في مصل غني بعوامل النمو التي تُنشّط بصيلات الشعر الخاملة وتُحسّن الدورة الدموية في فروة الرأس.",
         },
       },
       {
         question: { en: "Who performs PRP at Blue Diamond Medical?", ar: "من يُجري علاج البلازما في بلو دايموند الطبية؟" },
         answer: {
-          en: "PRP treatments are performed by Dr. Farhat, combining advanced technique with personalized care.",
+          en: "PRP treatments are performed by Dr. Farhat.",
           ar: "يُجري الدكتور فرحات علاجات البلازما، جامعًا بين التقنية المتقدمة والرعاية الشخصية.",
         },
       },
@@ -136,7 +136,7 @@ export const concerns: AestheticConcern[] = [
       {
         question: { en: "Which treatment is used for acne scarring?", ar: "ما العلاج المستخدم لندبات حب الشباب؟" },
         answer: {
-          en: "RF microneedling is the treatment linked to this concern; a physician will confirm what's appropriate for your specific scarring during your consultation.",
+          en: "RF microneedling and laser treatments are options for acne scarring. Your physician will discuss which options suit your skin during your consultation.",
           ar: "تُستخدم الإبر الدقيقة بالترددات الراديوية لهذه المخاوف؛ وسيؤكد الطبيب ما يناسب حالة ندباتكم تحديدًا خلال الاستشارة.",
         },
       },
@@ -164,7 +164,7 @@ export const concerns: AestheticConcern[] = [
     slugAr: "الوردية-والاحمرار",
     title: { en: "Rosacea & Redness", ar: "الوردية والاحمرار" },
     summary: {
-      en: "The gentle flush of rosacea can escalate into redness that's distressing to live with. We take a holistic approach, starting with a full medical consultation to discuss what can be achieved — laser treatments often work best for this condition.",
+      en: "Rosacea can cause redness that is distressing to live with. Care starts with a medical consultation to discuss your symptoms and treatment options. Laser treatment may help with visible redness and blood vessels.",
       ar: "قد يتطور احمرار الوردية الخفيف إلى احمرار مزعج. نتبع نهجًا شاملًا يبدأ باستشارة طبية كاملة لمناقشة النتائج الممكنة — وغالبًا ما تكون علاجات الليزر الأنسب لهذه الحالة.",
     },
     relatedTreatmentIds: ["laser-skin-treatments"],
@@ -180,7 +180,7 @@ export const concerns: AestheticConcern[] = [
       {
         question: { en: "What treatment is generally used for rosacea and redness?", ar: "ما العلاج المستخدم عادةً للوردية والاحمرار؟" },
         answer: {
-          en: "Laser treatments often work best for this condition — Laser Skin Treatments is the relevant treatment page.",
+          en: "Laser treatment may help with visible redness and blood vessels. Your physician will assess your rosacea and discuss suitable options.",
           ar: "غالبًا ما تكون علاجات الليزر الأنسب لهذه الحالة — وصفحة علاجات الليزر للبشرة هي الصفحة ذات الصلة.",
         },
       },
@@ -208,7 +208,7 @@ export const concerns: AestheticConcern[] = [
     slugAr: "جفاف-البشرة",
     title: { en: "Dry Skin", ar: "جفاف البشرة" },
     summary: {
-      en: "Calgary's climate is unusually harsh on skin. Using RF microneedling to infuse topicals — including moisturizers and pigment regulators — we help skin stay nourished and comfortable for months after treatment.",
+      en: "Calgary's dry climate can contribute to dry, uncomfortable skin. The clinic's RF microneedling approach includes topical products such as moisturizers and pigment regulators. Your physician will assess whether this approach is appropriate for your skin.",
       ar: "يُعد مناخ كالغاري قاسيًا بشكل خاص على البشرة. باستخدام الإبر الدقيقة بالترددات الراديوية لإدخال المستحضرات الموضعية — بما فيها المرطبات ومنظمات الصبغة — نساعد البشرة على البقاء رطبة ومشرقة لأشهر بعد العلاج.",
     },
     relatedTreatmentIds: ["rf-microneedling"],
@@ -216,21 +216,21 @@ export const concerns: AestheticConcern[] = [
       {
         question: { en: "Does Calgary's climate affect dry skin?", ar: "لماذا يُذكر مناخ كالغاري عند الحديث عن العناية بالبشرة الجافة؟" },
         answer: {
-          en: "Calgary's climate is unusually harsh on skin, which is part of why ongoing nourishment support can be worthwhile for many patients here.",
+          en: "Calgary's dry climate can contribute to dry, uncomfortable skin.",
           ar: "مناخ كالغاري قاسٍ بشكل خاص على البشرة، وهو أحد أسباب أهمية دعم الترطيب المستمر لكثير من المرضى هنا.",
         },
       },
       {
         question: { en: "How does RF microneedling help with dry skin?", ar: "كيف تساعد الإبر الدقيقة بالترددات الراديوية في علاج جفاف البشرة؟" },
         answer: {
-          en: "It's used to infuse topicals — including moisturizers and pigment regulators — helping skin stay nourished for months after treatment.",
+          en: "The clinic's approach uses RF microneedling with topical products, including moisturizers and pigment regulators. Your physician will discuss suitability and the risks and benefits of the proposed products.",
           ar: "تُستخدم لإدخال المستحضرات الموضعية — بما فيها المرطبات ومنظمات الصبغة — مما يساعد البشرة على البقاء رطبة لأشهر بعد العلاج.",
         },
       },
       {
         question: { en: "How long does the nourishing effect last?", ar: "كم تدوم فائدة الترطيب؟" },
         answer: {
-          en: "Effects can last for months after treatment, though this varies by individual.",
+          en: "The response and its duration vary. Your physician can discuss what to expect for your skin and the proposed treatment.",
           ar: "قد تستمر الفائدة لأشهر بعد العلاج، إلا أن ذلك يختلف من شخص لآخر.",
         },
       },
@@ -252,7 +252,7 @@ export const concerns: AestheticConcern[] = [
       {
         question: { en: "What treatments address fine lines and wrinkles?", ar: "ما العلاجات التي تعالج الخطوط الدقيقة والتجاعيد؟" },
         answer: {
-          en: "RF microneedling and radiofrequency skin tightening are the two treatments connected to this concern, suited to different skin types.",
+          en: "RF microneedling and radiofrequency skin tightening may soften fine lines and wrinkles. Your physician will assess which treatment suits your skin.",
           ar: "الإبر الدقيقة بالترددات الراديوية وشدّ البشرة بالترددات الراديوية هما العلاجان المرتبطان بهذه المخاوف، ويناسبان أنواع بشرة مختلفة.",
         },
       },
@@ -266,7 +266,7 @@ export const concerns: AestheticConcern[] = [
       {
         question: { en: "Do these treatments also help with skin tightening, not just lines?", ar: "هل تساعد هذه العلاجات أيضًا على شدّ البشرة، وليس فقط الخطوط؟" },
         answer: {
-          en: "Yes — skin-tightening options are available alongside the line-smoothing treatments, for all skin types.",
+          en: "Yes, these treatments may also help with skin tightening. Your physician will assess which options are suitable for your skin.",
           ar: "نعم — تتوفر خيارات شدّ البشرة إلى جانب علاجات تنعيم الخطوط، لمختلف أنواع البشرة.",
         },
       },
@@ -332,7 +332,7 @@ export const concerns: AestheticConcern[] = [
       {
         question: { en: "Where on the body can spider veins be treated?", ar: "أين على الجسم يمكن علاج الأوردة العنكبوتية؟" },
         answer: {
-          en: "Anywhere on the body.",
+          en: "The face and legs are common treatment areas. Your physician will assess whether treatment is appropriate for the area you want treated.",
           ar: "في أي منطقة من الجسم.",
         },
       },
@@ -369,7 +369,7 @@ export const concerns: AestheticConcern[] = [
       {
         question: { en: "What treatments address sun damage and pigmentation?", ar: "ما العلاجات التي تعالج تلف الشمس والتصبغ؟" },
         answer: {
-          en: "Laser Skin Treatments and the Ultra laser are the two treatments connected to this concern.",
+          en: "Laser skin treatments and Ultra may help with sun damage and uneven pigmentation. Your physician will assess the areas you want treated.",
           ar: "علاجات الليزر للبشرة وليزر الترا هما العلاجان المرتبطان بهذه المخاوف.",
         },
       },
@@ -434,14 +434,14 @@ export const concerns: AestheticConcern[] = [
       {
         question: { en: "Why are razor bumps a concern beyond appearance?", ar: "لماذا تُعدّ حبوب الحلاقة مشكلة تتجاوز المظهر؟" },
         answer: {
-          en: "They're uncomfortable and prone to infection, especially when combined with ingrown hairs.",
+          en: "Razor bumps can be uncomfortable. The affected skin can sometimes become infected.",
           ar: "فهي مزعجة وقابلة للإصابة، خصوصًا عند اقترانها بالشعر النامي تحت الجلد.",
         },
       },
       {
         question: { en: "Does treatment just remove the bumps, or address the cause?", ar: "هل يقتصر العلاج على إزالة الحبوب أم يعالج السبب أيضًا؟" },
         answer: {
-          en: "Both — treatment addresses the underlying cause as well as the visible bumps.",
+          en: "By reducing hair growth, laser hair removal may help reduce the ingrown hairs that cause razor bumps. Results vary.",
           ar: "كلاهما — يعالج العلاج السبب الجذري إلى جانب الحبوب الظاهرة.",
         },
       },
@@ -455,7 +455,7 @@ export const concerns: AestheticConcern[] = [
       {
         question: { en: "Is this a minimally invasive treatment?", ar: "هل هذا علاج طفيف التوغل؟" },
         answer: {
-          en: "Yes — laser hair removal is non-surgical and minimally invasive.",
+          en: "Laser hair removal is a non-surgical treatment.",
           ar: "نعم.",
         },
       },

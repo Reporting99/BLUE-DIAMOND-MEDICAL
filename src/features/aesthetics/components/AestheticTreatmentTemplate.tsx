@@ -223,7 +223,7 @@ export function AestheticTreatmentTemplate({
         {treatment.duration ? <Section title={t.duration}>{treatment.duration[locale]}</Section> : null}
         {treatment.treatmentDayJourney ? <Section title={t.treatmentDayJourney}>{treatment.treatmentDayJourney[locale]}</Section> : null}
         {treatment.downtime ? <Section title={t.downtime}>{treatment.downtime[locale]}</Section> : null}
-        {treatment.aftercare ? <Section title={t.aftercare}>{treatment.aftercare[locale]}</Section> : null}
+        {treatment.aftercare?.[locale] ? <Section title={t.aftercare}>{treatment.aftercare[locale]}</Section> : null}
         {treatment.resultTimeline ? <Section title={t.resultTimeline}>{treatment.resultTimeline[locale]}</Section> : null}
         {treatment.suggestedCourse ? <Section title={t.suggestedCourse}>{treatment.suggestedCourse[locale]}</Section> : null}
         {treatment.safetyContraindications ? (

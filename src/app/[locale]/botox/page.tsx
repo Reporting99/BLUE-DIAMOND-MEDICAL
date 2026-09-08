@@ -21,7 +21,7 @@ import { getRoute } from "@/lib/routing";
 import { resolvePageHeroImage } from "@/lib/feelstack/page-hero-media";
 
 const medicalConditions = {
-  en: ["Migraine treatment", "Hyperhidrosis", "Bruxism (TMJ) & jaw pain"],
+  en: ["Migraine treatment", "Hyperhidrosis", "Bruxism and jaw pain"],
   ar: ["علاج الشقيقة (الصداع النصفي)", "التعرق الزائد", "صرير الأسنان (TMJ) وألم الفك"],
 };
 
@@ -80,9 +80,9 @@ export default async function BotoxHubPage({ params }: { params: Promise<{ local
     en: {
       title: "Botox",
       intro:
-        "Botox at Blue Diamond Medical is administered by Dr. Farhat and Dr. Hamdi. Every treatment begins with a consultation, and most appointments are short enough to fit into a lunch break, with minimal recovery time afterward.",
+        "Botox at Blue Diamond Medical is administered by Dr. Farhat and Dr. Hamdi. Every treatment begins with a consultation to discuss suitability, the appointment and expected recovery.",
       coverageNote:
-        "Botox for migraine, bruxism, and hyperhidrosis is covered by a combination of provincial health insurance and either private insurance or the clinic's compassionate program, open to all Albertans whether registered with the clinic or not.",
+        "Coverage for Botox for migraine, bruxism and hyperhidrosis depends on the condition and your insurance eligibility. Provincial coverage, private insurance or the clinic's compassionate program may help with costs. Albertans can contact the clinic whether or not they are registered patients. Confirm coverage and any fees before treatment.",
       medicalHeading: "Medical Botox",
       cosmeticHeading: "Cosmetic Botox",
       cta: "Call to book",

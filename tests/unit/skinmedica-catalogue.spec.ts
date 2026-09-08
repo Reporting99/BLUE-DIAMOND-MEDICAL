@@ -357,6 +357,16 @@ test("CL-042: professional-only products say so and are never purchasable", () =
   }
 });
 
+test("C-Retinol and its pigmentary kit retain the manufacturer safety warnings", () => {
+  for (const id of ["c-retinol", "pigmentary-disorders-kit"]) {
+    const product = getProduct(id);
+    const warnings = product?.safetyWarnings?.en.join(" ") ?? "";
+    expect(warnings, `${id}: pregnancy warning`).toMatch(/pregnant or breastfeeding/i);
+    expect(warnings, `${id}: photosensitivity warning`).toMatch(/sensitivity to sunlight/i);
+    expect(warnings, `${id}: sunscreen instruction`).toMatch(/SPF 30 or higher every two hours/i);
+  }
+});
+
 test("CL-042: Myriade carries no invented research block and no borrowed image", () => {
   for (const p of myriadeProducts) {
     // The flyer is the only source; a `detail` block here would mean invented

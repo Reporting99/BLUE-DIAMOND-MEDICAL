@@ -1,0 +1,2142 @@
+[
+  {
+    "path": [
+      "routes",
+      "routes",
+      18,
+      "title",
+      "en"
+    ],
+    "before": "Radio Frequency",
+    "after": "Radiofrequency"
+  },
+  {
+    "path": [
+      "routes",
+      "routes",
+      108,
+      "title",
+      "en"
+    ],
+    "before": "THE PURIFYING PEELING",
+    "after": "The Purifying Peeling"
+  },
+  {
+    "path": [
+      "routes",
+      "routes",
+      109,
+      "title",
+      "en"
+    ],
+    "before": "THE BRIGHTENING PEELING",
+    "after": "The Brightening Peeling"
+  },
+  {
+    "path": [
+      "treatments",
+      "treatments",
+      0,
+      "summary",
+      "en"
+    ],
+    "before": "Long-lasting hair reduction anywhere on the body using the Cynosure Elite+™ laser system.",
+    "after": "Long-lasting hair reduction on suitable areas of the face and body using the Cynosure Elite+™ laser system. Treatment areas and suitability are assessed during consultation."
+  },
+  {
+    "path": [
+      "treatments",
+      "treatments",
+      0,
+      "howItWorks",
+      "en"
+    ],
+    "before": "Hair grows in a three-phase cycle — anagen (active growth), catagen, and telogen (resting). The laser emits light energy absorbed by melanin in the hair follicle, damaging it and impairing regrowth. Follicles in the anagen phase respond best, so multiple treatments are needed to catch hair actively growing.",
+    "after": "Hair grows in a three-phase cycle: anagen (active growth), catagen (a brief transition when the hair follicle regresses) and telogen (resting). The laser emits light energy absorbed by melanin in the hair follicle and shaft, damaging the follicle and reducing regrowth. Follicles in the anagen phase respond best, so multiple treatments are needed."
+  },
+  {
+    "path": [
+      "treatments",
+      "treatments",
+      0,
+      "comfortLevel",
+      "en"
+    ],
+    "before": "You may feel cold air and a slight beep or snapping sensation during treatment.",
+    "after": "You may feel cold air and a slight snapping sensation and hear a beep during treatment."
+  },
+  {
+    "path": [
+      "treatments",
+      "treatments",
+      0,
+      "faqs",
+      0,
+      "answer",
+      "en"
+    ],
+    "before": "It uses the Skintel™ device — the first melanin reader on the market cleared by both Health Canada and the FDA — allowing safe treatment of all skin types and areas.",
+    "after": "Elite iQ™ uses the Skintel™ melanin reader to help the practitioner select settings for your skin. Suitability depends on your skin, hair and treatment area."
+  },
+  {
+    "path": [
+      "treatments",
+      "treatments",
+      0,
+      "faqs",
+      1,
+      "answer",
+      "en"
+    ],
+    "before": "The Elite iQ™ device can be safely used on all skin types and anywhere on the body. Talk with your provider about whether it is right for you.",
+    "after": "Elite iQ™ can treat a range of skin types and body areas. Your physician will assess your skin, hair and medical history to determine whether treatment is appropriate."
+  },
+  {
+    "path": [
+      "treatments",
+      "treatments",
+      0,
+      "faqs",
+      2,
+      "answer",
+      "en"
+    ],
+    "before": "Treatment times vary by area, but a session usually takes less than 30 minutes. Book a consultation to discuss the areas you would like treated.",
+    "after": "Several sessions are needed, because only the hairs that are actively growing respond to each treatment. A session usually takes less than 30 minutes, depending on the area. Book a consultation to discuss the areas you would like treated."
+  },
+  {
+    "path": [
+      "treatments",
+      "treatments",
+      2,
+      "title",
+      "en"
+    ],
+    "before": "Radio Frequency",
+    "after": "Radiofrequency"
+  },
+  {
+    "path": [
+      "treatments",
+      "treatments",
+      2,
+      "howItWorks",
+      "en"
+    ],
+    "before": "A handheld device passes RF waves across the treatment area in a circular motion, gently raising the skin's temperature. The resulting heat penetrates the skin layers and stimulates collagen and elastin production for firmer, more youthful skin.",
+    "after": "A handheld device passes RF waves across the treatment area in a circular motion, gently raising the skin's temperature. The resulting heat penetrates the skin layers and stimulates collagen and elastin production for firmer, more youthful-looking skin."
+  },
+  {
+    "path": [
+      "treatments",
+      "treatments",
+      2,
+      "downtime",
+      "en"
+    ],
+    "before": "Virtually no downtime — you're free to return to normal daily life immediately. A medical-grade sunscreen is recommended to protect and preserve results.",
+    "after": "Downtime is not typically expected, although individual responses vary. Most patients can return to their usual activities right away. Follow your clinician's advice about sunscreen after treatment."
+  },
+  {
+    "path": [
+      "treatments",
+      "treatments",
+      2,
+      "resultTimeline",
+      "en"
+    ],
+    "before": "Not an instant-fix procedure — skin looks fresher within a few days, but the most noticeable results appear approximately 6–8 weeks after the first treatment.",
+    "after": "Results are gradual rather than immediate — skin looks fresher within a few days, but the most noticeable results appear about 6–8 weeks after the first treatment."
+  },
+  {
+    "path": [
+      "treatments",
+      "treatments",
+      2,
+      "suggestedCourse",
+      "en"
+    ],
+    "before": "3–5 treatments 4–6 weeks apart provide optimal results, with positive effects lasting up to 2 years.",
+    "after": "A course of 3–5 treatments spaced 4–6 weeks apart is recommended. Results may last up to two years, although individual responses vary."
+  },
+  {
+    "path": [
+      "treatments",
+      "treatments",
+      2,
+      "faqs",
+      0,
+      "question",
+      "en"
+    ],
+    "before": "Does Radio Frequency treatment hurt?",
+    "after": "Does radiofrequency treatment hurt?"
+  },
+  {
+    "path": [
+      "treatments",
+      "treatments",
+      2,
+      "faqs",
+      2,
+      "answer",
+      "en"
+    ],
+    "before": "Virtually none — you can return to normal daily life immediately. A medical-grade sunscreen is recommended afterward to protect results.",
+    "after": "Virtually none — you can return to your usual activities right away. A medical-grade sunscreen is recommended afterward to protect results."
+  },
+  {
+    "path": [
+      "treatments",
+      "treatments",
+      2,
+      "faqs",
+      3,
+      "answer",
+      "en"
+    ],
+    "before": "It isn't an instant-fix procedure — skin looks fresher within a few days, but the most noticeable results appear roughly 6–8 weeks after the first treatment.",
+    "after": "Results are gradual rather than immediate — skin looks fresher within a few days, but the most noticeable results appear roughly 6–8 weeks after the first treatment."
+  },
+  {
+    "path": [
+      "treatments",
+      "treatments",
+      2,
+      "faqs",
+      4,
+      "answer",
+      "en"
+    ],
+    "before": "3–5 treatments spaced 4–6 weeks apart provide optimal results, with positive effects lasting up to 2 years.",
+    "after": "A course of 3–5 treatments spaced 4–6 weeks apart is recommended. Results may last up to two years, although individual responses vary."
+  },
+  {
+    "path": [
+      "treatments",
+      "treatments",
+      3,
+      "howItWorks",
+      "en"
+    ],
+    "before": "RF energy is delivered via small needles deep into the dermis, heating underlying layers to cause tightening and stimulate collagen and elastin production — producing faster, more dramatic results than non-RF microneedling. Treatments aren't limited to the face and are particularly useful for toning and retracting skin post-weight-loss.",
+    "after": "RF energy is delivered through small needles into the dermis, heating the underlying layers to stimulate collagen and elastin production and support skin tightening. Treatments are not limited to the face and may help with skin laxity after weight loss. Results vary."
+  },
+  {
+    "path": [
+      "treatments",
+      "treatments",
+      3,
+      "concernsTreated",
+      "en",
+      1
+    ],
+    "before": "Firmer, more toned skin",
+    "after": "Loose or less toned skin"
+  },
+  {
+    "path": [
+      "treatments",
+      "treatments",
+      3,
+      "concernsTreated",
+      "en",
+      2
+    ],
+    "before": "Reduction in dark spots",
+    "after": "Dark spots"
+  },
+  {
+    "path": [
+      "treatments",
+      "treatments",
+      3,
+      "concernsTreated",
+      "en",
+      3
+    ],
+    "before": "Control of large pores",
+    "after": "Enlarged pores"
+  },
+  {
+    "path": [
+      "treatments",
+      "treatments",
+      3,
+      "concernsTreated",
+      "en",
+      4
+    ],
+    "before": "Reduction in wrinkles",
+    "after": "Wrinkles"
+  },
+  {
+    "path": [
+      "treatments",
+      "treatments",
+      3,
+      "duration",
+      "en"
+    ],
+    "before": "Typically around 30 minutes. A topical anesthetic is applied and can take up to 45 minutes to become fully effective.",
+    "after": "Typically around 30 minutes. A topical anaesthetic is applied and can take up to 45 minutes to become fully effective."
+  },
+  {
+    "path": [
+      "treatments",
+      "treatments",
+      3,
+      "comfortLevel",
+      "en"
+    ],
+    "before": "A topical numbing agent removes most of the discomfort. Most patients say they can feel the needles working but do not find it painful. A provider monitors you throughout, and treatment can be stopped at any point.",
+    "after": "A topical numbing agent removes most of the discomfort. Most patients say they can feel the needles working but do not find it painful. A member of the clinical team stays with you throughout, and treatment can be stopped at any point."
+  },
+  {
+    "path": [
+      "treatments",
+      "treatments",
+      3,
+      "resultTimeline",
+      "en"
+    ],
+    "before": "Effects can usually be seen straight away, but one session isn't enough for lasting results.",
+    "after": "Some changes may be noticeable soon after treatment, with gradual improvement over several weeks and treatments. More than one session is usually recommended."
+  },
+  {
+    "path": [
+      "treatments",
+      "treatments",
+      3,
+      "downtime",
+      "en"
+    ],
+    "before": "Minimal downtime — avoid strenuous exercise and sun exposure for 48 hours; otherwise resume regular activities with good SPF.",
+    "after": "Downtime is usually minimal. Redness, minor swelling and pinpoint bleeding can occur and typically settle within three days. Minor bumps or, rarely, micro-crusting can also occur. Contact the clinic if you have concerns about your recovery."
+  },
+  {
+    "path": [
+      "treatments",
+      "treatments",
+      3,
+      "aftercare",
+      "en"
+    ],
+    "before": null,
+    "after": "Avoid strenuous exercise and sun exposure for 48 hours after treatment. Follow your clinician's instructions about sunscreen and other skin care products before resuming your usual routine."
+  },
+  {
+    "path": [
+      "treatments",
+      "treatments",
+      3,
+      "faqs",
+      0,
+      "question",
+      "en"
+    ],
+    "before": "Why RF microneedling vs. non-RF microneedling?",
+    "after": "How is RF microneedling different from standard microneedling?"
+  },
+  {
+    "path": [
+      "treatments",
+      "treatments",
+      4,
+      "summary",
+      "en"
+    ],
+    "before": "A low-downtime laser that rejuvenates the skin, giving it a brighter tone and improved texture — treating mild to moderate age spots, freckles, sun spots, pigmented lesions, sun damage, actinic keratosis, melasma, and postinflammatory hyperpigmentation.",
+    "after": "Ultra is a laser treatment used to improve skin tone and texture and address mild to moderate age spots, freckles, sun spots, benign pigmented lesions, sun damage, melasma and post-inflammatory hyperpigmentation. Suitability is assessed during a consultation."
+  },
+  {
+    "path": [
+      "treatments",
+      "treatments",
+      4,
+      "downtime",
+      "en"
+    ],
+    "before": "Mild redness following treatment; normal activities can resume immediately. Full healing may take 5–7 days, during which skin has a dry, sandpaper-like texture as it exfoliates — this is normal.",
+    "after": "Mild redness can occur after treatment and usually lessens over the following day. Most patients can resume their usual activities. Skin may feel dry and sandpaper-like for 5–6 days as it exfoliates; full healing may take 5–7 days."
+  },
+  {
+    "path": [
+      "treatments",
+      "treatments",
+      4,
+      "aftercare",
+      "en"
+    ],
+    "before": null,
+    "after": "Follow your practitioner's advice about when to apply makeup while your skin heals."
+  },
+  {
+    "path": [
+      "treatments",
+      "treatments",
+      4,
+      "faqs",
+      0,
+      "answer",
+      "en"
+    ],
+    "before": "Mild to moderate age spots, freckles, sun spots, pigmented lesions, sun damage, actinic keratosis, melasma, and postinflammatory hyperpigmentation.",
+    "after": "Mild to moderate age spots, freckles, sun spots, benign pigmented lesions, sun damage, melasma and post-inflammatory hyperpigmentation. Your physician will assess the skin changes before recommending treatment."
+  },
+  {
+    "path": [
+      "treatments",
+      "treatments",
+      4,
+      "faqs",
+      2,
+      "answer",
+      "en"
+    ],
+    "before": "Mild redness follows treatment and normal activities can resume immediately. Full healing may take 5–7 days, during which skin has a dry, sandpaper-like texture as it exfoliates — this is a normal part of the process.",
+    "after": "Mild redness can occur after treatment and usually lessens over the following day. Most patients can resume their usual activities. Skin may feel dry and sandpaper-like for 5–6 days as it exfoliates; full healing may take 5–7 days."
+  },
+  {
+    "path": [
+      "treatments",
+      "treatments",
+      5,
+      "howItWorks",
+      "en"
+    ],
+    "before": "PRP is a regenerative serum created from the patient's own blood. After a blood draw, plasma is separated and concentrated into a serum rich in growth factors that stimulate inactive hair follicles and improve scalp blood circulation.",
+    "after": "Platelet-rich plasma (PRP) is prepared from the patient's own blood. After a blood draw, the blood is processed to concentrate platelets in plasma. The platelets release growth factors involved in tissue repair. PRP is injected into the scalp to support hair growth; results vary."
+  },
+  {
+    "path": [
+      "treatments",
+      "treatments",
+      5,
+      "faqs",
+      0,
+      "answer",
+      "en"
+    ],
+    "before": "PRP treatments are performed by Dr. Farhat, combining advanced technique with personalized care.",
+    "after": "PRP treatments are performed by Dr. Farhat."
+  },
+  {
+    "path": [
+      "treatments",
+      "treatments",
+      6,
+      "howItWorks",
+      "en"
+    ],
+    "before": "The same patient-derived, growth-factor-rich serum used for hair restoration is applied to the skin, boosting collagen production for firmer, more youthful skin using no synthetic additives.",
+    "after": "Platelet-rich plasma prepared from the patient's own blood is applied to the skin or delivered by microinjections. Platelet-derived growth factors may support collagen production and skin renewal; results vary."
+  },
+  {
+    "path": [
+      "treatments",
+      "treatments",
+      6,
+      "faqs",
+      2,
+      "answer",
+      "en"
+    ],
+    "before": "No — it uses the same patient-derived, growth-factor-rich serum used for PRP hair restoration, with no synthetic additives.",
+    "after": "PRP is prepared from your own blood. Ask your physician which preparation products are used and whether anything is added as part of your treatment."
+  },
+  {
+    "path": [
+      "treatments",
+      "treatments",
+      7,
+      "summary",
+      "en"
+    ],
+    "before": "A non-surgical, in-clinic treatment for pelvic floor and sexual health concerns, which roughly 1 in 3 women experience at some stage of life and often live with in silence. A consultation with Dr. Farhat establishes whether it is appropriate for you.",
+    "after": "TempSure Vitalia is a non-surgical radiofrequency device. If you have pelvic floor or sexual health concerns, a consultation with Dr. Farhat can help assess your symptoms and discuss appropriate treatment options."
+  },
+  {
+    "path": [
+      "treatments",
+      "treatments",
+      7,
+      "faqs",
+      0,
+      "question",
+      "en"
+    ],
+    "before": "How common are the concerns TempSure Vitalia addresses?",
+    "after": "Can I discuss pelvic floor or sexual health concerns at a consultation?"
+  },
+  {
+    "path": [
+      "treatments",
+      "treatments",
+      7,
+      "faqs",
+      0,
+      "answer",
+      "en"
+    ],
+    "before": "Roughly 1 in 3 women experience pelvic floor or sexual health concerns at some point, often in silence.",
+    "after": "Yes. You can discuss these symptoms with Dr. Farhat. Assessment is needed to identify the cause and consider appropriate treatment options."
+  },
+  {
+    "path": [
+      "treatments",
+      "treatments",
+      7,
+      "faqs",
+      1,
+      "answer",
+      "en"
+    ],
+    "before": "No — it's described as a simple, in-clinic procedure.",
+    "after": "No. TempSure Vitalia is a straightforward, non-surgical procedure carried out in the clinic."
+  },
+  {
+    "path": [
+      "concerns",
+      "concerns",
+      0,
+      "summary",
+      "en"
+    ],
+    "before": "Shaving, waxing, plucking, and depilatories are time-consuming and give only temporary results. Laser hair removal at Blue Diamond Medical offers long-lasting reduction anywhere on the body, and the Skintel™ melanin reader allows the laser to be set safely for all skin types.",
+    "after": "Shaving, waxing, plucking and depilatories give temporary results. Laser hair removal offers long-lasting hair reduction on a range of body areas. The Skintel™ melanin reader helps the practitioner select settings for your skin; suitability is assessed before treatment."
+  },
+  {
+    "path": [
+      "concerns",
+      "concerns",
+      0,
+      "commonPresentations",
+      "en"
+    ],
+    "before": "Unwanted hair is treated on the face, back, legs, chest, underarms, bikini area, and upper lip — the Elite iQ™ device can be used anywhere on the body.",
+    "after": "Treatment areas include the face, back, legs, chest, underarms, bikini area and upper lip. Your practitioner will assess whether treatment is suitable for the area you have in mind."
+  },
+  {
+    "path": [
+      "concerns",
+      "concerns",
+      0,
+      "faqs",
+      0,
+      "answer",
+      "en"
+    ],
+    "before": "It uses the Skintel™ device — the first melanin reader on the market cleared by both Health Canada and the FDA — allowing safe treatment of all skin types and areas.",
+    "after": "Elite iQ™ uses the Skintel™ melanin reader to help the practitioner select settings for your skin. Suitability depends on your skin, hair and treatment area."
+  },
+  {
+    "path": [
+      "concerns",
+      "concerns",
+      1,
+      "faqs",
+      0,
+      "answer",
+      "en"
+    ],
+    "before": "PRP is a regenerative serum created from the patient's own blood. After a blood draw, plasma is separated and concentrated into a serum rich in growth factors that stimulate inactive hair follicles and improve scalp blood circulation.",
+    "after": "Platelet-rich plasma (PRP) is prepared from the patient's own blood. After a blood draw, the blood is processed to concentrate platelets in plasma. The platelets release growth factors involved in tissue repair. PRP is injected into the scalp to support hair growth; results vary."
+  },
+  {
+    "path": [
+      "concerns",
+      "concerns",
+      1,
+      "faqs",
+      1,
+      "answer",
+      "en"
+    ],
+    "before": "PRP treatments are performed by Dr. Farhat, combining advanced technique with personalized care.",
+    "after": "PRP treatments are performed by Dr. Farhat."
+  },
+  {
+    "path": [
+      "concerns",
+      "concerns",
+      2,
+      "faqs",
+      2,
+      "answer",
+      "en"
+    ],
+    "before": "RF microneedling is the treatment linked to this concern; a physician will confirm what's appropriate for your specific scarring during your consultation.",
+    "after": "RF microneedling and laser treatments are options for acne scarring. Your physician will discuss which options suit your skin during your consultation."
+  },
+  {
+    "path": [
+      "concerns",
+      "concerns",
+      3,
+      "summary",
+      "en"
+    ],
+    "before": "The gentle flush of rosacea can escalate into redness that's distressing to live with. We take a holistic approach, starting with a full medical consultation to discuss what can be achieved — laser treatments often work best for this condition.",
+    "after": "Rosacea can cause redness that is distressing to live with. Care starts with a medical consultation to discuss your symptoms and treatment options. Laser treatment may help with visible redness and blood vessels."
+  },
+  {
+    "path": [
+      "concerns",
+      "concerns",
+      3,
+      "faqs",
+      1,
+      "answer",
+      "en"
+    ],
+    "before": "Laser treatments often work best for this condition — Laser Skin Treatments is the relevant treatment page.",
+    "after": "Laser treatment may help with visible redness and blood vessels. Your physician will assess your rosacea and discuss suitable options."
+  },
+  {
+    "path": [
+      "concerns",
+      "concerns",
+      4,
+      "summary",
+      "en"
+    ],
+    "before": "Calgary's climate is unusually harsh on skin. Using RF microneedling to infuse topicals — including moisturizers and pigment regulators — we help skin stay nourished and comfortable for months after treatment.",
+    "after": "Calgary's dry climate can contribute to dry, uncomfortable skin. The clinic's RF microneedling approach includes topical products such as moisturizers and pigment regulators. Your physician will assess whether this approach is appropriate for your skin."
+  },
+  {
+    "path": [
+      "concerns",
+      "concerns",
+      4,
+      "faqs",
+      0,
+      "question",
+      "en"
+    ],
+    "before": "Why is Calgary's climate mentioned for dry skin care?",
+    "after": "Does Calgary's climate affect dry skin?"
+  },
+  {
+    "path": [
+      "concerns",
+      "concerns",
+      4,
+      "faqs",
+      0,
+      "answer",
+      "en"
+    ],
+    "before": "Calgary's climate is unusually harsh on skin, which is part of why ongoing nourishment support can be worthwhile for many patients here.",
+    "after": "Calgary's dry climate can contribute to dry, uncomfortable skin."
+  },
+  {
+    "path": [
+      "concerns",
+      "concerns",
+      4,
+      "faqs",
+      1,
+      "answer",
+      "en"
+    ],
+    "before": "It's used to infuse topicals — including moisturizers and pigment regulators — helping skin stay nourished for months after treatment.",
+    "after": "The clinic's approach uses RF microneedling with topical products, including moisturizers and pigment regulators. Your physician will discuss suitability and the risks and benefits of the proposed products."
+  },
+  {
+    "path": [
+      "concerns",
+      "concerns",
+      4,
+      "faqs",
+      2,
+      "answer",
+      "en"
+    ],
+    "before": "Effects can last for months after treatment, though this varies by individual.",
+    "after": "The response and its duration vary. Your physician can discuss what to expect for your skin and the proposed treatment."
+  },
+  {
+    "path": [
+      "concerns",
+      "concerns",
+      5,
+      "faqs",
+      0,
+      "answer",
+      "en"
+    ],
+    "before": "RF microneedling and radio-frequency skin-tightening are the two treatments connected to this concern, suited to different skin types.",
+    "after": "RF microneedling and radiofrequency skin tightening may soften fine lines and wrinkles. Your physician will assess which treatment suits your skin."
+  },
+  {
+    "path": [
+      "concerns",
+      "concerns",
+      5,
+      "faqs",
+      2,
+      "answer",
+      "en"
+    ],
+    "before": "Yes — skin-tightening options are available alongside the line-smoothing treatments, for all skin types.",
+    "after": "Yes, these treatments may also help with skin tightening. Your physician will assess which options are suitable for your skin."
+  },
+  {
+    "path": [
+      "concerns",
+      "concerns",
+      6,
+      "faqs",
+      0,
+      "question",
+      "en"
+    ],
+    "before": "How does radio-frequency treatment address skin laxity?",
+    "after": "How does radiofrequency treatment address skin laxity?"
+  },
+  {
+    "path": [
+      "concerns",
+      "concerns",
+      7,
+      "faqs",
+      1,
+      "answer",
+      "en"
+    ],
+    "before": "Anywhere on the body.",
+    "after": "The face and legs are common treatment areas. Your physician will assess whether treatment is appropriate for the area you want treated."
+  },
+  {
+    "path": [
+      "concerns",
+      "concerns",
+      8,
+      "faqs",
+      0,
+      "answer",
+      "en"
+    ],
+    "before": "Time in the sun, over the years.",
+    "after": "Years of sun exposure. Sun spots, liver spots, and uneven pigmentation build up gradually over time."
+  },
+  {
+    "path": [
+      "concerns",
+      "concerns",
+      8,
+      "faqs",
+      1,
+      "answer",
+      "en"
+    ],
+    "before": "Laser Skin Treatments and the Ultra laser are the two treatments connected to this concern.",
+    "after": "Laser skin treatments and Ultra may help with sun damage and uneven pigmentation. Your physician will assess the areas you want treated."
+  },
+  {
+    "path": [
+      "concerns",
+      "concerns",
+      10,
+      "faqs",
+      0,
+      "answer",
+      "en"
+    ],
+    "before": "They're uncomfortable and prone to infection, especially when combined with ingrown hairs.",
+    "after": "Razor bumps can be uncomfortable. The affected skin can sometimes become infected."
+  },
+  {
+    "path": [
+      "concerns",
+      "concerns",
+      10,
+      "faqs",
+      1,
+      "answer",
+      "en"
+    ],
+    "before": "Both — treatment addresses the underlying cause as well as the visible bumps.",
+    "after": "By reducing hair growth, laser hair removal may help reduce the ingrown hairs that cause razor bumps. Results vary."
+  },
+  {
+    "path": [
+      "concerns",
+      "concerns",
+      10,
+      "faqs",
+      3,
+      "answer",
+      "en"
+    ],
+    "before": "Yes.",
+    "after": "Laser hair removal is a non-surgical treatment."
+  },
+  {
+    "path": [
+      "technologies",
+      "technologies",
+      0,
+      "summary",
+      "en"
+    ],
+    "before": "Cynosure's Elite iQ™ device offers quick, personalized laser hair treatments using the Skintel™ device — the first melanin reader on the market cleared by both Health Canada and the FDA — allowing safe treatment of all skin types and areas.",
+    "after": "Cynosure's Elite iQ™ laser uses the Skintel™ melanin reader to help practitioners select treatment settings for a range of skin types. Individual suitability is assessed before treatment."
+  },
+  {
+    "path": [
+      "technologies",
+      "technologies",
+      0,
+      "howItWorks",
+      "en"
+    ],
+    "before": "Before treatment, the Skintel™ device reads your skin's melanin level directly, rather than estimating it from a visual skin-type chart. The Elite iQ™ laser then uses that reading to calibrate its settings to your skin specifically.",
+    "after": "Before treatment, the Skintel™ device measures your skin's melanin level. The practitioner uses this reading to help select suitable Elite iQ™ laser settings."
+  },
+  {
+    "path": [
+      "technologies",
+      "technologies",
+      0,
+      "faqs",
+      3,
+      "question",
+      "en"
+    ],
+    "before": "What's the manufacturer of the Elite iQ™ device?",
+    "after": "Who makes the Elite iQ™ device?"
+  },
+  {
+    "path": [
+      "technologies",
+      "technologies",
+      1,
+      "summary",
+      "en"
+    ],
+    "before": "A radio-frequency microneedling system used for tightening and smoothing skin anywhere on the body — for fine lines, or for laxity after rapid weight loss or childbirth.",
+    "after": "A radiofrequency microneedling system used for skin tightening and smoothing on the face and body, including fine lines and skin laxity after weight loss or childbirth. Suitability is assessed during a consultation."
+  },
+  {
+    "path": [
+      "technologies",
+      "technologies",
+      1,
+      "howItWorks",
+      "en"
+    ],
+    "before": "Potenza combines microneedling — fine needles creating controlled micro-injuries in the skin — with radio-frequency energy delivered through those same needles, adding a tightening effect to the skin's natural response to micro-injury.",
+    "after": "Potenza combines microneedling — fine needles creating controlled micro-injuries in the skin — with radiofrequency energy delivered through those same needles, adding a tightening effect to the skin's natural response to micro-injury."
+  },
+  {
+    "path": [
+      "technologies",
+      "technologies",
+      1,
+      "faqs",
+      0,
+      "answer",
+      "en"
+    ],
+    "before": "Potenza adds radio-frequency energy delivered through the needles, combining the micro-injury response of standard microneedling with an additional tightening effect.",
+    "after": "Potenza adds radiofrequency energy delivered through the needles, combining the micro-injury response of standard microneedling with an additional tightening effect."
+  },
+  {
+    "path": [
+      "technologies",
+      "technologies",
+      1,
+      "faqs",
+      3,
+      "question",
+      "en"
+    ],
+    "before": "What's the manufacturer of the Potenza device?",
+    "after": "Who makes the Potenza device?"
+  },
+  {
+    "path": [
+      "technologies",
+      "technologies",
+      2,
+      "summary",
+      "en"
+    ],
+    "before": "A non-invasive device for tightening and firming skin anywhere on the body, with little to no downtime.",
+    "after": "A non-invasive radiofrequency device used for skin tightening and firming on the face and body. Downtime is usually minimal; individual responses vary."
+  },
+  {
+    "path": [
+      "technologies",
+      "technologies",
+      2,
+      "howItWorks",
+      "en"
+    ],
+    "before": "TempSure uses radio-frequency energy to gently heat the deeper layers of the skin, encouraging a natural tightening and firming response without breaking the skin's surface.",
+    "after": "TempSure uses radiofrequency energy to gently heat the deeper layers of the skin, encouraging a natural tightening and firming response without breaking the skin's surface."
+  },
+  {
+    "path": [
+      "technologies",
+      "technologies",
+      2,
+      "faqs",
+      0,
+      "answer",
+      "en"
+    ],
+    "before": "No — it is non-invasive, and most patients return to their usual activities right away.",
+    "after": "There is little to no downtime — the treatment is non-invasive, and most patients return to their usual activities right away."
+  },
+  {
+    "path": [
+      "technologies",
+      "technologies",
+      2,
+      "faqs",
+      1,
+      "answer",
+      "en"
+    ],
+    "before": "It heats the deeper layers of the skin using radio-frequency energy, which encourages the skin's own natural tightening response.",
+    "after": "It heats the deeper layers of the skin using radiofrequency energy, which encourages the skin's own natural tightening response."
+  },
+  {
+    "path": [
+      "technologies",
+      "technologies",
+      2,
+      "faqs",
+      2,
+      "answer",
+      "en"
+    ],
+    "before": "Radio Frequency treatment.",
+    "after": "Radiofrequency treatment."
+  },
+  {
+    "path": [
+      "technologies",
+      "technologies",
+      4,
+      "summary",
+      "en"
+    ],
+    "before": "Equipment addressing many pelvic floor issues and sexual health concerns women experience at all ages and stages of life.",
+    "after": "TempSure Vitalia is a radiofrequency device. Women with pelvic floor or sexual health concerns can discuss their symptoms and suitable treatment options with a physician."
+  },
+  {
+    "path": [
+      "technologies",
+      "technologies",
+      4,
+      "howItWorks",
+      "en"
+    ],
+    "before": "TempSure Vitalia uses radio-frequency energy in a non-surgical approach designed for pelvic floor and sexual health concerns.",
+    "after": "TempSure Vitalia delivers temperature-controlled radiofrequency energy to tissue. A physician must assess the proposed use, suitability, risks and expected benefits."
+  },
+  {
+    "path": [
+      "technologies",
+      "technologies",
+      4,
+      "faqs",
+      0,
+      "answer",
+      "en"
+    ],
+    "before": "No — it's a non-surgical, radio-frequency-based approach.",
+    "after": "No — it is a non-surgical treatment that uses radiofrequency energy."
+  },
+  {
+    "path": [
+      "doctors",
+      "doctors",
+      0,
+      "bio",
+      "en"
+    ],
+    "before": "Dr. Mohamed Farhat is a family physician with over 30 years in practice, and the founder of Blue Diamond Medical. He looks after patients across the full range of family medicine, from managing long-term medical conditions to performing minor surgical procedures in the clinic.\n\nAlongside his family practice, Dr. Farhat has completed advanced training in cosmetic medicine. He offers Botox, dermal fillers, RF microneedling, and laser therapies for skin concerns such as aging, pigmentation, scarring, and uneven texture.\n\nHe also provides hair restoration treatments: laser hair restoration combined with PRP, PRP on its own, and PRP injections to support scalp health and hair regrowth. He performs PRP injections under the eyes to soften the appearance of dark circles and refresh the skin, and these can be paired with microneedling to support skin renewal and collagen stimulation.\n\nHis warm manner, attention to detail, and patient‑centred approach have made him a trusted physician in the community.",
+    "after": "Dr. Mohamed Farhat is a family physician with over 30 years in practice, and the founder of Blue Diamond Medical. He looks after patients across the full range of family medicine, from managing long-term medical conditions to performing minor surgical procedures in the clinic.\n\nAlongside his family practice, Dr. Farhat has completed advanced training in cosmetic medicine. He offers Botox, dermal fillers, RF microneedling, and laser therapies for skin concerns such as aging, pigmentation, scarring, and uneven texture.\n\nHe also provides hair restoration treatments: laser hair restoration combined with PRP, PRP on its own, and PRP injections to support scalp health and hair regrowth. He performs PRP injections under the eyes to soften the appearance of dark circles and refresh the skin, and these can be paired with microneedling to support skin renewal and collagen stimulation.\n\nHis warm manner, attention to detail, and patient-centred approach have made him a trusted physician in the community."
+  },
+  {
+    "path": [
+      "doctors",
+      "doctors",
+      1,
+      "bio",
+      "en"
+    ],
+    "before": "Dr. Omaima Saeed is a family physician with postgraduate training in Family Medicine from Pakistan, now practising in Calgary. She provides comprehensive, patient-centred care for patients of all ages, with clinical interests in preventive medicine, women's health, and compassionate, stigma-free mental health support. She is one of the physicians leading Blue Diamond Medical's full-time Walk-In Clinic.",
+    "after": "Dr. Omaima Saeed is a family physician with postgraduate training in Family Medicine from Pakistan, now practising in Calgary. She provides comprehensive, patient-centred care for patients of all ages, with clinical interests in preventive medicine, women's health, and compassionate, stigma-free mental health support. She is one of the physicians leading Blue Diamond Medical's full-time walk-in clinic."
+  },
+  {
+    "path": [
+      "doctors",
+      "doctors",
+      2,
+      "bio",
+      "en"
+    ],
+    "before": "Dr. Hamdi completed her Family Medicine residency at the University of Calgary in 2015, followed by additional training (R3) in maternity and newborn care. She has practised family medicine in Calgary ever since, and joined Blue Diamond Medical in 2023.\n\nShe also works in the Labour and Delivery unit at Peter Lougheed Hospital and maintains a shared-care practice with the Lougheed Maternity Group (LMG).\n\nDr. Hamdi is board certified by the College of Family Physicians of Canada (CFPC) and has been granted Fellowship of the College (FCFP). She is an Assistant Clinical Professor at the University of Calgary and holds a Master's degree in Health Science Education from the University of Alberta.\n\nShe cares for a wide range of health concerns, including chronic disease, women's health (contraceptive management and IUD insertion, menopause, and prenatal and maternity care), well-child visits, and mental health. She is also certified to provide Botox injections for pain management as well as cosmetic indications.",
+    "after": "Dr. Hamdi completed her Family Medicine residency at the University of Calgary in 2015, followed by additional training (R3) in maternity and newborn care. She has practised family medicine in Calgary ever since, and joined Blue Diamond Medical in 2023.\n\nShe also works in the Labour and Delivery unit at Peter Lougheed Hospital and maintains a shared-care practice with the Lougheed Maternity Group (LMG).\n\nDr. Hamdi is certified by the College of Family Physicians of Canada (CFPC) and has been granted Fellowship of the College (FCFP). She is an Assistant Clinical Professor at the University of Calgary and holds a Master's degree in Health Science Education from the University of Alberta.\n\nShe cares for a wide range of health concerns, including chronic disease, women's health (contraceptive management and IUD insertion, menopause, and prenatal and maternity care), well-child visits, and mental health. She is also certified to provide Botox injections for pain management as well as cosmetic indications."
+  },
+  {
+    "path": [
+      "doctors",
+      "doctors",
+      3,
+      "bio",
+      "en"
+    ],
+    "before": "Dr. Omonijo has 12 years of experience in community and hospital settings. She completed her Family Medicine residency in the United Kingdom and enjoys caring for patients and their families. She is one of the physicians leading Blue Diamond Medical's full-time Walk-In Clinic.",
+    "after": "Dr. Omonijo has 12 years of experience in community and hospital settings. She completed her Family Medicine residency in the United Kingdom and enjoys caring for patients and their families. She is one of the physicians leading Blue Diamond Medical's full-time walk-in clinic."
+  },
+  {
+    "path": [
+      "doctors",
+      "doctors",
+      5,
+      "bio",
+      "en"
+    ],
+    "before": "Dr. Ahmed Gwea completed his Family Medicine residency at Hamad Medical Corporation in Qatar and holds a Diploma in Dermatology from the Royal College of Physicians of Ireland. He provides compassionate, patient-centred care, with a focus on preventive health, health promotion, chronic disease management, and mental well-being. His clinical interests include dermatology, minor office-based and dermatological procedures, and plasma therapy. He places particular emphasis on helping patients feel comfortable, informed, and supported in their care. He is one of the physicians leading Blue Diamond Medical's full-time Walk-In Clinic.",
+    "after": "Dr. Ahmed Gwea completed his Family Medicine residency at Hamad Medical Corporation in Qatar and holds a Diploma in Dermatology from the Royal College of Physicians of Ireland. He provides compassionate, patient-centred care, with a focus on preventive health, health promotion, chronic disease management, and mental well-being. His clinical interests include dermatology, minor office-based and dermatological procedures, and plasma therapy. He places particular emphasis on helping patients feel comfortable, informed, and supported in their care. He is one of the physicians leading Blue Diamond Medical's full-time walk-in clinic."
+  },
+  {
+    "path": [
+      "medical",
+      "medicalServices",
+      0,
+      "summary",
+      "en"
+    ],
+    "before": "A collaboration with Euclid Telehealth offering AHS-covered eye disease screening at our clinic — in keeping with our belief that prevention is better than cure.",
+    "after": "Eye disease screening at our Calgary clinic through Euclid Telehealth, with referral based on your doctor's assessment."
+  },
+  {
+    "path": [
+      "medical",
+      "medicalServices",
+      0,
+      "whoItsFor",
+      "en"
+    ],
+    "before": "All patients, and especially people with diabetes or a family history of eye disease.",
+    "after": "Patients referred by their doctor, particularly people with diabetes or a family history of eye disease."
+  },
+  {
+    "path": [
+      "medical",
+      "medicalServices",
+      0,
+      "faqs",
+      0,
+      "answer",
+      "en"
+    ],
+    "before": "Yes — this screening is AHS-covered, provided through our collaboration with Euclid Telehealth.",
+    "after": "Eligible eye disease screening is covered by Alberta Health. Euclid Telehealth can confirm your eligibility and any costs before your appointment."
+  },
+  {
+    "path": [
+      "medical",
+      "medicalServices",
+      0,
+      "faqs",
+      3,
+      "answer",
+      "en"
+    ],
+    "before": "It's available to all patients, and particularly relevant for people with diabetes or a family history of eye disease, since both are recognized risk factors for vision loss.",
+    "after": "People with diabetes or a family history of eye disease may benefit from screening. Your doctor can assess whether a referral is appropriate."
+  },
+  {
+    "path": [
+      "medical",
+      "medicalServices",
+      1,
+      "summary",
+      "en"
+    ],
+    "before": "When the clinic is closed, our patients are referred to a partner Primary Care Network for urgent, non-emergency needs — not left without a path to care.",
+    "after": "When the clinic is closed, patients can access care through a partner Primary Care Network for medical concerns that need prompt attention but are not emergencies."
+  },
+  {
+    "path": [
+      "medical",
+      "medicalServices",
+      2,
+      "summary",
+      "en"
+    ],
+    "before": "AHS-insured, ongoing management of chronic conditions through your family physician. Any Blue Diamond family physician can provide chronic-disease management.",
+    "after": "Ongoing care for chronic conditions through your family physician. All Blue Diamond family physicians provide chronic disease management."
+  },
+  {
+    "path": [
+      "medical",
+      "medicalServices",
+      2,
+      "faqs",
+      0,
+      "answer",
+      "en"
+    ],
+    "before": "Yes — this is provided as part of AHS-insured family medicine care.",
+    "after": "Medically necessary physician care is covered for eligible patients under the Alberta Health Care Insurance Plan (AHCIP). Coverage for medications and other services is separate."
+  },
+  {
+    "path": [
+      "medical",
+      "medicalServices",
+      2,
+      "faqs",
+      2,
+      "answer",
+      "en"
+    ],
+    "before": "No — every Blue Diamond family physician provides chronic-disease management as part of general family medicine. See whichever of our family physicians you are registered with.",
+    "after": "No — every Blue Diamond family physician provides chronic-disease management as part of general family medicine. Book with whichever of our family physicians you are registered with."
+  },
+  {
+    "path": [
+      "medical",
+      "medicalServices",
+      3,
+      "summary",
+      "en"
+    ],
+    "before": "\"Prevention is better than cure\" is at the core of how we practice — from vaccination to Dr. Saeed's clinical focus on preventive medicine and early intervention.",
+    "after": "\"Prevention is better than cure\" is at the core of how we practise — from vaccination to Dr. Saeed's clinical focus on preventive medicine and early intervention."
+  },
+  {
+    "path": [
+      "medical",
+      "medicalServices",
+      3,
+      "whatsIncluded",
+      "en",
+      2
+    ],
+    "before": "Referral for AHS-covered eye disease screening",
+    "after": "Referral for eye disease screening when appropriate"
+  },
+  {
+    "path": [
+      "medical",
+      "medicalServices",
+      3,
+      "faqs",
+      0,
+      "answer",
+      "en"
+    ],
+    "before": "Vaccination, preventive medicine and early-intervention care, and referral for AHS-covered eye disease screening when appropriate.",
+    "after": "Vaccination, preventive medicine and early-intervention care, and referral for eye disease screening when appropriate."
+  },
+  {
+    "path": [
+      "medical",
+      "medicalServices",
+      3,
+      "faqs",
+      1,
+      "answer",
+      "en"
+    ],
+    "before": "Yes, as part of AHS-insured family medicine care.",
+    "after": "Medically necessary physician care is covered for eligible patients under the Alberta Health Care Insurance Plan (AHCIP). Some vaccines and other services may have separate costs; ask the clinic before your appointment."
+  },
+  {
+    "path": [
+      "medical",
+      "medicalServices",
+      4,
+      "summary",
+      "en"
+    ],
+    "before": "AHS-insured weight management support as part of your comprehensive care with your family physician.",
+    "after": "Weight management support as part of your ongoing care with your family physician."
+  },
+  {
+    "path": [
+      "medical",
+      "medicalServices",
+      4,
+      "faqs",
+      0,
+      "answer",
+      "en"
+    ],
+    "before": "Yes — it's provided as part of AHS-insured family medicine care.",
+    "after": "Medically necessary physician care is covered for eligible patients under the Alberta Health Care Insurance Plan (AHCIP). Coverage for medications and other services is separate."
+  },
+  {
+    "path": [
+      "medical",
+      "medicalServices",
+      5,
+      "summary",
+      "en"
+    ],
+    "before": "AHS-insured pain management support from your family physician.",
+    "after": "Assessment and management of pain through your family physician."
+  },
+  {
+    "path": [
+      "medical",
+      "medicalServices",
+      5,
+      "faqs",
+      0,
+      "answer",
+      "en"
+    ],
+    "before": "Yes — it's provided as part of AHS-insured family medicine care.",
+    "after": "Medically necessary physician care is covered for eligible patients under the Alberta Health Care Insurance Plan (AHCIP). Coverage for medications and other services is separate."
+  },
+  {
+    "path": [
+      "medical",
+      "medicalServices",
+      5,
+      "faqs",
+      2,
+      "question",
+      "en"
+    ],
+    "before": "For minor in-clinic procedures related to pain, like joint injections, who provides those?",
+    "after": "Who performs joint injections and other minor in-clinic procedures for pain?"
+  },
+  {
+    "path": [
+      "medical",
+      "medicalServices",
+      6,
+      "summary",
+      "en"
+    ],
+    "before": "AHS-insured minor procedures performed in-house — suture removal and application, minor skin lesion excision, and joint injections. All of our family physicians provide these procedures. Minor procedures are booked by phone or in person, not online.",
+    "after": "Minor procedures at the clinic include suture placement and removal, minor skin lesion excision, and joint injections. All of our family physicians provide these procedures. Book by phone or in person."
+  },
+  {
+    "path": [
+      "medical",
+      "medicalServices",
+      6,
+      "whatsIncluded",
+      "en",
+      0
+    ],
+    "before": "Suture removal and application",
+    "after": "Suture placement and removal"
+  },
+  {
+    "path": [
+      "medical",
+      "medicalServices",
+      6,
+      "faqs",
+      0,
+      "answer",
+      "en"
+    ],
+    "before": "Yes — the procedures listed here are AHS-insured.",
+    "after": "Coverage depends on the procedure and whether it is medically necessary. The clinic can confirm Alberta Health coverage and any uninsured fees before your appointment."
+  },
+  {
+    "path": [
+      "medical",
+      "medicalServices",
+      6,
+      "faqs",
+      1,
+      "answer",
+      "en"
+    ],
+    "before": "Suture removal and application, minor skin lesion excision, and intra-articular injections for degenerative knee, shoulder, and ankle conditions. All of our family physicians provide these.",
+    "after": "Suture placement and removal, minor skin lesion excision, and intra-articular injections for degenerative knee, shoulder, and ankle conditions. All of our family physicians provide these."
+  },
+  {
+    "path": [
+      "products",
+      "categoryTaglines",
+      "the-growth-factor",
+      "en"
+    ],
+    "before": "Groundbreaking science for skin that's transformed",
+    "after": "Groundbreaking science for visibly transformed skin"
+  },
+  {
+    "path": [
+      "products",
+      "products",
+      0,
+      "detail",
+      "whatItIs",
+      "en"
+    ],
+    "before": "A two-bottle treatment system (Day, Night), not a single product — both bottles are included in this one price/size record.",
+    "after": "A two-bottle treatment system with Day and Night formulas. Both bottles are included."
+  },
+  {
+    "path": [
+      "products",
+      "products",
+      0,
+      "detail",
+      "faqs",
+      0,
+      "answer",
+      "en"
+    ],
+    "before": "It's a two-bottle system — a Day formula and a Night formula — sold together as one record at this price and size.",
+    "after": "The system includes two bottles: a Day formula and a Night formula."
+  },
+  {
+    "path": [
+      "products",
+      "products",
+      1,
+      "detail",
+      "howToUse",
+      "en"
+    ],
+    "before": "Apply to the skin around the eyes as directed by the product packaging or your provider; avoid direct contact with the eyes.",
+    "after": "Apply to the skin around the eyes as directed by the product packaging or by the clinic; avoid direct contact with the eyes."
+  },
+  {
+    "path": [
+      "products",
+      "products",
+      1,
+      "detail",
+      "faqs",
+      2,
+      "answer",
+      "en"
+    ],
+    "before": "It's formulated for the eye area, but avoid direct contact with the eyes themselves — confirm technique with your provider.",
+    "after": "It's formulated for the eye area, but avoid direct contact with the eyes themselves — confirm the technique with the clinic."
+  },
+  {
+    "path": [
+      "products",
+      "products",
+      3,
+      "detail",
+      "faqs",
+      4,
+      "answer",
+      "en"
+    ],
+    "before": "Not confirmed by the research for this record — ask the clinic if fragrance-free formulation matters for your skin.",
+    "after": "Please check the current ingredient label and ask the clinic if you need a fragrance-free product."
+  },
+  {
+    "path": [
+      "products",
+      "products",
+      6,
+      "detail",
+      "faqs",
+      0,
+      "answer",
+      "en"
+    ],
+    "before": "Those new to retinol typically start lower and work up — ask your provider what's appropriate for you.",
+    "after": "Those new to retinol typically start lower and work up — ask the clinic what is appropriate for you."
+  },
+  {
+    "path": [
+      "products",
+      "products",
+      7,
+      "detail",
+      "faqs",
+      1,
+      "answer",
+      "en"
+    ],
+    "before": "Typically not — this strength is intended for skin already tolerating a lower strength well. Ask your provider.",
+    "after": "Typically not — this strength is intended for skin already tolerating a lower strength well. Ask the clinic."
+  },
+  {
+    "path": [
+      "products",
+      "products",
+      8,
+      "detail",
+      "sunSensitivityWarning",
+      "en"
+    ],
+    "before": "As with other pigment-focused treatments, daily sun protection is important while addressing discolouration — confirm specific guidance with your provider.",
+    "after": "As with other pigment-focused treatments, daily sun protection is important while addressing discolouration — confirm specific guidance with the clinic."
+  },
+  {
+    "path": [
+      "products",
+      "products",
+      8,
+      "detail",
+      "faqs",
+      2,
+      "answer",
+      "en"
+    ],
+    "before": "Daily sun protection is generally important with pigment-focused treatments — confirm specific guidance with your provider.",
+    "after": "Daily sun protection is generally important with pigment-focused treatments — confirm specific guidance with the clinic."
+  },
+  {
+    "path": [
+      "products",
+      "products",
+      8,
+      "detail",
+      "faqs",
+      3,
+      "answer",
+      "en"
+    ],
+    "before": "Some current listings use \"Correcting\" rather than \"Brightening\" in the name — same underlying product line; the approved catalogue name is used here.",
+    "after": "You may see Lytera 2.0 listed as a Pigment Correcting Serum or Pigment Brightening Serum. Check the package label with the clinic to confirm the product."
+  },
+  {
+    "path": [
+      "products",
+      "products",
+      9,
+      "detail",
+      "routinePlacement",
+      "en"
+    ],
+    "before": "As a leave-on treatment step, per your provider's guidance.",
+    "after": "As a leave-on treatment step, following the clinic's guidance."
+  },
+  {
+    "path": [
+      "products",
+      "products",
+      9,
+      "detail",
+      "howToUse",
+      "en"
+    ],
+    "before": "Apply as directed by your provider; avoid the eye area, and rinse thoroughly with water if contact occurs.",
+    "after": "Apply as directed by the clinic; avoid the eye area, and rinse thoroughly with water if contact occurs."
+  },
+  {
+    "path": [
+      "products",
+      "products",
+      9,
+      "detail",
+      "faqs",
+      4,
+      "answer",
+      "en"
+    ],
+    "before": "Ask your provider — leave-on acid treatments are typically introduced gradually.",
+    "after": "Ask the clinic — leave-on acid treatments are typically introduced gradually."
+  },
+  {
+    "path": [
+      "products",
+      "products",
+      11,
+      "detail",
+      "faqs",
+      1,
+      "answer",
+      "en"
+    ],
+    "before": "\"Defense\" is the manufacturer's current official spelling, confirmed on the official product URL and Canadian retailers — the approved price and size are unchanged.",
+    "after": "\"Defense\" is the spelling used in the manufacturer's product name."
+  },
+  {
+    "path": [
+      "products",
+      "products",
+      13,
+      "detail",
+      "faqs",
+      2,
+      "answer",
+      "en"
+    ],
+    "before": "The research for this record didn't confirm ceramides as a primary ingredient — TNS Ceramide Treatment Cream is SkinMedica's dedicated ceramide-focused product.",
+    "after": "Please check the current ingredient label to confirm. TNS Ceramide Treatment Cream is a separate SkinMedica product formulated with ceramides."
+  },
+  {
+    "path": [
+      "products",
+      "products",
+      14,
+      "detail",
+      "faqs",
+      4,
+      "answer",
+      "en"
+    ],
+    "before": "Not confirmed by the research for this specific record — ask the clinic about suitability for your skin.",
+    "after": "Ask the clinic whether this product is suitable for your skin."
+  },
+  {
+    "path": [
+      "products",
+      "products",
+      18,
+      "detail",
+      "overview",
+      "en"
+    ],
+    "before": "A lightweight gel formulated to help minimize the appearance of scars, in the smaller of two approved sizes.",
+    "after": "A lightweight gel formulated to help minimize the appearance of scars, in a 14.2 g size."
+  },
+  {
+    "path": [
+      "products",
+      "products",
+      19,
+      "detail",
+      "overview",
+      "en"
+    ],
+    "before": "A lightweight gel formulated to help minimize the appearance of scars, in the larger of two approved sizes.",
+    "after": "A lightweight gel formulated to help minimize the appearance of scars, in a 56.7 g size."
+  },
+  {
+    "path": [
+      "products",
+      "products",
+      20,
+      "detail",
+      "faqs",
+      1,
+      "question",
+      "en"
+    ],
+    "before": "Why does the name differ slightly from the approved catalogue?",
+    "after": "Is TNS® Advanced+ Serum also called TNS Advanced Plus Serum?"
+  },
+  {
+    "path": [
+      "products",
+      "products",
+      20,
+      "detail",
+      "faqs",
+      1,
+      "answer",
+      "en"
+    ],
+    "before": "The approved catalogue listed \"TNS Advanced Plus Serum®\"; the current official naming/trademark styling is \"TNS® Advanced+ Serum.\" The approved price and size are unchanged.",
+    "after": "Yes. \"Advanced+\" is the styling used in the product name; the plus sign is sometimes written as \"Plus.\""
+  },
+  {
+    "path": [
+      "products",
+      "products",
+      22,
+      "detail",
+      "howToUse",
+      "en"
+    ],
+    "before": "Apply to face, neck, or décolleté twice daily.",
+    "after": "Apply to face, neck, or décolletage twice daily."
+  },
+  {
+    "path": [
+      "products",
+      "products",
+      22,
+      "detail",
+      "faqs",
+      0,
+      "question",
+      "en"
+    ],
+    "before": "Why does the name differ from the approved catalogue?",
+    "after": "Is HA5® Rejuvenating Hydrator also called HA5 Rejuvenative Hydrator?"
+  },
+  {
+    "path": [
+      "products",
+      "products",
+      22,
+      "detail",
+      "faqs",
+      0,
+      "answer",
+      "en"
+    ],
+    "before": "The approved catalogue listed \"HA5 Rejuvenative Hydrator\"; current official/retailer naming is \"HA5® Rejuvenating Hydrator.\" The approved price and size are unchanged, and this is the same product.",
+    "after": "Our earlier catalogue used \"Rejuvenative Hydrator.\" This page uses the current name, HA5® Rejuvenating Hydrator."
+  },
+  {
+    "path": [
+      "products",
+      "products",
+      23,
+      "name",
+      "en"
+    ],
+    "before": "THE PURIFYING PEELING",
+    "after": "The Purifying Peeling"
+  },
+  {
+    "path": [
+      "products",
+      "products",
+      23,
+      "keyFeatures",
+      "en",
+      2
+    ],
+    "before": "Recommended in a treatment course for long-term results.",
+    "after": "Recommended as part of a course of treatment, for longer-term results."
+  },
+  {
+    "path": [
+      "products",
+      "products",
+      24,
+      "name",
+      "en"
+    ],
+    "before": "THE BRIGHTENING PEELING",
+    "after": "The Brightening Peeling"
+  },
+  {
+    "path": [
+      "products",
+      "products",
+      26,
+      "benefits",
+      "en",
+      0
+    ],
+    "before": "Protects skin and helps prevent aging caused by environmental aggressions.",
+    "after": "Protects skin and helps prevent aging caused by environmental stress."
+  },
+  {
+    "path": [
+      "products",
+      "products",
+      26,
+      "directions",
+      "en",
+      0
+    ],
+    "before": "Apply evenly to the face, neck, and decollete.",
+    "after": "Apply evenly to the face, neck, and décolletage."
+  },
+  {
+    "path": [
+      "products",
+      "products",
+      27,
+      "benefits",
+      "en",
+      0
+    ],
+    "before": "Protects skin and helps prevent aging caused by environmental aggressions.",
+    "after": "Protects skin and helps prevent aging caused by environmental stress."
+  },
+  {
+    "path": [
+      "products",
+      "products",
+      27,
+      "directions",
+      "en",
+      0
+    ],
+    "before": "Apply evenly to the face, neck, and decollete.",
+    "after": "Apply evenly to the face, neck, and décolletage."
+  },
+  {
+    "path": [
+      "products",
+      "products",
+      28,
+      "directions",
+      "en",
+      0
+    ],
+    "before": "Apply evenly to the face, neck, and decollete.",
+    "after": "Apply evenly to the face, neck, and décolletage."
+  },
+  {
+    "path": [
+      "products",
+      "products",
+      29,
+      "benefits",
+      "en",
+      0
+    ],
+    "before": "Promotes healing and instantly soothes redness and skin discomfort.",
+    "after": "Promotes healing and quickly soothes redness and skin discomfort."
+  },
+  {
+    "path": [
+      "products",
+      "products",
+      32,
+      "safetyWarnings",
+      "en",
+      0
+    ],
+    "before": null,
+    "after": "Do not use C-Retinol while pregnant or breastfeeding."
+  },
+  {
+    "path": [
+      "products",
+      "products",
+      32,
+      "safetyWarnings",
+      "en",
+      1
+    ],
+    "before": null,
+    "after": "C-Retinol can increase sensitivity to sunlight. Avoid using it during periods of sun exposure and avoid direct UV exposure. Apply sunscreen with SPF 30 or higher every two hours, even in the shade."
+  },
+  {
+    "path": [
+      "products",
+      "products",
+      40,
+      "benefits",
+      "en",
+      0
+    ],
+    "before": "Repairs and protects skin following ablative procedures and extremely dehydrated skin.",
+    "after": "Repairs and protects skin after ablative procedures, and skin that is extremely dehydrated."
+  },
+  {
+    "path": [
+      "products",
+      "products",
+      43,
+      "benefits",
+      "en",
+      4
+    ],
+    "before": "Protects against external aggressors.",
+    "after": "Protects the skin against environmental stressors."
+  },
+  {
+    "path": [
+      "products",
+      "products",
+      45,
+      "subtitle",
+      "en"
+    ],
+    "before": "Post-treatment support for purifying peels, IPL, or facial treatments for teenagers",
+    "after": "Post-treatment support for purifying peels, IPL, or facial treatments for teenage skin"
+  },
+  {
+    "path": [
+      "products",
+      "products",
+      45,
+      "sizeLabel"
+    ],
+    "before": "3-month kit - complete set",
+    "after": "3-month kit — complete set"
+  },
+  {
+    "path": [
+      "products",
+      "products",
+      46,
+      "subtitle",
+      "en"
+    ],
+    "before": "Post-treatment support for IPL, ND:YAG laser, or redness and sensitivity care",
+    "after": "Post-treatment support for IPL, Nd:YAG laser, or redness and sensitivity care"
+  },
+  {
+    "path": [
+      "products",
+      "products",
+      46,
+      "sizeLabel"
+    ],
+    "before": "3-month kit - complete set support",
+    "after": "3-month kit — complete set support"
+  },
+  {
+    "path": [
+      "products",
+      "products",
+      47,
+      "sizeLabel"
+    ],
+    "before": "3-month kit - complete set support",
+    "after": "3-month kit — complete set support"
+  },
+  {
+    "path": [
+      "products",
+      "products",
+      47,
+      "kitContents",
+      "en",
+      1
+    ],
+    "before": "The Ultra-Protective 50 ml",
+    "after": "The Ultra Protective 50 ml"
+  },
+  {
+    "path": [
+      "products",
+      "products",
+      48,
+      "sizeLabel"
+    ],
+    "before": "3-month kit - complete set support",
+    "after": "3-month kit — complete set support"
+  },
+  {
+    "path": [
+      "products",
+      "products",
+      49,
+      "sizeLabel"
+    ],
+    "before": "3-month kit - complete set",
+    "after": "3-month kit — complete set"
+  },
+  {
+    "path": [
+      "products",
+      "products",
+      49,
+      "kitContents",
+      "en",
+      2
+    ],
+    "before": "The Ultra-Protective Cream 50 ml",
+    "after": "The Ultra Protective Cream 50 ml"
+  },
+  {
+    "path": [
+      "products",
+      "products",
+      49,
+      "safetyWarnings",
+      "en",
+      0
+    ],
+    "before": null,
+    "after": "Do not use C-Retinol while pregnant or breastfeeding."
+  },
+  {
+    "path": [
+      "products",
+      "products",
+      49,
+      "safetyWarnings",
+      "en",
+      1
+    ],
+    "before": null,
+    "after": "C-Retinol can increase sensitivity to sunlight. Avoid using it during periods of sun exposure and avoid direct UV exposure. Apply sunscreen with SPF 30 or higher every two hours, even in the shade."
+  },
+  {
+    "path": [
+      "products",
+      "products",
+      52,
+      "kitContents",
+      "en",
+      1
+    ],
+    "before": "The Ultra-Protective 5 ml",
+    "after": "The Ultra Protective 5 ml"
+  },
+  {
+    "path": [
+      "home",
+      "homepageCopy",
+      "en",
+      "medicalDepthHeading"
+    ],
+    "before": "Care for every stage of life.",
+    "after": "Care for every stage of life"
+  },
+  {
+    "path": [
+      "home",
+      "homepageCopy",
+      "en",
+      "medicalDepthIntro"
+    ],
+    "before": "Comprehensive AHS-insured family medicine and walk-in care for patients and families in West Springs.",
+    "after": "Family medicine and walk-in care for patients and families in West Springs, Calgary."
+  },
+  {
+    "path": [
+      "home",
+      "homepageCopy",
+      "en",
+      "otherServiceFactsHeading"
+    ],
+    "before": "Also included in every visit",
+    "after": "Other family medicine services"
+  },
+  {
+    "path": [
+      "home",
+      "homepageCopy",
+      "en",
+      "treatmentsHeading"
+    ],
+    "before": "Featured aesthetic treatments.",
+    "after": "Featured aesthetic treatments"
+  },
+  {
+    "path": [
+      "home",
+      "homepageCopy",
+      "en",
+      "techEyebrow"
+    ],
+    "before": "TECHNOLOGY BEHIND THE TREATMENT",
+    "after": "OUR TECHNOLOGY"
+  },
+  {
+    "path": [
+      "home",
+      "homepageCopy",
+      "en",
+      "techHeading"
+    ],
+    "before": "The devices behind your treatment.",
+    "after": "The devices behind your treatment"
+  },
+  {
+    "path": [
+      "home",
+      "homepageCopy",
+      "en",
+      "journeyHeading"
+    ],
+    "before": "Your visit, made simple.",
+    "after": "Your visit, made simple"
+  },
+  {
+    "path": [
+      "home",
+      "homepageCopy",
+      "en",
+      "journeySteps",
+      2,
+      "t"
+    ],
+    "before": "Book through the approved system",
+    "after": "Book your appointment"
+  },
+  {
+    "path": [
+      "home",
+      "homepageCopy",
+      "en",
+      "journeySteps",
+      2,
+      "d"
+    ],
+    "before": "Mikata, Skip the Waiting Room, Euclid, a phone call, or in person — never on this website.",
+    "after": "Use Mikata, Skip the Waiting Room or Euclid, depending on your appointment, or book by phone or in person."
+  },
+  {
+    "path": [
+      "home",
+      "homepageCopy",
+      "en",
+      "productsEyebrow"
+    ],
+    "before": "SKINMEDICA",
+    "after": "PROFESSIONAL SKINCARE"
+  },
+  {
+    "path": [
+      "home",
+      "homepageCopy",
+      "en",
+      "productsHeading"
+    ],
+    "before": "Medical-grade skincare, recommended by your physician.",
+    "after": "Medical-grade skincare, recommended by your physician"
+  },
+  {
+    "path": [
+      "home",
+      "homepageCopy",
+      "en",
+      "productsIntro"
+    ],
+    "before": "Blue Diamond Medical carries SkinMedica, a professional skincare line. Availability and pricing are confirmed in person, not through online checkout.",
+    "after": "Blue Diamond Medical carries the SkinMedica and Myriade professional skincare lines. Availability and pricing are confirmed in person, not through online checkout."
+  },
+  {
+    "path": [
+      "home",
+      "homepageCopy",
+      "en",
+      "productsCta"
+    ],
+    "before": "View All Products",
+    "after": "View all products"
+  },
+  {
+    "path": [
+      "home",
+      "homepageCopy",
+      "en",
+      "resourcesHeading"
+    ],
+    "before": "Useful patient resources.",
+    "after": "Useful patient resources"
+  },
+  {
+    "path": [
+      "home",
+      "homepageCopy",
+      "en",
+      "resources",
+      1,
+      "body"
+    ],
+    "before": "Forms, notes, and fees for services outside AHS coverage.",
+    "after": "Forms, notes, and fees for services not covered by Alberta Health."
+  },
+  {
+    "path": [
+      "home",
+      "homepageCopy",
+      "en",
+      "location",
+      "eliteIQBody"
+    ],
+    "before": "All Elite iQ™ treatments are exclusively performed at Citizen Studio.",
+    "after": "All Elite iQ™ treatments are performed exclusively at Citizen Studio."
+  },
+  {
+    "path": [
+      "home",
+      "homepageCopy",
+      "en",
+      "bookingHeading"
+    ],
+    "before": "Find the right appointment.",
+    "after": "Find the right appointment"
+  },
+  {
+    "path": [
+      "home",
+      "homepageCopy",
+      "en",
+      "faqEyebrow"
+    ],
+    "before": "QUESTIONS, ANSWERED",
+    "after": "COMMON QUESTIONS"
+  },
+  {
+    "path": [
+      "home",
+      "homepageCopy",
+      "en",
+      "faqHeading"
+    ],
+    "before": "Questions, answered.",
+    "after": "Questions, answered"
+  },
+  {
+    "path": [
+      "home",
+      "homepageCopy",
+      "en",
+      "faqs",
+      2,
+      "a"
+    ],
+    "before": "Monday to Saturday, 8:00 AM to 7:00 PM. Closed Sunday and on all statutory holidays.",
+    "after": "Monday to Saturday, 8:00 a.m. to 7:00 p.m. Closed Sundays and statutory holidays."
+  },
+  {
+    "path": [
+      "home",
+      "homepageCopy",
+      "en",
+      "faqs",
+      6,
+      "q"
+    ],
+    "before": "How can I ask about SkinMedica products?",
+    "after": "How can I ask about the skincare products you carry?"
+  },
+  {
+    "path": [
+      "home",
+      "homepageCopy",
+      "en",
+      "faqs",
+      7,
+      "q"
+    ],
+    "before": "Can SkinMedica products be purchased online?",
+    "after": "Can skincare products be purchased online?"
+  },
+  {
+    "path": [
+      "home",
+      "homepageCopy",
+      "en",
+      "faqs",
+      8,
+      "a"
+    ],
+    "before": "Botox for migraine, bruxism/TMJ, and hyperhidrosis is covered by a combination of provincial health insurance and our compassionate program. Cosmetic Botox is not insured.",
+    "after": "Coverage for medical Botox depends on the condition and your insurance eligibility. Provincial coverage, private insurance or the clinic's compassionate program may help with costs. Ask the clinic to confirm your coverage before treatment. Cosmetic Botox is uninsured."
+  },
+  {
+    "path": [
+      "dictionary",
+      "default",
+      "home",
+      "pathwaysTitle"
+    ],
+    "before": "Two ways to be cared for, one clinic",
+    "after": "Two kinds of care, one clinic"
+  },
+  {
+    "path": [
+      "dictionary",
+      "default",
+      "home",
+      "botoxBody"
+    ],
+    "before": "Botox for migraines, bruxism, and hyperhidrosis, alongside cosmetic Botox — administered by Dr. Farhat and Dr. Hamdi, starting with a consultation.",
+    "after": "Botox for migraine, bruxism, and hyperhidrosis, alongside cosmetic Botox — administered by Dr. Farhat and Dr. Hamdi, starting with a consultation."
+  },
+  {
+    "path": [
+      "dictionary",
+      "default",
+      "home",
+      "finalCtaTitle"
+    ],
+    "before": "Ready to find the right place to begin?",
+    "after": "Not sure where to start?"
+  }
+]

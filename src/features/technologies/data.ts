@@ -9,11 +9,11 @@ export const technologies: Technology[] = [
     title: { en: "Elite iQ™", ar: "إيليت آي كيو™" },
     manufacturer: "Cynosure",
     summary: {
-      en: "Cynosure's Elite iQ™ device offers quick, personalized laser hair treatments using the Skintel™ device — the first melanin reader on the market cleared by both Health Canada and the FDA — allowing safe treatment of all skin types and areas.",
+      en: "Cynosure's Elite iQ™ laser uses the Skintel™ melanin reader to help practitioners select treatment settings for a range of skin types. Individual suitability is assessed before treatment.",
       ar: "يوفر جهاز Elite iQ™ من Cynosure علاجات ليزر مخصصة وسريعة لإزالة الشعر باستخدام جهاز Skintel™ — أول قارئ ميلانين معتمد من هيئة الصحة الكندية وإدارة الغذاء والدواء الأمريكية — مما يتيح علاجًا آمنًا لجميع أنواع البشرة والمناطق.",
     },
     howItWorks: {
-      en: "Before treatment, the Skintel™ device reads your skin's melanin level directly, rather than estimating it from a visual skin-type chart. The Elite iQ™ laser then uses that reading to calibrate its settings to your skin specifically.",
+      en: "Before treatment, the Skintel™ device measures your skin's melanin level. The practitioner uses this reading to help select suitable Elite iQ™ laser settings.",
       ar: "قبل العلاج، يقرأ جهاز Skintel™ مستوى الميلانين في بشرتكم مباشرة، بدلًا من تقديره اعتمادًا على مخطط بصري لنوع البشرة. بعد ذلك، يستخدم ليزر Elite iQ™ تلك القراءة لضبط إعداداته خصيصًا لبشرتكم.",
     },
     whatItAddresses: {
@@ -76,7 +76,7 @@ export const technologies: Technology[] = [
     title: { en: "Potenza", ar: "بوتنزا" },
     manufacturer: "Cynosure",
     summary: {
-      en: "A radiofrequency microneedling system used for tightening and smoothing skin anywhere on the body — for fine lines, or for laxity after rapid weight loss or childbirth.",
+      en: "A radiofrequency microneedling system used for skin tightening and smoothing on the face and body, including fine lines and skin laxity after weight loss or childbirth. Suitability is assessed during a consultation.",
       ar: "نظام فريد للإبر الدقيقة بالترددات الراديوية، مثالي لشدّ البشرة وتنعيمها في مختلف مناطق الجسم — للخطوط الدقيقة أو الشدّ بعد فقدان وزن سريع أو بعد الولادة.",
     },
     howItWorks: {
@@ -128,7 +128,7 @@ export const technologies: Technology[] = [
     title: { en: "TempSure", ar: "تمبشور" },
     manufacturer: "Cynosure",
     summary: {
-      en: "A non-invasive device for tightening and firming skin anywhere on the body, with little to no downtime.",
+      en: "A non-invasive radiofrequency device used for skin tightening and firming on the face and body. Downtime is usually minimal; individual responses vary.",
       ar: "أداة غير جراحية لشدّ البشرة وتماسكها في مختلف مناطق الجسم، دون أي فترة تعافٍ.",
     },
     howItWorks: {
@@ -157,7 +157,7 @@ export const technologies: Technology[] = [
       {
         question: { en: "Which treatment uses the TempSure device?", ar: "أي علاج يستخدم جهاز TempSure؟" },
         answer: {
-          en: "Radio Frequency treatment.",
+          en: "Radiofrequency treatment.",
           ar: "علاج الترددات الراديوية.",
         },
       },
@@ -211,11 +211,11 @@ export const technologies: Technology[] = [
     title: { en: "TempSure Vitalia", ar: "تمبشور فيتاليا" },
     manufacturer: "Cynosure",
     summary: {
-      en: "A radiofrequency device used for pelvic floor and sexual health concerns that women may experience at any age or stage of life.",
+      en: "TempSure Vitalia is a radiofrequency device. Women with pelvic floor or sexual health concerns can discuss their symptoms and suitable treatment options with a physician.",
       ar: "جهاز يُعالج العديد من مشاكل قاع الحوض والصحة الجنسية التي تواجهها النساء في مختلف الأعمار ومراحل الحياة.",
     },
     howItWorks: {
-      en: "TempSure Vitalia uses radiofrequency energy in a non-surgical approach designed for pelvic floor and sexual health concerns.",
+      en: "TempSure Vitalia delivers temperature-controlled radiofrequency energy to tissue. A physician must assess the proposed use, suitability, risks and expected benefits.",
       ar: "يستخدم TempSure Vitalia طاقة الترددات الراديوية بأسلوب غير جراحي مصمم لمعالجة مشاكل قاع الحوض والصحة الجنسية.",
     },
     whatItAddresses: {
