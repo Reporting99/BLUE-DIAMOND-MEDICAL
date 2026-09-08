@@ -49,7 +49,7 @@ test.describe("Every product page — English", () => {
         if (product.kitContents) expect(html, `${product.slug}: kit contents`).toContain("What&#x27;s in this kit");
         if (product.directions) expect(html, `${product.slug}: Directions`).toContain("Directions");
       } else {
-        expect(html, `${product.slug}: FAQ heading`).toContain("Questions and Answers About This Product");
+        expect(html, `${product.slug}: FAQ heading`).toContain("Questions about this product");
         expect(html, `${product.slug}: availability notice`).toContain("confirmed directly with Blue Diamond Medical Clinic");
       }
     });
@@ -121,9 +121,9 @@ test.describe("Product page structure", () => {
     }
   });
 
-  test('"Ask About This Product" opens the enquiry pathway with the product preselected, not the catalogue', async ({ page }) => {
+  test('"Ask about this product" opens the enquiry pathway with the product preselected, not the catalogue', async ({ page }) => {
     await page.goto("/en/shop/retinol-complex-0-5");
-    const cta = page.getByRole("link", { name: "Ask About This Product" });
+    const cta = page.getByRole("link", { name: "Ask about this product" });
     await expect(cta).toBeVisible();
     await expect(cta).toHaveAttribute("href", "/en/contact?product=retinol-complex-0-5");
   });

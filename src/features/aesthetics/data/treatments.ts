@@ -16,7 +16,7 @@ export const treatments: AestheticTreatment[] = [
     slugAr: "إزالة-الشعر-بالليزر",
     title: { en: "Laser Hair Removal", ar: "إزالة الشعر بالليزر" },
     summary: {
-      en: "Long-lasting hair reduction anywhere on the body using the Cynosure Elite+™ laser system.",
+      en: "Long-lasting hair reduction anywhere on the body using the Cynosure Elite iQ™ laser system.",
       ar: "تقليل دائم لنمو الشعر في أي منطقة من الجسم باستخدام نظام ليزر Cynosure Elite+™.",
     },
     serviceLocationNote: {
@@ -56,14 +56,14 @@ export const treatments: AestheticTreatment[] = [
       {
         question: { en: "Is this treatment right for me?", ar: "هل هذا العلاج مناسب لي؟" },
         answer: {
-          en: "The Elite iQ™ device can be safely used on all skin types and anywhere on the body. Talk with your provider about whether it is right for you.",
+          en: "The Elite iQ™ device can be safely used on all skin types and anywhere on the body. Your physician will discuss whether it is right for you.",
           ar: "يمكن استخدام جهاز Elite iQ™ بأمان على جميع أنواع البشرة وفي أي منطقة من الجسم. ناقشوا ملاءمته لكم مع مقدم الرعاية.",
         },
       },
       {
         question: { en: "How many laser hair removal treatments will I need?", ar: "كم عدد الجلسات التي سأحتاجها؟" },
         answer: {
-          en: "Treatment times vary by area, but a session usually takes less than 30 minutes. Book a consultation to discuss the areas you would like treated.",
+          en: "Several sessions are needed, because only the hairs that are actively growing respond to each treatment. A session usually takes less than 30 minutes, depending on the area. Book a consultation to discuss the areas you would like treated.",
           ar: "تختلف مدة الجلسة حسب المنطقة، لكنها عادة أقل من 30 دقيقة. تحدثوا مع مقدم الرعاية لتحديد استشارة ومناقشة المناطق المطلوب علاجها.",
         },
       },
@@ -150,7 +150,7 @@ export const treatments: AestheticTreatment[] = [
       ar: "شدّ وتنعيم غير جراحي للبشرة في مختلف مناطق الجسم باستخدام موجات الترددات الراديوية (TempSure)، لتحسين ملمس البشرة وتقليل ظهور الخطوط الدقيقة والتجاعيد.",
     },
     howItWorks: {
-      en: "A handheld device passes RF waves across the treatment area in a circular motion, gently raising the skin's temperature. The resulting heat penetrates the skin layers and stimulates collagen and elastin production for firmer, more youthful skin.",
+      en: "A handheld device passes RF waves across the treatment area in a circular motion, gently raising the skin's temperature. The resulting heat penetrates the skin layers and stimulates collagen and elastin production for firmer, more youthful-looking skin.",
       ar: "يُمرَّر جهاز محمول موجات الترددات الراديوية على المنطقة المعالجة بحركة دائرية، مما يرفع درجة حرارة البشرة تدريجيًا. تُحفّز الحرارة الناتجة إنتاج الكولاجين والإيلاستين لبشرة أكثر تماسكًا وشبابًا.",
     },
     comfortLevel: {
@@ -162,15 +162,15 @@ export const treatments: AestheticTreatment[] = [
       ar: "تستغرق علاجات الوجه والرقبة (بجهاز محمول على الوجه والرقبة وأعلى الصدر) بين 40 و90 دقيقة حسب المنطقة. تُعالَج مناطق الجسم بواسطة وسائد غير جراحية خلال نحو 20 دقيقة.",
     },
     downtime: {
-      en: "Virtually no downtime — you're free to return to normal daily life immediately. A medical-grade sunscreen is recommended to protect and preserve results.",
+      en: "Virtually no downtime — you can return to your usual activities right away. A medical-grade sunscreen is recommended to protect and preserve results.",
       ar: "لا يوجد تعافٍ يُذكر — يمكنكم متابعة حياتكم اليومية فورًا. يُنصح باستخدام واقي شمس طبي للحفاظ على النتائج.",
     },
     resultTimeline: {
-      en: "Not an instant-fix procedure — skin looks fresher within a few days, but the most noticeable results appear approximately 6–8 weeks after the first treatment.",
+      en: "Results are gradual rather than immediate — skin looks fresher within a few days, but the most noticeable results appear about 6–8 weeks after the first treatment.",
       ar: "ليست نتيجتها فورية — تبدو البشرة أكثر انتعاشًا خلال أيام قليلة، لكن أبرز النتائج تظهر بعد نحو 6-8 أسابيع من الجلسة الأولى.",
     },
     suggestedCourse: {
-      en: "3–5 treatments 4–6 weeks apart provide optimal results, with positive effects lasting up to 2 years.",
+      en: "3–5 treatments spaced 4–6 weeks apart give the best results, which can last up to two years.",
       ar: "تُقدَّم أفضل النتائج بعد 3-5 جلسات بفاصل 4-6 أسابيع، مع استمرار النتائج الإيجابية حتى عامين.",
     },
     faqs: [
@@ -191,21 +191,21 @@ export const treatments: AestheticTreatment[] = [
       {
         question: { en: "Is there any downtime?", ar: "هل هناك فترة تعافٍ؟" },
         answer: {
-          en: "Virtually none — you can return to normal daily life immediately. A medical-grade sunscreen is recommended afterward to protect results.",
+          en: "Virtually none — you can return to your usual activities right away. A medical-grade sunscreen is recommended afterward to protect results.",
           ar: "لا يوجد تعافٍ يُذكر — يمكنكم متابعة حياتكم اليومية فورًا. يُنصح باستخدام واقي شمس طبي بعد العلاج للحفاظ على النتائج.",
         },
       },
       {
         question: { en: "When will I see results?", ar: "متى ستظهر النتائج؟" },
         answer: {
-          en: "It isn't an instant-fix procedure — skin looks fresher within a few days, but the most noticeable results appear roughly 6–8 weeks after the first treatment.",
+          en: "Results are gradual rather than immediate — skin looks fresher within a few days, but the most noticeable results appear roughly 6–8 weeks after the first treatment.",
           ar: "ليست نتيجتها فورية — تبدو البشرة أكثر انتعاشًا خلال أيام قليلة، لكن أبرز النتائج تظهر بعد نحو 6-8 أسابيع من الجلسة الأولى.",
         },
       },
       {
         question: { en: "How many sessions are recommended, and how long do results last?", ar: "كم عدد الجلسات الموصى بها، وكم تدوم النتائج؟" },
         answer: {
-          en: "3–5 treatments spaced 4–6 weeks apart provide optimal results, with positive effects lasting up to 2 years.",
+          en: "3–5 treatments spaced 4–6 weeks apart give the best results, which can last up to two years.",
           ar: "تُقدَّم أفضل النتائج بعد 3-5 جلسات بفاصل 4-6 أسابيع، مع استمرار النتائج الإيجابية حتى عامين.",
         },
       },
@@ -225,11 +225,11 @@ export const treatments: AestheticTreatment[] = [
       ar: "يضيف نظام Potenza طاقة الترددات الراديوية إلى تقنية الإبر الدقيقة الميكانيكية، لشدّ أعمق للبشرة إلى جانب فوائد التحفيز بالإصابات الدقيقة.",
     },
     howItWorks: {
-      en: "RF energy is delivered via small needles deep into the dermis, heating underlying layers to cause tightening and stimulate collagen and elastin production — producing faster, more dramatic results than non-RF microneedling. Treatments aren't limited to the face and are particularly useful for toning and retracting skin post-weight-loss.",
+      en: "RF energy is delivered via small needles deep into the dermis, heating underlying layers to cause tightening and stimulate collagen and elastin production — producing faster and more pronounced results than microneedling without RF. Treatments are not limited to the face, and are particularly useful for toning and tightening skin after weight loss.",
       ar: "تُوصَّل طاقة الترددات الراديوية عبر إبر دقيقة إلى عمق الأدمة، فتُسخّن الطبقات العميقة وتُحفّز الشدّ وإنتاج الكولاجين والإيلاستين — بنتائج أسرع وأوضح من الإبر الدقيقة التقليدية. لا تقتصر العلاجات على الوجه، وهي مفيدة بشكل خاص لشدّ البشرة بعد فقدان الوزن.",
     },
     concernsTreated: {
-      en: ["Skin scarring, including acne scars", "Firmer, more toned skin", "Reduction in dark spots", "Control of large pores", "Reduction in wrinkles"],
+      en: ["Skin scarring, including acne scars", "Loose or less toned skin", "Dark spots", "Enlarged pores", "Wrinkles"],
       ar: ["ندبات الجلد بما فيها ندبات حب الشباب", "بشرة أكثر تماسكًا ونضارة", "تقليل البقع الداكنة", "التحكم بحجم المسام", "تقليل التجاعيد"],
     },
     duration: {
@@ -237,11 +237,11 @@ export const treatments: AestheticTreatment[] = [
       ar: "نحو 30 دقيقة عادةً. يُطبَّق مخدر موضعي قد يستغرق حتى 45 دقيقة ليصبح فعالًا بالكامل.",
     },
     comfortLevel: {
-      en: "A topical numbing agent removes most of the discomfort. Most patients say they can feel the needles working but do not find it painful. A provider monitors you throughout, and treatment can be stopped at any point.",
+      en: "A topical numbing agent removes most of the discomfort. Most patients say they can feel the needles working but do not find it painful. A member of the clinical team stays with you throughout, and treatment can be stopped at any point.",
       ar: "يُزيل المخدر معظم الانزعاج — يشعر المرضى بوخز الإبر دون ألم حقيقي. يراقب مقدمو الرعاية الجلسة باستمرار، ويمكن إيقافها في أي وقت.",
     },
     resultTimeline: {
-      en: "Effects can usually be seen straight away, but one session isn't enough for lasting results.",
+      en: "Effects can usually be seen right away, but one session is not enough for lasting results.",
       ar: "غالبًا ما تظهر النتائج فورًا، لكن جلسة واحدة لا تكفي لنتائج دائمة.",
     },
     suggestedCourse: {
@@ -276,7 +276,7 @@ export const treatments: AestheticTreatment[] = [
     relatedConcernIds: ["acne-scars", "dry-skin", "fine-lines-wrinkles", "skin-revitalization"],
     faqs: [
       {
-        question: { en: "Why RF microneedling vs. non-RF microneedling?", ar: "لماذا الإبر الدقيقة بالترددات الراديوية بدل الإبر الدقيقة التقليدية؟" },
+        question: { en: "How is RF microneedling different from standard microneedling?", ar: "لماذا الإبر الدقيقة بالترددات الراديوية بدل الإبر الدقيقة التقليدية؟" },
         answer: {
           en: "Potenza delivers focused RF technology to heat the skin, triggering the body's natural response to increase collagen and elastin production, resulting in enhanced skin revitalization.",
           ar: "يوصل جهاز Potenza طاقة ترددات راديوية مركزة لتسخين البشرة، ما يُحفّز استجابة الجسم الطبيعية لزيادة إنتاج الكولاجين والإيلاستين، فتتجدد البشرة بشكل أعمق.",
@@ -393,7 +393,7 @@ export const treatments: AestheticTreatment[] = [
       ar: "تُستخدم البلازما الغنية بالصفائح الدموية موضعيًا أو عبر حقن دقيقة لتنعيم الخطوط الدقيقة والتجاعيد، وتحسين نضارة البشرة ومرونتها، وتقليل ندبات حب الشباب والتصبغ — يُعرف أحيانًا باسم \"فيشل مصاص الدماء\".",
     },
     howItWorks: {
-      en: "The same patient-derived, growth-factor-rich serum used for hair restoration is applied to the skin, boosting collagen production for firmer, more youthful skin using no synthetic additives.",
+      en: "The same patient-derived, growth-factor-rich serum used for hair restoration is applied to the skin, boosting collagen production for firmer, more youthful-looking skin, with no synthetic additives.",
       ar: "يُستخدم المصل الغني بعوامل النمو المشتق من دم المريض نفسه — ذاته المستخدم لاستعادة الشعر — على البشرة، لتحفيز إنتاج الكولاجين وبشرة أكثر تماسكًا وشبابًا دون أي مواد اصطناعية.",
     },
     duration: { en: "30 to 60 minutes depending on the treatment area.", ar: "من 30 إلى 60 دقيقة حسب المنطقة المعالجة." },
@@ -442,7 +442,7 @@ export const treatments: AestheticTreatment[] = [
     slugAr: "تمبشور-فيتاليا",
     title: { en: "TempSure Vitalia", ar: "تمبشور فيتاليا" },
     summary: {
-      en: "A non-surgical, in-clinic treatment for pelvic floor and sexual health concerns, which roughly 1 in 3 women experience at some stage of life and often live with in silence. A consultation with Dr. Farhat establishes whether it is appropriate for you.",
+      en: "A non-surgical, in-clinic treatment for pelvic floor and sexual health concerns. About one in three women experience these concerns at some point in their lives, and many live with them in silence. A consultation with Dr. Farhat establishes whether the treatment is appropriate for you.",
       ar: "جهاز يُعالج العديد من مشاكل قاع الحوض والصحة الجنسية التي تواجهها النساء في مختلف الأعمار ومراحل الحياة — تعاني منها نحو امرأة من كل ثلاث، وغالبًا بصمت.",
     },
     whoItsFor: {
@@ -453,14 +453,14 @@ export const treatments: AestheticTreatment[] = [
       {
         question: { en: "How common are the concerns TempSure Vitalia addresses?", ar: "ما مدى شيوع المشاكل التي يعالجها TempSure Vitalia؟" },
         answer: {
-          en: "Roughly 1 in 3 women experience pelvic floor or sexual health concerns at some point, often in silence.",
+          en: "About one in three women experience pelvic floor or sexual health concerns at some point in their lives, and many live with them in silence.",
           ar: "تعاني نحو امرأة من كل ثلاث من مشاكل قاع الحوض أو الصحة الجنسية في مرحلة ما، وغالبًا بصمت.",
         },
       },
       {
         question: { en: "Is this a surgical procedure?", ar: "هل هذا إجراء جراحي؟" },
         answer: {
-          en: "No — it's described as a simple, in-clinic procedure.",
+          en: "No. TempSure Vitalia is a straightforward, non-surgical procedure carried out in the clinic.",
           ar: "لا — يُوصف بأنه إجراء بسيط يُجرى داخل العيادة.",
         },
       },

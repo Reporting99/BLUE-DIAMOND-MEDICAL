@@ -51,7 +51,7 @@ export const technologies: Technology[] = [
         },
       },
       {
-        question: { en: "What's the manufacturer of the Elite iQ™ device?", ar: "من الشركة المصنّعة لجهاز Elite iQ™؟" },
+        question: { en: "Who makes the Elite iQ™ device?", ar: "من الشركة المصنّعة لجهاز Elite iQ™؟" },
         answer: {
           en: "Cynosure.",
           ar: "Cynosure.",
@@ -76,11 +76,11 @@ export const technologies: Technology[] = [
     title: { en: "Potenza", ar: "بوتنزا" },
     manufacturer: "Cynosure",
     summary: {
-      en: "A radio-frequency microneedling system used for tightening and smoothing skin anywhere on the body — for fine lines, or for laxity after rapid weight loss or childbirth.",
+      en: "A radiofrequency microneedling system used for tightening and smoothing skin anywhere on the body — for fine lines, or for laxity after rapid weight loss or childbirth.",
       ar: "نظام فريد للإبر الدقيقة بالترددات الراديوية، مثالي لشدّ البشرة وتنعيمها في مختلف مناطق الجسم — للخطوط الدقيقة أو الشدّ بعد فقدان وزن سريع أو بعد الولادة.",
     },
     howItWorks: {
-      en: "Potenza combines microneedling — fine needles creating controlled micro-injuries in the skin — with radio-frequency energy delivered through those same needles, adding a tightening effect to the skin's natural response to micro-injury.",
+      en: "Potenza combines microneedling — fine needles creating controlled micro-injuries in the skin — with radiofrequency energy delivered through those same needles, adding a tightening effect to the skin's natural response to micro-injury.",
       ar: "يجمع Potenza بين الإبر الدقيقة — إبر رفيعة تُحدث إصابات دقيقة متحكمًا بها في البشرة — وطاقة الترددات الراديوية المُوصَّلة عبر الإبر نفسها، مما يضيف تأثير شدّ إلى استجابة البشرة الطبيعية للإصابة الدقيقة.",
     },
     whatItAddresses: {
@@ -91,7 +91,7 @@ export const technologies: Technology[] = [
       {
         question: { en: "What's the difference between Potenza and standard microneedling?", ar: "ما الفرق بين Potenza والإبر الدقيقة التقليدية؟" },
         answer: {
-          en: "Potenza adds radio-frequency energy delivered through the needles, combining the micro-injury response of standard microneedling with an additional tightening effect.",
+          en: "Potenza adds radiofrequency energy delivered through the needles, combining the micro-injury response of standard microneedling with an additional tightening effect.",
           ar: "يضيف Potenza طاقة الترددات الراديوية المُوصَّلة عبر الإبر، فيجمع بين استجابة الإصابة الدقيقة للإبر الدقيقة التقليدية وتأثير شدّ إضافي.",
         },
       },
@@ -110,7 +110,7 @@ export const technologies: Technology[] = [
         },
       },
       {
-        question: { en: "What's the manufacturer of the Potenza device?", ar: "من الشركة المصنّعة لجهاز Potenza؟" },
+        question: { en: "Who makes the Potenza device?", ar: "من الشركة المصنّعة لجهاز Potenza؟" },
         answer: {
           en: "Cynosure.",
           ar: "Cynosure.",
@@ -132,7 +132,7 @@ export const technologies: Technology[] = [
       ar: "أداة غير جراحية لشدّ البشرة وتماسكها في مختلف مناطق الجسم، دون أي فترة تعافٍ.",
     },
     howItWorks: {
-      en: "TempSure uses radio-frequency energy to gently heat the deeper layers of the skin, encouraging a natural tightening and firming response without breaking the skin's surface.",
+      en: "TempSure uses radiofrequency energy to gently heat the deeper layers of the skin, encouraging a natural tightening and firming response without breaking the skin's surface.",
       ar: "يستخدم TempSure طاقة الترددات الراديوية لتسخين الطبقات العميقة من البشرة بلطف، مما يحفّز استجابة طبيعية للشدّ والتماسك دون كسر سطح البشرة.",
     },
     whatItAddresses: {
@@ -143,14 +143,14 @@ export const technologies: Technology[] = [
       {
         question: { en: "Does TempSure treatment involve any downtime?", ar: "هل يتطلب علاج TempSure أي فترة تعافٍ؟" },
         answer: {
-          en: "No — it is non-invasive, and most patients return to their usual activities right away.",
+          en: "There is little to no downtime — the treatment is non-invasive, and most patients return to their usual activities right away.",
           ar: "لا — فهو علاج غير جراحي دون أي فترة تعافٍ.",
         },
       },
       {
         question: { en: "How does TempSure tighten skin without surgery?", ar: "كيف يشدّ TempSure البشرة دون جراحة؟" },
         answer: {
-          en: "It heats the deeper layers of the skin using radio-frequency energy, which encourages the skin's own natural tightening response.",
+          en: "It heats the deeper layers of the skin using radiofrequency energy, which encourages the skin's own natural tightening response.",
           ar: "يسخّن الطبقات العميقة من البشرة باستخدام طاقة الترددات الراديوية، مما يحفّز استجابة البشرة الطبيعية للشدّ.",
         },
       },
@@ -211,11 +211,11 @@ export const technologies: Technology[] = [
     title: { en: "TempSure Vitalia", ar: "تمبشور فيتاليا" },
     manufacturer: "Cynosure",
     summary: {
-      en: "Equipment addressing many pelvic floor issues and sexual health concerns women experience at all ages and stages of life.",
+      en: "A radiofrequency device used for pelvic floor and sexual health concerns that women may experience at any age or stage of life.",
       ar: "جهاز يُعالج العديد من مشاكل قاع الحوض والصحة الجنسية التي تواجهها النساء في مختلف الأعمار ومراحل الحياة.",
     },
     howItWorks: {
-      en: "TempSure Vitalia uses radio-frequency energy in a non-surgical approach designed for pelvic floor and sexual health concerns.",
+      en: "TempSure Vitalia uses radiofrequency energy in a non-surgical approach designed for pelvic floor and sexual health concerns.",
       ar: "يستخدم TempSure Vitalia طاقة الترددات الراديوية بأسلوب غير جراحي مصمم لمعالجة مشاكل قاع الحوض والصحة الجنسية.",
     },
     whatItAddresses: {
@@ -226,7 +226,7 @@ export const technologies: Technology[] = [
       {
         question: { en: "Is TempSure Vitalia surgical?", ar: "هل TempSure Vitalia علاج جراحي؟" },
         answer: {
-          en: "No — it's a non-surgical, radio-frequency-based approach.",
+          en: "No — it is a non-surgical treatment that uses radiofrequency energy.",
           ar: "لا — هو أسلوب غير جراحي يعتمد على الترددات الراديوية.",
         },
       },

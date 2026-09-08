@@ -47,7 +47,7 @@ export default function LocaleErrorBoundary({
         Temporarily unavailable <span className="text-text-secondary">·</span> غير متاح مؤقتًا
       </h1>
       <p className="max-w-md text-body text-text-secondary">
-        We couldn&rsquo;t load this page right now. Please try again in a moment.
+        We couldn&apos;t load this page right now. Please try again in a moment.
         <br />
         تعذّر تحميل هذه الصفحة حاليًا. يرجى المحاولة مرة أخرى بعد قليل.
       </p>

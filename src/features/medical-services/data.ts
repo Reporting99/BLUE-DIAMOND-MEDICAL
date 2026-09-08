@@ -218,7 +218,7 @@ export const medicalServices: MedicalServiceContent[] = [
       {
         question: { en: "Do I need to see a particular physician for chronic disease management?", ar: "هل أحتاج إلى مراجعة طبيب معيّن لإدارة الأمراض المزمنة؟" },
         answer: {
-          en: "No — every Blue Diamond family physician provides chronic-disease management as part of general family medicine. See whichever of our family physicians you are registered with.",
+          en: "No — every Blue Diamond family physician provides chronic-disease management as part of general family medicine. Book with whichever of our family physicians you are registered with.",
           ar: "لا — يقدّم جميع أطباء الأسرة في بلو دايموند إدارة الأمراض المزمنة كجزء من طب الأسرة العام. راجعوا الطبيب المسجّلين لديه من أطباء الأسرة في العيادة.",
         },
       },
@@ -245,7 +245,7 @@ export const medicalServices: MedicalServiceContent[] = [
     slugAr: "الرعاية-الوقائية",
     title: { en: "Preventive Care", ar: "الرعاية الوقائية" },
     summary: {
-      en: '"Prevention is better than cure" is at the core of how we practice — from vaccination to Dr. Saeed\'s clinical focus on preventive medicine and early intervention.',
+      en: '"Prevention is better than cure" is at the core of how we practise — from vaccination to Dr. Saeed\'s clinical focus on preventive medicine and early intervention.',
       ar: '"الوقاية خير من العلاج" هو جوهر أسلوبنا في الممارسة الطبية — من التطعيمات إلى تركيز الدكتورة سعيد السريري على الطب الوقائي والتدخل المبكر.',
     },
     whatsIncluded: {
@@ -363,7 +363,7 @@ export const medicalServices: MedicalServiceContent[] = [
         },
       },
       {
-        question: { en: "For minor in-clinic procedures related to pain, like joint injections, who provides those?", ar: "من يقدّم الإجراءات البسيطة داخل العيادة المتعلقة بالألم، مثل الحقن المفصلية؟" },
+        question: { en: "Who performs joint injections and other minor in-clinic procedures for pain?", ar: "من يقدّم الإجراءات البسيطة داخل العيادة المتعلقة بالألم، مثل الحقن المفصلية؟" },
         answer: {
           en: "Our family physicians perform intra-articular injections for degenerative knee, shoulder, and ankle conditions in-house — see the Minor Procedures page for detail. These are booked by phone or in person, not online.",
           ar: "يُجري أطباء الأسرة لدينا حقنًا مفصلية لحالات تنكس الركبة والكتف والكاحل داخل العيادة — راجعوا صفحة الإجراءات البسيطة للتفاصيل. وتُحجز هذه الإجراءات عبر الهاتف أو بالحضور شخصيًا، وليس عبر الإنترنت.",

@@ -87,7 +87,7 @@ export const productBrands: ProductBrand[] = [
  * contradicts these client-approved "Factor" groupings as inappropriate;
  * they're preserved as directed, used only as organizational labels. */
 export const categoryTaglines: Record<string, { en: string; ar: string }> = {
-  "the-growth-factor": { en: "Groundbreaking science for skin that's transformed", ar: "علم رائد لبشرة متجددة" },
+  "the-growth-factor": { en: "Groundbreaking science for visibly transformed skin", ar: "علم رائد لبشرة متجددة" },
   "the-cleanse-factor": { en: "An array of cleansers for every skin type", ar: "مجموعة من المنظفات لكل أنواع البشرة" },
   "the-correct-factor": { en: "Target a wide variety of skin concerns", ar: "تستهدف مجموعة واسعة من مخاوف البشرة" },
   "the-protect-factor": { en: "Everyday protection for all skin types", ar: "حماية يومية لجميع أنواع البشرة" },
@@ -183,12 +183,12 @@ export const products: Product[] = [
       productType: { en: "Eye-area treatment cream", ar: "كريم علاجي لمحيط العين" },
       routinePlacement: { en: "As a targeted treatment step for the eye area, within a broader skincare routine.", ar: "كخطوة علاجية موجّهة لمنطقة العين، ضمن روتين عناية أوسع." },
       keyCharacteristics: { en: ["Contains TNS® growth-factor technology, peptides, and vitamins A, C, and E, per manufacturer information", "Formulated for the eye area specifically"], ar: ["يحتوي على تقنية TNS® لعوامل النمو، وببتيدات، وفيتامينات A وC وE، وفق معلومات الشركة المصنّعة", "مصمم خصيصًا لمنطقة العين"] },
-      howToUse: { en: "Apply to the skin around the eyes as directed by the product packaging or your provider; avoid direct contact with the eyes.", ar: "يُطبَّق على الجلد المحيط بالعين وفق تعليمات العبوة أو مقدم الرعاية؛ يُتجنَّب ملامسة العين مباشرة." },
+      howToUse: { en: "Apply to the skin around the eyes as directed by the product packaging or by the clinic; avoid direct contact with the eyes.", ar: "يُطبَّق على الجلد المحيط بالعين وفق تعليمات العبوة أو مقدم الرعاية؛ يُتجنَّب ملامسة العين مباشرة." },
       relatedProductIds: ["lumivive-system", "dermal-repair-cream"],
       faqs: [
         { question: { en: "What is TNS Eye Repair formulated for?", ar: "لماذا صُمم TNS لإصلاح محيط العين؟" }, answer: { en: "The eye area specifically — fine lines, wrinkles, tone, and texture, per manufacturer information.", ar: "لمنطقة العين تحديدًا — الخطوط الدقيقة والتجاعيد واللون والملمس، وفق معلومات الشركة المصنّعة." } },
         { question: { en: "What is TNS®?", ar: "ما هو TNS®؟" }, answer: { en: "TNS® is SkinMedica's growth-factor technology, used across several products in this catalogue.", ar: "TNS® هي تقنية عوامل النمو من سكين ميديكا، وتُستخدم في عدة منتجات ضمن هذه القائمة." } },
-        { question: { en: "Can this go near my eyes safely?", ar: "هل يمكن استخدامه بأمان قرب العينين؟" }, answer: { en: "It's formulated for the eye area, but avoid direct contact with the eyes themselves — confirm technique with your provider.", ar: "هو مصمم لمنطقة العين، لكن يُتجنَّب ملامسة العين نفسها مباشرة — يُنصح بتأكيد طريقة الاستخدام مع مقدم الرعاية." } },
+        { question: { en: "Can this go near my eyes safely?", ar: "هل يمكن استخدامه بأمان قرب العينين؟" }, answer: { en: "It's formulated for the eye area, but avoid direct contact with the eyes themselves — confirm the technique with the clinic.", ar: "هو مصمم لمنطقة العين، لكن يُتجنَّب ملامسة العين نفسها مباشرة — يُنصح بتأكيد طريقة الاستخدام مع مقدم الرعاية." } },
         { question: { en: "What size does this come in?", ar: "ما الحجم المتوفر؟" }, answer: { en: "14.2 g.", ar: "14.2 غرام." } },
         { question: { en: "Is this the same TNS used in TNS Recovery Complex?", ar: "هل هذا TNS نفسه المستخدم في TNS Recovery Complex؟" }, answer: { en: "It's the same underlying SkinMedica TNS® growth-factor technology, formulated here specifically for the eye area.", ar: "هي التقنية نفسها لعوامل النمو TNS® من سكين ميديكا، مصممة هنا خصيصًا لمنطقة العين." } },
         { question: { en: "How do I ask the clinic about this product?", ar: "كيف أستفسر عن هذا المنتج من العيادة؟" }, answer: { en: "Contact Blue Diamond Medical Clinic directly for current availability and to discuss whether it suits your routine.", ar: "تواصلوا مباشرة مع عيادة بلو دايموند الطبية لمعرفة التوفر الحالي ومناقشة مدى ملاءمته لروتينكم." } },
@@ -360,7 +360,7 @@ export const products: Product[] = [
       warnings: { en: ["Mild redness, peeling, and irritation are expected effects when using this product."], ar: ["الاحمرار الخفيف والتقشر والتهيج آثار متوقعة عند استخدام هذا المنتج."] },
       relatedProductIds: ["retinol-complex-025", "retinol-complex-10", "dermal-repair-cream"],
       faqs: [
-        { question: { en: "Should I start with this strength or the 0.25?", ar: "هل أبدأ بهذا التركيز أم بتركيز 0.25؟" }, answer: { en: "Those new to retinol typically start lower and work up — ask your provider what's appropriate for you.", ar: "من هم جدد على الريتينول يبدؤون عادة بتركيز أخف ثم يتدرجون — يُرجى سؤال مقدم الرعاية عمّا يناسبكم." } },
+        { question: { en: "Should I start with this strength or the 0.25?", ar: "هل أبدأ بهذا التركيز أم بتركيز 0.25؟" }, answer: { en: "Those new to retinol typically start lower and work up — ask the clinic what is appropriate for you.", ar: "من هم جدد على الريتينول يبدؤون عادة بتركيز أخف ثم يتدرجون — يُرجى سؤال مقدم الرعاية عمّا يناسبكم." } },
         { question: { en: "Can I use this if pregnant or breastfeeding?", ar: "هل يمكن استخدامه أثناء الحمل أو الرضاعة؟" }, answer: { en: "No — do not use if pregnant, lactating, or planning to become pregnant.", ar: "لا — لا يُستخدم في حال الحمل أو الرضاعة أو التخطيط للحمل." } },
         { question: { en: "Do I need sunscreen while using this?", ar: "هل أحتاج واقي شمس أثناء استخدامه؟" }, answer: { en: "Yes — SPF 30 or higher daily, with limited sun exposure, during use and for a week after stopping.", ar: "نعم — عامل حماية SPF 30 أو أعلى يوميًا، مع تقليل التعرض للشمس، أثناء الاستخدام ولمدة أسبوع بعد التوقف." } },
         { question: { en: "Is redness normal?", ar: "هل الاحمرار أمر طبيعي؟" }, answer: { en: "Mild redness, peeling, and irritation are expected effects.", ar: "الاحمرار الخفيف والتقشر والتهيج آثار متوقعة." } },
@@ -396,7 +396,7 @@ export const products: Product[] = [
       relatedProductIds: ["retinol-complex-025", "retinol-complex-05", "dermal-repair-cream"],
       faqs: [
         { question: { en: "Is this the strongest Retinol Complex?", ar: "هل هذا أقوى تركيز من مركب الريتينول؟" }, answer: { en: "Yes — 1.0 is the highest of the three strengths in this line.", ar: "نعم — تركيز 1.0 هو الأعلى بين التركيزات الثلاثة في هذا الخط." } },
-        { question: { en: "Should I start here if I'm new to retinol?", ar: "هل أبدأ بهذا التركيز إذا كنت جديدًا على الريتينول؟" }, answer: { en: "Typically not — this strength is intended for skin already tolerating a lower strength well. Ask your provider.", ar: "عادة لا — هذا التركيز مخصص لبشرة تتحمل بالفعل تركيزًا أخف بشكل جيد. يُرجى استشارة مقدم الرعاية." } },
+        { question: { en: "Should I start here if I'm new to retinol?", ar: "هل أبدأ بهذا التركيز إذا كنت جديدًا على الريتينول؟" }, answer: { en: "Typically not — this strength is intended for skin already tolerating a lower strength well. Ask the clinic.", ar: "عادة لا — هذا التركيز مخصص لبشرة تتحمل بالفعل تركيزًا أخف بشكل جيد. يُرجى استشارة مقدم الرعاية." } },
         { question: { en: "Can I use this if pregnant or breastfeeding?", ar: "هل يمكن استخدامه أثناء الحمل أو الرضاعة؟" }, answer: { en: "No — do not use if pregnant, lactating, or planning to become pregnant.", ar: "لا — لا يُستخدم في حال الحمل أو الرضاعة أو التخطيط للحمل." } },
         { question: { en: "Do I need sunscreen while using this?", ar: "هل أحتاج واقي شمس أثناء استخدامه؟" }, answer: { en: "Yes — SPF 30 or higher daily, with limited sun exposure, during use and for a week after stopping.", ar: "نعم — عامل حماية SPF 30 أو أعلى يوميًا، مع تقليل التعرض للشمس، أثناء الاستخدام ولمدة أسبوع بعد التوقف." } },
         { question: { en: "Is redness normal?", ar: "هل الاحمرار أمر طبيعي؟" }, answer: { en: "Mild redness, peeling, and irritation are expected effects.", ar: "الاحمرار الخفيف والتقشر والتهيج آثار متوقعة." } },
@@ -424,13 +424,13 @@ export const products: Product[] = [
       productType: { en: "Pigment-brightening serum", ar: "سيروم لتفتيح التصبغات" },
       routinePlacement: { en: "In the evening, as a treatment step.", ar: "مساءً، كخطوة علاجية." },
       howToUse: { en: "Apply a single pump to the face and neck each evening.", ar: "ضعوا ضغطة واحدة على الوجه والرقبة كل مساء." },
-      sunSensitivityWarning: { en: "As with other pigment-focused treatments, daily sun protection is important while addressing discolouration — confirm specific guidance with your provider.", ar: "كما هو الحال مع العلاجات الأخرى الموجهة للتصبغات، تُعد الحماية اليومية من الشمس مهمة أثناء معالجة التصبغ — يُرجى تأكيد الإرشادات المحددة مع مقدم الرعاية." },
+      sunSensitivityWarning: { en: "As with other pigment-focused treatments, daily sun protection is important while addressing discolouration — confirm specific guidance with the clinic.", ar: "كما هو الحال مع العلاجات الأخرى الموجهة للتصبغات، تُعد الحماية اليومية من الشمس مهمة أثناء معالجة التصبغ — يُرجى تأكيد الإرشادات المحددة مع مقدم الرعاية." },
       relatedProductIds: ["retinol-complex-025", "daily-physical-defense-spf-34"],
       legacyNameNote: { en: "Current official product listings sometimes name this \"Lytera 2.0 Pigment Correcting Serum\"; the approved catalogue's \"Pigment Brightening Serum\" naming is preserved as the published name.", ar: "تُدرج بعض المصادر الرسمية الحالية هذا المنتج باسم \"Lytera 2.0 Pigment Correcting Serum\"؛ وقد تم اعتماد تسمية \"Pigment Brightening Serum\" من القائمة المعتمدة كاسم منشور." },
       faqs: [
         { question: { en: "When do I use this serum?", ar: "متى أستخدم هذا السيروم؟" }, answer: { en: "In the evening, one pump applied to the face and neck.", ar: "مساءً، ضغطة واحدة تُطبَّق على الوجه والرقبة." } },
         { question: { en: "What is this formulated to address?", ar: "لماذا صُمم هذا السيروم؟" }, answer: { en: "The appearance of stubborn skin discolouration, per manufacturer information.", ar: "مظهر تصبغات البشرة العنيدة، وفق معلومات الشركة المصنّعة." } },
-        { question: { en: "Do I need sunscreen while using this?", ar: "هل أحتاج واقي شمس أثناء استخدامه؟" }, answer: { en: "Daily sun protection is generally important with pigment-focused treatments — confirm specific guidance with your provider.", ar: "الحماية اليومية من الشمس مهمة بشكل عام مع علاجات التصبغ — يُرجى تأكيد الإرشادات مع مقدم الرعاية." } },
+        { question: { en: "Do I need sunscreen while using this?", ar: "هل أحتاج واقي شمس أثناء استخدامه؟" }, answer: { en: "Daily sun protection is generally important with pigment-focused treatments — confirm specific guidance with the clinic.", ar: "الحماية اليومية من الشمس مهمة بشكل عام مع علاجات التصبغ — يُرجى تأكيد الإرشادات مع مقدم الرعاية." } },
         { question: { en: "Is this the same as \"Lytera 2.0 Pigment Correcting Serum\"?", ar: "هل هذا هو نفسه \"Lytera 2.0 Pigment Correcting Serum\"؟" }, answer: { en: "Some current listings use \"Correcting\" rather than \"Brightening\" in the name — same underlying product line; the approved catalogue name is used here.", ar: "تستخدم بعض القوائم الحالية كلمة \"Correcting\" بدل \"Brightening\" في الاسم — لكنه خط المنتج نفسه؛ ويُستخدم هنا الاسم المعتمد في القائمة." } },
         { question: { en: "What size is this?", ar: "ما الحجم؟" }, answer: { en: "60 ml.", ar: "60 مل." } },
         { question: { en: "How do I confirm current price and availability?", ar: "كيف أتحقق من السعر والتوفر الحاليين؟" }, answer: { en: "Contact Blue Diamond Medical Clinic directly.", ar: "تواصلوا مباشرة مع عيادة بلو دايموند الطبية." } },
@@ -455,8 +455,8 @@ export const products: Product[] = [
       overview: { en: "A leave-on AHA/BHA exfoliating cream, distinct from the AHA/BHA Exfoliating Cleanser, which is rinsed off.", ar: "كريم مقشر بأحماض AHA/BHA يُترك على البشرة، ويختلف عن غسول AHA/BHA المقشر الذي يُشطف." },
       whatItIs: { en: "An acid-based exfoliating treatment cream, sometimes listed by the manufacturer as \"AHA/BHA Exfoliating Cream.\"", ar: "كريم علاجي مقشر يعتمد على الأحماض، وتُدرجه الشركة المصنّعة أحيانًا باسم \"AHA/BHA Exfoliating Cream\"." },
       productType: { en: "AHA/BHA exfoliating cream", ar: "كريم مقشر بأحماض AHA/BHA" },
-      routinePlacement: { en: "As a leave-on treatment step, per your provider's guidance.", ar: "كخطوة علاجية تُترك على البشرة، وفق إرشادات مقدم الرعاية." },
-      howToUse: { en: "Apply as directed by your provider; avoid the eye area, and rinse thoroughly with water if contact occurs.", ar: "يُطبَّق وفق إرشادات مقدم الرعاية؛ يُتجنَّب منطقة العين، ويُشطف جيدًا بالماء في حال الملامسة." },
+      routinePlacement: { en: "As a leave-on treatment step, following the clinic's guidance.", ar: "كخطوة علاجية تُترك على البشرة، وفق إرشادات مقدم الرعاية." },
+      howToUse: { en: "Apply as directed by the clinic; avoid the eye area, and rinse thoroughly with water if contact occurs.", ar: "يُطبَّق وفق إرشادات مقدم الرعاية؛ يُتجنَّب منطقة العين، ويُشطف جيدًا بالماء في حال الملامسة." },
       sunSensitivityWarning: { en: "Contains an alpha-hydroxy acid (AHA), which may increase skin's sensitivity to sunburn. Use sunscreen, wear protective clothing, and limit sun exposure while using this product and for a week following discontinuation.", ar: "يحتوي على حمض ألفا هيدروكسي (AHA)، ما قد يزيد من حساسية البشرة لحروق الشمس. استخدموا واقي الشمس، وارتدوا ملابس واقية، وقلّلوا التعرض للشمس أثناء استخدام هذا المنتج ولمدة أسبوع بعد التوقف عنه." },
       relatedProductIds: ["aha-bha-exfoliating-cleanser", "retinol-complex-025"],
       faqs: [
@@ -464,7 +464,7 @@ export const products: Product[] = [
         { question: { en: "Does this increase sun sensitivity?", ar: "هل يزيد هذا المنتج من حساسية الشمس؟" }, answer: { en: "Yes — it contains an AHA. Use sunscreen, protective clothing, and limit sun exposure during use and for a week after stopping.", ar: "نعم — يحتوي على حمض AHA. استخدموا واقي الشمس والملابس الواقية، وقلّلوا التعرض للشمس أثناء الاستخدام ولمدة أسبوع بعد التوقف." } },
         { question: { en: "What if it gets in my eyes?", ar: "ماذا لو دخل في عينيّ؟" }, answer: { en: "Rinse thoroughly with water.", ar: "اشطفوا جيدًا بالماء." } },
         { question: { en: "What size is this?", ar: "ما الحجم؟" }, answer: { en: "56.7 g.", ar: "56.7 غرام." } },
-        { question: { en: "How do I know how often to use it?", ar: "كيف أعرف عدد مرات الاستخدام؟" }, answer: { en: "Ask your provider — leave-on acid treatments are typically introduced gradually.", ar: "يُرجى سؤال مقدم الرعاية — إذ تُدخَل العلاجات الحمضية التي تُترك على البشرة عادة بشكل تدريجي." } },
+        { question: { en: "How do I know how often to use it?", ar: "كيف أعرف عدد مرات الاستخدام؟" }, answer: { en: "Ask the clinic — leave-on acid treatments are typically introduced gradually.", ar: "يُرجى سؤال مقدم الرعاية — إذ تُدخَل العلاجات الحمضية التي تُترك على البشرة عادة بشكل تدريجي." } },
         { question: { en: "How do I confirm current price and availability?", ar: "كيف أتحقق من السعر والتوفر الحاليين؟" }, answer: { en: "Contact Blue Diamond Medical Clinic directly.", ar: "تواصلوا مباشرة مع عيادة بلو دايموند الطبية." } },
       ],
       sources: [{ url: "https://www.skinmedica.com/us/product-category/brighteners/20086693.html", ...officialSite }],
@@ -890,7 +890,7 @@ export const products: Product[] = [
       productType: { en: "Hyaluronic acid hydrating serum", ar: "سيروم مرطب بحمض الهيالورونيك" },
       routinePlacement: { en: "Twice daily; if used with other treatment products such as Lytera or a retinol product, apply this as the last step before moisturizer.", ar: "مرتين يوميًا؛ وعند استخدامه مع منتجات علاجية أخرى مثل Lytera أو منتج ريتينول، يُطبَّق كخطوة أخيرة قبل المرطب." },
       keyCharacteristics: { en: ["Blends five forms of hyaluronic acid, per manufacturer information", "Formulated for all skin types"], ar: ["يجمع بين خمسة أشكال من حمض الهيالورونيك، وفق معلومات الشركة المصنّعة", "مصمم لجميع أنواع البشرة"] },
-      howToUse: { en: "Apply to face, neck, or décolleté twice daily.", ar: "يُطبَّق على الوجه والرقبة أو أعلى الصدر مرتين يوميًا." },
+      howToUse: { en: "Apply to face, neck, or décolletage twice daily.", ar: "يُطبَّق على الوجه والرقبة أو أعلى الصدر مرتين يوميًا." },
       legacyNameNote: { en: "The approved catalogue listed this as \"HA5 Rejuvenative Hydrator.\" Current official and Canadian-retailer naming (confirmed on multiple authorized retailers) is \"HA5® Rejuvenating Hydrator\" — used here; the approved price and size are unchanged.", ar: "أدرجت القائمة المعتمدة هذا المنتج باسم \"HA5 Rejuvenative Hydrator\". أما التسمية الرسمية الحالية لدى المتاجر الكندية المعتمدة (تم التأكد منها عبر عدة متاجر) فهي \"HA5® Rejuvenating Hydrator\" — وقد اعتُمد هذا الشكل هنا، مع بقاء السعر والحجم المعتمدين دون تغيير." },
       relatedProductIds: ["lytera-2-pigment-brightening-serum", "retinol-complex-025"],
       faqs: [
@@ -928,7 +928,7 @@ export const products: Product[] = [
     slug: "the-purifying-peeling",
     slugAr: "the-purifying-peeling",
     brandId: "myriade",
-    name: { en: "THE PURIFYING PEELING", ar: "THE PURIFYING PEELING" },
+    name: { en: "The Purifying Peeling", ar: "The Purifying Peeling" },
     subtitle: { en: "Decongestant and anti-inflammatory", ar: "Decongestant and anti-inflammatory" },
     categoryIds: ["peels", "professional-care"],
     concernIds: ["acne"],
@@ -952,12 +952,12 @@ export const products: Product[] = [
       en: [
         "Liposoluble anti-inflammatory formula.",
         "Suitable for alternating use or as a prep with AHA-based products.",
-        "Recommended in a treatment course for long-term results.",
+        "Recommended as part of a course of treatment, for longer-term results.",
       ],
       ar: [
         "Liposoluble anti-inflammatory formula.",
         "Suitable for alternating use or as a prep with AHA-based products.",
-        "Recommended in a treatment course for long-term results.",
+        "Recommended as part of a course of treatment, for longer-term results.",
       ],
     },
     images: [
@@ -970,8 +970,8 @@ export const products: Product[] = [
     approvalStatus: "pending",
     inStock: false,
     purchaseBlocked: {
-      en: "This is a professional-use peel applied by a trained clinician at Blue Diamond Medical. It is shown here for information and is not available to purchase online \u2014 please ask the clinic.",
-      ar: "This is a professional-use peel applied by a trained clinician at Blue Diamond Medical. It is shown here for information and is not available to purchase online \u2014 please ask the clinic.",
+      en: "This is a professional-use peel applied by a trained clinician at Blue Diamond Medical. It is shown here for information and is not available to purchase online — please ask the clinic.",
+      ar: "This is a professional-use peel applied by a trained clinician at Blue Diamond Medical. It is shown here for information and is not available to purchase online — please ask the clinic.",
     },
   },
   {
@@ -982,7 +982,7 @@ export const products: Product[] = [
     /* CL-038 - the source pasted this title three ways ("HE BRIGHTENING
        PEELING", a trailing "&#x20;" entity, and a duplicated adjacent
        title). One canonical title is published. */
-    name: { en: "THE BRIGHTENING PEELING", ar: "THE BRIGHTENING PEELING" },
+    name: { en: "The Brightening Peeling", ar: "The Brightening Peeling" },
     subtitle: { en: "Exfoliating and anti-aging", ar: "Exfoliating and anti-aging" },
     categoryIds: ["peels", "professional-care"],
     concernIds: ["anti-aging", "pigmentation"],
@@ -1027,8 +1027,8 @@ export const products: Product[] = [
     approvalStatus: "pending",
     inStock: false,
     purchaseBlocked: {
-      en: "This is a professional-use peel applied by a trained clinician at Blue Diamond Medical. Its price has not been supplied, and it is not available to purchase online \u2014 please ask the clinic about pricing.",
-      ar: "This is a professional-use peel applied by a trained clinician at Blue Diamond Medical. Its price has not been supplied, and it is not available to purchase online \u2014 please ask the clinic about pricing.",
+      en: "This is a professional-use peel applied by a trained clinician at Blue Diamond Medical. Its price has not been supplied, and it is not available to purchase online — please ask the clinic about pricing.",
+      ar: "This is a professional-use peel applied by a trained clinician at Blue Diamond Medical. Its price has not been supplied, and it is not available to purchase online — please ask the clinic about pricing.",
     },
   },
   /* ------------------------------------------------------------------ CL-042
@@ -1148,12 +1148,12 @@ export const products: Product[] = [
     priceCents: null,
     benefits: {
       en: [
-        "Protects skin and helps prevent aging caused by environmental aggressions.",
+        "Protects skin and helps prevent aging caused by environmental stress.",
         "Lightweight and silky formula for long-term healthy skin.",
         "Suitable for normal to dehydrated skin.",
       ],
       ar: [
-        "Protects skin and helps prevent aging caused by environmental aggressions.",
+        "Protects skin and helps prevent aging caused by environmental stress.",
         "Lightweight and silky formula for long-term healthy skin.",
         "Suitable for normal to dehydrated skin.",
       ],
@@ -1170,11 +1170,11 @@ export const products: Product[] = [
     },
     directions: {
       en: [
-        "Apply evenly to the face, neck, and decollete.",
+        "Apply evenly to the face, neck, and décolletage.",
         "Use with the C-Serum to support the skin's natural defenses.",
       ],
       ar: [
-        "Apply evenly to the face, neck, and decollete.",
+        "Apply evenly to the face, neck, and décolletage.",
         "Use with the C-Serum to support the skin's natural defenses.",
       ],
     },
@@ -1215,12 +1215,12 @@ export const products: Product[] = [
     priceCents: null,
     benefits: {
       en: [
-        "Protects skin and helps prevent aging caused by environmental aggressions.",
+        "Protects skin and helps prevent aging caused by environmental stress.",
         "Mattifying formula helps control and stabilize sebum production throughout the day.",
         "Suitable for oily or combination skin and skin intolerant to moisturizing creams.",
       ],
       ar: [
-        "Protects skin and helps prevent aging caused by environmental aggressions.",
+        "Protects skin and helps prevent aging caused by environmental stress.",
         "Mattifying formula helps control and stabilize sebum production throughout the day.",
         "Suitable for oily or combination skin and skin intolerant to moisturizing creams.",
       ],
@@ -1237,11 +1237,11 @@ export const products: Product[] = [
     },
     directions: {
       en: [
-        "Apply evenly to the face, neck, and decollete.",
+        "Apply evenly to the face, neck, and décolletage.",
         "Use with the C-Serum to support the skin's natural defenses.",
       ],
       ar: [
-        "Apply evenly to the face, neck, and decollete.",
+        "Apply evenly to the face, neck, and décolletage.",
         "Use with the C-Serum to support the skin's natural defenses.",
       ],
     },
@@ -1302,11 +1302,11 @@ export const products: Product[] = [
     },
     directions: {
       en: [
-        "Apply evenly to the face, neck, and decollete.",
+        "Apply evenly to the face, neck, and décolletage.",
         "Use with the C-Serum to support the skin's natural defenses.",
       ],
       ar: [
-        "Apply evenly to the face, neck, and decollete.",
+        "Apply evenly to the face, neck, and décolletage.",
         "Use with the C-Serum to support the skin's natural defenses.",
       ],
     },
@@ -1347,11 +1347,11 @@ export const products: Product[] = [
     priceCents: null,
     benefits: {
       en: [
-        "Promotes healing and instantly soothes redness and skin discomfort.",
+        "Promotes healing and quickly soothes redness and skin discomfort.",
         "Helps maintain facial hydration throughout the day.",
       ],
       ar: [
-        "Promotes healing and instantly soothes redness and skin discomfort.",
+        "Promotes healing and quickly soothes redness and skin discomfort.",
         "Helps maintain facial hydration throughout the day.",
       ],
     },
@@ -2149,11 +2149,11 @@ export const products: Product[] = [
     priceCents: null,
     benefits: {
       en: [
-        "Repairs and protects skin following ablative procedures and extremely dehydrated skin.",
+        "Repairs and protects skin after ablative procedures, and skin that is extremely dehydrated.",
         "Supports healing and helps reduce infection risk.",
       ],
       ar: [
-        "Repairs and protects skin following ablative procedures and extremely dehydrated skin.",
+        "Repairs and protects skin after ablative procedures, and skin that is extremely dehydrated.",
         "Supports healing and helps reduce infection risk.",
       ],
     },
@@ -2376,14 +2376,14 @@ export const products: Product[] = [
         "Reduces wrinkles and repairs environmental damage.",
         "Firms and tones skin for a more youthful appearance.",
         "Deeply hydrates and leaves skin silky.",
-        "Protects against external aggressors.",
+        "Protects the skin against environmental stressors.",
       ],
       ar: [
         "Stimulates collagen production.",
         "Reduces wrinkles and repairs environmental damage.",
         "Firms and tones skin for a more youthful appearance.",
         "Deeply hydrates and leaves skin silky.",
-        "Protects against external aggressors.",
+        "Protects the skin against environmental stressors.",
       ],
     },
     keyFeatures: {
@@ -2523,10 +2523,10 @@ export const products: Product[] = [
     slugAr: "oily-skin-problem-kit",
     name: { en: "Oily Skin Problem Kit", ar: "Oily Skin Problem Kit" },
     brandId: "myriade",
-    subtitle: { en: "Post-treatment support for purifying peels, IPL, or facial treatments for teenagers", ar: "Post-treatment support for purifying peels, IPL, or facial treatments for teenagers" },
+    subtitle: { en: "Post-treatment support for purifying peels, IPL, or facial treatments for teenage skin", ar: "Post-treatment support for purifying peels, IPL, or facial treatments for teenage skin" },
     categoryIds: ["kits"],
     concernIds: [],
-    sizeLabel: "3-month kit - complete set",
+    sizeLabel: "3-month kit — complete set",
     priceCents: null,
     kitContents: {
       en: [
@@ -2560,10 +2560,10 @@ export const products: Product[] = [
     slugAr: "redness-kit",
     name: { en: "Redness Kit", ar: "Redness Kit" },
     brandId: "myriade",
-    subtitle: { en: "Post-treatment support for IPL, ND:YAG laser, or redness and sensitivity care", ar: "Post-treatment support for IPL, ND:YAG laser, or redness and sensitivity care" },
+    subtitle: { en: "Post-treatment support for IPL, Nd:YAG laser, or redness and sensitivity care", ar: "Post-treatment support for IPL, Nd:YAG laser, or redness and sensitivity care" },
     categoryIds: ["kits"],
     concernIds: [],
-    sizeLabel: "3-month kit - complete set support",
+    sizeLabel: "3-month kit — complete set support",
     priceCents: null,
     kitContents: {
       en: [
@@ -2600,18 +2600,18 @@ export const products: Product[] = [
     subtitle: { en: "Post-treatment support for ablative fractional laser", ar: "Post-treatment support for ablative fractional laser" },
     categoryIds: ["kits"],
     concernIds: [],
-    sizeLabel: "3-month kit - complete set support",
+    sizeLabel: "3-month kit — complete set support",
     priceCents: null,
     kitContents: {
       en: [
         "The Cleanser 100 ml",
-        "The Ultra-Protective 50 ml",
+        "The Ultra Protective 50 ml",
         "The Dermo-Repair Complex 1 50 ml",
         "The Dermo-Repair Complex 2 50 ml",
       ],
       ar: [
         "The Cleanser 100 ml",
-        "The Ultra-Protective 50 ml",
+        "The Ultra Protective 50 ml",
         "The Dermo-Repair Complex 1 50 ml",
         "The Dermo-Repair Complex 2 50 ml",
       ],
@@ -2637,7 +2637,7 @@ export const products: Product[] = [
     subtitle: { en: "Post-treatment support for microneedling, non-ablative fractional laser, or skin-tissue repair", ar: "Post-treatment support for microneedling, non-ablative fractional laser, or skin-tissue repair" },
     categoryIds: ["kits"],
     concernIds: [],
-    sizeLabel: "3-month kit - complete set support",
+    sizeLabel: "3-month kit — complete set support",
     priceCents: null,
     kitContents: {
       en: [
@@ -2674,19 +2674,19 @@ export const products: Product[] = [
     subtitle: { en: "Post-treatment support for IPL, laser, brightening peel, or complexion-evening care", ar: "Post-treatment support for IPL, laser, brightening peel, or complexion-evening care" },
     categoryIds: ["kits"],
     concernIds: [],
-    sizeLabel: "3-month kit - complete set",
+    sizeLabel: "3-month kit — complete set",
     priceCents: null,
     kitContents: {
       en: [
         "The Cleanser 100 ml",
         "The Soothing Gel 100 ml",
-        "The Ultra-Protective Cream 50 ml",
+        "The Ultra Protective Cream 50 ml",
         "The C-Retinol 50 ml",
       ],
       ar: [
         "The Cleanser 100 ml",
         "The Soothing Gel 100 ml",
-        "The Ultra-Protective Cream 50 ml",
+        "The Ultra Protective Cream 50 ml",
         "The C-Retinol 50 ml",
       ],
     },
@@ -2790,13 +2790,13 @@ export const products: Product[] = [
     kitContents: {
       en: [
         "The Cleanser 30 ml",
-        "The Ultra-Protective 5 ml",
+        "The Ultra Protective 5 ml",
         "The Dermo-Repair Complex 1 5 ml",
         "The Dermo-Repair Complex 2 5 ml",
       ],
       ar: [
         "The Cleanser 30 ml",
-        "The Ultra-Protective 5 ml",
+        "The Ultra Protective 5 ml",
         "The Dermo-Repair Complex 1 5 ml",
         "The Dermo-Repair Complex 2 5 ml",
       ],

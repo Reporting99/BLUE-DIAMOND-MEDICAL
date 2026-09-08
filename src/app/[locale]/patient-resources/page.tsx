@@ -16,6 +16,7 @@ import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
 import { PageSchema } from "@/components/shared/schema";
 import { getRoute } from "@/lib/routing";
 import { resolvePageHeroImage } from "@/lib/feelstack/page-hero-media";
+import { siteConfig } from "@/config/site";
 
 const policies = {
   en: [
@@ -25,11 +26,11 @@ const policies = {
     },
     {
       title: "No-show fees",
-      body: "Confirm your attendance via the reminder system. If you miss a confirmed appointment, no-show fees apply (from $40 for a regular visit up to $200 for paediatric appointments).",
+      body: "Confirm your attendance via the reminder system. If you miss a confirmed appointment, no-show fees apply (from $40 for a regular visit up to $200 for pediatric appointments).",
     },
     {
       title: "Prescription refills",
-      body: "New medications require an in-person visit. To renew an existing prescription, ask your pharmacy to fax a renewal request to +1 (587) 443-0394 — allow 2 business days, at the doctor's discretion. If you run out before the renewal comes through, ask your pharmacy for an extension (a 2–3 day supply).",
+      body: `New medications require an in-person visit. To renew an existing prescription, ask your pharmacy to fax a renewal request to ${siteConfig.clinic.faxDisplay} — allow 2 business days, at the doctor's discretion. If you run out before the renewal comes through, ask your pharmacy for an extension (a 2–3 day supply).`,
     },
     {
       title: "Confidentiality",

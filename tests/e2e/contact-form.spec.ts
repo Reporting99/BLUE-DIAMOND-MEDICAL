@@ -20,6 +20,11 @@ test.describe("Contact form", () => {
     // src/lib/forms/delivery.ts — so the honest fallback state is
     // shown rather than a false "sent" confirmation. Next.js's own
     // route-announcer also carries role="alert", so scope to the form's copy.
-    await expect(page.getByText(/825 413 1113/)).toBeVisible();
+    // The number is rendered from siteConfig.clinic.phoneDisplay rather than
+    // hand-typed here, so it now matches the footer's copy of it too — scope
+    // the assertion to the form's own alert, not to the whole page.
+    await expect(page.getByRole("alert").filter({ hasText: /connected to our inbox/ })).toContainText(
+      "(825) 413-1113",
+    );
   });
 });

@@ -40,7 +40,7 @@ const options: { channel: BookingChannel; description: { en: string; ar: string 
   {
     channel: "eye-screening",
     description: {
-      en: "Free, AHS-covered eye disease screening with Euclid Telehealth, on-site once a month.",
+      en: "AHS-covered eye disease screening with Euclid Telehealth, on-site once a month.",
       ar: "فحص مجاني لأمراض العين مشمول بالتأمين الصحي مع Euclid Telehealth، في العيادة مرة شهريًا.",
     },
   },

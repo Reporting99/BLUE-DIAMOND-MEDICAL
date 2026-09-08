@@ -4,6 +4,7 @@ import { useActionState } from "react";
 import { submitContactForm, type ContactFormState } from "@/app/[locale]/contact/actions";
 import { Button } from "@/components/ui/button";
 import type { Locale } from "@/i18n/config";
+import { siteConfig } from "@/config/site";
 
 const copy = {
   en: {
@@ -15,8 +16,8 @@ const copy = {
     submitting: "Sending…",
     success: "Thank you — your message has been received.",
     notConfigured:
-      "This form isn't connected to our inbox yet. Please call us directly at 825 413 1113 and we'll help right away.",
-    error: "Something went wrong. Please try again, or call us at 825 413 1113.",
+      `This form isn't connected to our inbox yet. Please call us directly at ${siteConfig.clinic.phoneDisplay} and we'll help right away.`,
+    error: `Something went wrong. Please try again, or call us at ${siteConfig.clinic.phoneDisplay}.`,
     notice: "This form is not for medical emergencies or private health information. For emergencies, call 911.",
   },
   ar: {
@@ -27,8 +28,8 @@ const copy = {
     submit: "إرسال الرسالة",
     submitting: "جارٍ الإرسال…",
     success: "شكرًا لكم — تم استلام رسالتكم.",
-    notConfigured: "هذا النموذج غير مرتبط ببريدنا بعد. يرجى الاتصال بنا مباشرة على 825 413 1113 وسنساعدكم فورًا.",
-    error: "حدث خطأ ما. يرجى المحاولة مرة أخرى، أو الاتصال بنا على 825 413 1113.",
+    notConfigured: `هذا النموذج غير مرتبط ببريدنا بعد. يرجى الاتصال بنا مباشرة على ${siteConfig.clinic.phoneDisplay} وسنساعدكم فورًا.`,
+    error: `حدث خطأ ما. يرجى المحاولة مرة أخرى، أو الاتصال بنا على ${siteConfig.clinic.phoneDisplay}.`,
     notice: "هذا النموذج غير مخصص لحالات الطوارئ الطبية أو المعلومات الصحية الخاصة. في حال الطوارئ، اتصلوا بالرقم 911.",
   },
 } as const;

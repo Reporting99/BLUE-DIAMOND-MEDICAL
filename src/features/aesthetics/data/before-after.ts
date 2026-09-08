@@ -52,10 +52,10 @@ export const beforeAfterPairs: BeforeAfterPair[] = [
   {
     pairId: "laser-hair-removal-01",
     treatmentId: "laser-hair-removal",
-    description: { en: "Clinical example published on Blue Diamond’s original Laser Hair Removal page.", ar: "مثال سريري كان منشورًا على صفحة إزالة الشعر بالليزر في موقع بلو دايموند الأصلي." },
+    description: { en: "Clinical example published on Blue Diamond's original Laser Hair Removal page.", ar: "مثال سريري كان منشورًا على صفحة إزالة الشعر بالليزر في موقع بلو دايموند الأصلي." },
     before: {
       imagekitPath: "/blue-diamond/before-after/laser-hair-removal-01-before.png",
-      alt: { en: "Clinical example before Laser Hair Removal", ar: "مثال سريري قبل إزالة الشعر بالليزر" },
+      alt: { en: "Clinical example 1 — before Laser Hair Removal", ar: "مثال سريري قبل إزالة الشعر بالليزر 1" },
       sourceUrl: "https://cdn.commoninja.com/asset/f9fb1a23-34b2-4e2c-ae3b-faabc98c1dcb.png",
       originalFilename: "f9fb1a23-34b2-4e2c-ae3b-faabc98c1dcb.png",
       width: 1350,
@@ -64,7 +64,7 @@ export const beforeAfterPairs: BeforeAfterPair[] = [
     },
     after: {
       imagekitPath: "/blue-diamond/before-after/laser-hair-removal-01-after.png",
-      alt: { en: "Clinical example after Laser Hair Removal", ar: "مثال سريري بعد إزالة الشعر بالليزر" },
+      alt: { en: "Clinical example 1 — after Laser Hair Removal", ar: "مثال سريري بعد إزالة الشعر بالليزر 1" },
       sourceUrl: "https://cdn.commoninja.com/asset/e1676d6b-a3de-466f-bbe2-f9ae6a111484.png",
       originalFilename: "e1676d6b-a3de-466f-bbe2-f9ae6a111484.png",
       width: 1350,
@@ -83,10 +83,10 @@ export const beforeAfterPairs: BeforeAfterPair[] = [
   {
     pairId: "laser-hair-removal-02",
     treatmentId: "laser-hair-removal",
-    description: { en: "Clinical example published on Blue Diamond’s original Laser Hair Removal page.", ar: "مثال سريري كان منشورًا على صفحة إزالة الشعر بالليزر في موقع بلو دايموند الأصلي." },
+    description: { en: "Clinical example published on Blue Diamond's original Laser Hair Removal page.", ar: "مثال سريري كان منشورًا على صفحة إزالة الشعر بالليزر في موقع بلو دايموند الأصلي." },
     before: {
       imagekitPath: "/blue-diamond/before-after/laser-hair-removal-02-before.png",
-      alt: { en: "Clinical example before Laser Hair Removal", ar: "مثال سريري قبل إزالة الشعر بالليزر" },
+      alt: { en: "Clinical example 2 — before Laser Hair Removal", ar: "مثال سريري قبل إزالة الشعر بالليزر 2" },
       sourceUrl: "https://cdn.commoninja.com/asset/aa505c21-c5f6-4b4d-9bcb-45c1fad531bb.png",
       originalFilename: "aa505c21-c5f6-4b4d-9bcb-45c1fad531bb.png",
       width: 1350,
@@ -95,7 +95,7 @@ export const beforeAfterPairs: BeforeAfterPair[] = [
     },
     after: {
       imagekitPath: "/blue-diamond/before-after/laser-hair-removal-02-after.png",
-      alt: { en: "Clinical example after Laser Hair Removal", ar: "مثال سريري بعد إزالة الشعر بالليزر" },
+      alt: { en: "Clinical example 2 — after Laser Hair Removal", ar: "مثال سريري بعد إزالة الشعر بالليزر 2" },
       sourceUrl: "https://cdn.commoninja.com/asset/903cd6a4-0a6f-4fbf-9c2d-aa0524f108f7.png",
       originalFilename: "903cd6a4-0a6f-4fbf-9c2d-aa0524f108f7.png",
       width: 1350,
@@ -114,10 +114,10 @@ export const beforeAfterPairs: BeforeAfterPair[] = [
   {
     pairId: "laser-skin-treatments-01",
     treatmentId: "laser-skin-treatments",
-    description: { en: "Clinical example published on Blue Diamond’s original Laser Skin Treatments page.", ar: "مثال سريري كان منشورًا على صفحة علاجات البشرة بالليزر في موقع بلو دايموند الأصلي." },
+    description: { en: "Clinical example published on Blue Diamond's original Laser Skin Treatments page.", ar: "مثال سريري كان منشورًا على صفحة علاجات البشرة بالليزر في موقع بلو دايموند الأصلي." },
     before: {
       imagekitPath: "/blue-diamond/before-after/laser-skin-treatments-01-before.png",
-      alt: { en: "Clinical example before Laser Skin Treatments", ar: "مثال سريري قبل علاجات البشرة بالليزر" },
+      alt: { en: "Clinical example 1 — before Laser Skin Treatments", ar: "مثال سريري قبل علاجات البشرة بالليزر 1" },
       sourceUrl: "https://uploads.commoninja.com/before_after/1731549407223_marketing_materials_BA-Elite-C-Nanni-Pigment-Pre-Post2Tx-01_b4.png",
       originalFilename: "1731549407223_marketing_materials_BA-Elite-C-Nanni-Pigment-Pre-Post2Tx-01_b4.png",
       width: 637,
@@ -126,7 +126,7 @@ export const beforeAfterPairs: BeforeAfterPair[] = [
     },
     after: {
       imagekitPath: "/blue-diamond/before-after/laser-skin-treatments-01-after.png",
-      alt: { en: "Clinical example after Laser Skin Treatments", ar: "مثال سريري بعد علاجات البشرة بالليزر" },
+      alt: { en: "Clinical example 1 — after Laser Skin Treatments", ar: "مثال سريري بعد علاجات البشرة بالليزر 1" },
       sourceUrl: "https://cdn.commoninja.com/asset/585a04a7-f48a-401e-b5e4-e454ee4d544f.png",
       originalFilename: "585a04a7-f48a-401e-b5e4-e454ee4d544f.png",
       width: 635,
@@ -147,10 +147,10 @@ export const beforeAfterPairs: BeforeAfterPair[] = [
   {
     pairId: "laser-skin-treatments-02",
     treatmentId: "laser-skin-treatments",
-    description: { en: "Clinical example published on Blue Diamond’s original Laser Skin Treatments page.", ar: "مثال سريري كان منشورًا على صفحة علاجات البشرة بالليزر في موقع بلو دايموند الأصلي." },
+    description: { en: "Clinical example published on Blue Diamond's original Laser Skin Treatments page.", ar: "مثال سريري كان منشورًا على صفحة علاجات البشرة بالليزر في موقع بلو دايموند الأصلي." },
     before: {
       imagekitPath: "/blue-diamond/before-after/laser-skin-treatments-02-before.png",
-      alt: { en: "Clinical example before Laser Skin Treatments", ar: "مثال سريري قبل علاجات البشرة بالليزر" },
+      alt: { en: "Clinical example 2 — before Laser Skin Treatments", ar: "مثال سريري قبل علاجات البشرة بالليزر 2" },
       sourceUrl: "https://cdn.commoninja.com/asset/2cae486a-669d-401c-a132-5514d50bd895.png",
       originalFilename: "2cae486a-669d-401c-a132-5514d50bd895.png",
       width: 637,
@@ -159,7 +159,7 @@ export const beforeAfterPairs: BeforeAfterPair[] = [
     },
     after: {
       imagekitPath: "/blue-diamond/before-after/laser-skin-treatments-02-after.png",
-      alt: { en: "Clinical example after Laser Skin Treatments", ar: "مثال سريري بعد علاجات البشرة بالليزر" },
+      alt: { en: "Clinical example 2 — after Laser Skin Treatments", ar: "مثال سريري بعد علاجات البشرة بالليزر 2" },
       sourceUrl: "https://cdn.commoninja.com/asset/74f4df46-af1b-46df-8a7c-a5aafee8745c.png",
       originalFilename: "74f4df46-af1b-46df-8a7c-a5aafee8745c.png",
       width: 640,
@@ -179,10 +179,10 @@ export const beforeAfterPairs: BeforeAfterPair[] = [
     pairId: "laser-skin-treatments-03",
     treatmentId: "laser-skin-treatments",
     concernId: "spider-veins",
-    description: { en: "Clinical example published on Blue Diamond’s original Laser Skin Treatments page.", ar: "مثال سريري كان منشورًا على صفحة علاجات البشرة بالليزر في موقع بلو دايموند الأصلي." },
+    description: { en: "Clinical example published on Blue Diamond's original Laser Skin Treatments page.", ar: "مثال سريري كان منشورًا على صفحة علاجات البشرة بالليزر في موقع بلو دايموند الأصلي." },
     before: {
       imagekitPath: "/blue-diamond/before-after/laser-skin-treatments-03-before.png",
-      alt: { en: "Clinical example before Laser Skin Treatments", ar: "مثال سريري قبل علاجات البشرة بالليزر" },
+      alt: { en: "Clinical example 3 — before Laser Skin Treatments", ar: "مثال سريري قبل علاجات البشرة بالليزر 3" },
       sourceUrl: "https://cdn.commoninja.com/asset/5c0f989c-52c2-4280-ba23-dcae97ae21e6.png",
       originalFilename: "5c0f989c-52c2-4280-ba23-dcae97ae21e6.png",
       width: 475,
@@ -191,7 +191,7 @@ export const beforeAfterPairs: BeforeAfterPair[] = [
     },
     after: {
       imagekitPath: "/blue-diamond/before-after/laser-skin-treatments-03-after.png",
-      alt: { en: "Clinical example after Laser Skin Treatments", ar: "مثال سريري بعد علاجات البشرة بالليزر" },
+      alt: { en: "Clinical example 3 — after Laser Skin Treatments", ar: "مثال سريري بعد علاجات البشرة بالليزر 3" },
       sourceUrl: "https://cdn.commoninja.com/asset/d6844b26-514a-49e0-a2f9-f512082bf128.png",
       originalFilename: "d6844b26-514a-49e0-a2f9-f512082bf128.png",
       width: 477,
@@ -211,10 +211,10 @@ export const beforeAfterPairs: BeforeAfterPair[] = [
   {
     pairId: "laser-skin-treatments-04",
     treatmentId: "laser-skin-treatments",
-    description: { en: "Clinical example published on Blue Diamond’s original Laser Skin Treatments page.", ar: "مثال سريري كان منشورًا على صفحة علاجات البشرة بالليزر في موقع بلو دايموند الأصلي." },
+    description: { en: "Clinical example published on Blue Diamond's original Laser Skin Treatments page.", ar: "مثال سريري كان منشورًا على صفحة علاجات البشرة بالليزر في موقع بلو دايموند الأصلي." },
     before: {
       imagekitPath: "/blue-diamond/before-after/laser-skin-treatments-04-before.png",
-      alt: { en: "Clinical example before Laser Skin Treatments", ar: "مثال سريري قبل علاجات البشرة بالليزر" },
+      alt: { en: "Clinical example 4 — before Laser Skin Treatments", ar: "مثال سريري قبل علاجات البشرة بالليزر 4" },
       sourceUrl: "https://cdn.commoninja.com/asset/bb35c22e-814c-4d98-a160-f82f9cc0a528.png",
       originalFilename: "bb35c22e-814c-4d98-a160-f82f9cc0a528.png",
       width: 962,
@@ -223,7 +223,7 @@ export const beforeAfterPairs: BeforeAfterPair[] = [
     },
     after: {
       imagekitPath: "/blue-diamond/before-after/laser-skin-treatments-04-after.png",
-      alt: { en: "Clinical example after Laser Skin Treatments", ar: "مثال سريري بعد علاجات البشرة بالليزر" },
+      alt: { en: "Clinical example 4 — after Laser Skin Treatments", ar: "مثال سريري بعد علاجات البشرة بالليزر 4" },
       sourceUrl: "https://cdn.commoninja.com/asset/d5778a61-859a-4aea-94c0-5fe98f57b861.png",
       originalFilename: "d5778a61-859a-4aea-94c0-5fe98f57b861.png",
       width: 955,
@@ -243,10 +243,10 @@ export const beforeAfterPairs: BeforeAfterPair[] = [
     pairId: "laser-skin-treatments-05",
     treatmentId: "laser-skin-treatments",
     technologyId: "elite-iq",
-    description: { en: "Clinical example published on Blue Diamond’s original Laser Skin Treatments page.", ar: "مثال سريري كان منشورًا على صفحة علاجات البشرة بالليزر في موقع بلو دايموند الأصلي." },
+    description: { en: "Clinical example published on Blue Diamond's original Laser Skin Treatments page.", ar: "مثال سريري كان منشورًا على صفحة علاجات البشرة بالليزر في موقع بلو دايموند الأصلي." },
     before: {
       imagekitPath: "/blue-diamond/before-after/laser-skin-treatments-05-before.png",
-      alt: { en: "Clinical example before Laser Skin Treatments", ar: "مثال سريري قبل علاجات البشرة بالليزر" },
+      alt: { en: "Clinical example 5 — before Laser Skin Treatments", ar: "مثال سريري قبل علاجات البشرة بالليزر 5" },
       sourceUrl: "https://uploads.commoninja.com/before_after/1731549748427_PRD-0844-Elite-iQ-BNAs-CAN-EN_02_B4.png",
       originalFilename: "1731549748427_PRD-0844-Elite-iQ-BNAs-CAN-EN_02_B4.png",
       width: 960,
@@ -255,7 +255,7 @@ export const beforeAfterPairs: BeforeAfterPair[] = [
     },
     after: {
       imagekitPath: "/blue-diamond/before-after/laser-skin-treatments-05-after.png",
-      alt: { en: "Clinical example after Laser Skin Treatments", ar: "مثال سريري بعد علاجات البشرة بالليزر" },
+      alt: { en: "Clinical example 5 — after Laser Skin Treatments", ar: "مثال سريري بعد علاجات البشرة بالليزر 5" },
       sourceUrl: "https://cdn.commoninja.com/asset/8605775d-a270-4f6c-8733-51d095925264.png",
       originalFilename: "8605775d-a270-4f6c-8733-51d095925264.png",
       width: 959,
@@ -280,7 +280,7 @@ export const beforeAfterPairs: BeforeAfterPair[] = [
     // not a claim about which treatment the pair shows.
     pairId: "prp-hair-restoration-01",
     treatmentId: "prp-hair-restoration",
-    description: { en: "Clinical example published on Blue Diamond’s original PRP therapy page.", ar: "مثال سريري كان منشورًا على صفحة العلاج بالبلازما في موقع بلو دايموند الأصلي." },
+    description: { en: "Clinical example published on Blue Diamond's original PRP therapy page.", ar: "مثال سريري كان منشورًا على صفحة العلاج بالبلازما في موقع بلو دايموند الأصلي." },
     before: {
       imagekitPath: "/blue-diamond/before-after/prp-skin-rejuvenation-01-before.png",
       alt: { en: "Clinical example before PRP Hair Restoration", ar: "مثال سريري قبل استعادة الشعر بالبلازما" },
@@ -312,10 +312,10 @@ export const beforeAfterPairs: BeforeAfterPair[] = [
     pairId: "radio-frequency-01",
     treatmentId: "radio-frequency",
     technologyId: "tempsure",
-    description: { en: "Clinical example published on Blue Diamond’s original Radio Frequency page.", ar: "مثال سريري كان منشورًا على صفحة الترددات الراديوية في موقع بلو دايموند الأصلي." },
+    description: { en: "Clinical example published on Blue Diamond's original Radio Frequency page.", ar: "مثال سريري كان منشورًا على صفحة الترددات الراديوية في موقع بلو دايموند الأصلي." },
     before: {
       imagekitPath: "/blue-diamond/before-after/radio-frequency-01-before.png",
-      alt: { en: "Clinical example before Radio Frequency", ar: "مثال سريري قبل الترددات الراديوية" },
+      alt: { en: "Clinical example 1 — before Radio Frequency", ar: "مثال سريري قبل الترددات الراديوية 1" },
       sourceUrl: "https://uploads.commoninja.com/before_after/1731554603454_TempSure_Before.png",
       originalFilename: "1731554603454_TempSure_Before.png",
       width: 398,
@@ -324,7 +324,7 @@ export const beforeAfterPairs: BeforeAfterPair[] = [
     },
     after: {
       imagekitPath: "/blue-diamond/before-after/radio-frequency-01-after.png",
-      alt: { en: "Clinical example after Radio Frequency", ar: "مثال سريري بعد الترددات الراديوية" },
+      alt: { en: "Clinical example 1 — after Radio Frequency", ar: "مثال سريري بعد الترددات الراديوية 1" },
       sourceUrl: "https://cdn.commoninja.com/asset/51876c60-5434-4f9d-8d57-41a401de89c0.png",
       originalFilename: "51876c60-5434-4f9d-8d57-41a401de89c0.png",
       width: 397,
@@ -346,10 +346,10 @@ export const beforeAfterPairs: BeforeAfterPair[] = [
     pairId: "radio-frequency-02",
     treatmentId: "radio-frequency",
     technologyId: "tempsure",
-    description: { en: "Clinical example published on Blue Diamond’s original Radio Frequency page.", ar: "مثال سريري كان منشورًا على صفحة الترددات الراديوية في موقع بلو دايموند الأصلي." },
+    description: { en: "Clinical example published on Blue Diamond's original Radio Frequency page.", ar: "مثال سريري كان منشورًا على صفحة الترددات الراديوية في موقع بلو دايموند الأصلي." },
     before: {
       imagekitPath: "/blue-diamond/before-after/radio-frequency-02-before.png",
-      alt: { en: "Clinical example before Radio Frequency", ar: "مثال سريري قبل الترددات الراديوية" },
+      alt: { en: "Clinical example 2 — before Radio Frequency", ar: "مثال سريري قبل الترددات الراديوية 2" },
       sourceUrl: "https://uploads.commoninja.com/before_after/1731554683080_PRD_4497_TempSureEnvi_BampA_Standard_Format-921-000-0000_b4.png",
       originalFilename: "1731554683080_PRD_4497_TempSureEnvi_BampA_Standard_Format-921-000-0000_b4.png",
       width: 962,
@@ -358,7 +358,7 @@ export const beforeAfterPairs: BeforeAfterPair[] = [
     },
     after: {
       imagekitPath: "/blue-diamond/before-after/radio-frequency-02-after.png",
-      alt: { en: "Clinical example after Radio Frequency", ar: "مثال سريري بعد الترددات الراديوية" },
+      alt: { en: "Clinical example 2 — after Radio Frequency", ar: "مثال سريري بعد الترددات الراديوية 2" },
       sourceUrl: "https://cdn.commoninja.com/asset/b093592d-bf76-48ae-b5b3-a47ba77a67a4.png",
       originalFilename: "b093592d-bf76-48ae-b5b3-a47ba77a67a4.png",
       width: 964,
@@ -379,10 +379,10 @@ export const beforeAfterPairs: BeforeAfterPair[] = [
   {
     pairId: "radio-frequency-03",
     treatmentId: "radio-frequency",
-    description: { en: "Clinical example published on Blue Diamond’s original Radio Frequency page.", ar: "مثال سريري كان منشورًا على صفحة الترددات الراديوية في موقع بلو دايموند الأصلي." },
+    description: { en: "Clinical example published on Blue Diamond's original Radio Frequency page.", ar: "مثال سريري كان منشورًا على صفحة الترددات الراديوية في موقع بلو دايموند الأصلي." },
     before: {
       imagekitPath: "/blue-diamond/before-after/radio-frequency-03-before.png",
-      alt: { en: "Clinical example before Radio Frequency", ar: "مثال سريري قبل الترددات الراديوية" },
+      alt: { en: "Clinical example 3 — before Radio Frequency", ar: "مثال سريري قبل الترددات الراديوية 3" },
       sourceUrl: "https://uploads.commoninja.com/before_after/1737139634411_skin_tone.png",
       originalFilename: "1737139634411_skin_tone.png",
       width: 2048,
@@ -391,7 +391,7 @@ export const beforeAfterPairs: BeforeAfterPair[] = [
     },
     after: {
       imagekitPath: "/blue-diamond/before-after/radio-frequency-03-after.png",
-      alt: { en: "Clinical example after Radio Frequency", ar: "مثال سريري بعد الترددات الراديوية" },
+      alt: { en: "Clinical example 3 — after Radio Frequency", ar: "مثال سريري بعد الترددات الراديوية 3" },
       sourceUrl: "https://cdn.commoninja.com/asset/b8476ddf-03ba-4c8a-b06b-0faa7cc6b14c.png",
       originalFilename: "b8476ddf-03ba-4c8a-b06b-0faa7cc6b14c.png",
       width: 2048,
@@ -410,10 +410,10 @@ export const beforeAfterPairs: BeforeAfterPair[] = [
   {
     pairId: "rf-microneedling-01",
     treatmentId: "rf-microneedling",
-    description: { en: "Clinical example published on Blue Diamond’s original RF Microneedling page.", ar: "مثال سريري كان منشورًا على صفحة الإبر الدقيقة بالترددات الراديوية في موقع بلو دايموند الأصلي." },
+    description: { en: "Clinical example published on Blue Diamond's original RF Microneedling page.", ar: "مثال سريري كان منشورًا على صفحة الإبر الدقيقة بالترددات الراديوية في موقع بلو دايموند الأصلي." },
     before: {
       imagekitPath: "/blue-diamond/before-after/rf-microneedling-01-before.png",
-      alt: { en: "Clinical example before RF Microneedling", ar: "مثال سريري قبل الإبر الدقيقة بالترددات الراديوية" },
+      alt: { en: "Clinical example 1 — before RF Microneedling", ar: "مثال سريري قبل الإبر الدقيقة بالترددات الراديوية 1" },
       sourceUrl: "https://cdn.commoninja.com/asset/cfd1cc48-37dd-4a8f-9723-df9f6f8d9994.png",
       originalFilename: "cfd1cc48-37dd-4a8f-9723-df9f6f8d9994.png",
       width: 2048,
@@ -422,7 +422,7 @@ export const beforeAfterPairs: BeforeAfterPair[] = [
     },
     after: {
       imagekitPath: "/blue-diamond/before-after/rf-microneedling-01-after.png",
-      alt: { en: "Clinical example after RF Microneedling", ar: "مثال سريري بعد الإبر الدقيقة بالترددات الراديوية" },
+      alt: { en: "Clinical example 1 — after RF Microneedling", ar: "مثال سريري بعد الإبر الدقيقة بالترددات الراديوية 1" },
       sourceUrl: "https://cdn.commoninja.com/asset/69543d8d-d873-4561-be13-a3403459ee74.png",
       originalFilename: "69543d8d-d873-4561-be13-a3403459ee74.png",
       width: 2048,
@@ -442,10 +442,10 @@ export const beforeAfterPairs: BeforeAfterPair[] = [
   {
     pairId: "rf-microneedling-02",
     treatmentId: "rf-microneedling",
-    description: { en: "Clinical example published on Blue Diamond’s original RF Microneedling page.", ar: "مثال سريري كان منشورًا على صفحة الإبر الدقيقة بالترددات الراديوية في موقع بلو دايموند الأصلي." },
+    description: { en: "Clinical example published on Blue Diamond's original RF Microneedling page.", ar: "مثال سريري كان منشورًا على صفحة الإبر الدقيقة بالترددات الراديوية في موقع بلو دايموند الأصلي." },
     before: {
       imagekitPath: "/blue-diamond/before-after/rf-microneedling-02-before.png",
-      alt: { en: "Clinical example before RF Microneedling", ar: "مثال سريري قبل الإبر الدقيقة بالترددات الراديوية" },
+      alt: { en: "Clinical example 2 — before RF Microneedling", ar: "مثال سريري قبل الإبر الدقيقة بالترددات الراديوية 2" },
       sourceUrl: "https://cdn.commoninja.com/asset/20307aa1-1db5-432a-a5f6-467506e23a98.png",
       originalFilename: "20307aa1-1db5-432a-a5f6-467506e23a98.png",
       width: 2048,
@@ -454,7 +454,7 @@ export const beforeAfterPairs: BeforeAfterPair[] = [
     },
     after: {
       imagekitPath: "/blue-diamond/before-after/rf-microneedling-02-after.png",
-      alt: { en: "Clinical example after RF Microneedling", ar: "مثال سريري بعد الإبر الدقيقة بالترددات الراديوية" },
+      alt: { en: "Clinical example 2 — after RF Microneedling", ar: "مثال سريري بعد الإبر الدقيقة بالترددات الراديوية 2" },
       sourceUrl: "https://cdn.commoninja.com/asset/86c6139d-f219-4966-9925-45d5c7ab392d.png",
       originalFilename: "86c6139d-f219-4966-9925-45d5c7ab392d.png",
       width: 2048,
@@ -475,7 +475,7 @@ export const beforeAfterPairs: BeforeAfterPair[] = [
     pairId: "ultra-01",
     treatmentId: "ultra",
     technologyId: "ultra",
-    description: { en: "Clinical example published on Blue Diamond’s original Ultra page.", ar: "مثال سريري كان منشورًا على صفحة ألترا في موقع بلو دايموند الأصلي." },
+    description: { en: "Clinical example published on Blue Diamond's original Ultra page.", ar: "مثال سريري كان منشورًا على صفحة ألترا في موقع بلو دايموند الأصلي." },
     before: {
       imagekitPath: "/blue-diamond/before-after/ultra-01-before.png",
       alt: { en: "Clinical example before Ultra", ar: "مثال سريري قبل ألترا" },

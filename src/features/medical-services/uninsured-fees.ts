@@ -23,14 +23,14 @@ export const uninsuredFeeGroups: FeeGroup[] = [
   {
     heading: { en: "Forms", ar: "النماذج" },
     rows: [
-      { item: { en: "Attending Physician Statement", ar: "إفادة الطبيب المعالج" }, price: "$50+ (billed to provider)" },
+      { item: { en: "Attending Physician Statement", ar: "إفادة الطبيب المعالج" }, price: "$50+ (billed to the insurer)" },
       { item: { en: "Short Term Disability", ar: "إعاقة قصيرة الأمد" }, price: "$50+" },
       { item: { en: "Certificates", ar: "الشهادات" }, price: "$50+" },
       // CL-022 — renamed from "Blue Cross Special Authorization": the fee is
       // not specific to one insurer.
       { item: { en: "Special Authorization", ar: "تفويض خاص" }, price: "$35" },
       { item: { en: "Long Term Disability", ar: "إعاقة طويلة الأمد" }, price: "$150" },
-      { item: { en: "Handicap Parking Placard", ar: "بطاقة موقف ذوي الإعاقة" }, price: "$50" },
+      { item: { en: "Accessible Parking Placard", ar: "بطاقة موقف ذوي الإعاقة" }, price: "$50" },
       { item: { en: "Medical Authorization Form", ar: "نموذج التفويض الطبي" }, price: "$35" },
     ],
   },
@@ -49,7 +49,7 @@ export const uninsuredFeeGroups: FeeGroup[] = [
     heading: { en: "Administrative Tasks", ar: "المهام الإدارية" },
     rows: [
       { item: { en: "Transfer of Records", ar: "نقل السجلات" }, price: "$50+" },
-      { item: { en: "Insurance Request", ar: "طلب التأمين" }, price: "$150+ (billed to provider)" },
+      { item: { en: "Insurance Request", ar: "طلب التأمين" }, price: "$150+ (billed to the insurer)" },
       { item: { en: "Photocopies", ar: "نسخ المستندات" }, price: "$5+" },
       { item: { en: "Driver's Medical (under 75 years)", ar: "الفحص الطبي لرخصة القيادة (دون 75 عامًا)" }, price: "$125" },
       { item: { en: "Sick Note", ar: "شهادة مرضية" }, price: "$35" },

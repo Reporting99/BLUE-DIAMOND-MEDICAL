@@ -4,6 +4,7 @@ import { useActionState } from "react";
 import { submitConsultationRequest, type ConsultationFormState } from "@/app/[locale]/aesthetics/consultation/actions";
 import { Button } from "@/components/ui/button";
 import type { Locale } from "@/i18n/config";
+import { siteConfig } from "@/config/site";
 
 const copy = {
   en: {
@@ -15,8 +16,10 @@ const copy = {
     submit: "Request a consultation",
     submitting: "Sending…",
     success: "Thank you — we've received your request.",
-    notConfigured: "This form isn't connected yet. Please call us at 825 413 1113 and we'll help right away.",
-    error: "Something went wrong. Please try again, or call us at 825 413 1113.",
+    notConfigured: `This form isn't connected yet. Please call us at ${siteConfig.clinic.phoneDisplay} and we'll help right away.`,
+    error: `Something went wrong. Please try again, or call us at ${siteConfig.clinic.phoneDisplay}.`,
+    notice:
+      "This form is not for medical emergencies or private health information. For emergencies, call 911.",
   },
   ar: {
     name: "الاسم الكامل",
@@ -27,8 +30,10 @@ const copy = {
     submit: "طلب استشارة",
     submitting: "جارٍ الإرسال…",
     success: "شكرًا لكم — تم استلام طلبكم.",
-    notConfigured: "هذا النموذج غير مرتبط بعد. يرجى الاتصال بنا على 825 413 1113 وسنساعدكم فورًا.",
-    error: "حدث خطأ ما. يرجى المحاولة مرة أخرى، أو الاتصال بنا على 825 413 1113.",
+    notConfigured: `هذا النموذج غير مرتبط بعد. يرجى الاتصال بنا على ${siteConfig.clinic.phoneDisplay} وسنساعدكم فورًا.`,
+    error: `حدث خطأ ما. يرجى المحاولة مرة أخرى، أو الاتصال بنا على ${siteConfig.clinic.phoneDisplay}.`,
+    notice:
+      "هذا النموذج غير مخصص لحالات الطوارئ الطبية أو المعلومات الصحية الخاصة. في حال الطوارئ، اتصلوا بالرقم 911.",
   },
 } as const;
 
@@ -48,6 +53,8 @@ export function ConsultationRequestForm({ locale }: { locale: Locale }) {
 
   return (
     <form action={formAction} noValidate className="flex flex-col gap-5">
+      <p className="rounded-md border border-border bg-surface px-4 py-3 text-sm text-text-secondary">{t.notice}</p>
+
       {state.status === "not-configured" ? (
         <div role="alert" className="rounded-md border border-border bg-surface px-4 py-3 text-sm">
           {t.notConfigured}

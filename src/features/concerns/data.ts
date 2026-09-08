@@ -214,7 +214,7 @@ export const concerns: AestheticConcern[] = [
     relatedTreatmentIds: ["rf-microneedling"],
     faqs: [
       {
-        question: { en: "Why is Calgary's climate mentioned for dry skin care?", ar: "لماذا يُذكر مناخ كالغاري عند الحديث عن العناية بالبشرة الجافة؟" },
+        question: { en: "Does Calgary's climate affect dry skin?", ar: "لماذا يُذكر مناخ كالغاري عند الحديث عن العناية بالبشرة الجافة؟" },
         answer: {
           en: "Calgary's climate is unusually harsh on skin, which is part of why ongoing nourishment support can be worthwhile for many patients here.",
           ar: "مناخ كالغاري قاسٍ بشكل خاص على البشرة، وهو أحد أسباب أهمية دعم الترطيب المستمر لكثير من المرضى هنا.",
@@ -252,7 +252,7 @@ export const concerns: AestheticConcern[] = [
       {
         question: { en: "What treatments address fine lines and wrinkles?", ar: "ما العلاجات التي تعالج الخطوط الدقيقة والتجاعيد؟" },
         answer: {
-          en: "RF microneedling and radio-frequency skin-tightening are the two treatments connected to this concern, suited to different skin types.",
+          en: "RF microneedling and radiofrequency skin tightening are the two treatments connected to this concern, suited to different skin types.",
           ar: "الإبر الدقيقة بالترددات الراديوية وشدّ البشرة بالترددات الراديوية هما العلاجان المرتبطان بهذه المخاوف، ويناسبان أنواع بشرة مختلفة.",
         },
       },
@@ -286,7 +286,7 @@ export const concerns: AestheticConcern[] = [
     relatedTreatmentIds: ["radio-frequency"],
     faqs: [
       {
-        question: { en: "How does radio-frequency treatment address skin laxity?", ar: "كيف يعالج علاج الترددات الراديوية ترهل البشرة؟" },
+        question: { en: "How does radiofrequency treatment address skin laxity?", ar: "كيف يعالج علاج الترددات الراديوية ترهل البشرة؟" },
         answer: {
           en: "It promotes collagen and elastin production, which helps tighten and smooth skin across the body.",
           ar: "يحفّز إنتاج الكولاجين والإيلاستين، مما يساعد على شدّ البشرة وتنعيمها في مختلف مناطق الجسم.",
@@ -362,7 +362,7 @@ export const concerns: AestheticConcern[] = [
       {
         question: { en: "What causes sun spots and pigmentation?", ar: "ما سبب بقع الشمس والتصبغ؟" },
         answer: {
-          en: "Time in the sun, over the years.",
+          en: "Years of sun exposure. Sun spots, liver spots, and uneven pigmentation build up gradually over time.",
           ar: "التعرض للشمس على مدى سنوات.",
         },
       },
@@ -455,7 +455,7 @@ export const concerns: AestheticConcern[] = [
       {
         question: { en: "Is this a minimally invasive treatment?", ar: "هل هذا علاج طفيف التوغل؟" },
         answer: {
-          en: "Yes.",
+          en: "Yes — laser hair removal is non-surgical and minimally invasive.",
           ar: "نعم.",
         },
       },
