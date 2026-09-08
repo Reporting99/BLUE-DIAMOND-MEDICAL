@@ -121,7 +121,9 @@ const ID_FIELD: Record<string, string> = {
 };
 
 /** Repository entities by content type, keyed by their stable id. */
-function repoEntitiesFor(contentType: string): Map<string, Record<string, unknown>> {
+function repoEntitiesFor(
+  contentType: string,
+): Map<string, { source: Record<string, unknown>; title: unknown }> {
   const list =
     contentType === "aesthetic-concern" ? concerns
     : contentType === "technology" ? technologies
@@ -132,17 +134,32 @@ function repoEntitiesFor(contentType: string): Map<string, Record<string, unknow
   return new Map(
     (list as { id: string }[]).map((e) => {
       // Product editorial copy lives one level down, under `detail`.
+      const record = e as unknown as Record<string, unknown>;
       const source = contentType === "product"
-        ? ((e as unknown as { detail?: Record<string, unknown> }).detail ?? {})
-        : (e as unknown as Record<string, unknown>);
-      return [e.id, source];
+        ? ((record.detail as Record<string, unknown>) ?? {})
+        : record;
+      // Products name the field `name`; every other family uses `title`.
+      return [e.id, { source, title: record.name ?? record.title }];
     }),
   );
 }
 
 /** Editorial differences between one repo entity and its CMS entry. */
-function driftFor(entry: CmsEntry, repo: Record<string, unknown>): string[] {
+function driftFor(entry: CmsEntry, repo: Record<string, unknown>, title: unknown): string[] {
   const out: string[] = [];
+
+  /**
+   * The entity title, which the CMS stores at the TOP LEVEL and not inside
+   * `fields`. Comparing only `fields` therefore misses it entirely — and the
+   * title is what the page renders as its <h1> and its <title>, so a drifted
+   * one is the most visible drift there is. Found by deliberately editing a
+   * repo title and watching this check stay green.
+   *
+   * Products carry it as `name`, every other family as `title`.
+   */
+  if (isLocalized(title) && norm(entry.title) !== norm(title.en)) {
+    out.push(`title (h1 + <title>)\n      cms : ${norm(entry.title)}\n      repo: ${norm(title.en)}`);
+  }
 
   for (const [key, value] of Object.entries(repo)) {
     if (!isLocalized(value)) continue;
@@ -178,9 +195,9 @@ const pairs = cmsEntries.flatMap((entry) => {
   if (!idField) return [];
   const id = entry.fields[idField];
   if (!id) return [];
-  const repo = repoEntitiesFor(entry.contentType!).get(id);
-  if (!repo) return [];
-  return [{ key: `${entry.contentType}:${id}`, entry, repo }];
+  const found = repoEntitiesFor(entry.contentType!).get(id);
+  if (!found) return [];
+  return [{ key: `${entry.contentType}:${id}`, entry, repo: found.source, title: found.title }];
 });
 
 test.describe("CMS_CONTENT_DRIFT — published copy matches approved repository copy", () => {
@@ -197,7 +214,7 @@ test.describe("CMS_CONTENT_DRIFT — published copy matches approved repository 
   test("no UNKNOWN record has drifted", () => {
     const drifted = pairs
       .filter((p) => !KNOWN_CMS_DRIFT.has(p.key))
-      .map((p) => ({ key: p.key, diffs: driftFor(p.entry, p.repo) }))
+      .map((p) => ({ key: p.key, diffs: driftFor(p.entry, p.repo, p.title) }))
       .filter((r) => r.diffs.length)
       .map((r) => `  ${r.key}\n    ${r.diffs.join("\n    ")}`);
 
@@ -215,7 +232,7 @@ test.describe("CMS_CONTENT_DRIFT — published copy matches approved repository 
     // list can never quietly become a permanent exemption.
     const fixed = pairs
       .filter((p) => KNOWN_CMS_DRIFT.has(p.key))
-      .filter((p) => driftFor(p.entry, p.repo).length === 0)
+      .filter((p) => driftFor(p.entry, p.repo, p.title).length === 0)
       .map((p) => p.key);
 
     expect(
