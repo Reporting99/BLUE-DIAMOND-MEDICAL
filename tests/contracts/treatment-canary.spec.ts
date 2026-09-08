@@ -131,8 +131,8 @@ test.describe("treatment adapter — parity with approved source", () => {
       expect(t.title[locale]).toBe(source.title[locale]);
       expect(t.summary[locale]).toBe(source.summary[locale]);
       expect(t.sourceVerified).toBe(source.sourceVerified);
-      for (const key of ["howItWorks", "duration", "comfortLevel", "downtime", "resultTimeline", "suggestedCourse"] as const) {
-        if (source[key]) expect(t[key]![locale]).toBe(source[key]![locale]);
+      for (const key of ["howItWorks", "duration", "comfortLevel", "downtime", "aftercare", "resultTimeline", "suggestedCourse"] as const) {
+        if (source[key]?.[locale]) expect(t[key]![locale]).toBe(source[key]![locale]);
       }
       for (const key of ["concernsTreated", "safetyContraindications"] as const) {
         if (source[key]) expect(t[key]![locale]).toEqual(source[key]![locale]);
