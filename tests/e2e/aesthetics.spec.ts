@@ -16,7 +16,7 @@ test.describe("Aesthetics — treatments, concerns, technologies", () => {
 
   test("treatment detail page renders rich content and FAQs", async ({ page }) => {
     await page.goto("/en/aesthetics/treatments/rf-microneedling");
-    await expect(page.getByRole("heading", { level: 1 })).toHaveText("RF Microneedling");
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("RF Micro-Needling");
     await expect(page.getByRole("heading", { name: "How it works" })).toBeVisible();
     await expect(page.getByRole("heading", { name: "Safety & contraindications" })).toBeVisible();
   });
