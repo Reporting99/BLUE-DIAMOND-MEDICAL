@@ -1,4 +1,12 @@
 import { test, expect } from "@playwright/test";
+import { getFeelstackContentMode, isFeelstackConfigured } from "../../src/lib/feelstack/content-mode";
+
+// The H1 differs by content source: the live CMS record spells it
+// "RF Micro-Needling" (the approved content doc's convention); the
+// static `src/content/*.ts` fallback -- what CI runs against, with no
+// FeelStack env -- spells it "RF Microneedling". Same class of fork as
+// `imagekitIsConfigured` in gated-routes.spec.ts / product-pages.spec.ts.
+const usesLiveCms = getFeelstackContentMode() !== "static" && isFeelstackConfigured();
 
 test.describe("Aesthetics — treatments, concerns, technologies", () => {
   /* Two ways in, not three, and not "By Treatment"/"By Concern": the concern
@@ -16,7 +24,9 @@ test.describe("Aesthetics — treatments, concerns, technologies", () => {
 
   test("treatment detail page renders rich content and FAQs", async ({ page }) => {
     await page.goto("/en/aesthetics/treatments/rf-microneedling");
-    await expect(page.getByRole("heading", { level: 1 })).toHaveText("RF Micro-Needling");
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+      usesLiveCms ? "RF Micro-Needling" : "RF Microneedling",
+    );
     await expect(page.getByRole("heading", { name: "How it works" })).toBeVisible();
     await expect(page.getByRole("heading", { name: "Safety & contraindications" })).toBeVisible();
   });
