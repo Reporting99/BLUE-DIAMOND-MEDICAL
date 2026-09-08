@@ -11,8 +11,13 @@ import { cacheTags } from "@/lib/feelstack/cache-tags";
 import { productCmsContract } from "@/features/products/cms-contract";
 
 /**
- * Statically generates params for every product/locale pair — 46 pages
- * (23 products × 2 locales), all live now that `shopEnabled` is true.
+ * Statically generates params for every product/locale pair — two pages per
+ * published product, all live now that `shopEnabled` is true.
+ *
+ * The count is derived, never written down: it was "46 pages (23 products ×
+ * 2 locales)" when the catalogue was SkinMedica, 108 when Myriade landed
+ * beside it, and 62 since SkinMedica was archived on 2026-09-07. Whatever
+ * `products` holds is what gets built.
  */
 export function generateStaticParams() {
   return locales.flatMap((locale) => products.map((p) => ({ locale, productId: p.slug })));

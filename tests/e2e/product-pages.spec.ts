@@ -70,24 +70,43 @@ test.describe("Every product page — Arabic (pretty URL)", () => {
   }
 });
 
+/**
+ * Structural checks run against ONE representative published product, derived
+ * rather than hardcoded.
+ *
+ * They named `retinol-complex-0-5` until 2026-09-07. That product is
+ * SkinMedica, the line was archived, and every one of these tests then failed
+ * on a missing page instead of on a broken structure — the slug had become a
+ * fact about a product that no longer publishes rather than about the page
+ * template being asserted.
+ */
+const subject = products.find((p) => p.id === "c-serum") ?? products[0];
+/** The FAQ/related-products checks need a record that carries researched
+ *  `detail`. Every published Myriade record deliberately has none (the flyer
+ *  is the only source, and inventing FAQs is what this repository refuses to
+ *  do), so with SkinMedica archived there is currently no such page. The
+ *  tests stay, skip with a stated reason, and come back with the line. */
+const detailSubject = products.find((p) => p.detail);
+
 test.describe("Product page structure", () => {
   test("breadcrumbs read Home → Products → product name", async ({ page }) => {
-    await page.goto("/en/shop/retinol-complex-0-5");
+    await page.goto(`/en/shop/${subject.slug}`);
     const nav = page.getByRole("navigation", { name: "Breadcrumb" });
     await expect(nav.getByRole("link", { name: "Home" })).toBeVisible();
     await expect(nav.getByRole("link", { name: "Products", exact: true })).toBeVisible();
-    await expect(nav.getByText("Retinol Complex 0.5")).toBeVisible();
+    await expect(nav.getByText(subject.name.en)).toBeVisible();
   });
 
   test("Arabic breadcrumbs are in RTL order and translated", async ({ page }) => {
-    await page.goto("/ar/المتجر/مركب-الريتينول-٠٫٥");
+    await page.goto(`/ar/المتجر/${encodeURIComponent(subject.slugAr)}`);
     const nav = page.getByRole("navigation", { name: "مسار التصفح" });
     await expect(nav.getByRole("link", { name: "الرئيسية" })).toBeVisible();
     await expect(nav.getByRole("link", { name: "المنتجات" })).toBeVisible();
   });
 
   test("FAQ schema exactly matches the visible FAQ questions", async ({ page }) => {
-    await page.goto("/en/shop/retinol-complex-0-5");
+    test.skip(!detailSubject, "no published product carries a research detail block — SkinMedica archived 2026-09-07");
+    await page.goto(`/en/shop/${detailSubject!.slug}`);
     const scripts = await page.locator('script[type="application/ld+json"]').allTextContents();
     const faqSchema = scripts.map((s) => JSON.parse(s)).find((s) => s["@type"] === "FAQPage");
     expect(faqSchema).toBeTruthy();
@@ -102,16 +121,17 @@ test.describe("Product page structure", () => {
   });
 
   test("a minimal Product schema is present with no Offer/price/InStock claim", async ({ page }) => {
-    await page.goto("/en/shop/retinol-complex-0-5");
+    await page.goto(`/en/shop/${subject.slug}`);
     const scripts = await page.locator('script[type="application/ld+json"]').allTextContents();
     const productSchema = scripts.map((s) => JSON.parse(s)).find((s) => s["@type"] === "Product");
     expect(productSchema).toBeTruthy();
-    expect(productSchema.name).toBe("Retinol Complex 0.5");
+    expect(productSchema.name).toBe(subject.name.en);
     expect(productSchema.offers).toBeUndefined();
   });
 
   test("related-product cards link to their own individual pages", async ({ page, request }) => {
-    await page.goto("/en/shop/retinol-complex-0-5");
+    test.skip(!detailSubject, "relatedProductIds lives in the research detail block — SkinMedica archived 2026-09-07");
+    await page.goto(`/en/shop/${detailSubject!.slug}`);
     const relatedSection = page.locator("section", { has: page.getByRole("heading", { name: "You may also like" }) });
     const hrefs = await relatedSection.locator("a").evaluateAll((els) => els.map((e) => e.getAttribute("href")));
     expect(hrefs.length).toBeGreaterThan(0);
@@ -122,28 +142,29 @@ test.describe("Product page structure", () => {
   });
 
   test('"Ask about this product" opens the enquiry pathway with the product preselected, not the catalogue', async ({ page }) => {
-    await page.goto("/en/shop/retinol-complex-0-5");
+    await page.goto(`/en/shop/${subject.slug}`);
     const cta = page.getByRole("link", { name: "Ask about this product" });
     await expect(cta).toBeVisible();
-    await expect(cta).toHaveAttribute("href", "/en/contact?product=retinol-complex-0-5");
+    await expect(cta).toHaveAttribute("href", `/en/contact?product=${subject.slug}`);
   });
 
   test("self-referencing canonical and reciprocal hreflang on a product page", async ({ page }) => {
-    await page.goto("/en/shop/retinol-complex-0-5");
+    await page.goto(`/en/shop/${subject.slug}`);
     const canonical = await page.locator('link[rel="canonical"]').getAttribute("href");
-    expect(canonical).toContain("/en/shop/retinol-complex-0-5");
+    expect(canonical).toContain(`/en/shop/${subject.slug}`);
     const enAlt = await page.locator('link[rel="alternate"][hreflang="en-CA"]').getAttribute("href");
     const arAlt = await page.locator('link[rel="alternate"][hreflang="ar-CA"]').getAttribute("href");
     const xDefault = await page.locator('link[rel="alternate"][hreflang="x-default"]').getAttribute("href");
-    expect(enAlt).toContain("/en/shop/retinol-complex-0-5");
+    expect(enAlt).toContain(`/en/shop/${subject.slug}`);
     expect(arAlt).toBeTruthy();
     expect(xDefault).toBeTruthy();
   });
 
   test("unique metadata (title, description) per product", async ({ page }) => {
-    await page.goto("/en/shop/retinol-complex-0-5");
+    const [a, b] = products;
+    await page.goto(`/en/shop/${a.slug}`);
     const title1 = await page.title();
-    await page.goto("/en/shop/facial-cleanser");
+    await page.goto(`/en/shop/${b.slug}`);
     const title2 = await page.title();
     expect(title1).not.toBe(title2);
   });

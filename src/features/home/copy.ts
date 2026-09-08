@@ -96,7 +96,7 @@ export const homepageCopy = {
     doctorsEyebrow: "OUR PHYSICIANS",
     productsEyebrow: "PROFESSIONAL SKINCARE",
     productsHeading: "Medical-grade skincare, recommended by your physician",
-    productsIntro: "Blue Diamond Medical carries the SkinMedica and Myriade professional skincare lines. Availability and pricing are confirmed in person, not through online checkout.",
+    productsIntro: "Blue Diamond Medical carries the Myriade professional skincare line. Availability and pricing are confirmed in person, not through online checkout.",
     productsCta: "View all products",
     resourcesEyebrow: "PATIENT RESOURCES",
     resourcesHeading: "Useful patient resources",
@@ -202,10 +202,10 @@ export const homepageCopy = {
       { t: "احضروا استشارتكم أو موعدكم", d: "يبدأ كل علاج تجميلي باستشارة طبية." },
     ],
     doctorsEyebrow: "أطباؤنا",
-    productsEyebrow: "سكين ميديكا",
+    productsEyebrow: "ميرياد",
     productsHeading: "عناية طبية بالبشرة، يوصي بها طبيبكم.",
-    productsIntro: "تقدّم بلو دايموند الطبية منتجات سكين ميديكا، وهي خط عناية بالبشرة احترافي. يتم تأكيد التوفر والسعر حضوريًا، وليس عبر الدفع الإلكتروني.",
-    productsCta: "استعرضي جميع منتجات SkinMedica",
+    productsIntro: "تقدّم بلو دايموند الطبية منتجات ميرياد، وهي خط عناية بالبشرة احترافي. يتم تأكيد التوفر والسعر حضوريًا، وليس عبر الدفع الإلكتروني.",
+    productsCta: "استعرضي جميع المنتجات",
     resourcesEyebrow: "موارد المرضى",
     resourcesHeading: "موارد مفيدة للمرضى.",
     resources: [
@@ -243,8 +243,8 @@ export const homepageCopy = {
       { q: "هل تتم عملية الحجز عبر هذا الموقع؟", a: "لا. يقدّم هذا الموقع معلومات فقط — ويتم الحجز عبر Mikata للمرضى المسجّلين، وعبر Skip the Waiting Room للمرضى الجدد والزيارات بدون موعد، وعبر Euclid لفحص العين، أو بالاتصال المباشر بالعيادة، أو بالحضور إلى الاستقبال." },
       { q: "كيف أحجز استشارة تجميل طبي؟", a: "يبدأ كل علاج تجميلي باستشارة طبية — احجزوا عبر مسار استشارة التجميل الطبي، أو اتصلوا بالعيادة مباشرة." },
       { q: "أين تُجرى علاجات Elite iQ™؟", a: "في Citizen Studio، وهو عنوان منفصل عن عيادة ويست سبرينغز — راجعوا صفحة علاج إزالة الشعر بالليزر للتفاصيل." },
-      { q: "كيف أسأل عن منتجات سكين ميديكا؟", a: "تواصلوا مع العيادة مباشرة. يتم تأكيد التوفر والسعر الحالي حضوريًا، وليس عبر الإنترنت." },
-      { q: "هل يمكن شراء منتجات سكين ميديكا عبر الإنترنت؟", a: "لا. الشراء عبر الإنترنت غير متاح حاليًا." },
+      { q: "كيف أسأل عن المنتجات؟", a: "تواصلوا مع العيادة مباشرة. يتم تأكيد التوفر والسعر الحالي حضوريًا، وليس عبر الإنترنت." },
+      { q: "هل يمكن شراء المنتجات عبر الإنترنت؟", a: "لا. الشراء عبر الإنترنت غير متاح حاليًا." },
       { q: "هل البوتوكس مشمول بالتأمين الصحي؟", a: "يُغطّى بوتوكس الشقيقة وصرير الأسنان (TMJ) والتعرق الزائد جزئيًا بالتأمين الصحي الحكومي وبرنامج العيادة التعاطفي. البوتوكس التجميلي غير مشمول بالتأمين." },
     ],
     finalActions: { explorMedical: "استكشفوا الرعاية الطبية", exploreAesthetics: "استكشفوا التجميل الطبي" },
@@ -287,13 +287,22 @@ export const TREATMENT_SHOWCASE_ORDER = [
   "tempsure-vitalia",
 ];
 
-// Six approved SkinMedica products spanning six of the seven "Factor"
-// groups, for editorial variety rather than six from the same group.
+// Six Myriade products, one from each of the six retail groupings the
+// supplied Products Flyer uses (Daily Care, Brightening, Purifying,
+// Anti-Aging and Repairing, Sun Care, Kits) — editorial variety rather than
+// six from the same shelf.
+//
+// These were six SkinMedica products until 2026-09-07. That line is archived
+// (src/config/features.ts), so `products` no longer contains any of those ids
+// and home/queries.ts, which drops ids it cannot resolve, would have rendered
+// the homepage's product section with an empty grid under a live heading.
+// Professional-use items are deliberately absent: this row links into the
+// retail catalogue, not the treatment room.
 export const PRODUCT_SHOWCASE_IDS = [
-  "lumivive-system",
-  "retinol-complex-05",
-  "total-defence-repair-spf-34-tinted",
-  "dermal-repair-cream",
-  "scar-recovery-gel-large",
-  "tns-advanced-plus-serum",
+  "the-cleanser",
+  "c-serum",
+  "charcoal-purifier",
+  "collagen-activator-serum",
+  "mineral-sunscreen-spf-30",
+  "normal-skin-kit",
 ];

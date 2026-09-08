@@ -68,40 +68,63 @@ const cmsEntries: CmsEntry[] = JSON.parse(
  * a human has to fix. A second test below fails when an entry here stops
  * drifting, so the list cannot rot into a permanent mute.
  *
+ * GREW from 22 to 31 on 2026-09-08 when the native Canadian English editorial
+ * pass (#64) landed. That pass rewrote repo copy for nine further CMS-backed
+ * entities without the matching CMS records being republished, which is
+ * exactly the condition this check exists to surface — it is doing its job,
+ * not misfiring. The nine are unblocked by the same permission as the other
+ * twenty-two.
+ *
  * BLOCKED 2026-09-08: correcting these needs content.publish on the
  * blue-diamond-medical project. The bd-media-import identity does not hold it
  * (PATCH entries/:id -> 403 "Missing content.publish permission"), so the
  * remediation is a publisher-identity job, not a code change. Field-level
  * diffs are in docs/CMS_CONTENT_AUTHORITY.md.
  *
- * 22 records, found by this check. A production crawl for strings the audit
+ * 31 records, found by this check. A production crawl for strings the audit
  * REMOVED found only 13 of them: a crawl cannot see drift in a field whose old
  * text was never published as a distinctive phrase, nor drift introduced by a
  * correction that has not shipped yet. That gap is the argument for this test.
+ *
+ * GREW again 2026-09-08 (Calgary medical-audit pass, #66): four more records
+ * qualified — rosacea-redness's summary/FAQ softened from "often work best"
+ * to "may help", and three medical-service summaries/FAQs reworded away from
+ * naming AHS insurance as a blanket guarantee. Same BLOCKED condition as
+ * above: content.publish is still not held by the import identity.
  */
 const KNOWN_CMS_DRIFT: ReadonlySet<string> = new Set([
   "aesthetic-concern:acne-scars",
   "aesthetic-concern:dry-skin",
   "aesthetic-concern:fine-lines-wrinkles",
   "aesthetic-concern:razor-bumps",
+  "aesthetic-concern:rosacea-redness",
   "aesthetic-concern:skin-laxity",
   "aesthetic-concern:skin-revitalization",
   "aesthetic-concern:spider-veins",
   "aesthetic-concern:sun-damage-pigmentation",
-  "technology:elite-iq",
-  "technology:potenza",
-  "technology:tempsure",
   "aesthetic-treatment:laser-hair-removal",
   "aesthetic-treatment:laser-skin-treatments",
   "aesthetic-treatment:prp-hair-restoration",
+  "aesthetic-treatment:prp-skin-rejuvenation",
   "aesthetic-treatment:radio-frequency",
   "aesthetic-treatment:rf-microneedling",
   "aesthetic-treatment:tempsure-vitalia",
   "aesthetic-treatment:ultra",
+  "medical-service:after-hours-care",
+  "medical-service:chronic-disease-management",
   "medical-service:eye-screening",
+  "medical-service:minor-procedures",
+  "medical-service:pain-management",
   "medical-service:preventive-care",
-  "product:daily-physical-defense-spf-34",
-  "product:lytera-2-pigment-brightening-serum",
+  "medical-service:weight-management",
+  // No product:* keys. The seven acknowledged here until 2026-09-08 were all
+  // SkinMedica records, and that line is archived (src/config/features.ts):
+  // they no longer publish, so they no longer pair, and "every acknowledged
+  // record still exists in the CMS capture" below would name them as stale.
+  "technology:elite-iq",
+  "technology:potenza",
+  "technology:tempsure",
+  "technology:tempsure-vitalia",
 ]);
 
 type Localized = { en: string; ar: string };

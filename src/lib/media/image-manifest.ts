@@ -329,16 +329,12 @@ export const imageManifest: ImageKitAsset[] = [
     role: "service",
     status: "pending",
   },
-  {
-    id: "skinmedica-collection",
-    path: `${MEDIA_ROOT}/shop/skinmedica-collection.jpg`,
-    width: 900,
-    height: 700,
-    aspectRatio: "9:7",
-    alt: { en: "SkinMedica professional skincare collection", ar: "مجموعة العناية بالبشرة الطبية سكين ميديكا" },
-    role: "product",
-    status: "pending",
-  },
+  // The `skinmedica-collection` slot was here. Removed 2026-09-07 with the
+  // SkinMedica line (src/config/features.ts): it was a `pending` placeholder
+  // for a photograph of a collection the clinic no longer carries, so keeping
+  // it would have left a standing request to shoot and approve an asset
+  // nothing can render. The Myriade packshots are real, approved assets and
+  // live on the product records themselves, not in this manifest.
   // Live aesthetic treatments only — generated from src/features/aesthetics/data/treatments.ts
   // so a treatment gated off (cosmetic-botox, skin-tightening) never gets a
   // stray manifest/image reference here; the homepage showcase filters to
