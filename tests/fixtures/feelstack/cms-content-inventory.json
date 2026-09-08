@@ -1,0 +1,2170 @@
+[
+  {
+    "cmsPath": "/aesthetics/concerns/acne-scars",
+    "entryId": "134fcffd-7f21-4756-8bda-0135e3488ffc",
+    "contentType": "aesthetic-concern",
+    "updatedAt": "2026-08-23T11:25:34.635Z",
+    "title": "Acne Scars",
+    "fields": {
+      "summary": "Comprehensive care for acne scarring — medical consultations, prescriptions where necessary, and RF micro-needling and laser treatments to reduce scarring, under the supervision of one of our physicians.",
+      "concern_id": "acne-scars"
+    },
+    "faqs": [
+      {
+        "id": "4732dc63-ba8b-4951-b45a-ae7508bdc141",
+        "question": "How does care for acne scarring start?",
+        "answer": "With a medical consultation — from there, a physician may recommend a prescription where necessary, alongside treatments like RF micro-needling and laser."
+      },
+      {
+        "id": "e75b87bc-c99f-40f5-a0c8-904766b46c2c",
+        "question": "Is this care physician-supervised?",
+        "answer": "Yes — every step, from consultation to treatment, is supervised by one of our physicians."
+      },
+      {
+        "id": "b96c661e-0c48-4996-abe1-e1b3e00a7acc",
+        "question": "Which treatment is used for acne scarring?",
+        "answer": "RF micro-needling is the treatment linked to this concern; a physician will confirm what's appropriate for your specific scarring during your consultation."
+      },
+      {
+        "id": "d4bb9bc5-27e5-4296-90a4-828b24994508",
+        "question": "Will a prescription always be part of my care?",
+        "answer": "Not necessarily — prescriptions are provided where necessary, based on your physician's assessment."
+      },
+      {
+        "id": "5c305078-48ab-4894-a02a-7b1e039dc579",
+        "question": "How do I book a consultation?",
+        "answer": "Through Jane App, our external booking system for aesthetics consultations."
+      }
+    ]
+  },
+  {
+    "cmsPath": "/aesthetics/concerns/dry-skin",
+    "entryId": "80c98c11-9c6c-4c30-9744-da5bf290cae5",
+    "contentType": "aesthetic-concern",
+    "updatedAt": "2026-08-23T11:25:37.751Z",
+    "title": "Dry Skin",
+    "fields": {
+      "summary": "Calgary's climate is unusually harsh on skin. Using RF micro-needling to infuse topicals — including moisturizers and pigment regulators — we help skin stay nourished and glowing for months after treatment.",
+      "concern_id": "dry-skin"
+    },
+    "faqs": [
+      {
+        "id": "eca20065-558b-4244-a08f-84562eaa90ce",
+        "question": "Why is Calgary's climate mentioned for dry skin care?",
+        "answer": "Calgary's climate is unusually harsh on skin, which is part of why ongoing nourishment support can be worthwhile for many patients here."
+      },
+      {
+        "id": "b13993e8-bd5e-4ea9-b47a-cf9ed47f2b02",
+        "question": "How does RF micro-needling help with dry skin?",
+        "answer": "It's used to infuse topicals — including moisturizers and pigment regulators — helping skin stay nourished for months after treatment."
+      },
+      {
+        "id": "081fdf86-84f5-4fa8-827f-add86f4d03ed",
+        "question": "How long does the nourishing effect last?",
+        "answer": "Effects can last for months after treatment, though this varies by individual."
+      }
+    ]
+  },
+  {
+    "cmsPath": "/aesthetics/concerns/fine-lines-wrinkles",
+    "entryId": "98c6a1c8-0712-4588-821b-326c1e326032",
+    "contentType": "aesthetic-concern",
+    "updatedAt": "2026-08-23T11:25:38.996Z",
+    "title": "Fine Lines & Wrinkles",
+    "fields": {
+      "summary": "State-of-the-art technologies to smooth and erase fine lines and wrinkles, alongside skin-tightening options for all skin types — bespoke treatments as individual as you are.",
+      "concern_id": "fine-lines-wrinkles"
+    },
+    "faqs": [
+      {
+        "id": "189323e5-0313-4712-997b-74f22ab2a2ed",
+        "question": "What treatments address fine lines and wrinkles?",
+        "answer": "RF micro-needling and radio-frequency skin-tightening are the two treatments connected to this concern, suited to different skin types."
+      },
+      {
+        "id": "65d280a5-6266-42fc-bcc3-ff6f115c7e7b",
+        "question": "Is treatment the same for everyone?",
+        "answer": "No — treatments are bespoke, tailored to your specific skin during a consultation."
+      },
+      {
+        "id": "17eb6804-d282-440f-bbf5-3d51ab458023",
+        "question": "Do these treatments also help with skin tightening, not just lines?",
+        "answer": "Yes — skin-tightening options are available alongside the line-smoothing treatments, for all skin types."
+      }
+    ]
+  },
+  {
+    "cmsPath": "/aesthetics/concerns/razor-bumps",
+    "entryId": "663ce5c2-cd39-4824-91cb-61484dd65512",
+    "contentType": "aesthetic-concern",
+    "updatedAt": "2026-08-23T11:25:54.132Z",
+    "title": "Razor Bumps",
+    "fields": {
+      "summary": "Uncomfortable and prone to infection when combined with ingrown hairs. Our technologies can remove razor bumps, treat the underlying cause, and give you smoother, softer skin with minimally invasive treatment.",
+      "concern_id": "razor-bumps"
+    },
+    "faqs": [
+      {
+        "id": "0c628039-55a1-4cd1-b661-6e21138b8149",
+        "question": "Why are razor bumps a concern beyond appearance?",
+        "answer": "They're uncomfortable and prone to infection, especially when combined with ingrown hairs."
+      },
+      {
+        "id": "8ec51ecc-5f2a-44de-90b9-9ea6ab9c2372",
+        "question": "Does treatment just remove the bumps, or address the cause?",
+        "answer": "Both — treatment addresses the underlying cause as well as the visible bumps."
+      },
+      {
+        "id": "af048da7-dcb2-4c9c-9def-8ef68eee27c1",
+        "question": "Which treatment is used for razor bumps?",
+        "answer": "Laser hair removal."
+      },
+      {
+        "id": "f61f87ed-bf1c-4914-8f51-c0a86049442c",
+        "question": "Is this a minimally invasive treatment?",
+        "answer": "Yes."
+      }
+    ]
+  },
+  {
+    "cmsPath": "/aesthetics/concerns/rosacea-redness",
+    "entryId": "70576868-4451-4ce3-865e-f33cdd02a35e",
+    "contentType": "aesthetic-concern",
+    "updatedAt": "2026-08-23T11:25:36.348Z",
+    "title": "Rosacea & Redness",
+    "fields": {
+      "summary": "The gentle flush of rosacea can escalate into redness that's distressing to live with. We take a holistic approach, starting with a full medical consultation to discuss what can be achieved — laser treatments often work best for this condition.",
+      "concern_id": "rosacea-redness"
+    },
+    "faqs": [
+      {
+        "id": "12020dc1-04ca-4a58-b9d3-49c263c7dc9c",
+        "question": "Where does treatment for rosacea and redness start?",
+        "answer": "With a full medical consultation to discuss what can realistically be achieved for your specific presentation."
+      },
+      {
+        "id": "92ac57aa-4dee-4929-9f85-77e1d8bef0fc",
+        "question": "What treatment is generally used for rosacea and redness?",
+        "answer": "Laser treatments often work best for this condition — Laser Skin Treatments is the relevant treatment page."
+      },
+      {
+        "id": "12625e87-3899-4981-bb13-aa412fe5c2da",
+        "question": "Will rosacea come back after treatment?",
+        "answer": "Results and their duration vary by individual — your physician will discuss realistic expectations for your case during the consultation."
+      },
+      {
+        "id": "2bc91182-2043-4695-a992-43e290d56eb3",
+        "question": "Is rosacea the same as general facial redness?",
+        "answer": "Rosacea is one cause of facial redness; a physician consultation is the way to understand what's contributing to your specific redness."
+      }
+    ]
+  },
+  {
+    "cmsPath": "/aesthetics/concerns/skin-laxity",
+    "entryId": "4468ab1c-57d4-4be4-9a6f-c7f33c0c7c8c",
+    "contentType": "aesthetic-concern",
+    "updatedAt": "2026-08-23T11:25:50.138Z",
+    "title": "Skin Laxity",
+    "fields": {
+      "summary": "Radio-frequency waves promote collagen and elastin production to tighten and smooth skin all over the body — a quick, pain-free treatment (about 15 minutes) with easy, visible results and no downtime.",
+      "concern_id": "skin-laxity"
+    },
+    "faqs": [
+      {
+        "id": "c295532a-f7a5-4ee8-a52c-cba67687e96b",
+        "question": "How does radio-frequency treatment address skin laxity?",
+        "answer": "It promotes collagen and elastin production, which helps tighten and smooth skin across the body."
+      },
+      {
+        "id": "86f6df37-e9a8-4c77-885c-eb870eec06c8",
+        "question": "How long does a session take?",
+        "answer": "About 15 minutes."
+      },
+      {
+        "id": "aa71a4dd-8f1d-4b59-9361-c9f2727baef5",
+        "question": "Is there downtime after treatment?",
+        "answer": "No downtime is associated with this treatment."
+      }
+    ]
+  },
+  {
+    "cmsPath": "/aesthetics/concerns/skin-revitalization",
+    "entryId": "643b827d-75f1-4edb-b9c7-ec029d79e38c",
+    "contentType": "aesthetic-concern",
+    "updatedAt": "2026-08-23T11:25:52.725Z",
+    "title": "Skin Revitalization",
+    "fields": {
+      "summary": "Harsh weather and daily stresses can leave skin looking tired. We can refresh skin in under 45 minutes, exposing a natural glow and reducing the appearance of fine lines and wrinkles.",
+      "concern_id": "skin-revitalization"
+    },
+    "faqs": [
+      {
+        "id": "5841d543-acf3-4353-a633-f4f3a8945255",
+        "question": "How long does a skin revitalization treatment take?",
+        "answer": "Under 45 minutes."
+      },
+      {
+        "id": "e46eae5d-83a0-4fb7-bfbc-c4abe012b872",
+        "question": "What does skin revitalization address?",
+        "answer": "Skin that looks tired from harsh weather and daily stress, including the appearance of fine lines and wrinkles."
+      },
+      {
+        "id": "5ec7e080-9ac6-479e-a54f-f3bcd6e1f883",
+        "question": "Which treatments are used for skin revitalization?",
+        "answer": "Laser Skin Treatments and RF micro-needling."
+      }
+    ]
+  },
+  {
+    "cmsPath": "/aesthetics/concerns/spider-veins",
+    "entryId": "d3fa75b6-eaf5-4007-b0d0-5ab8d0afa869",
+    "contentType": "aesthetic-concern",
+    "updatedAt": "2026-08-23T11:25:51.478Z",
+    "title": "Spider Veins",
+    "fields": {
+      "summary": "Damaged blood vessels under the skin that can appear red, blue, or purple — generally harmless but unsightly. Laser treatments can remove them from anywhere on the body quickly and painlessly.",
+      "concern_id": "spider-veins"
+    },
+    "faqs": [
+      {
+        "id": "69e50c28-24d8-4e94-95a4-c524c504ab86",
+        "question": "Are spider veins a health concern?",
+        "answer": "They're generally harmless but can be unsightly — treatment is typically for cosmetic reasons, though your physician will assess your specific case."
+      },
+      {
+        "id": "801a25fb-ef3c-4acf-b487-866575a9f2dd",
+        "question": "Where on the body can spider veins be treated?",
+        "answer": "Anywhere on the body."
+      },
+      {
+        "id": "11e171a4-9599-40e2-a4f3-52f220e627bc",
+        "question": "What causes the discoloration in spider veins?",
+        "answer": "They're damaged blood vessels under the skin, which can appear red, blue, or purple."
+      }
+    ]
+  },
+  {
+    "cmsPath": "/aesthetics/concerns/sun-damage-pigmentation",
+    "entryId": "270a4594-ae4a-4462-bd3c-7f2b7cabf3d9",
+    "contentType": "aesthetic-concern",
+    "updatedAt": "2026-08-23T11:24:34.523Z",
+    "title": "Sun Damage & Pigmentation",
+    "fields": {
+      "summary": "Sun spots and liver spots from time in the sun can be easily reduced using our state-of-the-art laser technologies.",
+      "concern_id": "sun-damage-pigmentation"
+    },
+    "faqs": [
+      {
+        "id": "6c67eea5-b19d-4887-9966-f44af0690b4f",
+        "question": "What causes sun spots and pigmentation?",
+        "answer": "Time in the sun, over the years."
+      },
+      {
+        "id": "7bc807c9-35d1-47df-8c43-1a67756c067b",
+        "question": "What treatments address sun damage and pigmentation?",
+        "answer": "Laser Skin Treatments and the Ultra laser are the two treatments connected to this concern."
+      },
+      {
+        "id": "d72430f9-ccc5-4986-853c-9b1bcf14bf6e",
+        "question": "Is sun damage/pigmentation the same as \"liver spots\"?",
+        "answer": "Liver spots are one common form of this — both are addressed by the same treatment pathway."
+      }
+    ]
+  },
+  {
+    "cmsPath": "/aesthetics/technologies/elite-iq",
+    "entryId": "0b101bea-6875-4510-be4d-69e00939734c",
+    "contentType": "technology",
+    "updatedAt": "2026-08-23T12:02:19.085Z",
+    "title": "Elite iQ™",
+    "fields": {
+      "summary": "Cynosure's Elite iQ™ device offers quick, personalized laser hair treatments using the Skintel™ device — the first Health Canada and FDA cleared melanin reader on the market — allowing safe treatment of all skin types and areas.",
+      "safety_note": "The melanin-reading step exists specifically to support safe treatment across a range of skin types; individual suitability is still assessed during a consultation.",
+      "how_it_works": "Before treatment, the Skintel™ device reads your skin's melanin level directly, rather than estimating it from a visual skin-type chart. The Elite iQ™ laser then uses that reading to calibrate its settings to your skin specifically.",
+      "manufacturer": "Cynosure",
+      "technology_id": "elite-iq",
+      "what_it_addresses": "Unwanted hair, across a range of skin types and treatment areas, made possible by the melanin-reading calibration step.",
+      "appointment_involves": "A Skintel™ reading followed by laser passes over the treatment area. All Elite iQ™ treatments are performed at Citizen Studio, not the West Springs clinic — see the laser hair removal treatment page for the address."
+    },
+    "faqs": [
+      {
+        "id": "502e9b65-6511-4105-abab-e09ef80a66f2",
+        "question": "What makes Elite iQ™ different from a standard laser hair removal device?",
+        "answer": "The Skintel™ melanin reader — it measures your skin's melanin directly rather than relying on a general skin-type estimate, which is what allows the laser settings to be calibrated to you specifically."
+      },
+      {
+        "id": "6a6896e9-f0a3-4ccb-bac0-3a1732b25548",
+        "question": "Where are Elite iQ™ treatments performed?",
+        "answer": "At Citizen Studio, a separate location from the West Springs clinic."
+      },
+      {
+        "id": "7102eff2-8866-4515-bfaa-e8ecd3dea5e1",
+        "question": "Is Elite iQ™ suitable for every skin type?",
+        "answer": "The Skintel™ calibration step is designed to support treatment across a range of skin types, but individual suitability is confirmed during a consultation."
+      },
+      {
+        "id": "d838e92e-46f5-4952-9619-75c205f646e2",
+        "question": "What's the manufacturer of the Elite iQ™ device?",
+        "answer": "Cynosure."
+      },
+      {
+        "id": "36feb78b-2994-4d7c-a380-4f4d9ed7e821",
+        "question": "How do I book a consultation for a treatment using this device?",
+        "answer": "Book a consultation through Jane App — see the laser hair removal treatment page for the direct link."
+      }
+    ]
+  },
+  {
+    "cmsPath": "/aesthetics/technologies/potenza",
+    "entryId": "40b09658-04d8-45b1-b0e3-4180f5aeb157",
+    "contentType": "technology",
+    "updatedAt": "2026-08-23T12:03:14.578Z",
+    "title": "Potenza",
+    "fields": {
+      "summary": "A one-of-a-kind radio-frequency micro-needling system, ideal for skin tightening and smoothing all over the body — for fine lines or tightening after rapid weight loss or post-birth.",
+      "how_it_works": "Potenza combines micro-needling — fine needles creating controlled micro-injuries in the skin — with radio-frequency energy delivered through those same needles, adding a tightening effect to the skin's natural response to micro-injury.",
+      "manufacturer": "Cynosure",
+      "technology_id": "potenza",
+      "what_it_addresses": "Skin tightening and smoothing across the body, including fine lines or laxity following rapid weight loss or after childbirth."
+    },
+    "faqs": [
+      {
+        "id": "f4b04fc6-f0b4-480d-9fa7-f9bcb34fab5e",
+        "question": "What's the difference between Potenza and standard micro-needling?",
+        "answer": "Potenza adds radio-frequency energy delivered through the needles, combining the micro-injury response of standard micro-needling with an additional tightening effect."
+      },
+      {
+        "id": "0e75a5e5-273f-4071-95e2-8b1472a3d033",
+        "question": "Who is Potenza treatment suited for?",
+        "answer": "It's commonly used for skin tightening after rapid weight loss or childbirth, and for fine lines generally — suitability for your specific goals is confirmed during a consultation."
+      },
+      {
+        "id": "f9f1c576-dff4-4549-98ff-2a1453bf609e",
+        "question": "Which treatment uses the Potenza device?",
+        "answer": "RF Micro-Needling."
+      },
+      {
+        "id": "d5658ddc-0a0a-4bbb-8098-3b91fc2a1a75",
+        "question": "What's the manufacturer of the Potenza device?",
+        "answer": "Cynosure."
+      }
+    ]
+  },
+  {
+    "cmsPath": "/aesthetics/technologies/tempsure",
+    "entryId": "30245ae4-2f16-490d-8f15-e9c765c6e69f",
+    "contentType": "technology",
+    "updatedAt": "2026-08-23T12:03:16.221Z",
+    "title": "TempSure",
+    "fields": {
+      "summary": "A non-invasive tool for tightening and firming skin all over the body, with zero downtime.",
+      "how_it_works": "TempSure uses radio-frequency energy to gently heat the deeper layers of the skin, encouraging a natural tightening and firming response without breaking the skin's surface.",
+      "manufacturer": "Cynosure",
+      "technology_id": "tempsure",
+      "what_it_addresses": "Skin tightening and firming across the body."
+    },
+    "faqs": [
+      {
+        "id": "96505e17-c62e-4d8b-8caf-66422630e27c",
+        "question": "Does TempSure treatment involve any downtime?",
+        "answer": "No — it's a non-invasive treatment with zero downtime."
+      },
+      {
+        "id": "35ed42a9-238b-4051-9929-4eb6fb9b525c",
+        "question": "How does TempSure tighten skin without surgery?",
+        "answer": "It heats the deeper layers of the skin using radio-frequency energy, which encourages the skin's own natural tightening response."
+      },
+      {
+        "id": "63575a0a-fb57-43ff-a618-84e6050f90f9",
+        "question": "Which treatment uses the TempSure device?",
+        "answer": "Radio Frequency treatment."
+      }
+    ]
+  },
+  {
+    "cmsPath": "/aesthetics/technologies/tempsure-vitalia",
+    "entryId": "f3746334-ff41-4bc3-a142-f2b1238aa7b3",
+    "contentType": "technology",
+    "updatedAt": "2026-08-23T12:03:18.572Z",
+    "title": "TempSure Vitalia",
+    "fields": {
+      "summary": "Equipment addressing many pelvic floor issues and sexual health concerns women experience at all ages and stages of life.",
+      "how_it_works": "TempSure Vitalia uses radio-frequency energy in a non-surgical approach designed for pelvic floor and sexual health concerns.",
+      "manufacturer": "Cynosure",
+      "technology_id": "tempsure-vitalia",
+      "what_it_addresses": "Pelvic floor issues and sexual health concerns women may experience at various ages and life stages."
+    },
+    "faqs": [
+      {
+        "id": "be0fa8cf-bba8-4396-9574-9280086abe89",
+        "question": "Is TempSure Vitalia surgical?",
+        "answer": "No — it's a non-surgical, radio-frequency-based approach."
+      },
+      {
+        "id": "bf3defd7-968d-46da-9682-2c7e39560597",
+        "question": "Who might consider TempSure Vitalia?",
+        "answer": "Women experiencing pelvic floor or sexual health concerns at any age or life stage — suitability is assessed during a consultation."
+      }
+    ]
+  },
+  {
+    "cmsPath": "/aesthetics/technologies/ultra",
+    "entryId": "26cf9261-fe27-4441-a558-0002d226a890",
+    "contentType": "technology",
+    "updatedAt": "2026-08-23T12:03:17.492Z",
+    "title": "Ultra",
+    "fields": {
+      "summary": "A low-downtime laser that rejuvenates skin, giving it a brighter tone and improved texture, with treatments customized to your needs and schedule.",
+      "how_it_works": "Ultra is a laser treatment that works on the skin's surface layers to improve tone and texture, with a low-downtime profile.",
+      "manufacturer": "Cynosure",
+      "technology_id": "ultra",
+      "what_it_addresses": "Overall skin tone and texture, with treatments customized to individual needs and scheduling."
+    },
+    "faqs": [
+      {
+        "id": "ec7b0006-b2e8-4811-8bd7-67de4268a545",
+        "question": "How much downtime does an Ultra treatment involve?",
+        "answer": "Ultra has a low-downtime profile compared to more intensive resurfacing lasers, and treatments are customized to your schedule."
+      },
+      {
+        "id": "58fd8421-efdc-4318-abe2-a89fabc96d6b",
+        "question": "What does Ultra treatment improve?",
+        "answer": "Skin tone and texture, giving a brighter, smoother appearance."
+      }
+    ]
+  },
+  {
+    "cmsPath": "/aesthetics/treatments/laser-hair-removal",
+    "entryId": "d3aef8df-feb3-4965-97f9-28527e9e419c",
+    "contentType": "aesthetic-treatment",
+    "updatedAt": "2026-08-23T11:05:27.599Z",
+    "title": "Laser Hair Removal",
+    "fields": {
+      "summary": "Long-lasting hair reduction anywhere on the body using the Cynosure Elite+™ laser system.",
+      "preparation": "Shave the treatment area beforehand so the laser's energy is delivered effectively.",
+      "how_it_works": "Hair grows in a three-phase cycle — anagen (active growth), catagen, and telogen (resting). The laser emits light energy absorbed by melanin in the hair follicle, damaging it and impairing regrowth. Follicles in the anagen phase respond best, so multiple treatments are needed to catch hair actively growing.",
+      "treatment_id": "laser-hair-removal",
+      "comfort_level": "You may feel cold air and a slight beep or snapping sensation during treatment.",
+      "result_timeline": "Hairs present at the time of treatment fall out over the following weeks. Regrowth becomes thinner and lighter with each subsequent treatment; multiple sessions are needed since not all hairs are actively growing at once.",
+      "service_location_note": "All Elite iQ™ treatments are performed exclusively at Citizen Studio, 45 Greenbriar Dr NW, Calgary, AB T3B 5N4 — not at the West Springs clinic."
+    },
+    "faqs": [
+      {
+        "id": "fc19e3fe-97a6-4211-b739-d42d2c5269cc",
+        "question": "How does Elite iQ™ work?",
+        "answer": "It uses the Skintel™ device — the first Health Canada and FDA cleared melanin reader on the market — allowing safe treatment of all skin types and areas."
+      },
+      {
+        "id": "adb619b9-3b79-459e-9915-8514eb988fe0",
+        "question": "Is this treatment right for me?",
+        "answer": "The Elite iQ™ device can be safely used on all skin types and anywhere on the body. Talk with your provider to discuss candidacy."
+      },
+      {
+        "id": "021f409e-4b3f-4af5-b989-732d2032f15e",
+        "question": "How many treatments will I need?",
+        "answer": "Treatment times vary by area but typically take less than 30 minutes. Speak to your provider for a consultation to discuss treatment areas."
+      }
+    ]
+  },
+  {
+    "cmsPath": "/aesthetics/treatments/laser-skin-treatments",
+    "entryId": "05353841-9ffe-43ad-88c7-0856a8c58fcd",
+    "contentType": "aesthetic-treatment",
+    "updatedAt": "2026-08-23T11:05:28.953Z",
+    "title": "Laser Skin Treatments",
+    "fields": {
+      "summary": "State-of-the-art laser equipment for smoother complexions, brightening damaged skin, removing benign pigmented lesions, and treating face and leg veins.",
+      "preparation": "Avoid sun exposure for one week before a Laser Facial treatment.",
+      "how_it_works": "A Laser Facial is suited to sun-damaged skin, red or ruddy complexions, light telangiectasia (spider veins), and uneven pigmentation — most often on the face but usable almost anywhere on the body. Each protocol is tailored to skin tone and needs.",
+      "treatment_id": "laser-skin-treatments",
+      "suggested_course": "Laser Facial: 3–6 treatments usually required for lasting results. Benign pigmented lesions: visible uniformity of color in as little as 2 treatments, full course of 4 treatments at 3–4 week intervals. Vascular treatments (spider veins): eliminated in as little as 2 treatments, spaced 4–8 weeks apart."
+    },
+    "faqs": [
+      {
+        "id": "b03a87fe-ecd1-4a81-9e00-f5ed8ad8807b",
+        "question": "What skin concerns can laser skin treatments address?",
+        "answer": "Sun-damaged skin, red or ruddy complexions, light spider veins, uneven pigmentation, and benign pigmented lesions."
+      },
+      {
+        "id": "4ac46de2-9653-4436-b59b-18b6f2aa1310",
+        "question": "Is treatment only for the face?",
+        "answer": "It's most often used on the face, but the underlying laser technology can be used almost anywhere on the body."
+      },
+      {
+        "id": "31055911-9f5c-4916-9c7d-4782ca0885a8",
+        "question": "How should I prepare for a Laser Facial?",
+        "answer": "Avoid sun exposure for one week beforehand."
+      },
+      {
+        "id": "042f18e1-5fcd-4cac-94af-4383e438d7df",
+        "question": "How many sessions does a Laser Facial usually take?",
+        "answer": "Usually 3–6 treatments for lasting results."
+      },
+      {
+        "id": "c1583628-4688-44ea-8a9c-98c244099ff5",
+        "question": "How many sessions for pigmented lesions or spider veins specifically?",
+        "answer": "Benign pigmented lesions: visible uniformity of color in as little as 2 treatments, with a full course of 4 at 3–4 week intervals. Vascular treatments (spider veins): eliminated in as little as 2 treatments, spaced 4–8 weeks apart."
+      },
+      {
+        "id": "74a9be25-e323-44bc-a039-13cda10780a9",
+        "question": "Is each treatment protocol the same for every patient?",
+        "answer": "No — each protocol is tailored to skin tone and individual needs."
+      }
+    ]
+  },
+  {
+    "cmsPath": "/aesthetics/treatments/prp-hair-restoration",
+    "entryId": "d30e1c87-d4a8-4c1f-ba2c-512c8711732a",
+    "contentType": "aesthetic-treatment",
+    "updatedAt": "2026-08-23T11:05:42.651Z",
+    "title": "PRP Hair Restoration",
+    "fields": {
+      "summary": "Platelet-Rich Plasma injected into the scalp to stimulate inactive hair follicles and promote denser, fuller hair growth — performed by Dr. Farhat.",
+      "downtime": "Sessions are quick with little to no downtime.",
+      "duration": "30 to 60 minutes depending on the treatment area.",
+      "who_its_for": "Individuals noticing thinning hair or early hair loss.",
+      "how_it_works": "PRP is a regenerative serum created from the patient's own blood. After a blood draw, plasma is separated and concentrated into a serum rich in growth factors that stimulate inactive hair follicles and improve scalp blood circulation.",
+      "treatment_id": "prp-hair-restoration",
+      "suggested_course": "Most people benefit from a series of 3–4 treatments spaced a few weeks apart; maintenance sessions may be recommended."
+    },
+    "faqs": [
+      {
+        "id": "76cf658e-9510-4ff0-8a50-2a764586223f",
+        "question": "Who performs PRP at Blue Diamond Medical?",
+        "answer": "PRP treatments are performed by Dr. Farhat, combining advanced technique with personalized care."
+      }
+    ]
+  },
+  {
+    "cmsPath": "/aesthetics/treatments/prp-skin-rejuvenation",
+    "entryId": "a64fe8ed-aeef-4ddd-9ae3-06423d47f6d8",
+    "contentType": "aesthetic-treatment",
+    "updatedAt": "2026-08-23T11:05:43.365Z",
+    "title": "PRP Skin Rejuvenation",
+    "fields": {
+      "summary": "PRP used topically or via microinjections to smooth fine lines and wrinkles, improve tone and elasticity, and reduce acne scars and pigmentation — often called the \"vampire facial.\"",
+      "duration": "30 to 60 minutes depending on the treatment area.",
+      "how_it_works": "The same patient-derived, growth-factor-rich serum used for hair restoration is applied to the skin, boosting collagen production for firmer, more youthful skin using no synthetic additives.",
+      "treatment_id": "prp-skin-rejuvenation",
+      "suggested_course": "Most people benefit from a series of 3–4 treatments spaced a few weeks apart; maintenance sessions may be recommended."
+    },
+    "faqs": [
+      {
+        "id": "1b0b578c-af77-43f7-9fb8-943fbe6c20a8",
+        "question": "Why is PRP skin rejuvenation sometimes called a \"vampire facial\"?",
+        "answer": "Because it uses the patient's own blood — plasma is separated and applied topically or via microinjections."
+      },
+      {
+        "id": "bdfb691c-9112-4d82-8269-e893df225713",
+        "question": "What can PRP skin rejuvenation address?",
+        "answer": "Fine lines and wrinkles, skin tone and elasticity, acne scars, and pigmentation."
+      },
+      {
+        "id": "3e2b95c1-a1d0-42e0-8687-725cf80d8273",
+        "question": "Does this use any synthetic additives?",
+        "answer": "No — it uses the same patient-derived, growth-factor-rich serum used for PRP hair restoration, with no synthetic additives."
+      },
+      {
+        "id": "d9bbd25f-b83b-45f4-8f79-72937ae0b12b",
+        "question": "How long does a session take, and how many will I need?",
+        "answer": "30 to 60 minutes depending on the treatment area. Most people benefit from a series of 3–4 treatments spaced a few weeks apart, with maintenance sessions sometimes recommended."
+      }
+    ]
+  },
+  {
+    "cmsPath": "/aesthetics/treatments/radio-frequency",
+    "entryId": "98c8e33c-5dc0-4f1f-9a51-b40f969c9e76",
+    "contentType": "aesthetic-treatment",
+    "updatedAt": "2026-08-23T11:05:31.231Z",
+    "title": "Radio Frequency",
+    "fields": {
+      "summary": "Non-invasive tightening and smoothing of skin all over the body using RF waves (TempSure), improving tone and reducing the appearance of fine lines and wrinkles.",
+      "downtime": "Virtually no downtime — you're free to return to normal daily life immediately. A medical-grade sunscreen is recommended to protect and preserve results.",
+      "duration": "Face and neck treatments (handheld roller over face, neck, and décolletage) take 40–90 minutes depending on area. Body areas are treated with non-invasive pads over about 20 minutes.",
+      "how_it_works": "A handheld device passes RF waves across the treatment area in a circular motion, gently raising the skin's temperature. The resulting heat penetrates the skin layers and stimulates collagen and elastin production for firmer, more youthful skin.",
+      "treatment_id": "radio-frequency",
+      "comfort_level": "Not painful — most patients report a therapeutic, massage-like effect.",
+      "result_timeline": "Not an instant-fix procedure — skin looks fresher within a few days, but the most noticeable results appear approximately 6–8 weeks after the first treatment.",
+      "suggested_course": "3–5 treatments 4–6 weeks apart provide optimal results, with positive effects lasting up to 2 years."
+    },
+    "faqs": [
+      {
+        "id": "24c66cf2-18f3-4a0e-acea-bf2b14c3d485",
+        "question": "Does Radio Frequency treatment hurt?",
+        "answer": "It's not painful — most patients report a therapeutic, massage-like effect."
+      },
+      {
+        "id": "7ca04559-2dba-4c84-a218-e3f1b8153bbd",
+        "question": "How long does a session take?",
+        "answer": "Face and neck treatments take 40–90 minutes depending on the area; body areas are treated with non-invasive pads over about 20 minutes."
+      },
+      {
+        "id": "9699ce64-f340-46e5-b62c-c382d91b658e",
+        "question": "Is there any downtime?",
+        "answer": "Virtually none — you can return to normal daily life immediately. A medical-grade sunscreen is recommended afterward to protect results."
+      },
+      {
+        "id": "e4d6a28a-dce7-4576-becc-1e2226936b73",
+        "question": "When will I see results?",
+        "answer": "It isn't an instant-fix procedure — skin looks fresher within a few days, but the most noticeable results appear roughly 6–8 weeks after the first treatment."
+      },
+      {
+        "id": "164b95b1-729f-4bfc-84d9-d8e7396fd82c",
+        "question": "How many sessions are recommended, and how long do results last?",
+        "answer": "3–5 treatments spaced 4–6 weeks apart provide optimal results, with positive effects lasting up to 2 years."
+      }
+    ]
+  },
+  {
+    "cmsPath": "/aesthetics/treatments/rf-microneedling",
+    "entryId": "7a0a7423-0c3f-4123-936b-c716c11e2d66",
+    "contentType": "aesthetic-treatment",
+    "updatedAt": "2026-08-23T11:02:47.148Z",
+    "title": "RF Micro-Needling",
+    "fields": {
+      "summary": "The Potenza RF microneedling system adds radiofrequency energy to mechanical microneedling for enhanced skin tightening alongside the benefits of micro-injury stimulation.",
+      "downtime": "Minimal downtime — avoid strenuous exercise and sun exposure for 48 hours; otherwise resume regular activities with good SPF.",
+      "duration": "Typically around 30 minutes. A topical anesthetic is applied and can take up to 45 minutes to become fully effective.",
+      "how_it_works": "RF energy is delivered via small needles deep into the dermis, heating underlying layers to cause tightening and stimulate collagen and elastin production — producing faster, more dramatic results than non-RF micro-needling. Treatments aren't limited to the face and are particularly useful for toning and retracting skin post-weight-loss.",
+      "treatment_id": "rf-microneedling",
+      "comfort_level": "The numbing agent removes most discomfort — patients report feeling the needling but not actual pain. Providers monitor continuously and treatment can be halted at any time.",
+      "result_timeline": "Effects can usually be seen straight away, but one session isn't enough for lasting results.",
+      "suggested_course": "3- and 5-session packages are recommended for continuous, rejuvenated, firm skin."
+    },
+    "faqs": [
+      {
+        "id": "637c6376-33d5-4a7c-a6b4-02a035c76f61",
+        "question": "Why RF micro-needling vs. non-RF micro-needling?",
+        "answer": "Potenza delivers focused RF technology to heat the skin, triggering the body's natural response to increase collagen and elastin production, resulting in enhanced skin revitalization."
+      }
+    ]
+  },
+  {
+    "cmsPath": "/aesthetics/treatments/tempsure-vitalia",
+    "entryId": "bac734ca-0701-4733-8823-4832650b9766",
+    "contentType": "aesthetic-treatment",
+    "updatedAt": "2026-08-23T11:05:44.837Z",
+    "title": "TempSure Vitalia",
+    "fields": {
+      "summary": "Equipment addressing many pelvic floor issues and sexual health concerns that women experience at all ages and stages of life — roughly 1 in 3 women, often in silence.",
+      "who_its_for": "Women experiencing pelvic floor or sexual health concerns who want to discuss whether this simple, in-clinic procedure may be right for them.",
+      "treatment_id": "tempsure-vitalia"
+    },
+    "faqs": [
+      {
+        "id": "37f77dd8-1326-4475-bd2b-76ebbaea4f1b",
+        "question": "How common are the concerns TempSure Vitalia addresses?",
+        "answer": "Roughly 1 in 3 women experience pelvic floor or sexual health concerns at some point, often in silence."
+      },
+      {
+        "id": "e197fb6d-4288-4b4f-9ba5-15f13024df7c",
+        "question": "Is this a surgical procedure?",
+        "answer": "No — it's described as a simple, in-clinic procedure."
+      },
+      {
+        "id": "f9b3dcb4-df87-4263-a801-1ddb54abbaab",
+        "question": "Who is this treatment for?",
+        "answer": "Women experiencing pelvic floor or sexual health concerns at any age or life stage, who want to discuss whether it may be right for them."
+      }
+    ]
+  },
+  {
+    "cmsPath": "/aesthetics/treatments/ultra",
+    "entryId": "5296f2bb-c454-4c1e-b092-df2482144757",
+    "contentType": "aesthetic-treatment",
+    "updatedAt": "2026-08-23T11:05:41.155Z",
+    "title": "Ultra Treatment",
+    "fields": {
+      "summary": "A low-downtime laser that rejuvenates the skin, giving it a brighter tone and improved texture — treating mild to moderate age spots, freckles, sun spots, pigmented lesions, sun damage, actinic keratosis, melasma, and postinflammatory hyperpigmentation.",
+      "downtime": "Mild redness following treatment; normal activities can resume immediately. Full healing may take 5–7 days, during which skin has a dry, sandpaper-like texture as it exfoliates — this is normal.",
+      "duration": "10–20 minutes depending on the area treated — sometimes called a \"Lunchtime Facial.\"",
+      "treatment_id": "ultra",
+      "comfort_level": "Discomfort is variable, described as mild to moderate; a topical numbing cream may be applied to minimize it.",
+      "result_timeline": "Results may appear after a single treatment or require several visits depending on the condition."
+    },
+    "faqs": [
+      {
+        "id": "257a9240-5b35-413c-9649-6fbc629de5ed",
+        "question": "What can Ultra treatment address?",
+        "answer": "Mild to moderate age spots, freckles, sun spots, pigmented lesions, sun damage, actinic keratosis, melasma, and postinflammatory hyperpigmentation."
+      },
+      {
+        "id": "dcce323b-eb27-4084-9d74-5ea9db891bad",
+        "question": "Why is Ultra sometimes called a \"Lunchtime Facial\"?",
+        "answer": "Because a session takes only 10–20 minutes depending on the area treated."
+      },
+      {
+        "id": "38e61ac5-2d55-44d8-ae56-93efe089cc1f",
+        "question": "What's recovery like after Ultra treatment?",
+        "answer": "Mild redness follows treatment and normal activities can resume immediately. Full healing may take 5–7 days, during which skin has a dry, sandpaper-like texture as it exfoliates — this is a normal part of the process."
+      },
+      {
+        "id": "853f5e87-7a09-4328-9de2-77052097eec7",
+        "question": "Will one session be enough?",
+        "answer": "Results may appear after a single treatment or require several visits, depending on the condition being treated."
+      }
+    ]
+  },
+  {
+    "cmsPath": "/medical/after-hours-care",
+    "entryId": "28158c82-399b-458b-9e6d-0699d3fc9172",
+    "contentType": "medical-service",
+    "updatedAt": "2026-08-23T10:37:59.532Z",
+    "title": "After-Hours Care",
+    "fields": {
+      "summary": "When the clinic is closed, our patients are referred to a partner Primary Care Network for urgent, non-emergency needs — not left without a path to care.",
+      "service_id": "after-hours-care",
+      "booking_channel": "family-doctor",
+      "urgent_care_note": "This referral pathway is for urgent, non-emergency needs only — it is not a substitute for calling 911 in a true emergency."
+    },
+    "faqs": [
+      {
+        "id": "bff4dbe8-cf39-4e00-97e5-88c2f0071507",
+        "question": "What counts as an urgent, non-emergency need?",
+        "answer": "Concerns that need attention before your next scheduled appointment but aren't life-threatening — for example a worsening infection or a medication question. A true medical emergency always means 911 or the nearest emergency department, not this pathway."
+      },
+      {
+        "id": "482e5391-9348-4e99-87ca-4c3f15f1dcf6",
+        "question": "Which Primary Care Network do I contact?",
+        "answer": "It depends on your family doctor: Dr. Reem Hamdi's patients are referred to Mosaic Primary Care Network, and patients of all other Blue Diamond family physicians are referred to Calgary West Central Primary Care Network."
+      },
+      {
+        "id": "da22ae62-f1b3-4b83-98c8-f63240e2c306",
+        "question": "Does this apply to every patient at the clinic?",
+        "answer": "Yes. Every Blue Diamond patient has an after-hours pathway: Dr. Reem Hamdi's patients are referred to Mosaic Primary Care Network, and patients of all other Blue Diamond family physicians are referred to Calgary West Central Primary Care Network."
+      },
+      {
+        "id": "55dadb74-cca4-4c3e-88c4-ed45c999f2e1",
+        "question": "Is there a cost for after-hours PCN care?",
+        "answer": "Contact the relevant Primary Care Network directly for their current fee and coverage information — this isn't something our clinic bills for, since the care is delivered by the PCN partner."
+      },
+      {
+        "id": "87438342-1a4c-4174-9527-2cd8dddf175c",
+        "question": "What if I'm not sure whether it's an emergency?",
+        "answer": "When in doubt, treat it as an emergency and call 911 or go to the nearest emergency department. It's always safer to be assessed by emergency services than to wait."
+      }
+    ]
+  },
+  {
+    "cmsPath": "/medical/chronic-disease-management",
+    "entryId": "298dddc5-2baa-47f6-b52d-a8e25f8c7d9a",
+    "contentType": "medical-service",
+    "updatedAt": "2026-08-23T10:42:22.322Z",
+    "title": "Chronic Disease Management",
+    "fields": {
+      "summary": "AHS-insured, ongoing management of chronic conditions through your family physician. Any Blue Diamond family physician can provide chronic-disease management.",
+      "service_id": "chronic-disease-management",
+      "who_its_for": "Patients living with an ongoing health condition that needs regular monitoring and a coordinated care plan.",
+      "booking_channel": "family-doctor"
+    },
+    "faqs": [
+      {
+        "id": "67f33701-4c55-4ed1-aef7-3aaf42696c70",
+        "question": "Is chronic disease management covered by Alberta Health?",
+        "answer": "Yes — this is provided as part of AHS-insured family medicine care."
+      },
+      {
+        "id": "4b1f3503-d980-4f80-a9ce-66545230f8c7",
+        "question": "What kinds of conditions does this cover?",
+        "answer": "Any ongoing health condition that needs regular monitoring and a coordinated plan — your family physician will discuss what that looks like for your specific situation."
+      },
+      {
+        "id": "4a1df9a4-0dfd-4da3-a965-64bb68bdcb10",
+        "question": "Do I need to see a particular physician for chronic disease management?",
+        "answer": "No — every Blue Diamond family physician provides chronic-disease management as part of general family medicine. See whichever of our family physicians you are registered with."
+      },
+      {
+        "id": "dc157ea0-8cb3-4c73-af37-17122e0729c5",
+        "question": "How often will I need to be seen?",
+        "answer": "This depends entirely on your specific condition and care plan — your physician will set a monitoring schedule that's appropriate for you."
+      },
+      {
+        "id": "05db8d4c-3ddb-4ffb-8de1-aeec476fe0fe",
+        "question": "How do I book a chronic disease management visit?",
+        "answer": "If you are already registered with one of our family physicians, book with your doctor through Mikata. New patients and walk-ins can book online through Skip the Waiting Room, call the clinic, or come in — walk-ins are welcome."
+      }
+    ]
+  },
+  {
+    "cmsPath": "/medical/eye-screening",
+    "entryId": "be085cb6-ded9-4274-84a5-43e5d663f1ca",
+    "contentType": "medical-service",
+    "updatedAt": "2026-08-23T10:41:58.961Z",
+    "title": "Eye Disease Screening",
+    "fields": {
+      "summary": "A collaboration with Euclid Telehealth offering AHS-covered eye disease screening at our clinic — in keeping with our belief that prevention is better than cure.",
+      "service_id": "eye-screening",
+      "who_its_for": "All patients, especially diabetics and those with a family history of eye disease.",
+      "contact_note": "Euclid Telehealth patient support: patientsupport@euclidtelehealth.org or 1-800-511-5661.",
+      "booking_channel": "eye-screening",
+      "how_appointments_work": "Based on your doctor's recommendation, Euclid Telehealth will contact you directly to schedule your screening."
+    },
+    "faqs": [
+      {
+        "id": "5bd554c5-1fa0-46db-86e8-d97011242123",
+        "question": "Is the eye disease screening covered by Alberta Health?",
+        "answer": "Yes — this screening is AHS-covered, provided through our collaboration with Euclid Telehealth."
+      },
+      {
+        "id": "ae139aec-37f0-47fc-9417-4d71dfb44594",
+        "question": "How do I get a screening appointment?",
+        "answer": "Your family doctor refers you based on clinical need; Euclid Telehealth then contacts you directly to schedule the visit, which takes place on-site at our clinic once a month."
+      },
+      {
+        "id": "a3c2185b-2ed4-41d7-9b11-0bfc4b02fa3b",
+        "question": "What does the screening involve?",
+        "answer": "It's a non-invasive screening that takes about 20 minutes, aimed at early detection of eye disease before symptoms appear."
+      },
+      {
+        "id": "0063501f-571d-437e-9861-dd5c7382476a",
+        "question": "Who should consider this screening?",
+        "answer": "It's available to all patients, and particularly relevant for people with diabetes or a family history of eye disease, since both are recognized risk factors for vision loss."
+      },
+      {
+        "id": "d9307986-fef1-4f78-910f-a61eae0bf0ee",
+        "question": "What happens if the screening finds something?",
+        "answer": "Euclid Telehealth provides guidance on next steps, which may include further testing or a referral, depending on what's found."
+      },
+      {
+        "id": "3d604bfe-ffe4-46e7-ac40-acd2f5caa7ca",
+        "question": "Who can I contact with questions about my screening?",
+        "answer": "Euclid Telehealth's patient support team handles screening-specific questions directly — see their contact details above."
+      }
+    ]
+  },
+  {
+    "cmsPath": "/medical/minor-procedures",
+    "entryId": "dc849465-c82e-4e6d-8572-4c2a2d02c6de",
+    "contentType": "medical-service",
+    "updatedAt": "2026-08-23T10:42:34.689Z",
+    "title": "Minor Procedures",
+    "fields": {
+      "summary": "AHS-insured minor procedures performed in-house — suture removal and application, minor skin lesion excision, and joint injections. All of our family physicians provide these procedures. Minor procedures are booked by phone or in person, not online.",
+      "service_id": "minor-procedures",
+      "booking_channel": "family-doctor"
+    },
+    "faqs": [
+      {
+        "id": "8add6a73-2053-4972-bee9-491c50a27572",
+        "question": "Are minor procedures covered by Alberta Health?",
+        "answer": "Yes — the procedures listed here are AHS-insured."
+      },
+      {
+        "id": "93c0059c-65c6-4478-a79f-4ffb90672be9",
+        "question": "What minor procedures are available?",
+        "answer": "Suture removal and application, minor skin lesion excision, and intra-articular injections for degenerative knee, shoulder, and ankle conditions. All of our family physicians provide these."
+      },
+      {
+        "id": "994516a4-2caa-4558-9c4d-6c8a44ccea59",
+        "question": "How do I book a minor procedure?",
+        "answer": "Minor procedures cannot be booked online. Call the clinic or come in to reception, and we will schedule the procedure with one of our family physicians."
+      },
+      {
+        "id": "df10d22f-8c3f-4a50-a62c-90070f4c6970",
+        "question": "Is this the same as a walk-in visit?",
+        "answer": "No — minor procedures are scheduled appointments rather than walk-in visits. Arrange one by calling the clinic or asking at reception."
+      }
+    ]
+  },
+  {
+    "cmsPath": "/medical/pain-management",
+    "entryId": "95d32601-f641-4605-85a1-97ef236a2c88",
+    "contentType": "medical-service",
+    "updatedAt": "2026-08-23T10:42:33.468Z",
+    "title": "Pain Management",
+    "fields": {
+      "summary": "AHS-insured pain management support from your family physician.",
+      "service_id": "pain-management",
+      "booking_channel": "family-doctor"
+    },
+    "faqs": [
+      {
+        "id": "6c48d37a-0073-4398-88ca-e077d894b55d",
+        "question": "Is pain management covered by Alberta Health?",
+        "answer": "Yes — it's provided as part of AHS-insured family medicine care."
+      },
+      {
+        "id": "2603cb05-fe70-4d36-bc8f-2731be407dad",
+        "question": "What kind of pain can I discuss with my family doctor?",
+        "answer": "Any ongoing or recurring pain — your family physician will assess it and discuss an appropriate management approach as part of your care."
+      },
+      {
+        "id": "53c5ef03-ce70-4be4-aa1c-0a8f7cac0a43",
+        "question": "For minor in-clinic procedures related to pain, like joint injections, who provides those?",
+        "answer": "Our family physicians perform intra-articular injections for degenerative knee, shoulder, and ankle conditions in-house — see the Minor Procedures page for detail. These are booked by phone or in person, not online."
+      },
+      {
+        "id": "f6a6d84c-fa70-48cb-8aaf-375829a3b226",
+        "question": "How do I book a pain management appointment?",
+        "answer": "If you are registered with one of our family physicians, book with your doctor through Mikata. New patients and walk-ins can book online through Skip the Waiting Room, call the clinic, or come in."
+      }
+    ]
+  },
+  {
+    "cmsPath": "/medical/preventive-care",
+    "entryId": "eec7dcb1-ddaf-477a-bd6a-e10454de33a9",
+    "contentType": "medical-service",
+    "updatedAt": "2026-08-23T10:42:24.126Z",
+    "title": "Preventive Care",
+    "fields": {
+      "summary": "\"Prevention is better than cure\" is at the core of how we practice — from vaccination to Dr. Saeed's clinical focus on preventive medicine and early intervention.",
+      "service_id": "preventive-care",
+      "booking_channel": "family-doctor"
+    },
+    "faqs": [
+      {
+        "id": "3120be6b-9e85-4a9e-9e73-60b2210d0326",
+        "question": "What's included in preventive care here?",
+        "answer": "Vaccination, preventive medicine and early-intervention care, and referral for AHS-covered eye disease screening when appropriate."
+      },
+      {
+        "id": "0b8346ce-65f6-4674-8fe2-a943a2a6c8c0",
+        "question": "Is preventive care covered by Alberta Health?",
+        "answer": "Yes, as part of AHS-insured family medicine care."
+      },
+      {
+        "id": "7a19fe8c-90b9-41a0-8f86-177712865eea",
+        "question": "Do I need to see Dr. Saeed specifically for preventive care?",
+        "answer": "Preventive medicine and early intervention is a particular clinical focus of Dr. Saeed's, but preventive care in general is available from any of our family physicians."
+      },
+      {
+        "id": "888ee5cd-803a-4f19-b569-689883076b46",
+        "question": "Which vaccinations are available?",
+        "answer": "Discuss which vaccinations are appropriate for you or your family with your physician at your appointment."
+      },
+      {
+        "id": "04215a46-463b-435b-aed4-aa2e9a5ba9ef",
+        "question": "How do I book a preventive care visit?",
+        "answer": "If you are registered with one of our family physicians, book with your doctor through Mikata. New patients and walk-ins can book online through Skip the Waiting Room, call the clinic, or come in."
+      }
+    ]
+  },
+  {
+    "cmsPath": "/medical/weight-management",
+    "entryId": "e9e9ecca-2d0e-4629-ac2b-853a5ab62922",
+    "contentType": "medical-service",
+    "updatedAt": "2026-08-23T10:42:32.293Z",
+    "title": "Weight Management",
+    "fields": {
+      "summary": "AHS-insured weight management support as part of your comprehensive care with your family physician.",
+      "service_id": "weight-management",
+      "booking_channel": "family-doctor"
+    },
+    "faqs": [
+      {
+        "id": "2b5952d8-8159-4e9b-8fc0-1a885805bbc5",
+        "question": "Is weight management covered by Alberta Health?",
+        "answer": "Yes — it's provided as part of AHS-insured family medicine care."
+      },
+      {
+        "id": "6d6bcc2b-b07b-4350-9f48-0823962e1332",
+        "question": "What does weight management support involve?",
+        "answer": "This is provided as part of your comprehensive, ongoing care with your family physician — they'll discuss an approach suited to your health history and goals."
+      },
+      {
+        "id": "29bbc3ae-6806-421c-9885-34326732e2b6",
+        "question": "Do I need a referral for weight management support?",
+        "answer": "No — raise it directly with your family physician at a regular appointment."
+      },
+      {
+        "id": "9fe43b7d-f15c-4f52-9e4c-249f232a2bd3",
+        "question": "How do I book this appointment?",
+        "answer": "If you are registered with one of our family physicians, book with your doctor through Mikata. New patients and walk-ins can book online through Skip the Waiting Room, call the clinic, or come in."
+      }
+    ]
+  },
+  {
+    "cmsPath": "/shop/aha-bha-cream",
+    "entryId": "3539d299-8007-47b3-972a-1ceec2182fc9",
+    "contentType": "product",
+    "updatedAt": "2026-08-23T13:04:51.012Z",
+    "title": "AHA/BHA Cream",
+    "fields": {
+      "brand_id": "skinmedica",
+      "overview": "A leave-on AHA/BHA exfoliating cream, distinct from the AHA/BHA Exfoliating Cleanser, which is rinsed off.",
+      "how_to_use": "Apply as directed by your provider; avoid the eye area, and rinse thoroughly with water if contact occurs.",
+      "product_id": "aha-bha-cream",
+      "size_label": "56.7 g",
+      "what_it_is": "An acid-based exfoliating treatment cream, sometimes listed by the manufacturer as \"AHA/BHA Exfoliating Cream.\"",
+      "product_type": "AHA/BHA exfoliating cream",
+      "price_currency": "CAD",
+      "approval_status": "approved",
+      "routine_placement": "As a leave-on treatment step, per your provider's guidance.",
+      "sun_sensitivity_warning": "Contains an alpha-hydroxy acid (AHA), which may increase skin's sensitivity to sunburn. Use sunscreen, wear protective clothing, and limit sun exposure while using this product and for a week following discontinuation."
+    },
+    "faqs": [
+      {
+        "id": "5268715c-ac77-46d4-983b-c34aa7881a34",
+        "question": "Is this the same as the AHA/BHA Exfoliating Cleanser?",
+        "answer": "No — the cleanser is rinsed off; this cream is a leave-on treatment."
+      },
+      {
+        "id": "3ce3d496-a20c-4901-81e8-32ac5b88cb41",
+        "question": "Does this increase sun sensitivity?",
+        "answer": "Yes — it contains an AHA. Use sunscreen, protective clothing, and limit sun exposure during use and for a week after stopping."
+      },
+      {
+        "id": "aa7c7400-fe43-40ea-8656-77148ace48a4",
+        "question": "What if it gets in my eyes?",
+        "answer": "Rinse thoroughly with water."
+      },
+      {
+        "id": "99cd906e-1295-4b57-8c11-9852c54852b7",
+        "question": "What size is this?",
+        "answer": "56.7 g."
+      },
+      {
+        "id": "df07c4af-fd99-4a74-90b5-ac7de0eaebfa",
+        "question": "How do I know how often to use it?",
+        "answer": "Ask your provider — leave-on acid treatments are typically introduced gradually."
+      },
+      {
+        "id": "c89d1b78-2238-4d88-adf9-cf8a726f0fc7",
+        "question": "How do I confirm current price and availability?",
+        "answer": "Contact Blue Diamond Medical Clinic directly."
+      }
+    ]
+  },
+  {
+    "cmsPath": "/shop/aha-bha-exfoliating-cleanser",
+    "entryId": "41d14e2d-24fc-4106-ba57-566322b56cdd",
+    "contentType": "product",
+    "updatedAt": "2026-08-23T13:01:41.204Z",
+    "title": "AHA/BHA Exfoliating Cleanser",
+    "fields": {
+      "brand_id": "skinmedica",
+      "overview": "An exfoliating cleanser combining alpha- and beta-hydroxy acids to cleanse and exfoliate in one step.",
+      "how_to_use": "Moisten skin with warm water, apply a small amount to fingertips, gently exfoliate in small circular motions, and rinse thoroughly. Avoid the eye area; if contact occurs, rinse eyes thoroughly with water.",
+      "product_id": "aha-bha-exfoliating-cleanser",
+      "size_label": "177.4 ml",
+      "what_it_is": "A daily-use exfoliating facial cleanser.",
+      "when_to_use": "Can be used up to twice daily (morning and evening); those with sensitive skin may start with once daily and increase gradually as tolerated.",
+      "product_type": "AHA/BHA exfoliating cleanser",
+      "price_currency": "CAD",
+      "approval_status": "approved",
+      "routine_placement": "First step of a routine, replacing a standard cleanser.",
+      "sun_sensitivity_warning": "Contains an alpha-hydroxy acid (AHA), which may increase skin's sensitivity to sunburn. Use a sunscreen and limit sun exposure while using this product and for a week following discontinuation."
+    },
+    "faqs": [
+      {
+        "id": "cc5a5b2c-95c5-4bfe-9f6c-1661930e35b5",
+        "question": "How often can I use this?",
+        "answer": "Up to twice daily; sensitive skin should start with once daily and increase gradually as tolerated."
+      },
+      {
+        "id": "ccb96762-9d81-44e7-866a-e3194cc5bfd1",
+        "question": "Does this make my skin more sun-sensitive?",
+        "answer": "Yes — it contains an AHA, which can increase sun sensitivity. Use sunscreen and limit sun exposure while using it and for a week after stopping."
+      },
+      {
+        "id": "305e06f2-83b9-4dcb-8c50-61a63811ce77",
+        "question": "What if it gets in my eyes?",
+        "answer": "Rinse eyes thoroughly with water."
+      },
+      {
+        "id": "67203ead-39a6-444a-90bf-3cb2c77f1e00",
+        "question": "Can I use this with the AHA/BHA Cream too?",
+        "answer": "Both are acid-based products from the same category — ask the clinic how to combine them safely for your skin."
+      },
+      {
+        "id": "eaf0f5a7-2c90-4046-b587-c6797a69a146",
+        "question": "What size is this?",
+        "answer": "177.4 ml."
+      },
+      {
+        "id": "092ba56f-bcb4-4422-936a-cf956d9ff9b0",
+        "question": "How do I confirm current price and availability?",
+        "answer": "Contact Blue Diamond Medical Clinic directly."
+      }
+    ]
+  },
+  {
+    "cmsPath": "/shop/daily-physical-defense-spf-34",
+    "entryId": "9ea55194-be46-4fd5-84e2-72fe38c854a4",
+    "contentType": "product",
+    "updatedAt": "2026-08-23T13:04:53.046Z",
+    "title": "Daily Physical Defense® SPF 34",
+    "fields": {
+      "brand_id": "skinmedica",
+      "overview": "An oil-free, fragrance-free dual-mineral sunscreen providing broad-spectrum UVA/UVB protection.",
+      "how_to_use": "Dispense onto the back of the hand and apply generously to the face and other sun-exposed areas (neck and chest if desired).",
+      "product_id": "daily-physical-defense-spf-34",
+      "size_label": "85 ml",
+      "what_it_is": "A daily mineral (physical) sunscreen with active ingredients Titanium Dioxide 5.0% and Zinc Oxide 6.0%, per manufacturer information.",
+      "when_to_use": "Apply in the morning as the last step of your routine, or as needed; reapply at least every 2 hours if in direct sunlight.",
+      "product_type": "Broad-spectrum mineral sunscreen, SPF 34",
+      "price_currency": "CAD",
+      "approval_status": "approved",
+      "routine_placement": "The last step of a morning routine."
+    },
+    "faqs": [
+      {
+        "id": "11dfdae9-aed6-416d-aab3-c162118443a4",
+        "question": "Is this a chemical or mineral sunscreen?",
+        "answer": "Mineral (physical) — with Titanium Dioxide and Zinc Oxide as the active ingredients, per manufacturer information."
+      },
+      {
+        "id": "9983007d-1ba5-40d4-b7f4-71d75ea5a5e4",
+        "question": "How often do I reapply?",
+        "answer": "At least every 2 hours if in direct sunlight."
+      },
+      {
+        "id": "9b64ac9d-1718-465e-bc08-1a200b2610e2",
+        "question": "Is it fragrance-free?",
+        "answer": "Yes, per manufacturer information."
+      },
+      {
+        "id": "b634598b-6901-42be-aa49-8316fb2e9e46",
+        "question": "Where do I apply it?",
+        "answer": "Face and other sun-exposed areas, with neck and chest if desired."
+      },
+      {
+        "id": "3d4fb980-526c-407f-a025-9404c5f937a2",
+        "question": "How is this different from Total Defence + Repair?",
+        "answer": "Both are SPF 34 sunscreens from the same catalogue; ask the clinic which suits your routine and skin type."
+      },
+      {
+        "id": "a3ddac9d-5165-4339-bc66-0ad356fa3239",
+        "question": "How do I confirm current price and availability?",
+        "answer": "Contact Blue Diamond Medical Clinic directly."
+      }
+    ]
+  },
+  {
+    "cmsPath": "/shop/dermal-repair-cream",
+    "entryId": "ef94310e-96b4-406f-9baf-14f455ae3718",
+    "contentType": "product",
+    "updatedAt": "2026-08-23T13:04:59.540Z",
+    "title": "Dermal Repair Cream",
+    "fields": {
+      "brand_id": "skinmedica",
+      "overview": "An ultra-rich facial cream intended to intensely hydrate and help replenish moisture, suited to normal-to-dry skin.",
+      "how_to_use": "Apply to face (and neck if desired) as the moisturizing step of your routine.",
+      "product_id": "dermal-repair-cream",
+      "size_label": "48 g",
+      "what_it_is": "A rich moisturizing cream with antioxidant vitamins C and E and sodium hyaluronate, per manufacturer information.",
+      "product_type": "Rich moisturizing cream",
+      "price_currency": "CAD",
+      "approval_status": "approved",
+      "routine_placement": "As the moisturizing step of a routine, appropriate for normal-to-dry skin."
+    },
+    "faqs": [
+      {
+        "id": "97acde7d-186b-478a-be0b-9506fbf9ff32",
+        "question": "What skin type is this formulated for?",
+        "answer": "Normal-to-dry skin, per manufacturer information."
+      },
+      {
+        "id": "a94c10b7-297c-437f-a12e-e39402f090a0",
+        "question": "What does it contain?",
+        "answer": "Antioxidant vitamin C and E forms and sodium hyaluronate, per manufacturer information."
+      },
+      {
+        "id": "35c9f5ee-3409-4b75-b54b-bc4768bb59fe",
+        "question": "Does this contain ceramides?",
+        "answer": "The research for this record didn't confirm ceramides as a primary ingredient — TNS Ceramide Treatment Cream is SkinMedica's dedicated ceramide-focused product."
+      },
+      {
+        "id": "13759ef0-6a05-4e26-a928-03ec2a3387fe",
+        "question": "When do I apply this in my routine?",
+        "answer": "As the moisturizing step, typically after any treatment serums."
+      },
+      {
+        "id": "1cbdf8f3-9f86-41b3-b636-9d0f24c6c035",
+        "question": "What size is this?",
+        "answer": "48 g."
+      },
+      {
+        "id": "f1c43a15-0c85-4f2a-b0b4-5461c57d9d9d",
+        "question": "How do I confirm current price and availability?",
+        "answer": "Contact Blue Diamond Medical Clinic directly."
+      }
+    ]
+  },
+  {
+    "cmsPath": "/shop/facial-cleanser",
+    "entryId": "9ab16b51-f967-43d2-b3f1-83e579172c48",
+    "contentType": "product",
+    "updatedAt": "2026-08-23T13:01:39.419Z",
+    "title": "Facial Cleanser",
+    "fields": {
+      "brand_id": "skinmedica",
+      "overview": "A foaming daily cleanser formulated for all skin types, with panthenol to support healthy-looking skin.",
+      "how_to_use": "Wet the face, apply a small amount, work into a lather, and rinse thoroughly.",
+      "product_id": "facial-cleanser",
+      "size_label": "177.4 ml",
+      "what_it_is": "A foaming face wash intended to remove dirt, oil, and makeup.",
+      "product_type": "Foaming facial cleanser",
+      "price_currency": "CAD",
+      "approval_status": "approved",
+      "routine_placement": "First step of a skincare routine, morning and/or evening."
+    },
+    "faqs": [
+      {
+        "id": "f0aaf44d-80a2-40e5-8811-16182365a37e",
+        "question": "What skin types is this for?",
+        "answer": "It's described by the manufacturer as suitable for all skin types."
+      },
+      {
+        "id": "fec983a4-bbed-43fd-a90c-17b1e40f8022",
+        "question": "Morning, evening, or both?",
+        "answer": "It can be used as the first step of a morning and/or evening routine."
+      },
+      {
+        "id": "1f67eb8d-613b-4c26-9138-0d8ff7f7e28d",
+        "question": "Is this different from the AHA/BHA Exfoliating Cleanser?",
+        "answer": "Yes — this is a standard foaming cleanser without exfoliating acids; the AHA/BHA Exfoliating Cleanser is a separate, exfoliating product."
+      },
+      {
+        "id": "0bed6376-c7d4-4632-8b23-5d49a7b40428",
+        "question": "What size is this?",
+        "answer": "177.4 ml."
+      },
+      {
+        "id": "73a20ed9-58e2-4f02-b51d-e6f63b836f91",
+        "question": "Does this contain fragrance?",
+        "answer": "Not confirmed by the research for this record — ask the clinic if fragrance-free formulation matters for your skin."
+      },
+      {
+        "id": "2dcf8d98-6b5c-489e-af4a-2dd004053099",
+        "question": "How do I confirm price and availability?",
+        "answer": "Contact Blue Diamond Medical Clinic directly."
+      }
+    ]
+  },
+  {
+    "cmsPath": "/shop/ha5-rejuvenative-hydrator",
+    "entryId": "c6445318-7fe3-4d73-83b7-7f363fbdac8c",
+    "contentType": "product",
+    "updatedAt": "2026-08-23T13:06:57.799Z",
+    "title": "HA5® Rejuvenating Hydrator",
+    "fields": {
+      "brand_id": "skinmedica",
+      "overview": "A hydrating serum blending five forms of hyaluronic acid, for all skin types.",
+      "how_to_use": "Apply to face, neck, or décolleté twice daily.",
+      "product_id": "ha5-rejuvenative-hydrator",
+      "size_label": "56.7 g",
+      "what_it_is": "A multi-molecular-weight hyaluronic acid serum with SkinMedica's VITISENSCE antioxidant technology, per manufacturer information.",
+      "product_type": "Hyaluronic acid hydrating serum",
+      "price_currency": "CAD",
+      "approval_status": "approved",
+      "legacy_name_note": "The approved catalogue listed this as \"HA5 Rejuvenative Hydrator.\" Current official and Canadian-retailer naming (confirmed on multiple authorized retailers) is \"HA5® Rejuvenating Hydrator\" — used here; the approved price and size are unchanged.",
+      "routine_placement": "Twice daily; if used with other treatment products such as Lytera or a retinol product, apply this as the last step before moisturizer."
+    },
+    "faqs": [
+      {
+        "id": "7e1b2c58-deda-46e4-9082-58baf70fa47d",
+        "question": "Why does the name differ from the approved catalogue?",
+        "answer": "The approved catalogue listed \"HA5 Rejuvenative Hydrator\"; current official/retailer naming is \"HA5® Rejuvenating Hydrator.\" The approved price and size are unchanged, and this is the same product."
+      },
+      {
+        "id": "ddf5e928-fad1-4175-928b-3262c1599af0",
+        "question": "How many types of hyaluronic acid does it contain?",
+        "answer": "Five forms, per manufacturer information."
+      },
+      {
+        "id": "353f41f3-1beb-462f-8bca-2f7c89e7dcf8",
+        "question": "How often do I use it?",
+        "answer": "Twice daily."
+      },
+      {
+        "id": "bd02cf82-1279-4f1f-9f68-c20dd6ab8188",
+        "question": "When do I apply it relative to other treatments?",
+        "answer": "If used with other treatment products, apply it as the last step before moisturizer."
+      },
+      {
+        "id": "4db85fa7-f94a-45fa-a08a-94fdb8ff0fec",
+        "question": "What size is this?",
+        "answer": "56.7 g."
+      },
+      {
+        "id": "b59fa2b1-beb0-4f1c-9b24-476adddb47bc",
+        "question": "How do I confirm current price and availability?",
+        "answer": "Contact Blue Diamond Medical Clinic directly."
+      }
+    ]
+  },
+  {
+    "cmsPath": "/shop/lumivive-system-day-night",
+    "entryId": "1fbede5a-95bd-4761-8eb9-1b4cadee83f0",
+    "contentType": "product",
+    "updatedAt": "2026-08-23T13:01:33.959Z",
+    "title": "Lumivive® System Day, Night",
+    "fields": {
+      "brand_id": "skinmedica",
+      "overview": "A two-step day-and-night system: a daytime step formulated to help shield skin from blue light and environmental stress, and a nighttime step formulated to support skin's overnight repair process.",
+      "how_to_use": "Apply 1 pump of the Day formula in the morning and 1 pump of the Night formula in the evening, after cleansing and toning, to face, neck, and décolletage.",
+      "product_id": "lumivive-system",
+      "size_label": "28.4 g",
+      "what_it_is": "A two-bottle treatment system (Day, Night), not a single product — both bottles are included in this one price/size record.",
+      "product_type": "Two-step antioxidant treatment system",
+      "price_currency": "CAD",
+      "approval_status": "approved",
+      "routine_placement": "After cleansing and toning, before other treatment products and moisturizer — Day in the morning, Night in the evening."
+    },
+    "faqs": [
+      {
+        "id": "47f4693f-18f5-4c3e-9c87-72bfc1fae285",
+        "question": "Is this one product or two?",
+        "answer": "It's a two-bottle system — a Day formula and a Night formula — sold together as one record at this price and size."
+      },
+      {
+        "id": "d3b8793f-8160-4422-a75f-1a708b123a41",
+        "question": "When do I use each bottle?",
+        "answer": "The Day formula in the morning and the Night formula in the evening, both after cleansing and toning."
+      },
+      {
+        "id": "ae00b7a7-490f-4242-9abe-d00a9f52dd2b",
+        "question": "What is Lumivive designed to help with?",
+        "answer": "Per manufacturer information, the Day formula is designed to help shield skin from blue light and environmental stress, and the Night formula is designed to support the skin's overnight repair process."
+      },
+      {
+        "id": "f7028f00-ad34-4aa1-bfc5-751380b724e8",
+        "question": "Where do I apply it?",
+        "answer": "Face, neck, and décolletage."
+      },
+      {
+        "id": "822ca877-4d05-480f-99c2-7fec4ef3a18c",
+        "question": "Can I combine this with other SkinMedica products?",
+        "answer": "This is a routine question best confirmed with the clinic directly, since it depends on your full regimen."
+      },
+      {
+        "id": "74e65aac-e793-49f4-a789-05832f7c1f9a",
+        "question": "How do I confirm current price and availability?",
+        "answer": "Contact Blue Diamond Medical Clinic directly — see the notice above."
+      }
+    ]
+  },
+  {
+    "cmsPath": "/shop/lytera-2-pigment-brightening-serum",
+    "entryId": "a145f6f4-d02d-40c0-ba4e-a4a91179cbc5",
+    "contentType": "product",
+    "updatedAt": "2026-08-23T13:01:48.633Z",
+    "title": "Lytera® 2.0 Pigment Brightening Serum",
+    "fields": {
+      "brand_id": "skinmedica",
+      "overview": "An evening serum formulated to address the appearance of stubborn skin discoloration.",
+      "how_to_use": "Apply a single pump to the face and neck each evening.",
+      "product_id": "lytera-2-pigment-brightening-serum",
+      "size_label": "60 ml",
+      "what_it_is": "A pigment-brightening serum.",
+      "product_type": "Pigment-brightening serum",
+      "price_currency": "CAD",
+      "approval_status": "approved",
+      "legacy_name_note": "Current official product listings sometimes name this \"Lytera 2.0 Pigment Correcting Serum\"; the approved catalogue's \"Pigment Brightening Serum\" naming is preserved as the published name.",
+      "routine_placement": "In the evening, as a treatment step.",
+      "sun_sensitivity_warning": "As with other pigment-focused treatments, daily sun protection is important while addressing discoloration — confirm specific guidance with your provider."
+    },
+    "faqs": [
+      {
+        "id": "b9391f7f-4a24-4fe5-96cd-9e00d00d5a93",
+        "question": "When do I use this serum?",
+        "answer": "In the evening, one pump applied to the face and neck."
+      },
+      {
+        "id": "71726f4b-7d5f-4e95-9641-a1a984d38c16",
+        "question": "What is this formulated to address?",
+        "answer": "The appearance of stubborn skin discoloration, per manufacturer information."
+      },
+      {
+        "id": "a3a9bb8e-0e8a-4fbe-94ea-1034037f3144",
+        "question": "Do I need sunscreen while using this?",
+        "answer": "Daily sun protection is generally important with pigment-focused treatments — confirm specific guidance with your provider."
+      },
+      {
+        "id": "f2079bbd-17dc-4102-8589-3a9975d78037",
+        "question": "Is this the same as \"Lytera 2.0 Pigment Correcting Serum\"?",
+        "answer": "Some current listings use \"Correcting\" rather than \"Brightening\" in the name — same underlying product line; the approved catalogue name is used here."
+      },
+      {
+        "id": "48807b24-948f-42cd-ba15-af5f9783fc1d",
+        "question": "What size is this?",
+        "answer": "60 ml."
+      },
+      {
+        "id": "fbce0ef8-633b-42d6-a3dc-852c7b192930",
+        "question": "How do I confirm current price and availability?",
+        "answer": "Contact Blue Diamond Medical Clinic directly."
+      }
+    ]
+  },
+  {
+    "cmsPath": "/shop/rejuvenative-moisturizer",
+    "entryId": "f6735a4c-1e10-45f2-bc81-8934b040a9ae",
+    "contentType": "product",
+    "updatedAt": "2026-08-23T13:05:02.027Z",
+    "title": "Rejuvenative Moisturizer",
+    "fields": {
+      "brand_id": "skinmedica",
+      "overview": "A moisturizing cream formulated to restore and maintain skin's natural moisture balance.",
+      "how_to_use": "Apply to face (and neck if desired) as the moisturizing step of your routine.",
+      "product_id": "rejuvenative-moisturizer",
+      "size_label": "56.7 g",
+      "what_it_is": "A daily moisturizer.",
+      "product_type": "Moisturizing cream",
+      "price_currency": "CAD",
+      "approval_status": "approved",
+      "routine_placement": "As the moisturizing step of a routine."
+    },
+    "faqs": [
+      {
+        "id": "446a18f2-59c7-4015-99af-6e07864709ef",
+        "question": "What does this moisturizer do?",
+        "answer": "It's formulated to help restore and maintain the skin's natural moisture balance, per manufacturer information."
+      },
+      {
+        "id": "9fa69673-8a87-43d6-bf84-96f2d30e3d8a",
+        "question": "When do I apply it?",
+        "answer": "As the moisturizing step of your routine, morning and/or evening."
+      },
+      {
+        "id": "8b212a25-701c-471b-8113-65d35dc05c1a",
+        "question": "How is this different from Ultra Sheer Moisturizer?",
+        "answer": "Both are moisturizers in this catalogue with different formulations — ask the clinic which suits your skin type."
+      },
+      {
+        "id": "bab7a417-b666-424f-90fa-d4ebdd821898",
+        "question": "What size is this?",
+        "answer": "56.7 g."
+      },
+      {
+        "id": "4f3f81e5-7204-425f-a9d0-b998278732ad",
+        "question": "Is this suitable for all skin types?",
+        "answer": "Not confirmed by the research for this specific record — ask the clinic about suitability for your skin."
+      },
+      {
+        "id": "2b35be94-a821-41d9-8cd7-ff8cc338bc4f",
+        "question": "How do I confirm current price and availability?",
+        "answer": "Contact Blue Diamond Medical Clinic directly."
+      }
+    ]
+  },
+  {
+    "cmsPath": "/shop/replenish-hydrating-cream",
+    "entryId": "0951cc8c-d8a6-420a-b155-ebbcfcb88f9c",
+    "contentType": "product",
+    "updatedAt": "2026-08-23T13:05:15.233Z",
+    "title": "Replenish Hydrating Cream",
+    "fields": {
+      "brand_id": "skinmedica",
+      "overview": "A hydrating cream formulated to restore moisture levels for smoother, softer, more balanced-feeling skin.",
+      "how_to_use": "Apply to face (and neck if desired) as the moisturizing step of your routine.",
+      "product_id": "replenish-hydrating-cream",
+      "size_label": "56.7 g",
+      "what_it_is": "A daily hydrating moisturizer.",
+      "product_type": "Hydrating cream",
+      "price_currency": "CAD",
+      "approval_status": "approved",
+      "routine_placement": "As the moisturizing step of a routine."
+    },
+    "faqs": [
+      {
+        "id": "e0cb53e4-49e1-4bee-ab01-5a27d928c22f",
+        "question": "What ingredients help calm the skin?",
+        "answer": "Chamomile-derived bisabolol, per manufacturer information."
+      },
+      {
+        "id": "51f375f4-e17d-454f-a54f-1deb74379aa6",
+        "question": "Does this brighten skin tone?",
+        "answer": "It contains vitamin C, which the manufacturer describes as helping restore radiance."
+      },
+      {
+        "id": "c2fcbc65-7ea0-4e40-865b-d34b5af3d1cf",
+        "question": "When do I apply it?",
+        "answer": "As the moisturizing step of your routine."
+      },
+      {
+        "id": "984fd94e-533e-4dca-98ec-b9688444b12a",
+        "question": "What size is this?",
+        "answer": "56.7 g."
+      },
+      {
+        "id": "9a733d1c-c568-4c79-8bf7-a8b287738688",
+        "question": "Is this suited to sensitive skin?",
+        "answer": "The manufacturer describes it as nourishing and soothing; confirm suitability for sensitive skin with the clinic."
+      },
+      {
+        "id": "d1982276-8551-4835-ae76-d60c4d091875",
+        "question": "How do I confirm current price and availability?",
+        "answer": "Contact Blue Diamond Medical Clinic directly."
+      }
+    ]
+  },
+  {
+    "cmsPath": "/shop/retinol-complex-0-25",
+    "entryId": "fa720e77-7512-4f9b-aac9-52f1ffecc927",
+    "contentType": "product",
+    "updatedAt": "2026-08-23T13:01:42.952Z",
+    "title": "Retinol Complex 0.25",
+    "fields": {
+      "brand_id": "skinmedica",
+      "overview": "The lowest of three Retinol Complex strengths — a starting point for those new to retinol.",
+      "how_to_use": "Apply a single pump in the evening after cleansing and toning and before moisturizer, to the entire face. Avoid the eye area; if contact occurs, rinse eyes thoroughly with water.",
+      "product_id": "retinol-complex-025",
+      "size_label": "29.6 g",
+      "what_it_is": "A retinol treatment, evening use only.",
+      "when_to_use": "If new to retinol, start with twice-weekly use, gradually increasing to every other night, then nightly or as tolerated.",
+      "product_type": "Retinol serum/cream, 0.25% strength",
+      "price_currency": "CAD",
+      "approval_status": "approved",
+      "pregnancy_warning": "Do not use if pregnant, lactating, or planning to become pregnant.",
+      "routine_placement": "In the evening, after cleansing and toning, before moisturizer.",
+      "sun_sensitivity_warning": "Use daily sun protection with SPF 30 or higher and limit sun exposure while using this product and for a week following discontinuation."
+    },
+    "faqs": [
+      {
+        "id": "680f9992-f8fb-46df-a794-a50aae002b67",
+        "question": "How is this different from Retinol Complex 0.5 and 1.0?",
+        "answer": "Same product line at a lower retinol strength — a starting point for those new to retinol."
+      },
+      {
+        "id": "9089fdad-f273-452e-8928-3b006202de8b",
+        "question": "Can I use this if pregnant or breastfeeding?",
+        "answer": "No — do not use if pregnant, lactating, or planning to become pregnant."
+      },
+      {
+        "id": "d7c5890e-1d3e-4702-9267-9f7d1677d63a",
+        "question": "How often should I use it when starting out?",
+        "answer": "Twice weekly at first, gradually increasing to every other night and then nightly or as tolerated."
+      },
+      {
+        "id": "c59f5cc6-8a7b-4286-ba0e-3e7e0e2934fb",
+        "question": "Do I need sunscreen while using this?",
+        "answer": "Yes — SPF 30 or higher daily, with limited sun exposure, during use and for a week after stopping."
+      },
+      {
+        "id": "3ef1ad68-9a37-4b42-961b-2b8d042d5ca8",
+        "question": "Is redness normal?",
+        "answer": "Mild redness, peeling, and irritation are expected effects."
+      },
+      {
+        "id": "615111f4-9821-4dab-81c5-8b0752a4f357",
+        "question": "How do I confirm price and availability?",
+        "answer": "Contact Blue Diamond Medical Clinic directly."
+      }
+    ]
+  },
+  {
+    "cmsPath": "/shop/retinol-complex-0-5",
+    "entryId": "92872d5e-92be-484d-ab47-f7eafddd3f39",
+    "contentType": "product",
+    "updatedAt": "2026-08-23T13:01:44.815Z",
+    "title": "Retinol Complex 0.5",
+    "fields": {
+      "brand_id": "skinmedica",
+      "overview": "The mid-strength Retinol Complex — for those who have built tolerance beyond the 0.25 strength.",
+      "how_to_use": "Apply a single pump in the evening after cleansing and toning and before moisturizer, to the entire face. Avoid the eye area; if contact occurs, rinse eyes thoroughly with water.",
+      "product_id": "retinol-complex-05",
+      "size_label": "29.6 g",
+      "what_it_is": "A retinol treatment, evening use only.",
+      "when_to_use": "Typically for those already tolerating a lower retinol strength; increase frequency gradually as tolerated.",
+      "product_type": "Retinol serum/cream, 0.5% strength",
+      "price_currency": "CAD",
+      "approval_status": "approved",
+      "pregnancy_warning": "Do not use if pregnant, lactating, or planning to become pregnant.",
+      "routine_placement": "In the evening, after cleansing and toning, before moisturizer.",
+      "sun_sensitivity_warning": "Use daily sun protection with SPF 30 or higher and limit sun exposure while using this product and for a week following discontinuation."
+    },
+    "faqs": [
+      {
+        "id": "fbf3c555-a4d5-49d8-a147-59e770b5aa27",
+        "question": "Should I start with this strength or the 0.25?",
+        "answer": "Those new to retinol typically start lower and work up — ask your provider what's appropriate for you."
+      },
+      {
+        "id": "89ec268b-418c-48de-aa17-791cadfd5b12",
+        "question": "Can I use this if pregnant or breastfeeding?",
+        "answer": "No — do not use if pregnant, lactating, or planning to become pregnant."
+      },
+      {
+        "id": "c2eee70c-6704-4d73-a9b7-efa3e49de8f0",
+        "question": "Do I need sunscreen while using this?",
+        "answer": "Yes — SPF 30 or higher daily, with limited sun exposure, during use and for a week after stopping."
+      },
+      {
+        "id": "8e93ee4e-06cc-486b-98c3-16e5553c14db",
+        "question": "Is redness normal?",
+        "answer": "Mild redness, peeling, and irritation are expected effects."
+      },
+      {
+        "id": "5b084007-7463-4872-b63c-29261076d73a",
+        "question": "What size is this?",
+        "answer": "29.6 g."
+      },
+      {
+        "id": "81af1cfb-b71d-44db-b76d-138cf34899f3",
+        "question": "How do I confirm price and availability?",
+        "answer": "Contact Blue Diamond Medical Clinic directly."
+      }
+    ]
+  },
+  {
+    "cmsPath": "/shop/retinol-complex-1-0",
+    "entryId": "e1a247a0-3dcb-4206-873e-9d7b70718143",
+    "contentType": "product",
+    "updatedAt": "2026-08-23T13:01:46.802Z",
+    "title": "Retinol Complex 1.0",
+    "fields": {
+      "brand_id": "skinmedica",
+      "overview": "The highest of three Retinol Complex strengths, for skin that has already built tolerance to retinol.",
+      "how_to_use": "Apply a single pump in the evening after cleansing and toning and before moisturizer, to the entire face. Avoid the eye area; if contact occurs, rinse eyes thoroughly with water.",
+      "product_id": "retinol-complex-10",
+      "size_label": "29.6 g",
+      "what_it_is": "A retinol treatment, evening use only.",
+      "when_to_use": "Typically for those already tolerating a lower retinol strength well.",
+      "product_type": "Retinol serum/cream, 1.0% strength",
+      "price_currency": "CAD",
+      "approval_status": "approved",
+      "pregnancy_warning": "Do not use if pregnant, lactating, or planning to become pregnant.",
+      "routine_placement": "In the evening, after cleansing and toning, before moisturizer.",
+      "sun_sensitivity_warning": "Use daily sun protection with SPF 30 or higher and limit sun exposure while using this product and for a week following discontinuation."
+    },
+    "faqs": [
+      {
+        "id": "a0348c40-e31a-4527-bb92-6cc61d670c3a",
+        "question": "Is this the strongest Retinol Complex?",
+        "answer": "Yes — 1.0 is the highest of the three strengths in this line."
+      },
+      {
+        "id": "868f811d-1c14-4300-978b-b000b40600f5",
+        "question": "Should I start here if I'm new to retinol?",
+        "answer": "Typically not — this strength is intended for skin already tolerating a lower strength well. Ask your provider."
+      },
+      {
+        "id": "46c3fbcc-6cb0-4acc-87b4-c7fd157544a7",
+        "question": "Can I use this if pregnant or breastfeeding?",
+        "answer": "No — do not use if pregnant, lactating, or planning to become pregnant."
+      },
+      {
+        "id": "51d45f76-a368-44c5-952c-855c1d8479f0",
+        "question": "Do I need sunscreen while using this?",
+        "answer": "Yes — SPF 30 or higher daily, with limited sun exposure, during use and for a week after stopping."
+      },
+      {
+        "id": "dce32eb9-3e8d-470a-ab4e-63d10bbdc50b",
+        "question": "Is redness normal?",
+        "answer": "Mild redness, peeling, and irritation are expected effects."
+      },
+      {
+        "id": "9d4102c2-7f4e-4626-8558-5f6ebb4f3fb7",
+        "question": "How do I confirm price and availability?",
+        "answer": "Contact Blue Diamond Medical Clinic directly."
+      }
+    ]
+  },
+  {
+    "cmsPath": "/shop/scar-recovery-gel-with-centelline-large",
+    "entryId": "95b4d4e1-09f8-49c7-8c34-c835e628d52f",
+    "contentType": "product",
+    "updatedAt": "2026-08-23T12:59:30.729Z",
+    "title": "Scar Recovery Gel with Centelline® (Large)",
+    "fields": {
+      "brand_id": "skinmedica",
+      "overview": "A lightweight gel formulated to help minimize the appearance of scars, in the larger of two approved sizes.",
+      "how_to_use": "Apply morning and evening after the wound has healed, directly to scars. Continue use until the scar appears flat and without redness.",
+      "product_id": "scar-recovery-gel-large",
+      "size_label": "56.7 g",
+      "what_it_is": "A scar-appearance gel built around Centelline®, a complex of Centella asiatica, Bulbine frutescens, and Oleuropein, per manufacturer information.",
+      "product_type": "Scar-appearance gel",
+      "variant_of_id": "scar-recovery-gel-small",
+      "price_currency": "CAD",
+      "approval_status": "approved",
+      "routine_placement": "Applied directly to a healed scar area, not as part of a general facial routine."
+    },
+    "faqs": [
+      {
+        "id": "1b88b842-5cee-4e62-baec-0959cdbe1027",
+        "question": "Why choose the large size?",
+        "answer": "For a larger scar area or more extended use — ask the clinic which size suits your situation."
+      },
+      {
+        "id": "35f60cb4-ee73-463a-b6d4-7e62deca1f29",
+        "question": "When do I start using this?",
+        "answer": "After the wound has healed — not on an open wound."
+      },
+      {
+        "id": "93a8a11d-92ce-40ba-8b60-150a860e8aa5",
+        "question": "Does this guarantee my scar will disappear?",
+        "answer": "No — results vary by individual, and this is a cosmetic gel, not a guaranteed medical treatment."
+      },
+      {
+        "id": "891377fc-07f4-4dd3-acb8-ed2981cb12ab",
+        "question": "What's the difference between this and the small size?",
+        "answer": "Same product, different size — 56.7 g here versus 14.2 g for the small size."
+      },
+      {
+        "id": "bc622878-54ba-4215-a717-7fe7eb0b9a80",
+        "question": "How long do I use it for?",
+        "answer": "Until the scar appears flat and without redness, per manufacturer guidance."
+      },
+      {
+        "id": "b0dc3598-a773-4587-9ef4-a86a8a8cebf3",
+        "question": "How do I confirm current price and availability?",
+        "answer": "Contact Blue Diamond Medical Clinic directly."
+      }
+    ]
+  },
+  {
+    "cmsPath": "/shop/scar-recovery-gel-with-centelline-small",
+    "entryId": "c46f1271-5cec-4805-aa2a-01e9d4868cc3",
+    "contentType": "product",
+    "updatedAt": "2026-08-23T12:59:32.249Z",
+    "title": "Scar Recovery Gel with Centelline® (Small)",
+    "fields": {
+      "brand_id": "skinmedica",
+      "overview": "A lightweight gel formulated to help minimize the appearance of scars, in the smaller of two approved sizes.",
+      "how_to_use": "Apply morning and evening after the wound has healed, directly to scars, on smaller incisions and everyday cuts. Continue use until the scar appears flat and without redness.",
+      "product_id": "scar-recovery-gel-small",
+      "size_label": "14.2 g",
+      "what_it_is": "A scar-appearance gel built around Centelline®, a complex of Centella asiatica, Bulbine frutescens, and Oleuropein, per manufacturer information.",
+      "product_type": "Scar-appearance gel",
+      "variant_of_id": "scar-recovery-gel-large",
+      "price_currency": "CAD",
+      "approval_status": "approved",
+      "routine_placement": "Applied directly to a healed scar area, not as part of a general facial routine."
+    },
+    "faqs": [
+      {
+        "id": "5f857485-ab3d-48f5-ae3b-b92834f113b1",
+        "question": "What is Centelline®?",
+        "answer": "A complex of Centella asiatica, Bulbine frutescens, and Oleuropein, formulated to help minimize the appearance of scars, per manufacturer information."
+      },
+      {
+        "id": "1363ae9a-ccc4-4037-bd2f-746518554963",
+        "question": "When do I start using this?",
+        "answer": "After the wound has healed — not on an open wound."
+      },
+      {
+        "id": "24cd4828-2706-4a73-8f5b-c8f5fbff7d2a",
+        "question": "Does this guarantee my scar will disappear?",
+        "answer": "No — results vary by individual, and this is a cosmetic gel, not a guaranteed medical treatment."
+      },
+      {
+        "id": "4538e59d-d86f-4632-a5bb-dc2f1bbad167",
+        "question": "What's the difference between this and the large size?",
+        "answer": "Same product, different size — 14.2 g here versus 56.7 g for the large size."
+      },
+      {
+        "id": "c27af4d3-5556-4876-a69c-18ac7ce076e4",
+        "question": "How long do I use it for?",
+        "answer": "Until the scar appears flat and without redness, per manufacturer guidance."
+      },
+      {
+        "id": "257908b2-d0e6-4b71-b7b0-d3eaa14a8afe",
+        "question": "How do I confirm current price and availability?",
+        "answer": "Contact Blue Diamond Medical Clinic directly."
+      }
+    ]
+  },
+  {
+    "cmsPath": "/shop/tns-advanced-plus-serum",
+    "entryId": "5887878e-7889-4bb6-b824-85115b53911d",
+    "contentType": "product",
+    "updatedAt": "2026-08-23T13:06:39.210Z",
+    "title": "TNS® Advanced+ Serum",
+    "fields": {
+      "brand_id": "skinmedica",
+      "overview": "A serum built on SkinMedica's TNS® growth-factor technology, formulated to support collagen production and cellular activity.",
+      "how_to_use": "Apply to the entire face (neck and chest if desired), morning and evening. Avoid the eye area; if contact occurs, rinse eyes thoroughly with water.",
+      "product_id": "tns-advanced-plus-serum",
+      "size_label": "28.4 g",
+      "what_it_is": "A growth-factor serum. Per manufacturer information, it contains 450 total growth factors, described as more than any previous TNS formulation.",
+      "product_type": "Growth-factor serum",
+      "price_currency": "CAD",
+      "approval_status": "approved",
+      "legacy_name_note": "The approved catalogue listed this as \"TNS Advanced Plus Serum®.\" Current official and Canadian-retailer naming and trademark placement is \"TNS® Advanced+ Serum\" (confirmed on skinmedica.com and Dermstore.com) — used here; the approved price and size are unchanged.",
+      "routine_placement": "Morning and evening, after cleansing and toning; if used with TNS Recovery Complex, apply Recovery Complex first, then this serum."
+    },
+    "faqs": [
+      {
+        "id": "151a3a13-e783-4f95-8317-f71fc6cc90e0",
+        "question": "How many growth factors does this contain?",
+        "answer": "450 total growth factors, per manufacturer information — described as more than any previous TNS formulation."
+      },
+      {
+        "id": "72f0f2c2-b8c8-4a30-bed5-8bab7806fd70",
+        "question": "Why does the name differ slightly from the approved catalogue?",
+        "answer": "The approved catalogue listed \"TNS Advanced Plus Serum®\"; the current official naming/trademark styling is \"TNS® Advanced+ Serum.\" The approved price and size are unchanged."
+      },
+      {
+        "id": "01be5095-8254-40c7-95fc-8f7ab454c3fb",
+        "question": "Should I use this with TNS Recovery Complex?",
+        "answer": "If using both, apply TNS Recovery Complex first, then this serum, per manufacturer guidance."
+      },
+      {
+        "id": "59ef0ddb-0219-4846-aa21-d79447d86fd0",
+        "question": "When do I apply this?",
+        "answer": "Morning and evening, after cleansing and toning."
+      },
+      {
+        "id": "286c884a-4bb1-448c-916f-dda3b4e80d87",
+        "question": "What size is this?",
+        "answer": "28.4 g."
+      },
+      {
+        "id": "ebe97a2e-af2e-4932-8947-bede003b2325",
+        "question": "How do I confirm current price and availability?",
+        "answer": "Contact Blue Diamond Medical Clinic directly."
+      }
+    ]
+  },
+  {
+    "cmsPath": "/shop/tns-ceramide-treatment-cream",
+    "entryId": "72f8a436-9954-40c9-9be6-60532125daed",
+    "contentType": "product",
+    "updatedAt": "2026-08-23T13:05:17.060Z",
+    "title": "TNS Ceramide Treatment Cream®",
+    "fields": {
+      "brand_id": "skinmedica",
+      "overview": "A moisture cream formulated to help heal, mend, and soothe severely dry, damaged, or compromised skin.",
+      "how_to_use": "Apply to face (and neck if desired) as the moisturizing step of your routine.",
+      "product_id": "tns-ceramide-treatment-cream",
+      "size_label": "56.7 g",
+      "what_it_is": "A barrier-repair cream combining SkinMedica's TNS® technology, peptides, and a patented ceramide complex, per manufacturer information.",
+      "product_type": "Ceramide barrier-repair cream",
+      "price_currency": "CAD",
+      "approval_status": "approved",
+      "routine_placement": "As the moisturizing step, particularly for very dry or compromised skin."
+    },
+    "faqs": [
+      {
+        "id": "b2d5f860-6941-42d9-bb8e-5d6465d25a0f",
+        "question": "Who is this cream formulated for?",
+        "answer": "Skin that is severely dry, damaged, or compromised, per manufacturer information."
+      },
+      {
+        "id": "cb3c3ca5-d97e-4149-930f-871bffb04d20",
+        "question": "What technology does it use?",
+        "answer": "SkinMedica's TNS® technology, peptides, and a patented ceramide complex, per manufacturer information."
+      },
+      {
+        "id": "1454cf3e-3067-496e-bc94-3be3a18f182b",
+        "question": "How is this different from Dermal Repair Cream?",
+        "answer": "Both are rich moisturizers; this one is specifically ceramide-focused for barrier repair — ask the clinic which suits your skin."
+      },
+      {
+        "id": "3baf916a-6c7c-42f8-832b-0fc03ce2f5bf",
+        "question": "When do I apply it?",
+        "answer": "As the moisturizing step of your routine."
+      },
+      {
+        "id": "bc0abe0e-62c7-4726-b090-418e3d0ae2b8",
+        "question": "What size is this?",
+        "answer": "56.7 g."
+      },
+      {
+        "id": "4bf81412-8eb0-4508-b273-063083bc7f7a",
+        "question": "How do I confirm current price and availability?",
+        "answer": "Contact Blue Diamond Medical Clinic directly."
+      }
+    ]
+  },
+  {
+    "cmsPath": "/shop/tns-eye-repair",
+    "entryId": "cdd643b4-2155-44b0-bb94-27f2bfa39899",
+    "contentType": "product",
+    "updatedAt": "2026-08-23T13:01:35.808Z",
+    "title": "TNS® Eye Repair",
+    "fields": {
+      "brand_id": "skinmedica",
+      "overview": "A treatment for the skin around the eyes, combining SkinMedica's TNS® growth-factor technology with peptides and vitamins A, C, and E.",
+      "how_to_use": "Apply to the skin around the eyes as directed by the product packaging or your provider; avoid direct contact with the eyes.",
+      "product_id": "tns-eye-repair",
+      "size_label": "14.2 g",
+      "what_it_is": "An eye-area cream formulated for fine lines, wrinkles, skin tone, and texture around the eyes, per manufacturer information.",
+      "product_type": "Eye-area treatment cream",
+      "price_currency": "CAD",
+      "approval_status": "approved",
+      "routine_placement": "As a targeted treatment step for the eye area, within a broader skincare routine."
+    },
+    "faqs": [
+      {
+        "id": "60a3cdb0-d90e-472b-b489-d3c12838f75a",
+        "question": "What is TNS Eye Repair formulated for?",
+        "answer": "The eye area specifically — fine lines, wrinkles, tone, and texture, per manufacturer information."
+      },
+      {
+        "id": "1d829b14-c182-402c-b84d-7263db944378",
+        "question": "What is TNS®?",
+        "answer": "TNS® is SkinMedica's growth-factor technology, used across several products in this catalogue."
+      },
+      {
+        "id": "d6943cce-1d51-4630-94a6-af1b310676f7",
+        "question": "Can this go near my eyes safely?",
+        "answer": "It's formulated for the eye area, but avoid direct contact with the eyes themselves — confirm technique with your provider."
+      },
+      {
+        "id": "372fce1c-b1cc-4173-81bf-95445d0f75d1",
+        "question": "What size does this come in?",
+        "answer": "14.2 g."
+      },
+      {
+        "id": "337699eb-e45c-4501-acca-97f730d321f0",
+        "question": "Is this the same TNS used in TNS Recovery Complex?",
+        "answer": "It's the same underlying SkinMedica TNS® growth-factor technology, formulated here specifically for the eye area."
+      },
+      {
+        "id": "f7e3f3e6-dfa4-4052-ad4a-2b7e3bbcdf7c",
+        "question": "How do I ask the clinic about this product?",
+        "answer": "Contact Blue Diamond Medical Clinic directly for current availability and to discuss whether it suits your routine."
+      }
+    ]
+  },
+  {
+    "cmsPath": "/shop/tns-recovery-complex",
+    "entryId": "d3e5d337-1035-43b4-84ba-5c0341ab9e9a",
+    "contentType": "product",
+    "updatedAt": "2026-08-23T13:06:44.446Z",
+    "title": "TNS Recovery Complex®",
+    "fields": {
+      "brand_id": "skinmedica",
+      "overview": "A concentrated growth-factor serum formulated to help reduce the appearance of fine lines and wrinkles while improving skin tone and texture.",
+      "how_to_use": "Apply to the entire face (neck and chest if desired), morning and evening. Avoid the eye area; if contact occurs, rinse eyes thoroughly with water.",
+      "product_id": "tns-recovery-complex",
+      "size_label": "28.4 g",
+      "what_it_is": "A growth-factor and exosome serum. Per manufacturer information, it contains over 1 trillion exosomes per bottle, described as the highest concentration of the brand's patented growth-factor blend.",
+      "product_type": "Growth-factor and exosome serum",
+      "price_currency": "CAD",
+      "approval_status": "approved",
+      "routine_placement": "Morning and evening, after cleansing and toning; if used with TNS Advanced+ Serum, apply this first."
+    },
+    "faqs": [
+      {
+        "id": "3ee25897-c3c3-4561-bba3-4b8b9f83791b",
+        "question": "What are exosomes?",
+        "answer": "The manufacturer describes this product as containing over 1 trillion exosomes per bottle as part of its growth-factor and protein blend."
+      },
+      {
+        "id": "dab9a844-8dd0-4cd9-82ab-258aeea7cc41",
+        "question": "Should this go before or after TNS Advanced+ Serum?",
+        "answer": "Before — apply TNS Recovery Complex first, then TNS Advanced+ Serum, per manufacturer guidance."
+      },
+      {
+        "id": "84c94737-9bd1-4116-93f7-848d0860bf8c",
+        "question": "When do I apply this?",
+        "answer": "Morning and evening, after cleansing and toning."
+      },
+      {
+        "id": "37173284-2ee1-440b-b41f-467ddd77a7bb",
+        "question": "What is this formulated to help with?",
+        "answer": "The appearance of fine lines and wrinkles, and skin tone and texture, per manufacturer information."
+      },
+      {
+        "id": "c54db2bc-3bbf-4645-93bc-32b3eeef6eff",
+        "question": "What size is this?",
+        "answer": "28.4 g."
+      },
+      {
+        "id": "6b85854a-d41c-4c31-86d8-69dd21224ac3",
+        "question": "How do I confirm current price and availability?",
+        "answer": "Contact Blue Diamond Medical Clinic directly."
+      }
+    ]
+  },
+  {
+    "cmsPath": "/shop/total-defence-repair-spf-34-clear",
+    "entryId": "d9ca6856-e3b0-42bb-bc6e-328035d615f0",
+    "contentType": "product",
+    "updatedAt": "2026-08-23T13:04:57.626Z",
+    "title": "Total Defense + Repair SPF 34 (Clear)",
+    "fields": {
+      "brand_id": "skinmedica",
+      "overview": "A broad-spectrum SPF 34 sunscreen in a clear, untinted formula, for daily use.",
+      "how_to_use": "Apply generously to face and other sun-exposed areas as the last step of your morning routine; reapply at least every 2 hours if in direct sunlight.",
+      "product_id": "total-defence-repair-spf-34-clear",
+      "size_label": "65 g",
+      "what_it_is": "A clear broad-spectrum sunscreen.",
+      "product_type": "Broad-spectrum sunscreen, SPF 34, untinted",
+      "price_currency": "CAD",
+      "approval_status": "approved",
+      "legacy_name_note": "The approved catalogue used the British/Canadian spelling \"Defence\"; the manufacturer's own current naming uses \"Defense.\" The current official name is used here; the approved price and size are unchanged.",
+      "routine_placement": "The last step of a morning routine."
+    },
+    "faqs": [
+      {
+        "id": "26906939-65cc-4f39-81d9-4de7c35572d6",
+        "question": "Is this tinted?",
+        "answer": "No — this is the clear, untinted version. A tinted version is also available as a separate product."
+      },
+      {
+        "id": "4e761cc2-59d8-4847-9225-66a3a6448524",
+        "question": "How does this differ from Daily Physical Defense?",
+        "answer": "Both are SPF sunscreens in this catalogue; ask the clinic which formula and finish suits your routine."
+      },
+      {
+        "id": "287b5299-b4b9-4c45-b932-ba699754cf88",
+        "question": "How often do I reapply?",
+        "answer": "At least every 2 hours if in direct sunlight."
+      },
+      {
+        "id": "bbe234b0-92c1-4a3d-8dac-516a9fff8026",
+        "question": "What SPF does this provide?",
+        "answer": "SPF 34, broad spectrum."
+      },
+      {
+        "id": "829efd56-8643-4be4-baaa-16180f079ec2",
+        "question": "What size is this?",
+        "answer": "65 g."
+      },
+      {
+        "id": "7765718a-1767-436b-978b-030a413ae247",
+        "question": "How do I confirm current price and availability?",
+        "answer": "Contact Blue Diamond Medical Clinic directly."
+      }
+    ]
+  },
+  {
+    "cmsPath": "/shop/total-defence-repair-spf-34-tinted",
+    "entryId": "c19f02e1-0ab1-46f6-933e-2419b3c31c6d",
+    "contentType": "product",
+    "updatedAt": "2026-08-23T13:04:55.465Z",
+    "title": "Total Defense + Repair SPF 34 (Tinted)",
+    "fields": {
+      "brand_id": "skinmedica",
+      "overview": "A broad-spectrum SPF 34 sunscreen with sheer tinted coverage, for daily use.",
+      "how_to_use": "Apply generously to face and other sun-exposed areas as the last step of your morning routine; reapply at least every 2 hours if in direct sunlight.",
+      "product_id": "total-defence-repair-spf-34-tinted",
+      "size_label": "65 g",
+      "what_it_is": "A tinted broad-spectrum sunscreen.",
+      "product_type": "Broad-spectrum sunscreen, SPF 34, tinted",
+      "price_currency": "CAD",
+      "approval_status": "approved",
+      "legacy_name_note": "The approved catalogue used the British/Canadian spelling \"Defence\"; the manufacturer's own current naming (confirmed on the official skinmedica.ca product URL and multiple Canadian retailers) uses \"Defense.\" The current official name is used here; the approved price and size are unchanged.",
+      "routine_placement": "The last step of a morning routine."
+    },
+    "faqs": [
+      {
+        "id": "a9b7d8f4-3025-4c72-9158-2fff8c837714",
+        "question": "Is this tinted or clear?",
+        "answer": "Tinted — with sheer coverage. A clear version is also available as a separate product."
+      },
+      {
+        "id": "aa31839e-b607-46f9-9dc5-161fccbc6a6f",
+        "question": "Why does the product name say \"Defense\" instead of \"Defence\"?",
+        "answer": "\"Defense\" is the manufacturer's current official spelling, confirmed on the official product URL and Canadian retailers — the approved price and size are unchanged."
+      },
+      {
+        "id": "4a3164f3-78c7-4339-9fda-e48e4393469c",
+        "question": "How often do I reapply?",
+        "answer": "At least every 2 hours if in direct sunlight."
+      },
+      {
+        "id": "c396adfd-cb5e-498e-b93a-01e88354f387",
+        "question": "What SPF does this provide?",
+        "answer": "SPF 34, broad spectrum."
+      },
+      {
+        "id": "cb0f75ad-6760-4ffa-b538-98d17142f7a9",
+        "question": "What size is this?",
+        "answer": "65 g."
+      },
+      {
+        "id": "c65b8af8-2c42-4d88-89fd-fc2f0f8aa60e",
+        "question": "How do I confirm current price and availability?",
+        "answer": "Contact Blue Diamond Medical Clinic directly."
+      }
+    ]
+  },
+  {
+    "cmsPath": "/shop/ultra-sheer-moisturizer",
+    "entryId": "b733c567-3ff7-4b75-b3de-231de0a3dd2f",
+    "contentType": "product",
+    "updatedAt": "2026-08-23T13:06:34.143Z",
+    "title": "Ultra Sheer Moisturizer",
+    "fields": {
+      "brand_id": "skinmedica",
+      "overview": "A lightweight, oil-free moisturizer enriched with vitamins C and E.",
+      "how_to_use": "Apply to face (and neck if desired) as the moisturizing step of your routine.",
+      "product_id": "ultra-sheer-moisturizer",
+      "size_label": "56.7 g",
+      "what_it_is": "A daily lightweight moisturizer.",
+      "product_type": "Lightweight, oil-free moisturizer",
+      "price_currency": "CAD",
+      "approval_status": "approved",
+      "routine_placement": "As the moisturizing step of a routine, for those who prefer a lighter finish."
+    },
+    "faqs": [
+      {
+        "id": "a3a2a414-107a-43f0-8c64-2dc7f9b60937",
+        "question": "Is this oil-free?",
+        "answer": "Yes, per manufacturer information."
+      },
+      {
+        "id": "db0ec1b6-d30a-4513-ae02-a210e6cf111d",
+        "question": "How is this different from Rejuvenative Moisturizer?",
+        "answer": "Both are moisturizers in this catalogue; this one is positioned as a lighter, sheer finish — ask the clinic which suits your skin type."
+      },
+      {
+        "id": "b36dbe2e-dc14-40eb-822f-ef0e9fc87896",
+        "question": "What vitamins does it contain?",
+        "answer": "Vitamins C and E, per manufacturer information."
+      },
+      {
+        "id": "933cc326-3246-487c-9005-d7deeff9671f",
+        "question": "When do I apply it?",
+        "answer": "As the moisturizing step of your routine."
+      },
+      {
+        "id": "eae59afd-2537-474f-90fd-ef9602055836",
+        "question": "What size is this?",
+        "answer": "56.7 g."
+      },
+      {
+        "id": "a4f0164e-3f76-4877-9145-1fb6cc915700",
+        "question": "How do I confirm current price and availability?",
+        "answer": "Contact Blue Diamond Medical Clinic directly."
+      }
+    ]
+  },
+  {
+    "cmsPath": "/shop/vitamin-c-e-complex",
+    "entryId": "c571f132-f2e7-4d78-b6cc-b404f6cd8780",
+    "contentType": "product",
+    "updatedAt": "2026-08-23T13:01:37.572Z",
+    "title": "Vitamin C+E Complex",
+    "fields": {
+      "brand_id": "skinmedica",
+      "overview": "A morning antioxidant serum combining vitamin C and vitamin E, formulated to release gradually through the day.",
+      "how_to_use": "Apply a single pump into the hand and gently apply to the entire face (neck and chest if desired) each morning.",
+      "product_id": "vitamin-c-e-complex",
+      "size_label": "28.3 g",
+      "what_it_is": "A vitamin C and E antioxidant serum for daytime use.",
+      "product_type": "Antioxidant serum",
+      "price_currency": "CAD",
+      "approval_status": "approved",
+      "routine_placement": "Each morning after cleansing, toning, and (if used) TNS Recovery Complex, and before moisturizer."
+    },
+    "faqs": [
+      {
+        "id": "20e1ecac-fdb4-48d9-bac7-1612277e1666",
+        "question": "When should I apply this?",
+        "answer": "In the morning, after cleansing/toning and before moisturizer."
+      },
+      {
+        "id": "b3be1193-b29f-4b7b-a150-f20b3365c708",
+        "question": "What vitamins does it contain?",
+        "answer": "Vitamin C (as Ascorbic Acid and Tetrahexyldecyl Ascorbate) and vitamin E (as Tocopherol), per manufacturer information."
+      },
+      {
+        "id": "3f5bbabc-dcd6-4f37-b187-72090827abe0",
+        "question": "Should I still wear sunscreen with this?",
+        "answer": "An antioxidant serum doesn't replace sunscreen — daily sun protection is a separate, important step."
+      },
+      {
+        "id": "575198a3-4571-4119-a366-32fd595039ed",
+        "question": "How much do I use?",
+        "answer": "A single pump, applied to the entire face and optionally neck and chest."
+      },
+      {
+        "id": "5d8fb07b-7be8-477e-a7c6-da132455c8c8",
+        "question": "What size is this?",
+        "answer": "28.3 g."
+      },
+      {
+        "id": "0b5daab2-0149-43e6-8197-914c151c1b07",
+        "question": "How do I check current price and availability?",
+        "answer": "Contact Blue Diamond Medical Clinic directly."
+      }
+    ]
+  }
+]

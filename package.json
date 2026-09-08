@@ -13,6 +13,7 @@
     "typecheck": "tsc --noEmit",
     "test:e2e": "bash scripts/run-playwright.sh",
     "validate:secrets": "node scripts/validate-no-secrets.mjs",
+    "capture:cms": "node scripts/capture-cms-content.mjs",
     "validate": "npm run typecheck && npm run lint && npm run validate:secrets && npm run build"
   },
   "dependencies": {
