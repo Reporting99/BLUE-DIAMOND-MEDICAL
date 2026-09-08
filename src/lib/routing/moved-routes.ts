@@ -1,4 +1,6 @@
 import { concerns } from "@/features/concerns/data";
+import { features } from "@/config/features";
+import { archivedSkinMedicaProducts } from "@/features/products/archive/skinmedica";
 
 /**
  * Permanent 301s for URLs this app itself used to serve and has since moved —
@@ -32,7 +34,41 @@ const OLD_AR_HUB = "/التجميل-الطبي/المخاوف-الجمالية";
 const NEW_EN_HUB = "/aesthetics/treatments";
 const NEW_AR_HUB = "/التجميل-الطبي/العلاجات";
 
+/**
+ * The 23 archived SkinMedica product pages (2026-09-07).
+ *
+ * Blue Diamond stopped carrying SkinMedica, so `products` no longer contains
+ * these records and `src/config/routes.ts` no longer builds a route for any of
+ * them — /en/shop/lumivive-system-day-night and its 45 siblings would 404. They
+ * were indexed, they are the targets of the /about-skinmedica-products/f/*
+ * legacy 301s, and they are what anyone's bookmark or a search result points
+ * at, so each one 301s to the catalogue hub instead: the visitor lands on a
+ * live page showing what the clinic actually carries now.
+ *
+ * /shop, not a per-product replacement: there is no Myriade equivalent of any
+ * given SkinMedica SKU, and pointing a retinol serum at an unrelated product
+ * would be a claim the clinic never made.
+ *
+ * DERIVED from the archive itself, and empty while `skinMedicaEnabled` is
+ * true. Both halves matter: a hand-written table would drift from the archive,
+ * and a static one would keep 301ing the products away from themselves the day
+ * the flag comes back — the redirect and the catalogue cannot disagree.
+ */
+const ARCHIVED_PRODUCT_REDIRECTS: Record<string, string> = features.skinMedicaEnabled
+  ? {}
+  : Object.fromEntries(
+      archivedSkinMedicaProducts.flatMap((product) => [
+        [`/en/shop/${product.slug}`, "/en/shop"],
+        [`/ar/المتجر/${product.slugAr}`, "/ar/المتجر"],
+        // The Latin-slug form under /ar, for the same reason the concern
+        // entries below list one: proxy.ts would otherwise rewrite it to the
+        // approved Arabic path first and land on a route that no longer exists.
+        [`/ar/shop/${product.slug}`, "/ar/المتجر"],
+      ]),
+    );
+
 export const movedRoutes: Record<string, string> = {
+  ...ARCHIVED_PRODUCT_REDIRECTS,
   [`/en${OLD_EN_HUB}`]: `/en${NEW_EN_HUB}`,
   [`/ar${OLD_AR_HUB}`]: `/ar${NEW_AR_HUB}`,
   [`/ar${OLD_EN_HUB}`]: `/ar${NEW_AR_HUB}`,

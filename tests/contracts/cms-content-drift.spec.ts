@@ -107,13 +107,10 @@ const KNOWN_CMS_DRIFT: ReadonlySet<string> = new Set([
   "medical-service:eye-screening",
   "medical-service:pain-management",
   "medical-service:preventive-care",
-  "product:aha-bha-cream",
-  "product:daily-physical-defense-spf-34",
-  "product:ha5-rejuvenative-hydrator",
-  "product:lytera-2-pigment-brightening-serum",
-  "product:retinol-complex-05",
-  "product:retinol-complex-10",
-  "product:tns-eye-repair",
+  // No product:* keys. The seven acknowledged here until 2026-09-08 were all
+  // SkinMedica records, and that line is archived (src/config/features.ts):
+  // they no longer publish, so they no longer pair, and "every acknowledged
+  // record still exists in the CMS capture" below would name them as stale.
   "technology:elite-iq",
   "technology:potenza",
   "technology:tempsure",

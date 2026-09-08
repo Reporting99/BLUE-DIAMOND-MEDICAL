@@ -1,3 +1,19 @@
+import { features } from "@/config/features";
+
+/**
+ * Where a legacy SkinMedica product page should land.
+ *
+ * SkinMedica was archived on 2026-09-07 (src/config/features.ts), which
+ * removed all 23 product routes. Left pointing at `/en/shop/<slug>` these
+ * seven 301s would have chained — legacy URL -> retired product URL ->
+ * /en/shop — and this table's whole contract is one hop to a live 200
+ * (docs/ROUTING.md, tests/redirects). Reading the flag keeps them single-hop
+ * in BOTH states: straight to the hub now, straight back to each product the
+ * day the line returns.
+ */
+const skinMedicaProduct = (slug: string): string =>
+  features.skinMedicaEnabled ? `/en/shop/${slug}` : "/en/shop";
+
 /**
  * Direct 301 redirect map for every legacy URL — brief §33. Consumed by
  * src/proxy.ts. Kept as a flat exact-match table (no chains, no wildcard
@@ -42,13 +58,13 @@ export const legacyRedirects: Record<string, string> = {
   // against the "-1" variant's <title> of "... - Tinted" before mapping.
   // Any further/undiscovered slug under this same prefix falls back to
   // `/en/shop` via the safety-net rule in src/proxy.ts rather than 404ing.
-  "/about-skinmedica-products/f/lumivivetm-system": "/en/shop/lumivive-system-day-night",
-  "/about-skinmedica-products/f/lytera®-20-pigmentbrightening-serum": "/en/shop/lytera-2-pigment-brightening-serum",
-  "/about-skinmedica-products/f/tns®-eye-repair": "/en/shop/tns-eye-repair",
-  "/about-skinmedica-products/f/total-defense-repair-spf-34---tinted": "/en/shop/total-defence-repair-spf-34-clear",
-  "/about-skinmedica-products/f/total-defense-repair-spf-34---tinted-1": "/en/shop/total-defence-repair-spf-34-tinted",
-  "/about-skinmedica-products/f/dermal-repair-cream": "/en/shop/dermal-repair-cream",
-  "/about-skinmedica-products/f/ahabha-exfoliating-cleanser": "/en/shop/aha-bha-exfoliating-cleanser",
+  "/about-skinmedica-products/f/lumivivetm-system": skinMedicaProduct("lumivive-system-day-night"),
+  "/about-skinmedica-products/f/lytera®-20-pigmentbrightening-serum": skinMedicaProduct("lytera-2-pigment-brightening-serum"),
+  "/about-skinmedica-products/f/tns®-eye-repair": skinMedicaProduct("tns-eye-repair"),
+  "/about-skinmedica-products/f/total-defense-repair-spf-34---tinted": skinMedicaProduct("total-defence-repair-spf-34-clear"),
+  "/about-skinmedica-products/f/total-defense-repair-spf-34---tinted-1": skinMedicaProduct("total-defence-repair-spf-34-tinted"),
+  "/about-skinmedica-products/f/dermal-repair-cream": skinMedicaProduct("dermal-repair-cream"),
+  "/about-skinmedica-products/f/ahabha-exfoliating-cleanser": skinMedicaProduct("aha-bha-exfoliating-cleanser"),
 
   // bluediamondmedicalaesthetics.ca — cannot be caught by this app's own
   // proxy (different host), documented for DNS/hosting-level redirect

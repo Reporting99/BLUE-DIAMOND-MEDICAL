@@ -18,20 +18,28 @@ import { PageSchema } from "@/components/shared/schema";
 import { heroFromListing } from "@/lib/feelstack/page-hero-media";
 import { siteConfig } from "@/config/site";
 
+/**
+ * The hub's own copy. It names Myriade, not SkinMedica: SkinMedica was
+ * archived on 2026-09-07 (src/config/features.ts) and no SkinMedica product
+ * is published, so naming it here would have advertised a line the clinic
+ * stopped carrying on the page whose whole job is to say what it carries.
+ * The metadata description below derives its brand list from `productBrands`
+ * instead and needs no edit either way.
+ */
 const copy = {
   en: {
-    intro: "Professional skincare and treatment products carried by Blue Diamond Medical, including the SkinMedica and Myriade lines. Availability and current pricing are confirmed directly with the clinic — this catalogue is informational, not an online store.",
+    intro: "Professional skincare and treatment products carried by Blue Diamond Medical, including the Myriade line. Availability and current pricing are confirmed directly with the clinic — this catalogue is informational, not an online store.",
     byCategory: "By category",
     byConcern: "By concern",
     allProducts: "All products",
-    contactCta: "Contact the clinic about SkinMedica",
+    contactCta: "Contact the clinic about our products",
   },
   ar: {
-    intro: "منتجات احترافية للعناية بالبشرة والعلاج تقدّمها عيادة بلو دايموند الطبية، من بينها خط سكين ميديكا. يتم تأكيد التوفر والسعر الحالي مباشرةً مع العيادة — هذا الكتالوج معلوماتي وليس متجرًا إلكترونيًا.",
+    intro: "منتجات احترافية للعناية بالبشرة والعلاج تقدّمها عيادة بلو دايموند الطبية، من بينها خط ميرياد. يتم تأكيد التوفر والسعر الحالي مباشرةً مع العيادة — هذا الكتالوج معلوماتي وليس متجرًا إلكترونيًا.",
     byCategory: "حسب الفئة",
     byConcern: "حسب المخاوف",
     allProducts: "جميع المنتجات",
-    contactCta: "تواصلي مع العيادة للاستفسار عن SkinMedica",
+    contactCta: "تواصلي مع العيادة للاستفسار عن منتجاتنا",
   },
 };
 
@@ -71,7 +79,7 @@ export default async function ShopHubPage({ params }: { params: Promise<{ locale
   const { locale: rawLocale } = await params;
   const locale: Locale = isLocale(rawLocale) ? rawLocale : "en";
 
-  // Catalogue media. The shop index renders 23 products while the single-entity
+  // Catalogue media. The shop index renders the whole catalogue while the single-entity
   // page resolver handles one at a time, so without this every card falls back
   // to the static record while each product's own detail page renders its real
   // packshot. Tagged with productsIndex so a publish invalidates the catalogue
@@ -120,8 +128,8 @@ export default async function ShopHubPage({ params }: { params: Promise<{ locale
         imageRole="hero"
         seed="shop"
         imageAlt={{
-          en: "SkinMedica physician-dispensed skincare at Blue Diamond Medical",
-          ar: "منتجات العناية بالبشرة سكين ميديكا المصروفة بإشراف طبي في بلو دايموند الطبية",
+          en: "Physician-dispensed professional skincare at Blue Diamond Medical",
+          ar: "منتجات العناية بالبشرة الاحترافية المصروفة بإشراف طبي في بلو دايموند الطبية",
         }}
         breadcrumbs={<Breadcrumbs locale={locale} items={[{ label: ownRoute.title[locale] }]} />}
         size="compact"
@@ -184,7 +192,7 @@ export default async function ShopHubPage({ params }: { params: Promise<{ locale
             "COMPLETE SKINMEDICA NAVIGATION..." §7. */}
         <div className="mt-12 border-t border-border pt-6 text-center">
           <Link
-            href={`${href("contact", locale)}?topic=skinmedica`}
+            href={`${href("contact", locale)}?topic=products`}
             className="inline-flex items-center gap-1 text-sm font-semibold text-primary hover:text-primary-hover"
           >
             {t.contactCta}

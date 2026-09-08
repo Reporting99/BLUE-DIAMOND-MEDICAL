@@ -42,7 +42,7 @@ See `docs/ROUTING.md` for the complete existing table — verified current and a
 ### Known translation-review flags
 
 - `doctor-gwea`'s Arabic slug (`محمد-فرحات` sibling pattern, transliteration of "Gwea") is pending native-speaker confirmation — tracked in `docs/CONTENT_MODEL.md`, not a blocker (the page still renders and functions correctly either way; this is a spelling-refinement flag, not a missing-content flag).
-- SkinMedica product Arabic names and detail content (23 products) are professional-convention transliterations/translations and original bilingual copy, not yet reviewed by a native Arabic-speaking marketing reviewer — flagged in `docs/CONTENT_MODEL.md`.
+- SkinMedica product Arabic names and detail content (23 products, archived 2026-09-07 and no longer published) are professional-convention transliterations/translations and original bilingual copy, not yet reviewed by a native Arabic-speaking marketing reviewer — flagged in `docs/CONTENT_MODEL.md`.
 
 ### Verification
 
@@ -52,7 +52,7 @@ See `docs/ROUTING.md` for the complete existing table — verified current and a
 
 Single source of truth is `src/config/routes.ts` — this document mirrors it in prose. Do not hand-edit route paths here; edit the registry (or the content file it's generated from) and regenerate this table.
 
-**104 route entries are registered** (81 + 23 `shop-product-*` entries, one per client-approved SkinMedica product — see `docs/CONTENT_MODEL.md`). Every one of them has a real page file, a typed bilingual content model, and a reusable template — there is no "planned but not built" category left. 50 entries are live and public (unchanged — sitemap.xml verified at exactly 100 URLs); 54 are fully built but feature-flagged off pending approved content, credentials, or a business decision (see "Gated" below and `docs/CONTENT_MODEL.md` for the reason behind each).
+**113 route entries are registered** (2026-09-07): 68 fixed entries plus 31 `shop-product-*` (one per published Myriade product), 8 `shop-category-*` and 6 `shop-concern-*`. The shop half is DERIVED from `src/features/products/data.ts`, so the total moves with the catalogue rather than being maintained here — it was 104 when the catalogue was 23 SkinMedica products, 143 when both brands published, and would return to 143 if `skinMedicaEnabled` were flipped back on. See `docs/CONTENT_MODEL.md` and `docs/archive/SKINMEDICA_ARCHIVE.md`. Every one of them has a real page file, a typed bilingual content model, and a reusable template — there is no "planned but not built" category left. 50 entries are live and public (unchanged — sitemap.xml verified at exactly 100 URLs); 54 are fully built but feature-flagged off pending approved content, credentials, or a business decision (see "Gated" below and `docs/CONTENT_MODEL.md` for the reason behind each).
 
 ### Live and public (50 route entries → 100 URLs, verified in `sitemap.xml`)
 
@@ -89,7 +89,7 @@ None of these appear in the sitemap, main navigation, or search results, and eve
 | `aesthetics-consultation` | `consultationFormEnabled` | No approved consultation-intake flow supplied |
 | `aesthetics-before-after` | `beforeAfterEnabled` | No approved before/after photography |
 | `legal-terms`, `legal-privacy-policy`, `legal-accessibility`, `legal-medical-disclaimer` (4) | `legalPagesEnabled` | No approved legal copy (legacy showed literal "Coming soon") |
-| `shop-hub`, 8 category, 6 concern, 23 `shop-product-*` (all client-approved SkinMedica products, full bilingual detail content), cart, checkout, shipping-returns (41) | `shopEnabled` | Product data and content are approved, imported, and validated (`src/features/products/data.ts`, `tests/unit/skinmedica-catalogue.spec.ts`); the remaining blocker is product photography — see `docs/MEDIA.md` |
+| `shop-hub`, 8 category, 6 concern, 31 `shop-product-*` (the Myriade catalogue), cart, checkout, shipping-returns (49) | `shopEnabled` | The hub, listings and product pages are **live**; only cart/checkout/shipping-returns stay gated, behind the separate `shopCheckoutEnabled`. The 23 SkinMedica entries were withdrawn on 2026-09-07 with the line itself — `skinMedicaEnabled: false`, see `docs/archive/SKINMEDICA_ARCHIVE.md` |
 
 `/health-hub/[articleId]` is a 19th fully-built-but-empty case that isn't in the table above because it has no flag at all — it's gated purely by having zero entries in `src/features/health-hub/data.ts`, so `generateStaticParams` returns nothing and any slug 404s. Same underlying pattern (route + type + template exist, no content), no feature flag needed since there's nothing to toggle.
 
@@ -159,7 +159,7 @@ served — is asserted in `tests/contracts/prelaunch-route-architecture.spec.ts`
 | Do not create detailed internal booking-form routes | `book-appointment` route (`templateType: "booking-hub"`) presents channel choices and links externally; no form fields, no health-data collection anywhere on the site | **Compliant** |
 | `/book-appointment/` is an external-booking routing hub | Confirmed via `src/config/routes.ts` and `docs/ARCHITECTURE.md` | **Compliant** |
 | Do not create duplicate pages merely to target similar keywords | Checked every treatment/concern/technology pair for content overlap — none share the same underlying content (each has distinct approved source text) | **Compliant** |
-| Do not retain thin or empty category pages | Shop category/concern pages are now populated (21 real SkinMedica products), but the whole subtree stays `GATE`d pending product photography — no thin *live* page exists | **Compliant** |
+| Do not retain thin or empty category pages | `productCategories` is derived from what the catalogue actually fills, so a grouping with no products has no route, no link and no page. Archiving SkinMedica emptied 7 groupings (cleansers, serums, moisturizers, retinol, eye-care, scar-care, treatment-systems) and all 7 disappeared in the same move — asserted by `tests/unit/skinmedica-catalogue.spec.ts` | **Compliant** |
 | Do not publish "Coming Soon" pages | Grepped for the phrase and manually checked every gated route's behavior — all real 404s, zero placeholder pages | **Compliant** |
 | Gated content must return the intended non-indexable behavior | Verified structurally (`indexing: "noindex"` + `inSitemap: false` on every `requiresFeature` route) and by test (`tests/e2e/gated-routes.spec.ts`) | **Compliant** |
 | Old URLs must redirect directly to the final canonical route | Audited every row in `src/lib/routing/legacy-redirects.ts` against actual current content location — **found and fixed 3 rows that pointed at the wrong or an unrelated page** (see below) | **2 real bugs found and fixed this pass** |
@@ -213,17 +213,19 @@ Source of truth: `src/lib/routing/legacy-redirects.ts`, consumed by `src/proxy.t
 | `/clinic-policies` | `/en/patient-resources` *(correct — clinic-policy content is published inline on this hub)* |
 | `/join-our-team` | `/en/careers` |
 | `/contact-us` | `/en/contact` |
-| `/products` | `/en/shop` *(shop is live — `shopEnabled: true` as of the SkinMedica catalogue pass; resolves to a real 200 catalogue page, not a 404)* |
+| `/products` | `/en/shop` *(shop is live — `shopEnabled: true`; resolves to a real 200 catalogue page, not a 404)* |
 | `/tempsure` | `/en/aesthetics/technologies/tempsure` *(found via live `sitemap.website.xml` crawl this pass — not in the original DOCX-derived inventory, previously would have 404'd)* |
 | `/microneedling` | `/en/aesthetics/treatments/rf-microneedling` *(same — found via live crawl)* |
-| `/about-skinmedica-products/f/lumivivetm-system` | `/en/shop/lumivive-system-day-night` *(found via live `sitemap.blog.xml` crawl; 6 more per-product legacy URLs below)* |
-| `/about-skinmedica-products/f/lytera®-20-pigmentbrightening-serum` | `/en/shop/lytera-2-pigment-brightening-serum` |
-| `/about-skinmedica-products/f/tns®-eye-repair` | `/en/shop/tns-eye-repair` |
-| `/about-skinmedica-products/f/total-defense-repair-spf-34---tinted` | `/en/shop/total-defence-repair-spf-34-clear` *(legacy URL slug literally says "tinted" for both this and the next row — resolved by fetching each page's real `<title>`: this one is "... - Clear")* |
-| `/about-skinmedica-products/f/total-defense-repair-spf-34---tinted-1` | `/en/shop/total-defence-repair-spf-34-tinted` *(confirmed "... - Tinted" by title)* |
-| `/about-skinmedica-products/f/dermal-repair-cream` | `/en/shop/dermal-repair-cream` |
-| `/about-skinmedica-products/f/ahabha-exfoliating-cleanser` | `/en/shop/aha-bha-exfoliating-cleanser` |
+| `/about-skinmedica-products/f/lumivivetm-system` | `/en/shop` *(found via live `sitemap.blog.xml` crawl; 6 more per-product legacy URLs below)* |
+| `/about-skinmedica-products/f/lytera®-20-pigmentbrightening-serum` | `/en/shop` |
+| `/about-skinmedica-products/f/tns®-eye-repair` | `/en/shop` |
+| `/about-skinmedica-products/f/total-defense-repair-spf-34---tinted` | `/en/shop` *(legacy URL slug literally says "tinted" for both this and the next row — resolved by fetching each page's real `<title>`: this one is "... - Clear")* |
+| `/about-skinmedica-products/f/total-defense-repair-spf-34---tinted-1` | `/en/shop` *(confirmed "... - Tinted" by title)* |
+| `/about-skinmedica-products/f/dermal-repair-cream` | `/en/shop` |
+| `/about-skinmedica-products/f/ahabha-exfoliating-cleanser` | `/en/shop` |
 | `/about-skinmedica-products/f/*` (any other/undiscovered slug) | `/en/shop` *(safety-net prefix rule in `src/proxy.ts` — no 404 possible under this legacy path even for a slug not individually mapped above)* |
+
+**2026-09-07 — every SkinMedica row above now lands on `/en/shop`, not on a product page.** Their targets were `/en/shop/<product-slug>` while the line was carried. Archiving it removed those 23 routes, so leaving the targets alone would have chained each legacy URL through a dead product URL to the hub — this table's contract is one hop to a live 200. `src/lib/routing/legacy-redirects.ts` reads `features.skinMedicaEnabled` and restores the per-product targets automatically if the line returns, so the rows stay single-hop in both states.
 
 ### In-app moved routes — `src/lib/routing/moved-routes.ts`
 

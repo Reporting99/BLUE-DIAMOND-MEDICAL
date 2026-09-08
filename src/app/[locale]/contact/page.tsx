@@ -53,7 +53,13 @@ export default async function ContactPage({
   // affect output.
   const { product: productSlug, topic } = await searchParams;
   const product = productSlug ? getProduct(productSlug) : undefined;
-  const isSkinMedicaTopic = topic === "skinmedica" && !product;
+  // `products` is the current value; `skinmedica` is still accepted because
+  // it was the only value until SkinMedica was archived on 2026-09-07 and it
+  // is baked into every /shop page Google has already crawled. Both mean the
+  // same thing — a catalogue enquiry with no single product in context — and
+  // the copy below names no brand, so an old link stays correct rather than
+  // silently degrading to the generic contact page.
+  const isCatalogueTopic = (topic === "products" || topic === "skinmedica") && !product;
 
   const dict = {
     en: {
@@ -61,25 +67,25 @@ export default async function ContactPage({
       formHeading: "Send us a message",
       detailsHeading: "Clinic details",
       askAboutProduct: (name: string) => `Ask About ${name}`,
-      skinMedicaTitle: "Ask About SkinMedica",
+      catalogueTitle: "Ask About Our Products",
       productContextNotice: "This enquiry concerns product availability — current pricing and stock are confirmed directly with the clinic, not through this form.",
       messagePrefill: (name: string) => `I'd like to ask about ${name}.`,
-      skinMedicaPrefill: "I'd like to ask about the SkinMedica products available at the clinic.",
+      cataloguePrefill: "I'd like to ask about the products available at the clinic.",
     },
     ar: {
       title: "تواصل معنا",
       formHeading: "أرسلوا لنا رسالة",
       detailsHeading: "تفاصيل العيادة",
       askAboutProduct: (name: string) => `استفسري عن ${name}`,
-      skinMedicaTitle: "استفسري عن سكين ميديكا",
+      catalogueTitle: "استفسري عن منتجاتنا",
       productContextNotice: "يتعلق هذا الاستفسار بتوفر المنتج — يتم تأكيد السعر والتوفر الحاليين مباشرةً مع العيادة، وليس عبر هذا النموذج.",
       messagePrefill: (name: string) => `أرغب في الاستفسار عن ${name}.`,
-      skinMedicaPrefill: "أرغب في الاستفسار عن منتجات سكين ميديكا المتوفرة في العيادة.",
+      cataloguePrefill: "أرغب في الاستفسار عن المنتجات المتوفرة في العيادة.",
     },
   }[locale];
 
-  const pageTitle = product ? dict.askAboutProduct(product.name[locale]) : isSkinMedicaTopic ? dict.skinMedicaTitle : dict.title;
-  const defaultMessage = product ? dict.messagePrefill(product.name[locale]) : isSkinMedicaTopic ? dict.skinMedicaPrefill : undefined;
+  const pageTitle = product ? dict.askAboutProduct(product.name[locale]) : isCatalogueTopic ? dict.catalogueTitle : dict.title;
+  const defaultMessage = product ? dict.messagePrefill(product.name[locale]) : isCatalogueTopic ? dict.cataloguePrefill : undefined;
 
   const ownRoute = getRoute("contact")!;
   const hero = await resolvePageHeroImage(ownRoute.path.en, locale);
@@ -110,7 +116,7 @@ export default async function ContactPage({
       {/* Compact, and carrying the clinic's own exterior as its visual: this
           is the page a visitor opens to find the building, so the picture is
           part of the answer rather than decoration around it. `pageTitle`
-          still varies with the product/SkinMedica context the route can carry,
+          still varies with the product/catalogue context the route can carry,
           so the hero says what the page is for in every one of those cases. */}
       <PageHero
         locale={locale}
@@ -160,7 +166,7 @@ export default async function ContactPage({
             </div>
           ) : null}
 
-          {product || isSkinMedicaTopic ? (
+          {product || isCatalogueTopic ? (
             <p className="mt-4 rounded-md border border-border bg-surface px-4 py-3 text-sm text-text-secondary">{dict.productContextNotice}</p>
           ) : null}
 
