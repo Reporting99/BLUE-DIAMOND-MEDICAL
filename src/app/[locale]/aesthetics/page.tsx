@@ -39,15 +39,23 @@ export default async function AestheticsHubPage({ params }: { params: Promise<{ 
   const copy = {
     en: {
       title: "Medical Aesthetics",
-      /* CL-035 — the client-approved three-paragraph introduction, verbatim.
-         Paragraph 1 carries the hero (the split hero stays compact, CL-033);
-         paragraphs 2 and 3 continue in the introduction block immediately
-         below it, so the full approved copy is present once and in order. */
+      /* CL-035 supplied this three-paragraph introduction and it was published
+         verbatim. The 2026-09-08 native-Canadian-English pass edits it, on the
+         same footing as CL-030/CL-031: the client has since commissioned an
+         editorial pass over the whole site and named "comprehensive range",
+         "designed to", "committed to delivering" and "look and feel your best"
+         as the house-marketing register to remove. EVERY SERVICE NAMED IS
+         PRESERVED — RF microneedling, laser treatments, radiofrequency
+         procedures, laser hair removal, PRP hair restoration, PRP facial
+         rejuvenation, under-eye PRP, Botox, dermal fillers. Only the sentences
+         carrying them changed. Paragraph 1 carries the hero (the split hero
+         stays compact, CL-033); paragraphs 2 and 3 continue in the introduction
+         block immediately below it, so the full copy is present once, in order. */
       intro:
-        "At Blue Diamond Medical Aesthetics, we proudly offer a comprehensive range of medical aesthetic treatments designed to rejuvenate the skin, enhance natural beauty, and support hair restoration. Our services include RF microneedling, laser treatments, radio‑frequency procedures, and professional laser hair removal for smooth, long‑lasting results.",
+        "Blue Diamond Medical Aesthetics offers medical aesthetic treatments for the skin and for hair restoration. Our services include RF microneedling, laser treatments, radiofrequency procedures, and laser hair removal.",
       introRest: [
-        "We also provide advanced PRP‑based treatments, including PRP hair restoration, PRP facial rejuvenation, and PRP injections under the eyes to improve dark circles and refresh the delicate under‑eye area. In addition, we offer Botox and dermal fillers to soften fine lines, restore volume, and achieve natural‑looking enhancements.",
-        "Our team is committed to delivering safe, effective, and personalized aesthetic care to help you look and feel your best.",
+        "We also provide PRP treatments: PRP hair restoration, PRP facial rejuvenation, and PRP injections under the eyes to soften the appearance of dark circles and refresh the under-eye area. Botox and dermal fillers are available to soften fine lines and restore volume.",
+        "Every treatment here is medically supervised and planned around you, and your physician will discuss what you can realistically expect before you begin.",
       ] as readonly string[] | null,
       exploreHeading: "Find your way in",
       byTreatment: { title: "Treatments", body: "Start from what you'd like to treat — acne scars, unwanted hair, fine lines — and see the options we offer for it." },

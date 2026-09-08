@@ -20,11 +20,11 @@ import { siteConfig } from "@/config/site";
 
 const copy = {
   en: {
-    intro: "Professional skincare and treatment products carried by Blue Diamond Medical, including the SkinMedica line. Availability and current pricing are confirmed directly with the clinic — this catalogue is informational, not an online store.",
+    intro: "Professional skincare and treatment products carried by Blue Diamond Medical, including the SkinMedica and Myriade lines. Availability and current pricing are confirmed directly with the clinic — this catalogue is informational, not an online store.",
     byCategory: "By category",
     byConcern: "By concern",
     allProducts: "All products",
-    contactCta: "Contact the Clinic About SkinMedica",
+    contactCta: "Contact the clinic about SkinMedica",
   },
   ar: {
     intro: "منتجات احترافية للعناية بالبشرة والعلاج تقدّمها عيادة بلو دايموند الطبية، من بينها خط سكين ميديكا. يتم تأكيد التوفر والسعر الحالي مباشرةً مع العيادة — هذا الكتالوج معلوماتي وليس متجرًا إلكترونيًا.",

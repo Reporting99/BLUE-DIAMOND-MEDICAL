@@ -34,13 +34,13 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
   const copy = {
     en: {
       title: "About Blue Diamond Medical",
-      missionHeading: "Our Mission",
+      missionHeading: "Our mission",
       mission:
         'Blue Diamond Medical was founded on a simple principle: careful, personal attention for every patient, in a setting that feels welcoming to the whole family. We aim to meet the needs of all our patients in a friendly, timely, and efficient way. We also believe that "prevention is better than cure," so we work to give our patients access to the resources that help them lead healthier lives. Blue Diamond Medical — compassion, caring, and well-being for all.',
-      aestheticsHeading: "Expanding Our Clinic with a New Aesthetic Medicine Department",
+      aestheticsHeading: "Our medical aesthetics department",
       aestheticsBody: [
-        "Blue Diamond Medical has proudly expanded its services to include physician\u2011led medical aesthetics in response to growing patient demand. Alongside our comprehensive family medicine care, we now offer a range of advanced aesthetic treatments designed to improve skin health, enhance confidence, and support overall well\u2011being.",
-        "Our aesthetic services include laser hair removal, hair restoration using laser therapy and/or PRP, and a variety of skin\u2011rejuvenation treatments focused on improving texture, tone, and vitality. These additions allow us to provide patients with safe, effective, and medically supervised solutions for both skin and hair concerns — all within the trusted environment of our clinic. With our commitment to high\u2011quality care and continuous innovation, Blue Diamond Medical remains dedicated to meeting the evolving needs of our community while ensuring every patient receives personalized, professional treatment.",
+        "Blue Diamond Medical has expanded its services to include physician-led medical aesthetics, in response to growing patient demand. Alongside our family medicine care, we now offer aesthetic treatments that support skin health, confidence, and overall well-being.",
+        "Our aesthetic services include laser hair removal, hair restoration using laser therapy and/or PRP, and skin-rejuvenation treatments that improve texture, tone, and vitality. Every one of them is medically supervised and provided here at the clinic, by the same clinical team that looks after our family medicine patients. Each treatment plan is set individually, after a consultation.",
       ],
       storyHeading: "Our story",
       story:

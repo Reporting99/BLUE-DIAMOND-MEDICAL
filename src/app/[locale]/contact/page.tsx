@@ -177,27 +177,22 @@ export default async function ContactPage({
                 {siteConfig.clinic.address.region} {siteConfig.clinic.address.postalCode}
               </dd>
             </div>
-            {/* CL-042 - two published lines, each named for what it
-                answers. The Contact page previously showed only the medical
-                number under a bare "Phone" label, which both hid the
-                aesthetics line and left the one it did show unattributed. */}
+            {/* CL-042 asked for two named phone rows, because the page used to
+                show one unattributed number and hid the separate aesthetics
+                line. CONF-001 then retired that second line: the clinic
+                publishes ONE number for both services. Keeping two rows meant
+                printing the same number twice, in two different formats, under
+                two labels — which reads as two lines that do not exist. One
+                row, named for both services, is the honest rendering. */}
             <div>
               <dt className="text-sm text-text-secondary">
-                {locale === "ar" ? "الهاتف — العيادة الطبية وحجوزات المرضى" : "Phone — medical clinic and patient bookings"}
+                {locale === "ar"
+                  ? "الهاتف — العيادة الطبية والتجميل الطبي"
+                  : "Phone — medical clinic and medical aesthetics"}
               </dt>
               <dd>
                 <a className="ltr-run hover:text-primary" href={`tel:${siteConfig.clinic.phone}`}>
                   {siteConfig.clinic.phoneDisplay}
-                </a>
-              </dd>
-            </div>
-            <div>
-              <dt className="text-sm text-text-secondary">
-                {locale === "ar" ? "الهاتف — التجميل الطبي" : "Phone — medical aesthetics"}
-              </dt>
-              <dd>
-                <a className="ltr-run hover:text-primary" href={`tel:${siteConfig.aesthetics.phone}`}>
-                  {siteConfig.aesthetics.phoneDisplay}
                 </a>
               </dd>
             </div>

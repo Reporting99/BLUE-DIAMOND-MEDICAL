@@ -36,7 +36,7 @@ export const doctors: Doctor[] = [
     name: { en: "Dr. Mohamed Farhat", ar: "د. محمد فرحات" },
     credentials: { en: "Family Physician · Founder", ar: "طبيب أسرة · المؤسس" },
     bio: {
-      en: "Dr. Mohamed Farhat is a family physician with over 30 years in practice, and the founder of Blue Diamond Medical. He looks after patients across the full range of family medicine, from managing long-term medical conditions to performing minor surgical procedures in the clinic.\n\nAlongside his family practice, Dr. Farhat has completed advanced training in cosmetic medicine. He offers Botox, dermal fillers, RF microneedling, and laser therapies for skin concerns such as aging, pigmentation, scarring, and uneven texture.\n\nHe also provides hair restoration treatments: laser hair restoration combined with PRP, PRP on its own, and PRP injections to support scalp health and hair regrowth. He performs PRP injections under the eyes to soften the appearance of dark circles and refresh the skin, and these can be paired with microneedling to support skin renewal and collagen stimulation.\n\nHis warm manner, attention to detail, and patient\u2011centred approach have made him a trusted physician in the community.",
+      en: "Dr. Mohamed Farhat is a family physician with over 30 years in practice, and the founder of Blue Diamond Medical. He looks after patients across the full range of family medicine, from managing long-term medical conditions to performing minor surgical procedures in the clinic.\n\nAlongside his family practice, Dr. Farhat has completed advanced training in cosmetic medicine. He offers Botox, dermal fillers, RF microneedling, and laser therapies for skin concerns such as aging, pigmentation, scarring, and uneven texture.\n\nHe also provides hair restoration treatments: laser hair restoration combined with PRP, PRP on its own, and PRP injections to support scalp health and hair regrowth. He performs PRP injections under the eyes to soften the appearance of dark circles and refresh the skin, and these can be paired with microneedling to support skin renewal and collagen stimulation.\n\nHis warm manner, attention to detail, and patient-centred approach have made him a trusted physician in the community.",
       ar: "الدكتور محمد فرحات طبيب أسرة بخبرة تتجاوز 30 عامًا. أسّس عيادة بلو دايموند الطبية في ويست سبرينغز عام 2022، ولديه خبرة واسعة في طب الأسرة، والإجراءات الجراحية البسيطة، والخدمات التجميلية بما فيها البوتوكس وعلاج البلازما الغنية بالصفائح الدموية (PRP).",
     },
     practicesAesthetics: true,
@@ -49,7 +49,7 @@ export const doctors: Doctor[] = [
     name: { en: "Dr. Omaima Saeed", ar: "د. أميمة سعيد" },
     credentials: { en: "Family Physician", ar: "طبيبة أسرة" },
     bio: {
-      en: "Dr. Omaima Saeed is a family physician with postgraduate training in Family Medicine from Pakistan, now practising in Calgary. She provides comprehensive, patient-centred care for patients of all ages, with clinical interests in preventive medicine, women's health, and compassionate, stigma-free mental health support. She is one of the physicians leading Blue Diamond Medical's full-time Walk-In Clinic.",
+      en: "Dr. Omaima Saeed is a family physician with postgraduate training in Family Medicine from Pakistan, now practising in Calgary. She provides comprehensive, patient-centred care for patients of all ages, with clinical interests in preventive medicine, women's health, and compassionate, stigma-free mental health support. She is one of the physicians leading Blue Diamond Medical's full-time walk-in clinic.",
       ar: "الدكتورة أميمة سعيد طبيبة أسرة حاصلة على تدريب عالٍ في طب الأسرة من باكستان، وتمارس حاليًا في كالغاري. تقدّم رعاية شاملة تتمحور حول المريض لجميع الأعمار، وتهتم سريريًا بالطب الوقائي وصحة المرأة والدعم النفسي المتعاطف الخالي من الوصم. وهي من الأطباء الذين يقودون العيادة بدون موعد بدوام كامل في بلو دايموند الطبية.",
     },
     practicesAesthetics: false,
@@ -134,7 +134,7 @@ export const doctors: Doctor[] = [
     name: { en: "Dr. Omonijo", ar: "د. أومونيجو" },
     credentials: { en: "Family Physician", ar: "طبيبة أسرة" },
     bio: {
-      en: "Dr. Omonijo has 12 years of experience in community and hospital settings. She completed her Family Medicine residency in the United Kingdom and enjoys caring for patients and their families. She is one of the physicians leading Blue Diamond Medical's full-time Walk-In Clinic.",
+      en: "Dr. Omonijo has 12 years of experience in community and hospital settings. She completed her Family Medicine residency in the United Kingdom and enjoys caring for patients and their families. She is one of the physicians leading Blue Diamond Medical's full-time walk-in clinic.",
       ar: "تتمتع الدكتورة أومونيجو بخبرة 12 عامًا في المجتمعات الطبية والمستشفيات، وأكملت إقامتها في طب الأسرة في المملكة المتحدة. وهي من الأطباء الذين يقودون العيادة بدون موعد بدوام كامل في بلو دايموند الطبية.",
     },
     practicesAesthetics: false,
@@ -166,7 +166,7 @@ export const doctors: Doctor[] = [
       ar: "طبيب أسرة · دبلوم في الأمراض الجلدية، الكلية الملكية للأطباء في أيرلندا",
     },
     bio: {
-      en: "Dr. Ahmed Gwea completed his Family Medicine residency at Hamad Medical Corporation in Qatar and holds a Diploma in Dermatology from the Royal College of Physicians of Ireland. He provides compassionate, patient-centred care, with a focus on preventive health, health promotion, chronic disease management, and mental well-being. His clinical interests include dermatology, minor office-based and dermatological procedures, and plasma therapy. He places particular emphasis on helping patients feel comfortable, informed, and supported in their care. He is one of the physicians leading Blue Diamond Medical's full-time Walk-In Clinic.",
+      en: "Dr. Ahmed Gwea completed his Family Medicine residency at Hamad Medical Corporation in Qatar and holds a Diploma in Dermatology from the Royal College of Physicians of Ireland. He provides compassionate, patient-centred care, with a focus on preventive health, health promotion, chronic disease management, and mental well-being. His clinical interests include dermatology, minor office-based and dermatological procedures, and plasma therapy. He places particular emphasis on helping patients feel comfortable, informed, and supported in their care. He is one of the physicians leading Blue Diamond Medical's full-time walk-in clinic.",
       ar: "أكمل الدكتور أحمد جويع إقامته في طب الأسرة في مؤسسة حمد الطبية بقطر، ويحمل دبلومًا في الأمراض الجلدية من الكلية الملكية للأطباء في أيرلندا. تشمل اهتماماته السريرية الأمراض الجلدية والطب الوقائي وتعزيز الصحة وإدارة الأمراض المزمنة. وهو من الأطباء الذين يقودون العيادة بدون موعد بدوام كامل في بلو دايموند الطبية.",
     },
     practicesAesthetics: false,

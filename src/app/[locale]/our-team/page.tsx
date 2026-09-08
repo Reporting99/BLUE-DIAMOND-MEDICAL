@@ -48,7 +48,7 @@ export default async function DoctorsIndexPage({ params }: { params: Promise<{ l
   const intro =
     locale === "ar"
       ? "تعرّفوا على فريق بلو دايموند الطبي — ستة أطباء أسرة يقدّمون رعاية شاملة لعائلتكم، ويقدّم بعضهم أيضًا خدمات التجميل الطبي وحقن البوتوكس."
-      : "Meet the team behind Blue Diamond Medical — six family physicians providing comprehensive care for your family, several also delivering medical aesthetics and Botox.";
+      : "Meet the team behind Blue Diamond Medical — six family physicians providing comprehensive care for your whole family. Dr. Farhat and Dr. Hamdi also provide Botox, and Dr. Farhat leads our medical aesthetics service.";
 
   const ownRoute = getRoute("doctors-index")!;
   // Built from the same `orderedDoctors` array the grid below maps over, so the

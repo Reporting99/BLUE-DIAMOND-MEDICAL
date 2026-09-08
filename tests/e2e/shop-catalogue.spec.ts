@@ -11,7 +11,7 @@ test.describe("Homepage — SkinMedica preview", () => {
     await page.goto("/en");
     // Count via links into /en/shop/ inside the SkinMedica section
     // specifically, since the homepage also links to many other things.
-    const heading = page.getByRole("heading", { name: "Medical-grade skincare, recommended by your physician." });
+    const heading = page.getByRole("heading", { name: "Medical-grade skincare, recommended by your physician" });
     const section = page.locator("section", { has: heading });
     const productLinks = section.locator("a[href*='/en/shop/']");
     const count = await productLinks.count();
@@ -21,7 +21,7 @@ test.describe("Homepage — SkinMedica preview", () => {
 
   test("each homepage product card links directly to its own detail page (never the catalogue)", async ({ page, request }) => {
     await page.goto("/en");
-    const heading = page.getByRole("heading", { name: "Medical-grade skincare, recommended by your physician." });
+    const heading = page.getByRole("heading", { name: "Medical-grade skincare, recommended by your physician" });
     const section = page.locator("section", { has: heading });
     const hrefs = await section.locator("a[href*='/en/shop/']").evaluateAll((els) => els.map((e) => e.getAttribute("href")));
     for (const href of hrefs) {
@@ -31,9 +31,9 @@ test.describe("Homepage — SkinMedica preview", () => {
     }
   });
 
-  test('"View All Products" opens the catalogue, not Contact', async ({ page }) => {
+  test('"View all products" opens the catalogue, not Contact', async ({ page }) => {
     await page.goto("/en");
-    const cta = page.getByRole("link", { name: "View All Products" });
+    const cta = page.getByRole("link", { name: "View all products" });
     await expect(cta).toBeVisible();
     await expect(cta).toHaveAttribute("href", "/en/shop");
   });
@@ -86,9 +86,9 @@ test.describe("Shop catalogue page", () => {
     expect(selfLinks).toBe(0);
   });
 
-  test('shows "Contact the Clinic About SkinMedica" linking to Contact with the skinmedica topic, not the catalogue', async ({ page }) => {
+  test('shows "Contact the clinic about SkinMedica" linking to Contact with the skinmedica topic, not the catalogue', async ({ page }) => {
     await page.goto("/en/shop");
-    const cta = page.getByRole("link", { name: "Contact the Clinic About SkinMedica" });
+    const cta = page.getByRole("link", { name: "Contact the clinic about SkinMedica" });
     await expect(cta).toBeVisible();
     await expect(cta).toHaveAttribute("href", "/en/contact?topic=skinmedica");
   });
@@ -123,7 +123,7 @@ test.describe("Full catalogue-card → product-page flow", () => {
     await expect(page).toHaveURL(new RegExp(`/en/shop/${targetProduct.slug}$`));
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(targetProduct.name.en);
     await expect(page.getByText(/\$83\.00 CAD/)).toBeVisible();
-    await expect(page.getByRole("heading", { name: "Questions and Answers About This Product" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Questions about this product" })).toBeVisible();
   });
 });
 

@@ -68,7 +68,7 @@ export const aestheticPriceRows: AestheticPriceRow[] = [
   { id: "PR-006", treatmentId: "rf-microneedling", group: rfRegular, area: { en: "Forehead", ar: "الجبهة" }, priceCents: 45000, notes: potenza, technologyIds: ["potenza"], publicDisplay: true, source: "workbook" },
   { id: "PR-007", treatmentId: "rf-microneedling", group: rfRegular, area: { en: "Neck", ar: "الرقبة" }, priceCents: 65000, notes: potenza, technologyIds: ["potenza"], publicDisplay: true, source: "workbook" },
   { id: "PR-008", treatmentId: "rf-microneedling", group: rfRegular, area: { en: "Face and Neck", ar: "الوجه والرقبة" }, priceCents: 125000, notes: potenza, technologyIds: ["potenza"], publicDisplay: true, source: "workbook" },
-  { id: "PR-009", treatmentId: "rf-microneedling", group: rfBody, area: { en: "Decolletage", ar: "أعلى الصدر" }, priceCents: 65000, notes: potenza, technologyIds: ["potenza"], publicDisplay: true, source: "workbook" },
+  { id: "PR-009", treatmentId: "rf-microneedling", group: rfBody, area: { en: "Décolletage", ar: "أعلى الصدر" }, priceCents: 65000, notes: potenza, technologyIds: ["potenza"], publicDisplay: true, source: "workbook" },
   { id: "PR-010", treatmentId: "rf-microneedling", group: rfBody, area: { en: "Abdomen (Full)", ar: "البطن بالكامل" }, priceCents: 140000, notes: potenza, technologyIds: ["potenza"], publicDisplay: true, source: "workbook" },
   { id: "PR-011", treatmentId: "rf-microneedling", group: rfBody, area: { en: "Abdomen (Upper and Lower)", ar: "البطن العلوي والسفلي" }, priceCents: 75000, notes: potenza, technologyIds: ["potenza"], publicDisplay: true, source: "workbook" },
   { id: "PR-012", treatmentId: "rf-microneedling", group: rfBody, area: { en: "Arms (Back)", ar: "الجزء الخلفي من الذراعين" }, priceCents: 80000, notes: potenza, technologyIds: ["potenza"], publicDisplay: true, source: "workbook" },
@@ -82,8 +82,8 @@ export const aestheticPriceRows: AestheticPriceRow[] = [
   { id: "PR-018", treatmentId: "ultra", group: ultraGroup, area: { en: "Moderate — Full Face", ar: "متوسط — كامل الوجه" }, priceCents: 55000, notes: ultraTopical, technologyIds: ["ultra"], publicDisplay: true, source: "workbook" },
   { id: "PR-019", treatmentId: "ultra", group: ultraGroup, area: { en: "Ultra-Light Glow Full Face", ar: "Ultra-Light Glow — كامل الوجه" }, priceCents: 35000, notes: ultraTopical, technologyIds: ["ultra"], publicDisplay: true, source: "workbook" },
   { id: "PR-020", treatmentId: "ultra", group: ultraGroup, area: { en: "Neck", ar: "الرقبة" }, priceCents: 42500, notes: ultraTopical, technologyIds: ["ultra"], publicDisplay: true, source: "workbook" },
-  { id: "PR-021", treatmentId: "ultra", group: ultraGroup, area: { en: "Full Face + Neck", ar: "كامل الوجه + الرقبة" }, priceCents: 90000, notes: ultraTopical, technologyIds: ["ultra"], publicDisplay: true, source: "workbook" },
-  { id: "PR-022", treatmentId: "ultra", group: ultraGroup, area: { en: "Decolletage", ar: "أعلى الصدر" }, priceCents: 60000, notes: ultraTopical, technologyIds: ["ultra"], publicDisplay: true, source: "workbook" },
+  { id: "PR-021", treatmentId: "ultra", group: ultraGroup, area: { en: "Full Face & Neck", ar: "كامل الوجه + الرقبة" }, priceCents: 90000, notes: ultraTopical, technologyIds: ["ultra"], publicDisplay: true, source: "workbook" },
+  { id: "PR-022", treatmentId: "ultra", group: ultraGroup, area: { en: "Décolletage", ar: "أعلى الصدر" }, priceCents: 60000, notes: ultraTopical, technologyIds: ["ultra"], publicDisplay: true, source: "workbook" },
   { id: "PR-023", treatmentId: "ultra", group: ultraGroup, area: { en: "Small Area", ar: "منطقة صغيرة" }, priceCents: 42500, notes: ultraTopical, technologyIds: ["ultra"], publicDisplay: true, source: "workbook" },
   // Named combined protocol, not a multi-session package. The workbook's AREA
   // cell holds the protocol name, so `area` stays null — no body area invented.
@@ -133,7 +133,7 @@ export const aestheticPriceRows: AestheticPriceRow[] = [
   { id: "PR-057", treatmentId: "laser-hair-removal", group: lhr, area: { en: "Chin", ar: "الذقن" }, priceCents: 5500, notes: eliteIq, technologyIds: ["elite-iq"], publicDisplay: true, source: "workbook" },
   { id: "PR-058", treatmentId: "laser-hair-removal", group: lhr, area: { en: "Derriere", ar: "الأرداف" }, priceCents: 19500, notes: eliteIq, technologyIds: ["elite-iq"], publicDisplay: true, source: "workbook" },
   { id: "PR-059", treatmentId: "laser-hair-removal", group: lhr, area: { en: "Ears", ar: "الأذنان" }, priceCents: 6500, notes: eliteIq, technologyIds: ["elite-iq"], publicDisplay: true, source: "workbook" },
-  { id: "PR-060", treatmentId: "laser-hair-removal", group: lhr, area: { en: "Face Lower (Woman)", ar: "الجزء السفلي من الوجه (نساء)" }, priceCents: 16500, notes: eliteIq, technologyIds: ["elite-iq"], publicDisplay: true, source: "workbook" },
+  { id: "PR-060", treatmentId: "laser-hair-removal", group: lhr, area: { en: "Lower Face (Women)", ar: "الجزء السفلي من الوجه (نساء)" }, priceCents: 16500, notes: eliteIq, technologyIds: ["elite-iq"], publicDisplay: true, source: "workbook" },
   { id: "PR-061", treatmentId: "laser-hair-removal", group: lhr, area: { en: "Feet and Toes", ar: "القدمان وأصابع القدم" }, priceCents: 9500, notes: eliteIq, technologyIds: ["elite-iq"], publicDisplay: true, source: "workbook" },
   { id: "PR-062", treatmentId: "laser-hair-removal", group: lhr, area: { en: "Hands & Fingers", ar: "اليدان والأصابع" }, priceCents: 9500, notes: eliteIq, technologyIds: ["elite-iq"], publicDisplay: true, source: "workbook" },
   { id: "PR-063", treatmentId: "laser-hair-removal", group: lhr, area: { en: "Happy Trail", ar: "الخط أسفل البطن" }, priceCents: 9500, notes: eliteIq, technologyIds: ["elite-iq"], publicDisplay: true, source: "workbook" },

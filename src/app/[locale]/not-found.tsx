@@ -23,7 +23,7 @@ export default function NotFound() {
         Page not found <span className="text-text-secondary">·</span> الصفحة غير موجودة
       </h1>
       <p className="max-w-md text-body text-text-secondary">
-        The page you&rsquo;re looking for doesn&rsquo;t exist or has moved.
+        The page you&apos;re looking for doesn&apos;t exist or has moved.
         <br />
         الصفحة التي تبحث عنها غير موجودة أو تم نقلها.
       </p>

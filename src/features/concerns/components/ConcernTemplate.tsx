@@ -30,7 +30,7 @@ const labels = {
     factors: "Contributing factors",
     treatmentOptions: "Treatment options at Blue Diamond",
     treatmentOptionsIntro:
-      "Which of these is right for you is decided at your consultation, by a physician, after assessing your skin — this page is a starting point, not a diagnosis.",
+      "Which of these is right for you is a decision for your physician, made at your consultation once they have assessed your skin — this page is a starting point, not a diagnosis.",
     readMore: "Read the full treatment page",
     relatedTechnologies: "Relevant technologies",
     whatToExpect: "What to expect",

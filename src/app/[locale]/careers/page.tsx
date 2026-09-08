@@ -15,7 +15,7 @@ import { siteConfig } from "@/config/site";
 /** Single source for this page's description: consumed by both generateMetadata
  * and the page's JSON-LD node, so the two can never drift apart (brief §9). */
 const PAGE_DESCRIPTION = {
-  en: "Join Blue Diamond Medical in Calgary. We welcome qualified medical professionals committed to exceptional patient care and personal well-being.",
+  en: "Join Blue Diamond Medical in Calgary. We welcome qualified medical professionals who want to provide excellent patient care in a well-supported clinic.",
   ar: "انضموا إلى فريق عيادة بلو دايموند الطبية في ويست سبرينغز، كالغاري.",
 } as const;
 
@@ -76,24 +76,28 @@ export default async function CareersPage({ params }: { params: Promise<{ locale
   const copy = {
     en: {
       eyebrow: "Careers at Blue Diamond Medical",
-      title: "Build a Meaningful Career in Patient-Centred Care",
+      title: "Work With Us in West Springs",
       intro:
-        "Blue Diamond Medical welcomes qualified medical professionals who share our commitment to thoughtful, respectful, and high-quality patient care. We believe excellent care begins with a supported healthcare team, and we value professionals who are equally committed to their patients and their own well-being.",
-      joinHeading: "Join Our Team",
+        "Blue Diamond Medical welcomes qualified medical professionals who take thoughtful, respectful, high-quality patient care seriously. Good care starts with a well-supported clinical team, so we look for people who look after their patients and themselves.",
+      // Sentence case, like every other section heading on the site ("Our
+      // mission", "Submit your application", "Your privacy"). The client-approved
+      // <title> keeps its Title Case "… | Join Our Team" — that is a title, not
+      // a heading, and PAGE_TITLE above is untouched.
+      joinHeading: "Join our team",
       joinBody:
-        "We are interested in hearing from qualified and eligible medical professionals who would like to contribute to a welcoming, collaborative clinic environment. If you are committed to providing exemplary patient care without sacrificing your well-being, we invite you to introduce yourself and submit your résumé.",
+        "We would like to hear from qualified and eligible medical professionals who want to work in a welcoming, collaborative clinic. If that sounds like the practice you are looking for, please introduce yourself and send us your résumé.",
       joinSupporting:
         "Tell us about your experience and the type of opportunity you are seeking. Our team will review your application and contact you if your background aligns with a current or future opportunity at Blue Diamond Medical.",
-      applyHeading: "Submit Your Application",
+      applyHeading: "Submit your application",
       includeHeading: "Please include",
       include: [
         "Your full name",
-        "A phone number we can reach you on",
+        "A phone number where we can reach you",
         "Your email address",
         "Your résumé, attached",
         "An optional message about the opportunity you are seeking",
       ],
-      cta: "Email Your Application",
+      cta: "Email your application",
       privacyHeading: "Your privacy",
       privacy:
         "The information you provide will be used only to review and respond to your employment application. Please do not include personal health information in your résumé or message.",

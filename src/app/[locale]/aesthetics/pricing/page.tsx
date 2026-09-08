@@ -53,7 +53,7 @@ export default async function AestheticsPricingPage({ params }: { params: Promis
   const packagesNote =
     locale === "ar"
       ? "تتوفر باقات علاجية مخصّصة حسب احتياجات كل عميل. يُرجى التواصل مع فريقنا للحصول على خطة علاجية وأسعار باقات مخصّصة."
-      : "Customized treatment packages are available based on individual client needs. Please contact our team for a personalized treatment plan and package pricing.";
+      : "Treatment packages are put together around each patient's needs. Contact the clinic and our team will discuss a treatment plan and package pricing with you.";
   const ownRoute = getRoute("aesthetics-pricing")!;
   const hero = await resolvePageHeroImage(ownRoute.path.en, locale);
   const consult = getBookingUrl("aesthetics-consultation");

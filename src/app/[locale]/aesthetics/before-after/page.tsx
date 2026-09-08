@@ -44,7 +44,7 @@ export default async function BeforeAfterPage({ params }: { params: Promise<{ lo
   const intro =
     locale === "ar"
       ? "اسحبوا المؤشر على كل صورة للتنقّل بين حالة \"قبل\" و\"بعد\" في الإطار نفسه."
-      : "Drag the handle across any image to move between the before and after state within the same frame.";
+      : "Drag the handle across any image to move between the before and after views in the same frame.";
   const ownRoute = getRoute("aesthetics-before-after")!;
   const hero = await resolvePageHeroImage(ownRoute.path.en, locale);
   const consult = getBookingUrl("aesthetics-consultation");

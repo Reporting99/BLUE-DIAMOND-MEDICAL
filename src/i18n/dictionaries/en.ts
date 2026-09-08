@@ -106,7 +106,7 @@ const en: Dictionary = {
       "One Blue Diamond Medical experience — family medicine, walk-in care, and physician-led medical aesthetics, together in West Springs.",
     heroCtaPrimary: "Explore Medical Care",
     heroCtaSecondary: "Explore Medical Aesthetics",
-    pathwaysTitle: "Two ways to be cared for, one clinic",
+    pathwaysTitle: "Two kinds of care, one clinic",
     pathwaysMedicalTitle: "Medical Care",
     pathwaysMedicalBody:
       "Family medicine, walk-in visits, chronic disease management, preventive care, and more — six physicians, one clinic.",
@@ -118,7 +118,7 @@ const en: Dictionary = {
       "Our practice opened on July 4, 2022 in West Springs and has welcomed walk-in patients ever since. It was founded by Dr. Mohamed Farhat, who brings over 30 years of family medicine experience, and six family physicians now practise here.",
     botoxTitle: "Medical Botox",
     botoxBody:
-      "Botox for migraines, bruxism, and hyperhidrosis, alongside cosmetic Botox — administered by Dr. Farhat and Dr. Hamdi, starting with a consultation.",
+      "Botox for migraine, bruxism, and hyperhidrosis, alongside cosmetic Botox — administered by Dr. Farhat and Dr. Hamdi, starting with a consultation.",
     doctorsTitle: "Blue Diamond Medical Team",
     doctorsBody: "Six family physicians, one clinic, one standard of care.",
     locationTitle: "Visit us in West Springs",
@@ -126,7 +126,7 @@ const en: Dictionary = {
       "You are welcome to visit us during regular business hours. We are closed on all statutory holidays.",
     healthHubTitle: "From the Health Hub",
     healthHubBody: "Guidance from our clinical team, in plain language.",
-    finalCtaTitle: "Ready to find the right place to begin?",
+    finalCtaTitle: "Not sure where to start?",
     finalCtaBody: "Book with your family physician, come in as a walk-in, or request a medical aesthetics consultation.",
   },
   footer: {

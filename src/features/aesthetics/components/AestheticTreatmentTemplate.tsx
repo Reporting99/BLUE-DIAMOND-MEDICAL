@@ -29,7 +29,7 @@ const labels = {
     treatmentAreas: "Treatment areas",
     pricing: "Pricing",
     pricingNote:
-      "Customized treatment packages are available based on individual client needs. Please contact our team for a personalized treatment plan and package pricing.",
+      "Treatment packages are put together around each patient's needs. Contact the clinic and our team will discuss a treatment plan and package pricing with you.",
     preparation: "Preparation",
     comfortLevel: "Comfort level",
     duration: "Duration",

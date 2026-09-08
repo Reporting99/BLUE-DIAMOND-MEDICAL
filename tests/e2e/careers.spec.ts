@@ -28,7 +28,7 @@ test.describe("Careers page", () => {
     await expect(page).toHaveTitle("Careers at Blue Diamond Medical | Join Our Team");
     await expect(page.locator('meta[name="description"]')).toHaveAttribute(
       "content",
-      "Join Blue Diamond Medical in Calgary. We welcome qualified medical professionals committed to exceptional patient care and personal well-being.",
+      "Join Blue Diamond Medical in Calgary. We welcome qualified medical professionals who want to provide excellent patient care in a well-supported clinic.",
     );
   });
 
@@ -36,7 +36,7 @@ test.describe("Careers page", () => {
     await page.goto("/en/careers");
     const h1 = page.locator("h1");
     await expect(h1).toHaveCount(1);
-    await expect(h1).toHaveText("Build a Meaningful Career in Patient-Centred Care");
+    await expect(h1).toHaveText("Work With Us in West Springs");
   });
 
   test("headings descend without skipping a level", async ({ page }) => {
@@ -53,9 +53,9 @@ test.describe("Careers page", () => {
   test("shows the approved recruitment copy", async ({ page }) => {
     await page.goto("/en/careers");
     await expect(page.getByText(/Blue Diamond Medical welcomes qualified medical professionals/)).toBeVisible();
-    await expect(page.getByRole("heading", { name: "Join Our Team", level: 2 })).toBeVisible();
-    await expect(page.getByText(/committed to providing exemplary patient care without sacrificing your well-being/)).toBeVisible();
-    await expect(page.getByRole("heading", { name: "Submit Your Application", level: 2 })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Join our team", level: 2 })).toBeVisible();
+    await expect(page.getByText(/want to work in a welcoming, collaborative clinic/)).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Submit your application", level: 2 })).toBeVisible();
     await expect(page.getByText(/used only to review and respond to your employment application/)).toBeVisible();
   });
 
@@ -105,8 +105,8 @@ test.describe("Careers page", () => {
     // No Arabic translation of the new English sections was supplied, so the
     // page must omit them rather than publish English copy under /ar.
     const body = await page.locator("main").innerText();
-    expect(body).not.toContain("Build a Meaningful Career");
-    expect(body).not.toContain("Submit Your Application");
+    expect(body).not.toContain("Work With Us in West Springs");
+    expect(body).not.toContain("Submit your application");
     await expect(page.locator(`a[href="${MAILTO}"]`).first()).toBeVisible();
   });
 });

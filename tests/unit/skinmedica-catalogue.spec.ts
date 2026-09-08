@@ -255,7 +255,13 @@ test("CL-037/CL-038: both peels carry structured Benefits and Key features, neve
   expect(problems, problems.join("\n")).toEqual([]);
 
   const purifying = products.find((p) => p.id === "purifying-peeling")!;
-  expect(purifying.name.en).toBe("THE PURIFYING PEELING");
+  // The client pasted both peel names in block capitals. The 2026-09-08
+  // English editorial pass normalized them to the Title Case every other
+  // Myriade record uses ("The Charcoal Purifier", "The Soothing Gel", …) —
+  // a capitalization fix only, and the mangled paste this pair of assertions
+  // exists to keep out ("HE BRIGHTENING PEELING", a trailing "&#x20;") is
+  // still what they keep out.
+  expect(purifying.name.en).toBe("The Purifying Peeling");
   expect(purifying.subtitle!.en).toBe("Decongestant and anti-inflammatory");
   expect(purifying.benefits!.en).toHaveLength(3);
   expect(purifying.keyFeatures!.en).toHaveLength(3);
@@ -263,7 +269,7 @@ test("CL-037/CL-038: both peels carry structured Benefits and Key features, neve
   const brightening = products.find((p) => p.id === "brightening-peeling")!;
   // CL-038 — one canonical title; the pasted "HE BRIGHTENING PEELING" and the
   // trailing "&#x20;" entity must not survive into published content.
-  expect(brightening.name.en).toBe("THE BRIGHTENING PEELING");
+  expect(brightening.name.en).toBe("The Brightening Peeling");
   expect(brightening.subtitle!.en).toBe("Exfoliating and anti-aging");
   expect(brightening.benefits!.en).toHaveLength(6);
   expect(brightening.keyFeatures!.en).toHaveLength(2);

@@ -82,7 +82,7 @@ export default async function BotoxHubPage({ params }: { params: Promise<{ local
       intro:
         "Botox at Blue Diamond Medical is administered by Dr. Farhat and Dr. Hamdi. Every treatment begins with a consultation, and most appointments are short enough to fit into a lunch break, with minimal recovery time afterward.",
       coverageNote:
-        "Botox for migraines, bruxism, and hyperhidrosis is covered by a combination of provincial health insurance and either private insurance or the clinic's compassionate program, open to all Albertans whether registered with the clinic or not.",
+        "Botox for migraine, bruxism, and hyperhidrosis is covered by a combination of provincial health insurance and either private insurance or the clinic's compassionate program, open to all Albertans whether registered with the clinic or not.",
       medicalHeading: "Medical Botox",
       cosmeticHeading: "Cosmetic Botox",
       cta: "Call to book",

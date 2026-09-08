@@ -37,12 +37,18 @@ export default async function HealthHubPage({ params }: { params: Promise<{ loca
     en: {
       title: "Health Hub",
       intro:
-        "A growing library of plain-language guidance from our clinical team, organized by the topics our patients ask about most. Articles are published only after medical review.",
+        "Plain-language guidance from our clinical team, organized by the topics our patients ask about most. Articles are published only after medical review.",
+      emptyHeading: "The first articles are on their way",
+      emptyBody:
+        "Nothing has been published here yet. Our physicians are preparing the first articles, and each one is reviewed before it goes up. In the meantime, please call the clinic or ask at your next appointment.",
     },
     ar: {
       title: "المركز المعرفي",
       intro:
-        "مكتبة متنامية من الإرشادات بلغة واضحة من فريقنا الطبي، مصنّفة حسب المواضيع الأكثر تكرارًا بين مرضانا. تُنشر المقالات فقط بعد المراجعة الطبية.",
+        "إرشادات بلغة واضحة من فريقنا الطبي، مصنّفة حسب المواضيع الأكثر تكرارًا بين مرضانا. تُنشر المقالات فقط بعد المراجعة الطبية.",
+      emptyHeading: "المقالات الأولى في الطريق",
+      emptyBody:
+        "لم يُنشر أي مقال هنا بعد. يعمل أطباؤنا على إعداد المقالات الأولى، وتخضع كل مقالة للمراجعة قبل نشرها. وفي هذه الأثناء، يسعدنا تلقي أسئلتكم عبر الاتصال بالعيادة أو في موعدكم القادم.",
     },
   }[locale];
 
@@ -81,6 +87,14 @@ export default async function HealthHubPage({ params }: { params: Promise<{ loca
             </li>
           ))}
         </ul>
+
+        <div
+          data-reveal="up"
+          className="mt-10 rounded-md border border-border bg-surface px-5 py-6"
+        >
+          <h2 className="text-h4 font-heading">{copy.emptyHeading}</h2>
+          <p className="mt-2 max-w-2xl text-body text-text-secondary">{copy.emptyBody}</p>
+        </div>
       </Container>
       </section>
       <SectionTransition from="var(--background)" to="var(--surface-dark)" />

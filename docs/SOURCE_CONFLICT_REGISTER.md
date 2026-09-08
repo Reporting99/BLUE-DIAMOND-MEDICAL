@@ -62,3 +62,25 @@ unrelated conflict decision was revisited in either pricing pass.
 all resolved except CONF-024, whose commercial side is closed and whose remaining
 entity-structure question is explicitly non-blocking. **No unresolved numeric
 price conflict exists anywhere.**
+
+## Conflicts found by the 2026-09-08 native-Canadian-English editorial pass
+
+These are **not** language problems. Each is a factual contradiction the
+editorial read surfaced, and each is recorded rather than guessed at, per the
+brief's "flag conflicting information rather than guessing" rule. **No number,
+credential or clinical statement below was changed in code.**
+
+| Conflict ID | Field | Source A | Source B | Source precedence | Proposed handling | Client approval required |
+|---|---|---|---|---|---|---|
+| CONF-027 | Radiofrequency session length | **Treatment page** (`treatments.ts`, `radio-frequency.duration`): face and neck 40–90 minutes depending on area; body areas ~20 minutes with non-invasive pads | **Concern page** (`concerns/data.ts`, `skin-laxity`): "About 15 minutes" — carried in both the EN FAQ answer and the AR summary | Both precedence 6, both from the legacy aesthetics site (the RF treatment page vs. the Skin Tightening concern page) | **Unresolved — no edit made.** A visitor who reads both pages is told two different session lengths for the same treatment. 15 minutes matches neither the face/neck nor the body figure, so it cannot be reconciled by scope. Do not average, pick, or delete a clinical duration without the clinic: ask which figure is current, and for which areas | **Yes** — confirm the real session length(s) for TempSure radiofrequency |
+| CONF-028 | Named walk-in rota | **Physician biographies** (`doctors/data.ts`): Dr. Saeed, Dr. Omonijo and Dr. Gwea each close with "one of the physicians leading Blue Diamond Medical's full-time walk-in clinic" | **CONF-017's own decision**: "Do not publish a named walk-in rota. Publish the walk-in service without naming physicians until confirmed" | CONF-017 resolved on precedence 3 (approved doctor record) against L92 of the extraction | **Unresolved — no edit made.** The three sentences are exactly the L92 claim CONF-017 held back, and they are live in three published biographies. Either CONF-017 has been superseded by a later approval that was not written down, or three profiles are publishing an unconfirmed role. Removing a physician's stated role is a client decision, not an editorial one | **Yes** — confirm whether these three physicians lead the walk-in clinic, or drop the sentence from all three |
+| CONF-029 | Who provides cosmetic Botox | **English** (`gatedTreatments.cosmetic-botox`, `/botox`, homepage, `/botox` metadata): "administered by Dr. Farhat and Dr. Hamdi" | **Arabic** (same gated record): names Dr. Farhat only | Same record, same field, two locales | **Unresolved — English is internally consistent and was left as it is.** The Arabic half of one gated (unpublished) record disagrees with every English surface. Arabic is outside this pass's remit and was not edited | **Yes** — confirm, then align the Arabic |
+
+**Editorial note on CONF-005 (Elite+™ vs Elite iQ™).** The laser hair removal
+summary was the last English surface still saying "Cynosure Elite+™", directly
+above FAQs that say "Elite iQ™". CONF-005's standing decision is that these are
+**one device**, with Elite iQ™ canonical and Elite+™ "retained as a name variant
+only", so the summary now says Elite iQ™. This applies the existing decision; it
+does not resolve CONF-005's open question of whether the clinic operates one
+device or two. The Elite+™ variant is still recorded here, in
+`CONTENT_MODEL.md` §"Elite+ vs. Elite iQ™", and in the Arabic summary.
