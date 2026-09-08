@@ -708,13 +708,14 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
 
       <SectionTransition from="var(--surface)" to="var(--background)" />
 
-      {/* ============ SECTION 10 — SKINMEDICA PRODUCT COLLECTION ============ */}
+      {/* ============ SECTION 10 — PRODUCT COLLECTION ============ */}
       {/* Refined homepage preview only (4-6 featured products) — the full
-          23-product catalogue lives at /shop, never on the homepage.
-          Every card links to its own real detail page; the section CTA
-          opens the catalogue itself, not Contact, since that's what "View
-          All SkinMedica Products" actually points to — button wording
-          must match its destination. */}
+          catalogue lives at /shop, never on the homepage. Every card links to
+          its own real detail page; the section CTA opens the catalogue
+          itself, not Contact, since that's what "View all products" actually
+          points to — button wording must match its destination.
+          Neither the heading nor this comment names a brand: the showcase ids
+          live in home/copy.ts and follow whatever the catalogue carries. */}
       <section className="section-y bg-background">
         <Container>
           <div className="flex flex-wrap items-end justify-between gap-4">
