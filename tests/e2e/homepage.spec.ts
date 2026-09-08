@@ -1,11 +1,20 @@
 import { test, expect } from "@playwright/test";
 
 test.describe("Homepage", () => {
-  test("renders hero, primary CTA, and doctor cards", async ({ page }) => {
+  test("renders hero, primary CTA, and the team section's single link out", async ({ page }) => {
     await page.goto("/en");
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
     await expect(page.getByRole("link", { name: /book an appointment/i }).first()).toBeVisible();
-    await expect(page.getByRole("link", { name: /dr\.\s/i }).first()).toBeVisible();
+
+    // The team section carries no portraits. It introduces the physicians in
+    // words and sends the visitor to /our-team, which is the one place their
+    // photography lives -- so the assertion is the link out, and the absence
+    // of any per-doctor link beside it.
+    const team = page.locator("section").filter({
+      has: page.getByRole("heading", { name: "Blue Diamond Medical Team" }),
+    });
+    await expect(team.getByRole("link", { name: /our team/i })).toHaveAttribute("href", "/en/our-team");
+    await expect(team.getByRole("link", { name: /dr\.\s/i })).toHaveCount(0);
   });
 
   test("has no console errors on load", async ({ page }) => {
