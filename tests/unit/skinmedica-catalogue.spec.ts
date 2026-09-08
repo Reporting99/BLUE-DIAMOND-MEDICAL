@@ -1,5 +1,8 @@
 import { test, expect } from "@playwright/test";
-import { products, getProduct, productCategories, productBrands } from "../../src/features/products/data";
+import { products, productCategories, productBrands } from "../../src/features/products/data";
+import { archivedSkinMedicaProducts } from "../../src/features/products/archive/skinmedica";
+import { features } from "../../src/config/features";
+import { movedRoutes } from "../../src/lib/routing/moved-routes";
 
 /**
  * Automated validation for the "MANDATORY APPROVED SKINMEDICA CATALOGUE"
@@ -89,8 +92,25 @@ const approvedCatalogue: { id: string; priceCents: number; sizeLabel: string; gr
  * client-supplied Myriade records to their own separate contract. No
  * assertion is weakened; the boundary is simply drawn where it belongs.
  */
+/**
+ * 2026-09-07 — SkinMedica was ARCHIVED, and this file now reads it from the
+ * archive rather than from `products`.
+ *
+ * The clinic stopped carrying the line, so `products` holds Myriade only and
+ * `products.filter(brandId === "skinmedica")` is empty. Every assertion below
+ * would then have passed over nothing and reported success — the exact way a
+ * guard dies quietly. Pointing them at `archivedSkinMedicaProducts` keeps all
+ * 23 approved records under the same contract they have always been held to:
+ * a name, price or FAQ cannot be edited out of the archive unnoticed, so the
+ * day the flag comes back what returns is what was approved.
+ *
+ * The separate "not published" test at the bottom of this file asserts the
+ * other half — that none of them is currently reachable.
+ */
 const CLIENT_SUPPLIED_IDS = ["purifying-peeling", "brightening-peeling"] as const;
-const skinMedicaProducts = products.filter((p) => p.brandId === "skinmedica");
+const skinMedicaProducts = archivedSkinMedicaProducts;
+/** Archive plus live catalogue — what `products` becomes if the flag flips. */
+const allRecords = [...archivedSkinMedicaProducts, ...products];
 /** The two CL-037/CL-038 peel records, whose assertions below are specific to them. */
 const clientSuppliedProducts = products.filter((p) =>
   (CLIENT_SUPPLIED_IDS as readonly string[]).includes(p.id),
@@ -114,16 +134,20 @@ test("no unapproved product exists and no approved product is missing", () => {
   expect(clientSuppliedProducts.map((p) => p.id).sort()).toEqual([...CLIENT_SUPPLIED_IDS].sort());
 });
 
-test("no duplicate ids, slugs, or Arabic slugs", () => {
-  expect(new Set(products.map((p) => p.id)).size).toBe(products.length);
-  expect(new Set(products.map((p) => p.slug)).size).toBe(products.length);
-  expect(new Set(products.map((p) => p.slugAr)).size).toBe(products.length);
+test("no duplicate ids, slugs, or Arabic slugs — across the archive AND the live catalogue", () => {
+  // Checked over the union, not just what publishes today. A new Myriade
+  // record that reused an archived SkinMedica slug would look fine now and
+  // collide the moment `skinMedicaEnabled` flips back — two products fighting
+  // over one URL, discovered in production.
+  expect(new Set(allRecords.map((p) => p.id)).size).toBe(allRecords.length);
+  expect(new Set(allRecords.map((p) => p.slug)).size).toBe(allRecords.length);
+  expect(new Set(allRecords.map((p) => p.slugAr)).size).toBe(allRecords.length);
 });
 
 test("every published price matches the approved catalogue exactly", () => {
   const mismatches: string[] = [];
   for (const approved of approvedCatalogue) {
-    const product = products.find((p) => p.id === approved.id);
+    const product = skinMedicaProducts.find((p) => p.id === approved.id);
     if (!product) continue; // caught by the missing-product test above
     if (product.priceCents !== approved.priceCents) {
       mismatches.push(`${approved.id}: expected ${approved.priceCents}, got ${product.priceCents}`);
@@ -135,7 +159,7 @@ test("every published price matches the approved catalogue exactly", () => {
 test("every published size label matches the approved catalogue exactly", () => {
   const mismatches: string[] = [];
   for (const approved of approvedCatalogue) {
-    const product = products.find((p) => p.id === approved.id);
+    const product = skinMedicaProducts.find((p) => p.id === approved.id);
     if (!product) continue;
     if (product.sizeLabel !== approved.sizeLabel) {
       mismatches.push(`${approved.id}: expected "${approved.sizeLabel}", got "${product.sizeLabel}"`);
@@ -195,16 +219,21 @@ test("every SkinMedica product has real bilingual detail content: overview, what
 
 test("FAQ content is product-specific, not one generic set reused across all 23 records", () => {
   // If every product's FAQ question set were identical, this would collapse
-  // to size 1 — a real signal of a copy-pasted generic block.
+  // to size 1 — a real signal of a copy-pasted generic block. Read from the
+  // archive: the Myriade records deliberately carry no research block, so
+  // running this over `products` would compare 31 empty signatures and
+  // collapse to 1 for an honest reason, turning a real guard into a failure
+  // about nothing.
   const faqSignatures = new Set(
-    products.map((p) => (p.detail?.faqs ?? []).map((f) => f.question.en).join("|")),
+    skinMedicaProducts.map((p) => (p.detail?.faqs ?? []).map((f) => f.question.en).join("|")),
   );
-  expect(faqSignatures.size).toBeGreaterThan(1);
+  expect(faqSignatures.size).toBe(skinMedicaProducts.length);
 });
 
 test("Scar Recovery Gel sizes map correctly and cross-link reciprocally via variantOfId", () => {
-  const small = getProduct("scar-recovery-gel-with-centelline-small");
-  const large = getProduct("scar-recovery-gel-with-centelline-large");
+  const bySlug = (slug: string) => skinMedicaProducts.find((p) => p.slug === slug);
+  const small = bySlug("scar-recovery-gel-with-centelline-small");
+  const large = bySlug("scar-recovery-gel-with-centelline-large");
   expect(small, "small scar-recovery-gel product not found by slug").toBeTruthy();
   expect(large, "large scar-recovery-gel product not found by slug").toBeTruthy();
   expect(small!.sizeLabel).toBe("14.2 g");
@@ -222,9 +251,12 @@ test("every variantOfId and relatedProductIds entry resolves to a real product b
   // searches by slug instead of id silently drops the cross-link. This
   // guards the fix (ProductTemplate.tsx uses getProductById, not
   // getProduct, for both fields).
-  const idSet = new Set(products.map((p) => p.id));
+  // Over the union: `relatedProductIds` inside the archive points at other
+  // archived records, which is correct and must stay resolvable for the day
+  // the line returns.
+  const idSet = new Set(allRecords.map((p) => p.id));
   const dangling: string[] = [];
-  for (const p of products) {
+  for (const p of allRecords) {
     if (p.variantOfId && !idSet.has(p.variantOfId)) dangling.push(`${p.id}: variantOfId "${p.variantOfId}" not found`);
     for (const relatedId of p.detail?.relatedProductIds ?? []) {
       if (!idSet.has(relatedId)) dangling.push(`${p.id}: relatedProductIds entry "${relatedId}" not found`);
@@ -307,7 +339,7 @@ test("CL-037/CL-038/CL-039-041: no treatment or equipment photograph is reused a
   // product packshot folder, and never from the treatment, technology or
   // before/after trees.
   const FORBIDDEN = /^\/blue-diamond\/(treatments|technologies|before-after|aesthetics|medical|home|team|shared)\//;
-  for (const p of products) {
+  for (const p of allRecords) {
     for (const img of p.images) {
       if (!img.path) continue;
       expect(img.path, `${p.id} must not use a non-packaging asset`).not.toMatch(FORBIDDEN);
@@ -320,14 +352,16 @@ test("CL-037/CL-038/CL-039-041: no treatment or equipment photograph is reused a
 
 /* ------------------------------- CL-042 — the Myriade catalogue contract ---- */
 
-test("CL-042: the catalogue holds 23 SkinMedica + 31 Myriade = 54 records, with unique ids and slugs", () => {
+test("CL-042: 31 Myriade records publish, 23 SkinMedica records are archived, 54 in total", () => {
   expect(skinMedicaProducts.length).toBe(23);
   expect(myriadeProducts.length).toBe(31);
-  expect(products.length).toBe(54);
+  expect(allRecords.length).toBe(54);
   // Adding a brand must not have collided an id or a URL with an existing one.
-  expect(new Set(products.map((p) => p.id)).size).toBe(54);
-  expect(new Set(products.map((p) => p.slug)).size).toBe(54);
-  expect(new Set(products.map((p) => p.slugAr)).size).toBe(54);
+  expect(new Set(allRecords.map((p) => p.id)).size).toBe(54);
+  expect(new Set(allRecords.map((p) => p.slug)).size).toBe(54);
+  expect(new Set(allRecords.map((p) => p.slugAr)).size).toBe(54);
+  // What actually publishes is decided by the flag, and only by the flag.
+  expect(products.length).toBe(features.skinMedicaEnabled ? 54 : 31);
 });
 
 test("CL-042: no Myriade record claims a price, stock or purchase path it was not given", () => {
@@ -434,9 +468,59 @@ test("CL-042: the manufacturer comparison is on exactly one product, correctly o
   expect(c.resultsVary.en).toMatch(/individual results vary/i);
   expect(c.resultsVary.ar).toMatch(/individual results vary/i);
   // The comparison must never be reused as packaging.
-  for (const p of products) {
+  for (const p of allRecords) {
     for (const img of p.images) {
       expect(img.path).not.toContain("/before-after/");
     }
+  }
+});
+
+/* ------------------------- 2026-09-07 — the SkinMedica archive contract ---- */
+
+test("archived: no SkinMedica record reaches the published catalogue", () => {
+  // The archive's whole point is that it does not publish. If a record ever
+  // leaks back into `products` without the flag, /shop lists a brand the
+  // clinic does not carry and the route registry builds 46 pages for it.
+  const published = products.filter((p) => p.brandId === "skinmedica");
+  expect(
+    published.map((p) => p.id),
+    "SkinMedica records are published while skinMedicaEnabled is false",
+  ).toEqual(features.skinMedicaEnabled ? published.map((p) => p.id) : []);
+  expect(productBrands.some((b) => b.id === "skinmedica")).toBe(features.skinMedicaEnabled);
+});
+
+test("archived: the seven SkinMedica-only categories carry no empty listing page", () => {
+  // Categories are derived from what the catalogue fills (data.ts). With the
+  // line archived these seven have nothing in them, so they must not survive
+  // into `productCategories` — src/config/routes.ts builds a route per entry.
+  const SKINMEDICA_ONLY = ["cleansers", "serums", "moisturizers", "retinol", "eye-care", "scar-care", "treatment-systems"];
+  for (const id of SKINMEDICA_ONLY) {
+    expect(
+      productCategories.some((c) => c.id === id),
+      `category "${id}" is published with no product in it`,
+    ).toBe(features.skinMedicaEnabled);
+  }
+  // And every surviving category still has something to list.
+  for (const category of productCategories) {
+    expect(
+      products.some((p) => p.categoryIds.includes(category.id)),
+      `category "${category.id}" would render an empty grid`,
+    ).toBe(true);
+  }
+});
+
+test("archived: every retired product URL 301s instead of 404ing", () => {
+  // These 46 URLs were indexed and are the targets of the
+  // /about-skinmedica-products/f/* legacy redirects. Archiving the line
+  // deleted their routes; without these entries each one becomes a 404.
+  for (const product of archivedSkinMedicaProducts) {
+    const en = `/en/shop/${product.slug}`;
+    const ar = `/ar/المتجر/${product.slugAr}`;
+    if (features.skinMedicaEnabled) {
+      expect(movedRoutes[en], `${en} must not redirect while the line is live`).toBeUndefined();
+      continue;
+    }
+    expect(movedRoutes[en], `${en} has no redirect`).toBe("/en/shop");
+    expect(movedRoutes[ar], `${ar} has no redirect`).toBe("/ar/المتجر");
   }
 });

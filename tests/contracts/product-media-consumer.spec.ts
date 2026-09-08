@@ -6,6 +6,7 @@ import { parseMediaAssignments } from "../../src/lib/feelstack/media";
 import { toAdapterInput } from "../../src/lib/feelstack/adapters";
 import { productCmsContract } from "../../src/features/products/cms-contract";
 import { products } from "../../src/features/products/data";
+import { archivedSkinMedicaProducts } from "../../src/features/products/archive/skinmedica";
 
 /**
  * A product's assigned photograph must beat anything this repository hardcodes.
@@ -94,7 +95,10 @@ test("no static product record fabricates an ImageKit path", () => {
   // their imagery still comes from CMS assignments and a static path there
   // would be the original bug returning.
   const VERIFIED_PREFIX = "/blue-diamond/products/myriade/";
-  for (const product of products) {
+  // Archived records included: SkinMedica left `products` on 2026-09-07, and a
+  // guard that stops covering the records it was written for has stopped
+  // being a guard. They must still be pathless when the line comes back.
+  for (const product of [...products, ...archivedSkinMedicaProducts]) {
     for (const image of product.images) {
       if (product.brandId === "myriade" && image.path) {
         expect(image.path, `${product.id} must use a verified packshot path`).toContain(

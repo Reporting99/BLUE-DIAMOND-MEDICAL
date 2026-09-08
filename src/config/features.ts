@@ -15,19 +15,30 @@
  * closed later by flipping one flag, not by writing new code.
  */
 export const features = {
-  // SkinMedica brand + product data (all 23 client-approved SKUs, exact
-  // names/prices/sizes, full bilingual detail content, FAQs, and sources)
-  // is imported (src/features/products/data.ts) and validated
-  // (tests/unit/skinmedica-catalogue.spec.ts). Published live per the
-  // "COMPLETE SKINMEDICA NAVIGATION AND PRODUCT-DETAIL FLOW" brief's
-  // explicit instruction to ship with the approved neutral placeholder
-  // until real photography exists, rather than keep the whole catalogue
-  // gated on photography — see docs/MEDIA.md and
-  // docs/CONTENT_MODEL.md for the still-missing packshots.
-  // Controls browsing/detail/enquiry only — cart/checkout stay separately
-  // gated below regardless of this flag (brief: "Do not activate...
-  // Cart. Checkout.").
+  // The /shop catalogue — browsing, category/concern listings, product detail
+  // pages and the enquiry route. Live. Controls browsing/detail/enquiry only:
+  // cart/checkout stay separately gated below regardless of this flag
+  // (brief: "Do not activate... Cart. Checkout.").
   shopEnabled: true,
+  // SkinMedica — ARCHIVED 2026-09-07. Blue Diamond stopped carrying the line
+  // and now carries Myriade only, so its 23 client-approved records do not
+  // publish: no /shop cards, no detail pages, no route-registry entries, no
+  // sitemap rows, and the brand is absent from /shop's own copy and metadata.
+  //
+  // Off, not deleted, because the instruction was that the line is stopped
+  // "currently". Every record — exact names, prices, sizes, bilingual detail
+  // copy, FAQs and per-claim sources — is preserved verbatim in
+  // src/features/products/archive/skinmedica.ts and validated by
+  // tests/unit/skinmedica-catalogue.spec.ts, so bringing the line back is
+  // this one flag plus a deploy, with nothing rewritten and no research
+  // repeated. The 23 retired product URLs 301 to /shop while it is false —
+  // src/lib/routing/moved-routes.ts, which derives them from the archive so
+  // the redirect table cannot drift from it.
+  //
+  // Flipping this to true republishes the line and, by construction, drops
+  // those 301s, restores the seven SkinMedica-only categories, and re-adds
+  // the brand to the hub's derived description. Nothing else to change.
+  skinMedicaEnabled: false,
   // Real payment/cart/checkout is not implemented and not approved —
   // deliberately a *separate* flag from shopEnabled so flipping shop
   // browsing on never exposes the bare placeholder cart/checkout/

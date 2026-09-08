@@ -1,4 +1,4 @@
-/** SkinMedica retail catalogue domain. */
+/** Retail catalogue domain — Myriade live, SkinMedica archived (see ./archive/skinmedica.ts). */
 export type {
   Product,
   ProductBrand,

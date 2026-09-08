@@ -31,13 +31,13 @@ into a gated (404) route.
 | bluediamondmedical.ca | `/products` | `/en/shop` | 301 (Live) | Orphan legacy catalogue → live canonical catalogue (200, `shopEnabled: true`) | Yes |
 | bluediamondmedical.ca | `/tempsure` | `/en/aesthetics/technologies/tempsure` | 301 (Live) | Found by live sitemap crawl; absent from the Word inventory | Yes |
 | bluediamondmedical.ca | `/microneedling` | `/en/aesthetics/treatments/rf-microneedling` | 301 (Live) | Found by live sitemap crawl | Yes |
-| bluediamondmedical.ca | `/about-skinmedica-products/f/lumivivetm-system` | `/en/shop/lumivive-system-day-night` | 301 (Live) | Legacy per-product landing page | Yes |
-| bluediamondmedical.ca | `/about-skinmedica-products/f/lytera®-20-pigmentbrightening-serum` | `/en/shop/lytera-2-pigment-brightening-serum` | 301 (Live) | Legacy per-product landing page | Yes |
-| bluediamondmedical.ca | `/about-skinmedica-products/f/tns®-eye-repair` | `/en/shop/tns-eye-repair` | 301 (Live) | Legacy per-product landing page | Yes |
-| bluediamondmedical.ca | `/about-skinmedica-products/f/total-defense-repair-spf-34---tinted` | `/en/shop/total-defence-repair-spf-34-clear` | 301 (Live) | Legacy slug says "tinted" but its `<title>` reads "Clear" — verified against the `-1` variant before mapping | Yes — both variants must be asserted together |
-| bluediamondmedical.ca | `/about-skinmedica-products/f/total-defense-repair-spf-34---tinted-1` | `/en/shop/total-defence-repair-spf-34-tinted` | 301 (Live) | Confirmed by page `<title>` | Yes |
-| bluediamondmedical.ca | `/about-skinmedica-products/f/dermal-repair-cream` | `/en/shop/dermal-repair-cream` | 301 (Live) | Legacy per-product landing page | Yes |
-| bluediamondmedical.ca | `/about-skinmedica-products/f/ahabha-exfoliating-cleanser` | `/en/shop/aha-bha-exfoliating-cleanser` | 301 (Live) | Legacy per-product landing page | Yes |
+| bluediamondmedical.ca | `/about-skinmedica-products/f/lumivivetm-system` | `/en/shop` | 301 (Live) | Legacy per-product landing page | Yes |
+| bluediamondmedical.ca | `/about-skinmedica-products/f/lytera®-20-pigmentbrightening-serum` | `/en/shop` | 301 (Live) | Legacy per-product landing page | Yes |
+| bluediamondmedical.ca | `/about-skinmedica-products/f/tns®-eye-repair` | `/en/shop` | 301 (Live) | Legacy per-product landing page | Yes |
+| bluediamondmedical.ca | `/about-skinmedica-products/f/total-defense-repair-spf-34---tinted` | `/en/shop` | 301 (Live) | Legacy slug says "tinted" but its `<title>` reads "Clear" — verified against the `-1` variant before mapping | Yes — both variants must be asserted together |
+| bluediamondmedical.ca | `/about-skinmedica-products/f/total-defense-repair-spf-34---tinted-1` | `/en/shop` | 301 (Live) | Confirmed by page `<title>` | Yes |
+| bluediamondmedical.ca | `/about-skinmedica-products/f/dermal-repair-cream` | `/en/shop` | 301 (Live) | Legacy per-product landing page | Yes |
+| bluediamondmedical.ca | `/about-skinmedica-products/f/ahabha-exfoliating-cleanser` | `/en/shop` | 301 (Live) | Legacy per-product landing page | Yes |
 | bluediamondmedical.ca | `/about-skinmedica-products/f/*` (any other) | `/en/shop` | 301 (Live, safety net) | Prefix fallback so an undiscovered product slug lands on the catalogue instead of 404ing. Bounded to this prefix — **not** a universal homepage redirect | Yes — assert the fallback fires only under this prefix |
 | bluediamondmedical.ca | `/ols/products` | `/en/shop` | 301 (Live) | GoDaddy auto-generated store module page; platform boilerplate, no unique content | Yes |
 | bluediamondmedical.ca | `/laser-treatment` | `/en/aesthetics/treatments/laser-skin-treatments` | 301 **PROPOSED** | Linked from the legacy Medical Aesthetics page (L276) but never existed as a page. Defensive entry so any inbound link or crawl of that broken URL lands correctly | Yes |
@@ -114,6 +114,14 @@ redirect-only status, or a written exclusion reason.
 | Rule | Result |
 |---|---|
 | Direct 301s only — no chains | Pass — flat exact-match table, every target is a final canonical route |
+**2026-09-07 — the seven per-product rows above now target `/en/shop`.**
+SkinMedica was archived (`skinMedicaEnabled: false`), which removed the 23
+product routes these used to point at. Left alone they would have chained
+through a dead URL to the hub; this table's contract is one hop to a live 200.
+`src/lib/routing/legacy-redirects.ts` derives the target from the flag, so the
+per-product targets come back automatically if the line does. Full record:
+`docs/archive/SKINMEDICA_ARCHIVE.md`.
+
 | No universal redirect to the homepage | Pass — the single prefix fallback is bounded to `/about-skinmedica-products/f/*` and lands on `/en/shop` |
 | No broken legacy link promoted to canonical | Pass — `/laser-treatment`, `/rf-micro-needling`, Ultra→PRP, and Vitalia→self exist **only** as redirect sources |
 | No redirect into a non-existent route | Pass |

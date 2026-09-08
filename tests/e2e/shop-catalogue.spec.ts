@@ -1,15 +1,16 @@
 import { test, expect } from "@playwright/test";
 import { products } from "../../src/features/products/data";
+import { archivedSkinMedicaProducts } from "../../src/features/products/archive/skinmedica";
 
 /**
  * "COMPLETE SKINMEDICA NAVIGATION AND PRODUCT-DETAIL FLOW" — homepage
  * product-preview and full-catalogue card/link tests.
  */
 
-test.describe("Homepage — SkinMedica preview", () => {
-  test("shows a refined preview (4-6 products), not the full 23-product catalogue", async ({ page }) => {
+test.describe("Homepage — product preview", () => {
+  test("shows a refined preview (4-6 products), not the full catalogue", async ({ page }) => {
     await page.goto("/en");
-    // Count via links into /en/shop/ inside the SkinMedica section
+    // Count via links into /en/shop/ inside the product section
     // specifically, since the homepage also links to many other things.
     const heading = page.getByRole("heading", { name: "Medical-grade skincare, recommended by your physician" });
     const section = page.locator("section", { has: heading });
@@ -40,7 +41,7 @@ test.describe("Homepage — SkinMedica preview", () => {
 
   test("Arabic CTA uses the descriptive translated label and opens the Arabic catalogue", async ({ page }) => {
     await page.goto("/ar");
-    const cta = page.getByRole("link", { name: "استعرضي جميع منتجات SkinMedica" });
+    const cta = page.getByRole("link", { name: "استعرضي جميع المنتجات" });
     await expect(cta).toBeVisible();
     const href = await cta.getAttribute("href");
     expect(href).toContain("المتجر");
@@ -48,7 +49,7 @@ test.describe("Homepage — SkinMedica preview", () => {
 });
 
 test.describe("Shop catalogue page", () => {
-  test("/en/shop publishes all 23 approved products as clickable cards", async ({ page }) => {
+  test("/en/shop publishes every product in the live catalogue as a clickable card", async ({ page }) => {
     await page.goto("/en/shop");
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
     // Scoped to exclude the "by category"/"by concern" filter-chip links
@@ -68,12 +69,23 @@ test.describe("Shop catalogue page", () => {
     expect(nestedAnchors).toBe(0);
   });
 
-  test("cards show category, name, size, price, and a descriptive detail CTA", async ({ page }) => {
+  test("cards show category, name, size and a descriptive detail CTA — and a price only where one was supplied", async ({ page }) => {
     await page.goto("/en/shop");
     const firstCard = page.locator("ul li a[href*='/en/shop/']:not([href*='/category/']):not([href*='/concern/'])").first();
     await expect(firstCard.getByText("View Product Details")).toBeVisible();
-    // Price is formatted with two decimals and CAD, per the centralized formatter.
-    await expect(firstCard).toContainText(/\$[\d.]+ CAD/);
+
+    // The price assertion is now a two-sided one, because the live catalogue
+    // is Myriade and the supplied flyer carried exactly ONE price. Asserting
+    // "$x CAD on the first card" would have been asserting that a price the
+    // client never sent had appeared from somewhere.
+    const priced = products.filter((p) => p.priceCents !== null);
+    expect(priced.map((p) => p.id), "the source supplies exactly one price").toEqual(["purifying-peeling"]);
+    const pricedCard = page.locator(`ul li a[href$='/${priced[0].slug}']`).first();
+    await expect(pricedCard).toContainText("188 + GST");
+    // ...and a card with no supplied price shows no price at all, not a zero,
+    // a dash, or a sibling's.
+    const unpricedCard = page.locator("ul li a[href$='/the-cleanser']").first();
+    await expect(unpricedCard).not.toContainText(/CAD|\$/);
   });
 
   test("the catalogue's own main content does not link back to itself as an enquiry CTA", async ({ page }) => {
@@ -86,11 +98,14 @@ test.describe("Shop catalogue page", () => {
     expect(selfLinks).toBe(0);
   });
 
-  test('shows "Contact the clinic about SkinMedica" linking to Contact with the skinmedica topic, not the catalogue', async ({ page }) => {
+  test('shows "Contact the clinic about our products" linking to Contact with the products topic, not the catalogue', async ({ page }) => {
     await page.goto("/en/shop");
-    const cta = page.getByRole("link", { name: "Contact the clinic about SkinMedica" });
+    const cta = page.getByRole("link", { name: "Contact the clinic about our products" });
     await expect(cta).toBeVisible();
-    await expect(cta).toHaveAttribute("href", "/en/contact?topic=skinmedica");
+    // Brand-neutral since SkinMedica was archived (2026-09-07): the topic is
+    // the catalogue, not one manufacturer. /contact still accepts the old
+    // `skinmedica` value so already-indexed links keep working.
+    await expect(cta).toHaveAttribute("href", "/en/contact?topic=products");
   });
 
   test("keyboard focus reaches a product card and Enter opens it", async ({ page }) => {
@@ -115,15 +130,35 @@ test.describe("Shop catalogue page", () => {
 });
 
 test.describe("Full catalogue-card → product-page flow", () => {
-  test("clicking a specific card opens the correct product with matching H1, name, price, and FAQ section", async ({ page }) => {
+  // Was retinol-complex-05, asserting "$83.00 CAD" and an FAQ section. That
+  // product is SkinMedica and has been archived (2026-09-07), so the test
+  // would have failed on a missing card rather than on a broken flow. The
+  // Myriade records carry the client's structured Benefits copy instead of a
+  // research FAQ block, so the flow is asserted against what a record of that
+  // shape actually publishes.
+  test("clicking a specific card opens the correct product with matching H1 and its supplied copy", async ({ page }) => {
     await page.goto("/en/shop");
-    const targetProduct = products.find((p) => p.id === "retinol-complex-05")!;
+    const targetProduct = products.find((p) => p.id === "c-serum")!;
     const card = page.locator(`a[href$='${targetProduct.slug}']`).first();
     await card.click();
     await expect(page).toHaveURL(new RegExp(`/en/shop/${targetProduct.slug}$`));
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(targetProduct.name.en);
-    await expect(page.getByText(/\$83\.00 CAD/)).toBeVisible();
+    await expect(page.getByText(targetProduct.subtitle!.en).first()).toBeVisible();
     await expect(page.getByRole("heading", { name: "Questions about this product" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Benefits" })).toBeVisible();
+  });
+
+  test("an archived SkinMedica product URL 301s to the catalogue instead of 404ing", async ({ request }) => {
+    // These 23 URLs were indexed while the line was carried. Archiving it
+    // removed their routes; the redirect is what keeps a bookmark or a search
+    // result landing on a live page.
+    // Derived from the archive: the id is `retinol-complex-05` but the URL
+    // slug is `retinol-complex-0-5`, and writing the wrong one by hand made
+    // this test assert a 404 on a URL that was never published.
+    const archived = archivedSkinMedicaProducts.find((p) => p.id === "retinol-complex-05")!;
+    const res = await request.get(`/en/shop/${archived.slug}`, { maxRedirects: 0 });
+    expect(res.status()).toBe(301);
+    expect(res.headers()["location"]).toContain("/en/shop");
   });
 });
 
