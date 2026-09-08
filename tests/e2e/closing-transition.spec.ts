@@ -76,14 +76,14 @@ test.describe("Closing CTA content and contrast", () => {
   test("primary and secondary actions, and the phone link, are all present and readable", async ({ page }) => {
     await page.goto("/en");
     const cta = page.locator("section", { has: page.getByRole("link", { name: "Explore Booking Options" }) });
-    await expect(cta.getByRole("link", { name: /book appointment/i })).toBeVisible();
+    await expect(cta.getByRole("link", { name: /book an appointment/i })).toBeVisible();
     await expect(cta.getByRole("link", { name: "Explore Booking Options" })).toBeVisible();
     await expect(cta.locator("a[href^='tel:']")).toBeVisible();
   });
 
   test("both CTA actions resolve to the internal booking hub (external booking preserved downstream)", async ({ page }) => {
     await page.goto("/en");
-    const primary = page.getByRole("link", { name: /book appointment/i }).last();
+    const primary = page.getByRole("link", { name: /book an appointment/i }).last();
     const secondary = page.getByRole("link", { name: "Explore Booking Options" });
     await expect(primary).toHaveAttribute("href", /\/en\/book-appointment/);
     await expect(secondary).toHaveAttribute("href", /\/en\/book-appointment/);

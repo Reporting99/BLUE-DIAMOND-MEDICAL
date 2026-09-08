@@ -4,7 +4,7 @@ test.describe("Homepage", () => {
   test("renders hero, primary CTA, and doctor cards", async ({ page }) => {
     await page.goto("/en");
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-    await expect(page.getByRole("link", { name: /book appointment/i }).first()).toBeVisible();
+    await expect(page.getByRole("link", { name: /book an appointment/i }).first()).toBeVisible();
     await expect(page.getByRole("link", { name: /dr\.\s/i }).first()).toBeVisible();
   });
 

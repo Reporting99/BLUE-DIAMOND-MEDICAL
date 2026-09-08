@@ -26,8 +26,8 @@ test.describe("Desktop service cards — hover/focus reveal", () => {
     await page.goto("/en");
     const card = page.locator("a", { has: page.getByRole("heading", { name: "Eye Disease Screening", level: 3 }) }).first();
     const explanationText = await card.evaluate((el) => el.textContent);
-    // whoItsFor text for eye-screening
-    expect(explanationText).toContain("diabetic");
+    // whoItsFor text for eye-screening ("people with diabetes", person-first)
+    expect(explanationText).toContain("diabetes");
   });
 
   // The explanation panel is `opacity: 0`, not `display: none`, at rest —
