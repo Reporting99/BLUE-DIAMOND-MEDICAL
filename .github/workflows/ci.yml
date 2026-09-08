@@ -86,28 +86,6 @@ jobs:
           done
           test -d .next/static
 
-      # next.config.ts sets `output: "standalone"`, and the Playwright harness
-      # serves `.next/standalone/server.js` with --no-build. If the build ever
-      # stops emitting it -- a dropped `output` setting, a Next major that
-      # renames the directory -- the first symptom is Playwright reporting that
-      # its web server did not start, several minutes later and with the cause
-      # nowhere in the log. Assert it here, where the build that produced it is
-      # still the subject.
-      - name: Verify standalone output
-        shell: bash
-        run: |
-          set -euo pipefail
-          for path in .next/standalone/server.js .next/BUILD_ID; do
-            if [ ! -s "$path" ]; then
-              echo "::error::missing $path -- next build did not emit standalone output"
-              echo "contents of .next:"
-              ls -la .next || echo "  (.next does not exist)"
-              exit 1
-            fi
-            echo "ok: $path ($(wc -c < "$path") bytes)"
-          done
-          test -d .next/static
-
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
 
