@@ -14,7 +14,7 @@ import { test, expect, type Page, type Locator } from "@playwright/test";
  * these tests assert.
  *
  * Locators are scoped to `header` throughout — the footer (Footer.tsx)
- * independently renders a logo, a "Book Appointment" link, and several
+ * independently renders a logo, a "Book an Appointment" link, and several
  * links whose accessible names overlap with primary-nav labels (e.g.
  * "Uninsured Services & Fees" contains "Services"), so an unscoped
  * getByRole query is ambiguous by design, not a bug in either component.
@@ -93,7 +93,7 @@ test.describe("English desktop navigation — exact order", () => {
 
   test("language switcher and Book Appointment sit at the far inline-end (far right in LTR)", async ({ page }) => {
     await page.goto("/en/contact");
-    const booking = page.locator("header").getByRole("link", { name: "Book Appointment" });
+    const booking = page.locator("header").getByRole("link", { name: "Book an Appointment" });
     const box = await booking.boundingBox();
     const viewport = page.viewportSize()!;
     expect(box).not.toBeNull();
@@ -317,7 +317,7 @@ test.describe("Mobile navigation", () => {
     await page.goto("/en/contact");
     await page.getByRole("button", { name: "Open menu" }).click();
     const dialog = page.getByRole("dialog");
-    await expect(dialog.getByRole("link", { name: "Book Appointment" })).toBeVisible();
+    await expect(dialog.getByRole("link", { name: "Book an Appointment" })).toBeVisible();
     const lang = dialog.getByRole("link", { name: "العربية" });
     await expect(lang).toBeVisible();
     // WCAG 2.5.8 target size — this measured 28px before this pass.

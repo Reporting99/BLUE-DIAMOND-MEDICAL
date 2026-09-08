@@ -12,8 +12,22 @@ import type { Doctor } from "./types";
  * locales are consequently out of step for these two records until approved
  * Arabic copy arrives; see the completion report's Blocked items section.
  *
- * CL-030: every other biography is untouched. The client approved their
- * current wording, so nothing here expands, shortens or "improves" them.
+ * CL-030 IS SUPERSEDED for English, 2026-09-07. It recorded that the client
+ * had approved each biography's then-current wording and that nothing should
+ * "improve" it. The client has since commissioned a native-Canadian-English
+ * editorial pass over the whole site, naming physician profiles explicitly and
+ * supplying a worked before/after for Dr. Omonijo. The English biographies
+ * below are therefore edited: grammar, article and preposition errors,
+ * run-on sentences, and unearned superlatives are gone.
+ *
+ * FACTS ARE UNTOUCHED. No qualification, institution, date, year count,
+ * hospital privilege, certification, clinical interest or procedure was added,
+ * removed or altered in any biography. Only the sentences carrying them
+ * changed. If the client wants the pre-edit wording back, it is one revert
+ * away and the audit report lists every change.
+ *
+ * ARABIC IS UNCHANGED throughout, so the two locales remain out of step for
+ * Dr. Farhat and Dr. Gwea exactly as CL-028/CL-029 already recorded.
  */
 export const doctors: Doctor[] = [
   {
@@ -22,7 +36,7 @@ export const doctors: Doctor[] = [
     name: { en: "Dr. Mohamed Farhat", ar: "د. محمد فرحات" },
     credentials: { en: "Family Physician · Founder", ar: "طبيب أسرة · المؤسس" },
     bio: {
-      en: "Dr. Mohamed Farhat is a highly experienced family physician with over 30 years of dedicated practice. He is known for his exceptional clinical expertise, compassionate approach, and commitment to delivering high\u2011quality care to every patient. Over the course of his career, Dr. Farhat has developed extensive skills in managing a wide range of medical conditions, performing minor surgical procedures, and providing comprehensive family medicine services.\n\nAlongside his strong medical background, Dr. Farhat has completed advanced training in cosmetic medicine. He offers a variety of aesthetic treatments, including Botox, dermal fillers, RF microneedling, and laser therapies for multiple skin concerns such as aging, pigmentation, scarring, and texture irregularities.\n\nDr. Farhat also specializes in hair restoration treatments. He provides laser hair restoration combined with PRP, PRP\u2011only hair restoration, and PRP injections for enhanced scalp health and hair regrowth. In addition, he performs PRP injections under the eyes to improve dark circles, rejuvenate the skin, and restore a brighter, refreshed appearance. These treatments can be complemented with microneedling for optimal skin renewal and collagen stimulation.\n\nWith a blend of medical precision and aesthetic artistry, Dr. Farhat is dedicated to helping patients look and feel their best. His warm manner, attention to detail, and patient\u2011centered approach make him a trusted physician within the community.",
+      en: "Dr. Mohamed Farhat is a family physician with over 30 years in practice, and the founder of Blue Diamond Medical. He looks after patients across the full range of family medicine, from managing long-term medical conditions to performing minor surgical procedures in the clinic.\n\nAlongside his family practice, Dr. Farhat has completed advanced training in cosmetic medicine. He offers Botox, dermal fillers, RF microneedling, and laser therapies for skin concerns such as aging, pigmentation, scarring, and uneven texture.\n\nHe also provides hair restoration treatments: laser hair restoration combined with PRP, PRP on its own, and PRP injections to support scalp health and hair regrowth. He performs PRP injections under the eyes to soften the appearance of dark circles and refresh the skin, and these can be paired with microneedling to support skin renewal and collagen stimulation.\n\nHis warm manner, attention to detail, and patient\u2011centred approach have made him a trusted physician in the community.",
       ar: "الدكتور محمد فرحات طبيب أسرة بخبرة تتجاوز 30 عامًا. أسّس عيادة بلو دايموند الطبية في ويست سبرينغز عام 2022، ولديه خبرة واسعة في طب الأسرة، والإجراءات الجراحية البسيطة، والخدمات التجميلية بما فيها البوتوكس وعلاج البلازما الغنية بالصفائح الدموية (PRP).",
     },
     practicesAesthetics: true,
@@ -35,7 +49,7 @@ export const doctors: Doctor[] = [
     name: { en: "Dr. Omaima Saeed", ar: "د. أميمة سعيد" },
     credentials: { en: "Family Physician", ar: "طبيبة أسرة" },
     bio: {
-      en: "Dr. Omaima Saeed is a family physician with postgraduate training in Family Medicine from Pakistan, now practicing in Calgary. She provides comprehensive, patient-centred care across all ages, with clinical interests in preventive medicine, women's health, and compassionate, stigma-free mental health support. She is one of the physicians leading Blue Diamond Medical's full-time Walk-In Clinic.",
+      en: "Dr. Omaima Saeed is a family physician with postgraduate training in Family Medicine from Pakistan, now practising in Calgary. She provides comprehensive, patient-centred care for patients of all ages, with clinical interests in preventive medicine, women's health, and compassionate, stigma-free mental health support. She is one of the physicians leading Blue Diamond Medical's full-time Walk-In Clinic.",
       ar: "الدكتورة أميمة سعيد طبيبة أسرة حاصلة على تدريب عالٍ في طب الأسرة من باكستان، وتمارس حاليًا في كالغاري. تقدّم رعاية شاملة تتمحور حول المريض لجميع الأعمار، وتهتم سريريًا بالطب الوقائي وصحة المرأة والدعم النفسي المتعاطف الخالي من الوصم. وهي من الأطباء الذين يقودون العيادة بدون موعد بدوام كامل في بلو دايموند الطبية.",
     },
     practicesAesthetics: false,
@@ -90,15 +104,24 @@ export const doctors: Doctor[] = [
     routeId: "doctor-hamdi",
     name: { en: "Dr. Reem Hamdi", ar: "د. ريم حمدي" },
     credentials: { en: "Family Physician", ar: "طبيبة أسرة" },
-    /* CL-034 — client-approved biography, verbatim. The pasted "&#x20;"
-       artifacts are decoded as ordinary spaces and nothing else is changed:
-       no shortening, rewriting, summarising or grammar correction. The
-       CL-027 availability sentence is rendered BELOW this text by the
-       profile template, never spliced into the approved copy. Arabic is a
-       client dependency (see the file header) — the previously approved
-       Arabic biography is kept rather than machine-translated. */
+    /* CL-034 recorded this biography as client-approved verbatim, explicitly
+       barring "shortening, rewriting, summarising or grammar correction".
+       The 2026-09-07 editorial pass overrides that for English only — see the
+       file header. This profile carried the most non-native English on the
+       site: "board certified FROM the College" (takes "by"), "in Labour and
+       Delivery unit" (missing article), "women health" (missing possessive),
+       "has Masters in" (missing article and apostrophe), "well child visits"
+       (missing hyphen), and three sentences running on through a repeated
+       "and she". Every credential, institution, date and clinical interest is
+       preserved exactly. The closing "Blue Diamond Medical is proud to have
+       her as part of our team" is dropped: it slipped from third person into
+       first, and no other profile ends with a house compliment.
+
+       The CL-027 availability sentence is still rendered BELOW this text by
+       the profile template, never spliced into it. Arabic is a client
+       dependency (see the file header) and is kept as approved. */
     bio: {
-      en: "Dr. Hamdi finished her Family Medicine Residency at the University of Calgary in 2015 followed by additional training (R3) in maternity and newborn care. She has been practicing Family Medicine in Calgary since then and she joined our clinic in 2023.\n\nShe also works at Peter Lougheed Hospital in Labour and Delivery unit and she has a shared care practice with the Lougheed Maternity Group (LMG).\n\nDr. Hamdi is board certified from the College of Family Physicians of Canada (CFPC) and has been granted Fellowship in the College of Family Physicians of Canada (FCFP). She is also an Assistant Clinical Professor at the University of Calgary and has Masters in Health Science Education from the University of Alberta.\n\nShe manages a wide range of health conditions including chronic disease, women health (including contraceptive management and IUD insertion, menopause, prenatal and maternity care), well child visits and mental health. She is also certified for Botox injections for pain management in addition to cosmetic indications.\n\nBlue Diamond Medical is proud to have her as part of our team.",
+      en: "Dr. Hamdi completed her Family Medicine residency at the University of Calgary in 2015, followed by additional training (R3) in maternity and newborn care. She has practised family medicine in Calgary ever since, and joined Blue Diamond Medical in 2023.\n\nShe also works in the Labour and Delivery unit at Peter Lougheed Hospital and maintains a shared-care practice with the Lougheed Maternity Group (LMG).\n\nDr. Hamdi is board certified by the College of Family Physicians of Canada (CFPC) and has been granted Fellowship of the College (FCFP). She is an Assistant Clinical Professor at the University of Calgary and holds a Master's degree in Health Science Education from the University of Alberta.\n\nShe cares for a wide range of health concerns, including chronic disease, women's health (contraceptive management and IUD insertion, menopause, and prenatal and maternity care), well-child visits, and mental health. She is also certified to provide Botox injections for pain management as well as cosmetic indications.",
       ar: "تمارس الدكتورة ريم حمدي طب الأسرة منذ عام 2015، وتخرّجت من برنامج إقامة طب الأسرة في جامعة كالغاري، مع تدريب إضافي في رعاية الأمومة والمواليد. تحمل درجة الماجستير في تعليم علوم الصحة من جامعة ألبرتا.",
     },
     practicesAesthetics: false,
@@ -111,7 +134,7 @@ export const doctors: Doctor[] = [
     name: { en: "Dr. Omonijo", ar: "د. أومونيجو" },
     credentials: { en: "Family Physician", ar: "طبيبة أسرة" },
     bio: {
-      en: "Dr. Omonijo has 12 years of experience across community and hospital settings and completed her Family Medicine residency in the United Kingdom. She is one of the physicians leading Blue Diamond Medical's full-time Walk-In Clinic.",
+      en: "Dr. Omonijo has 12 years of experience in community and hospital settings. She completed her Family Medicine residency in the United Kingdom and enjoys caring for patients and their families. She is one of the physicians leading Blue Diamond Medical's full-time Walk-In Clinic.",
       ar: "تتمتع الدكتورة أومونيجو بخبرة 12 عامًا في المجتمعات الطبية والمستشفيات، وأكملت إقامتها في طب الأسرة في المملكة المتحدة. وهي من الأطباء الذين يقودون العيادة بدون موعد بدوام كامل في بلو دايموند الطبية.",
     },
     practicesAesthetics: false,
@@ -127,7 +150,7 @@ export const doctors: Doctor[] = [
       ar: "طبيب أسرة · طبيب مستشفى · أستاذ سريري مساعد، جامعة كالغاري",
     },
     bio: {
-      en: "Dr. Bakare has been a family physician since 2006 and currently maintains hospital credentials as a hospitalist. He has extensive experience in chronic disease management, palliative care, and teaching, with clinical interests including minor skin lesion excision and intra-articular injections for knee, shoulder, and ankle conditions — all available in-house.",
+      en: "Dr. Bakare has been a family physician since 2006 and also works as a hospitalist, maintaining his hospital credentials alongside his practice here. He has extensive experience in chronic disease management, palliative care, and teaching. His clinical interests include minor skin lesion excision and intra-articular injections for the knee, shoulder, and ankle, all of which are done in-house.",
       ar: "يمارس الدكتور باكاري طب الأسرة منذ عام 2006، ويحتفظ حاليًا باعتماد طبيب مستشفى. لديه خبرة واسعة في إدارة الأمراض المزمنة والرعاية التلطيفية والتدريس، ويهتم سريريًا باستئصال الآفات الجلدية البسيطة والحقن داخل المفصل لحالات الركبة والكتف والكاحل، وجميعها متاحة داخل العيادة.",
     },
     practicesAesthetics: false,
@@ -143,7 +166,7 @@ export const doctors: Doctor[] = [
       ar: "طبيب أسرة · دبلوم في الأمراض الجلدية، الكلية الملكية للأطباء في أيرلندا",
     },
     bio: {
-      en: "Dr. Ahmed Gwea completed his Family Medicine residency at Hamad Medical Corporation in Qatar and holds a Diploma in Dermatology from the Royal College of Physicians of Ireland. He is dedicated to providing compassionate, patient-centred care, with a focus on preventive health, health promotion, chronic disease management, and mental well-being. His clinical interests include dermatology, dermatological and minor office-based procedures, and plasma therapy, with an emphasis on helping patients feel comfortable, informed, and supported in their care. He is one of the physicians leading Blue Diamond Medical's full-time Walk-In Clinic.",
+      en: "Dr. Ahmed Gwea completed his Family Medicine residency at Hamad Medical Corporation in Qatar and holds a Diploma in Dermatology from the Royal College of Physicians of Ireland. He provides compassionate, patient-centred care, with a focus on preventive health, health promotion, chronic disease management, and mental well-being. His clinical interests include dermatology, minor office-based and dermatological procedures, and plasma therapy. He places particular emphasis on helping patients feel comfortable, informed, and supported in their care. He is one of the physicians leading Blue Diamond Medical's full-time Walk-In Clinic.",
       ar: "أكمل الدكتور أحمد جويع إقامته في طب الأسرة في مؤسسة حمد الطبية بقطر، ويحمل دبلومًا في الأمراض الجلدية من الكلية الملكية للأطباء في أيرلندا. تشمل اهتماماته السريرية الأمراض الجلدية والطب الوقائي وتعزيز الصحة وإدارة الأمراض المزمنة. وهو من الأطباء الذين يقودون العيادة بدون موعد بدوام كامل في بلو دايموند الطبية.",
     },
     practicesAesthetics: false,

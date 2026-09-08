@@ -22,7 +22,7 @@ export async function generateMetadata({
   const safeLocale: Locale = isLocale(locale) ? locale : "en";
   return getRouteMetadata("aesthetics-consultation", safeLocale, {
     description: {
-      en: "Request a medical aesthetics consultation at Blue Diamond Medical.",
+      en: "Request a medical aesthetics consultation at Blue Diamond Medical in Calgary. Every treatment begins with a 20-minute consultation with a physician.",
       ar: "اطلبوا استشارة تجميل طبي في بلو دايموند الطبية.",
     },
   });

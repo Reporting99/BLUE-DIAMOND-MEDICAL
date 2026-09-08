@@ -9,7 +9,7 @@ export const technologies: Technology[] = [
     title: { en: "Elite iQ™", ar: "إيليت آي كيو™" },
     manufacturer: "Cynosure",
     summary: {
-      en: "Cynosure's Elite iQ™ device offers quick, personalized laser hair treatments using the Skintel™ device — the first Health Canada and FDA cleared melanin reader on the market — allowing safe treatment of all skin types and areas.",
+      en: "Cynosure's Elite iQ™ device offers quick, personalized laser hair treatments using the Skintel™ device — the first melanin reader on the market cleared by both Health Canada and the FDA — allowing safe treatment of all skin types and areas.",
       ar: "يوفر جهاز Elite iQ™ من Cynosure علاجات ليزر مخصصة وسريعة لإزالة الشعر باستخدام جهاز Skintel™ — أول قارئ ميلانين معتمد من هيئة الصحة الكندية وإدارة الغذاء والدواء الأمريكية — مما يتيح علاجًا آمنًا لجميع أنواع البشرة والمناطق.",
     },
     howItWorks: {
@@ -76,7 +76,7 @@ export const technologies: Technology[] = [
     title: { en: "Potenza", ar: "بوتنزا" },
     manufacturer: "Cynosure",
     summary: {
-      en: "A one-of-a-kind radio-frequency microneedling system, ideal for skin tightening and smoothing all over the body — for fine lines or tightening after rapid weight loss or post-birth.",
+      en: "A radio-frequency microneedling system used for tightening and smoothing skin anywhere on the body — for fine lines, or for laxity after rapid weight loss or childbirth.",
       ar: "نظام فريد للإبر الدقيقة بالترددات الراديوية، مثالي لشدّ البشرة وتنعيمها في مختلف مناطق الجسم — للخطوط الدقيقة أو الشدّ بعد فقدان وزن سريع أو بعد الولادة.",
     },
     howItWorks: {
@@ -128,7 +128,7 @@ export const technologies: Technology[] = [
     title: { en: "TempSure", ar: "تمبشور" },
     manufacturer: "Cynosure",
     summary: {
-      en: "A non-invasive tool for tightening and firming skin all over the body, with zero downtime.",
+      en: "A non-invasive device for tightening and firming skin anywhere on the body, with little to no downtime.",
       ar: "أداة غير جراحية لشدّ البشرة وتماسكها في مختلف مناطق الجسم، دون أي فترة تعافٍ.",
     },
     howItWorks: {
@@ -143,7 +143,7 @@ export const technologies: Technology[] = [
       {
         question: { en: "Does TempSure treatment involve any downtime?", ar: "هل يتطلب علاج TempSure أي فترة تعافٍ؟" },
         answer: {
-          en: "No — it's a non-invasive treatment with zero downtime.",
+          en: "No — it is non-invasive, and most patients return to their usual activities right away.",
           ar: "لا — فهو علاج غير جراحي دون أي فترة تعافٍ.",
         },
       },

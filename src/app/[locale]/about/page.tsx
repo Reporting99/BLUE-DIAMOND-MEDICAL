@@ -36,7 +36,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
       title: "About Blue Diamond Medical",
       missionHeading: "Our Mission",
       mission:
-        'Blue Diamond Medical is built on the ethos of exceptional patient care in a family-based environment. We are committed to meeting the needs of all our patients in a friendly, timely, and efficient manner. We believe "prevention is better than cure," and work hard to give our patients access to resources that help them lead healthier lives. Blue Diamond Medical — compassion, caring, and wellbeing for all.',
+        'Blue Diamond Medical was founded on a simple principle: careful, personal attention for every patient, in a setting that feels welcoming to the whole family. We aim to meet the needs of all our patients in a friendly, timely, and efficient way. We also believe that "prevention is better than cure," so we work to give our patients access to the resources that help them lead healthier lives. Blue Diamond Medical — compassion, caring, and well-being for all.',
       aestheticsHeading: "Expanding Our Clinic with a New Aesthetic Medicine Department",
       aestheticsBody: [
         "Blue Diamond Medical has proudly expanded its services to include physician\u2011led medical aesthetics in response to growing patient demand. Alongside our comprehensive family medicine care, we now offer a range of advanced aesthetic treatments designed to improve skin health, enhance confidence, and support overall well\u2011being.",
@@ -44,7 +44,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
       ],
       storyHeading: "Our story",
       story:
-        "Our practice opened on July 4, 2022 in West Springs and has consistently welcomed walk-in patients ever since. Founded by Dr. Mohamed Farhat, who brings over 30 years of family medicine experience, Blue Diamond Medical now houses six family physicians and continues to grow at a safe, steady pace.",
+        "Our practice opened on July 4, 2022 in West Springs and has welcomed walk-in patients ever since. It was founded by Dr. Mohamed Farhat, who brings over 30 years of family medicine experience. Six family physicians now practise here, and the clinic continues to grow at a careful, steady pace.",
       teamCta: "Meet our team",
     },
     ar: {

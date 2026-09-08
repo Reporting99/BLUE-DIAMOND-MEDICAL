@@ -63,7 +63,7 @@ export interface Dictionary {
 
 const en: Dictionary = {
   common: {
-    bookAppointment: "Book Appointment",
+    bookAppointment: "Book an Appointment",
     learnMore: "Learn more",
     call: "Call",
     address: "Address",
@@ -115,7 +115,7 @@ const en: Dictionary = {
       "Physician-led RF microneedling, skin tightening, laser treatments, and Botox — delivered by the same clinical team.",
     servicesTitle: "What we offer",
     servicesBody:
-      "Our practice opened on July 4, 2022 in West Springs and has consistently welcomed walk-in patients ever since. Founded by Dr. Mohamed Farhat, who brings over 30 years of family medicine experience, Blue Diamond Medical now houses six family physicians.",
+      "Our practice opened on July 4, 2022 in West Springs and has welcomed walk-in patients ever since. It was founded by Dr. Mohamed Farhat, who brings over 30 years of family medicine experience, and six family physicians now practise here.",
     botoxTitle: "Medical Botox",
     botoxBody:
       "Botox for migraines, bruxism, and hyperhidrosis, alongside cosmetic Botox — administered by Dr. Farhat and Dr. Hamdi, starting with a consultation.",
@@ -123,11 +123,11 @@ const en: Dictionary = {
     doctorsBody: "Six family physicians, one clinic, one standard of care.",
     locationTitle: "Visit us in West Springs",
     locationBody:
-      "We love our patients, so feel free to visit during normal business hours. Closed all statutory holidays.",
+      "You are welcome to visit us during regular business hours. We are closed on all statutory holidays.",
     healthHubTitle: "From the Health Hub",
     healthHubBody: "Guidance from our clinical team, in plain language.",
     finalCtaTitle: "Ready to find the right place to begin?",
-    finalCtaBody: "Book with your doctor, a walk-in visit, or a medical aesthetics consultation.",
+    finalCtaBody: "Book with your family physician, come in as a walk-in, or request a medical aesthetics consultation.",
   },
   footer: {
     tagline: "Family medicine and physician-led medical aesthetics in West Springs, Calgary.",

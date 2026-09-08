@@ -13,7 +13,7 @@ import { NewPatientNotice } from "@/components/shared/NewPatientNotice";
 /** Single source for this page's description: consumed by both generateMetadata
  * and the page's JSON-LD node, so the two can never drift apart (brief §9). */
 const PAGE_DESCRIPTION = {
-      en: "Book with your family doctor, a walk-in visit, an eye screening, or a medical aesthetics consultation at Blue Diamond Medical Clinic.",
+      en: "Book with your family doctor, come in as a walk-in, arrange an eye screening, or request a medical aesthetics consultation at Blue Diamond Medical Clinic in Calgary.",
       ar: "احجزوا مع طبيب أسرتكم، أو زيارة بدون موعد، أو فحص العين، أو استشارة تجميل طبي في عيادة بلو دايموند الطبية.",
     } as const;
 

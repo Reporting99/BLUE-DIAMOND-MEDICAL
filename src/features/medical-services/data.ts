@@ -17,7 +17,7 @@ export const medicalServices: MedicalServiceContent[] = [
       ar: "بالتعاون مع Euclid Telehealth، نقدّم فحصًا لأمراض العين مشمولًا بالتأمين الصحي في عيادتنا — انطلاقًا من إيماننا بأن الوقاية خير من العلاج.",
     },
     whoItsFor: {
-      en: "All patients, especially diabetics and those with a family history of eye disease.",
+      en: "All patients, and especially people with diabetes or a family history of eye disease.",
       ar: "جميع المرضى، وخصوصًا مرضى السكري ومن لديهم تاريخ عائلي لأمراض العين.",
     },
     whatsIncluded: {
@@ -272,7 +272,7 @@ export const medicalServices: MedicalServiceContent[] = [
       {
         question: { en: "Do I need to see Dr. Saeed specifically for preventive care?", ar: "هل يجب أن أراجع الدكتورة سعيد تحديدًا للرعاية الوقائية؟" },
         answer: {
-          en: "Preventive medicine and early intervention is a particular clinical focus of Dr. Saeed's, but preventive care in general is available from any of our family physicians.",
+          en: "Preventive medicine and early intervention are particular clinical interests of Dr. Saeed's, but preventive care is available from any of our family physicians.",
           ar: "الطب الوقائي والتدخل المبكر هو تركيز سريري خاص لدى الدكتورة سعيد، إلا أن الرعاية الوقائية بشكل عام متاحة لدى أي من أطباء الأسرة في عيادتنا.",
         },
       },
