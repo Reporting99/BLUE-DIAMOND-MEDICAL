@@ -180,6 +180,8 @@ export interface Product {
     resultsVary: Bilingual;
   };
   professionalOnly?: boolean;
+  /** Manufacturer warnings for catalogue products without a detail block. */
+  safetyWarnings?: { en: string[]; ar: string[] };
   /** Manufacturer "Directions"/how-to-use steps, one entry per step. */
   directions?: { en: string[]; ar: string[] };
   /** Manufacturer-stated key ingredients, verbatim — never an inferred list. */

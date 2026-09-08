@@ -38,9 +38,9 @@ export default async function HealthHubPage({ params }: { params: Promise<{ loca
       title: "Health Hub",
       intro:
         "Plain-language guidance from our clinical team, organized by the topics our patients ask about most. Articles are published only after medical review.",
-      emptyHeading: "The first articles are on their way",
+      emptyHeading: "Health articles",
       emptyBody:
-        "Nothing has been published here yet. Our physicians are preparing the first articles, and each one is reviewed before it goes up. In the meantime, please call the clinic or ask at your next appointment.",
+        "No articles have been published yet. For questions about your health, please call the clinic or speak with your physician at your next appointment.",
     },
     ar: {
       title: "المركز المعرفي",

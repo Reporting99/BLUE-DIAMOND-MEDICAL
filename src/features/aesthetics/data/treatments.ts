@@ -16,7 +16,7 @@ export const treatments: AestheticTreatment[] = [
     slugAr: "إزالة-الشعر-بالليزر",
     title: { en: "Laser Hair Removal", ar: "إزالة الشعر بالليزر" },
     summary: {
-      en: "Long-lasting hair reduction anywhere on the body using the Cynosure Elite iQ™ laser system.",
+      en: "Long-lasting hair reduction on suitable areas of the face and body using the Cynosure Elite+™ laser system. Treatment areas and suitability are assessed during consultation.",
       ar: "تقليل دائم لنمو الشعر في أي منطقة من الجسم باستخدام نظام ليزر Cynosure Elite+™.",
     },
     serviceLocationNote: {
@@ -24,7 +24,7 @@ export const treatments: AestheticTreatment[] = [
       ar: "تُجرى جميع علاجات Elite iQ™ حصريًا في Citizen Studio، 45 Greenbriar Dr NW، كالغاري، AB T3B 5N4 — وليس في عيادة ويست سبرينغز.",
     },
     howItWorks: {
-      en: "Hair grows in a three-phase cycle — anagen (active growth), catagen, and telogen (resting). The laser emits light energy absorbed by melanin in the hair follicle, damaging it and impairing regrowth. Follicles in the anagen phase respond best, so multiple treatments are needed to catch hair actively growing.",
+      en: "Hair grows in a three-phase cycle: anagen (active growth), catagen (a brief transition when the hair follicle regresses) and telogen (resting). The laser emits light energy absorbed by melanin in the hair follicle and shaft, damaging the follicle and reducing regrowth. Follicles in the anagen phase respond best, so multiple treatments are needed.",
       ar: "ينمو الشعر ضمن دورة من ثلاث مراحل — النمو النشط، ثم مرحلة الانتقال، ثم مرحلة الراحة. يُصدر الليزر طاقة ضوئية تمتصها صبغة الميلانين في بصيلة الشعر، ما يُضعفها ويُبطئ نموها. تستجيب البصيلات في مرحلة النمو النشط بشكل أفضل، لذا يلزم إجراء جلسات متعددة لاستهداف الشعر النامي فعليًا.",
     },
     treatmentAreas: {
@@ -36,7 +36,7 @@ export const treatments: AestheticTreatment[] = [
       ar: "يُنصح بحلاقة المنطقة المراد علاجها مسبقًا لضمان وصول طاقة الليزر بفعالية.",
     },
     comfortLevel: {
-      en: "You may feel cold air and a slight beep or snapping sensation during treatment.",
+      en: "You may feel cold air and a slight snapping sensation and hear a beep during treatment.",
       ar: "قد تشعرون بهواء بارد وإحساس خفيف يشبه النقر أثناء العلاج.",
     },
     resultTimeline: {
@@ -49,14 +49,14 @@ export const treatments: AestheticTreatment[] = [
       {
         question: { en: "How does Elite iQ™ work?", ar: "كيف يعمل جهاز Elite iQ™؟" },
         answer: {
-          en: "It uses the Skintel™ device — the first melanin reader on the market cleared by both Health Canada and the FDA — allowing safe treatment of all skin types and areas.",
+          en: "Elite iQ™ uses the Skintel™ melanin reader to help the practitioner select settings for your skin. Suitability depends on your skin, hair and treatment area.",
           ar: "يستخدم جهاز Skintel™ — أول قارئ ميلانين معتمد من هيئة الصحة الكندية وإدارة الغذاء والدواء الأمريكية — مما يتيح علاجًا آمنًا لجميع أنواع البشرة والمناطق.",
         },
       },
       {
         question: { en: "Is this treatment right for me?", ar: "هل هذا العلاج مناسب لي؟" },
         answer: {
-          en: "The Elite iQ™ device can be safely used on all skin types and anywhere on the body. Your physician will discuss whether it is right for you.",
+          en: "Elite iQ™ can treat a range of skin types and body areas. Your physician will assess your skin, hair and medical history to determine whether treatment is appropriate.",
           ar: "يمكن استخدام جهاز Elite iQ™ بأمان على جميع أنواع البشرة وفي أي منطقة من الجسم. ناقشوا ملاءمته لكم مع مقدم الرعاية.",
         },
       },
@@ -144,7 +144,7 @@ export const treatments: AestheticTreatment[] = [
     id: "radio-frequency",
     slug: "radio-frequency",
     slugAr: "الترددات-الراديوية",
-    title: { en: "Radio Frequency", ar: "الترددات الراديوية" },
+    title: { en: "Radiofrequency", ar: "الترددات الراديوية" },
     summary: {
       en: "Non-invasive tightening and smoothing of skin all over the body using RF waves (TempSure), improving tone and reducing the appearance of fine lines and wrinkles.",
       ar: "شدّ وتنعيم غير جراحي للبشرة في مختلف مناطق الجسم باستخدام موجات الترددات الراديوية (TempSure)، لتحسين ملمس البشرة وتقليل ظهور الخطوط الدقيقة والتجاعيد.",
@@ -162,7 +162,7 @@ export const treatments: AestheticTreatment[] = [
       ar: "تستغرق علاجات الوجه والرقبة (بجهاز محمول على الوجه والرقبة وأعلى الصدر) بين 40 و90 دقيقة حسب المنطقة. تُعالَج مناطق الجسم بواسطة وسائد غير جراحية خلال نحو 20 دقيقة.",
     },
     downtime: {
-      en: "Virtually no downtime — you can return to your usual activities right away. A medical-grade sunscreen is recommended to protect and preserve results.",
+      en: "Downtime is not typically expected, although individual responses vary. Most patients can return to their usual activities right away. Follow your clinician's advice about sunscreen after treatment.",
       ar: "لا يوجد تعافٍ يُذكر — يمكنكم متابعة حياتكم اليومية فورًا. يُنصح باستخدام واقي شمس طبي للحفاظ على النتائج.",
     },
     resultTimeline: {
@@ -170,12 +170,12 @@ export const treatments: AestheticTreatment[] = [
       ar: "ليست نتيجتها فورية — تبدو البشرة أكثر انتعاشًا خلال أيام قليلة، لكن أبرز النتائج تظهر بعد نحو 6-8 أسابيع من الجلسة الأولى.",
     },
     suggestedCourse: {
-      en: "3–5 treatments spaced 4–6 weeks apart give the best results, which can last up to two years.",
+      en: "A course of 3–5 treatments spaced 4–6 weeks apart is recommended. Results may last up to two years, although individual responses vary.",
       ar: "تُقدَّم أفضل النتائج بعد 3-5 جلسات بفاصل 4-6 أسابيع، مع استمرار النتائج الإيجابية حتى عامين.",
     },
     faqs: [
       {
-        question: { en: "Does Radio Frequency treatment hurt?", ar: "هل علاج الترددات الراديوية مؤلم؟" },
+        question: { en: "Does radiofrequency treatment hurt?", ar: "هل علاج الترددات الراديوية مؤلم؟" },
         answer: {
           en: "Most patients find it comfortable and describe a warm, massage-like sensation rather than pain.",
           ar: "غير مؤلم — يصف معظم المرضى شعورًا علاجيًا يشبه التدليك.",
@@ -205,7 +205,7 @@ export const treatments: AestheticTreatment[] = [
       {
         question: { en: "How many sessions are recommended, and how long do results last?", ar: "كم عدد الجلسات الموصى بها، وكم تدوم النتائج؟" },
         answer: {
-          en: "3–5 treatments spaced 4–6 weeks apart give the best results, which can last up to two years.",
+          en: "A course of 3–5 treatments spaced 4–6 weeks apart is recommended. Results may last up to two years, although individual responses vary.",
           ar: "تُقدَّم أفضل النتائج بعد 3-5 جلسات بفاصل 4-6 أسابيع، مع استمرار النتائج الإيجابية حتى عامين.",
         },
       },
@@ -225,7 +225,7 @@ export const treatments: AestheticTreatment[] = [
       ar: "يضيف نظام Potenza طاقة الترددات الراديوية إلى تقنية الإبر الدقيقة الميكانيكية، لشدّ أعمق للبشرة إلى جانب فوائد التحفيز بالإصابات الدقيقة.",
     },
     howItWorks: {
-      en: "RF energy is delivered via small needles deep into the dermis, heating underlying layers to cause tightening and stimulate collagen and elastin production — producing faster and more pronounced results than microneedling without RF. Treatments are not limited to the face, and are particularly useful for toning and tightening skin after weight loss.",
+      en: "RF energy is delivered through small needles into the dermis, heating the underlying layers to stimulate collagen and elastin production and support skin tightening. Treatments are not limited to the face and may help with skin laxity after weight loss. Results vary.",
       ar: "تُوصَّل طاقة الترددات الراديوية عبر إبر دقيقة إلى عمق الأدمة، فتُسخّن الطبقات العميقة وتُحفّز الشدّ وإنتاج الكولاجين والإيلاستين — بنتائج أسرع وأوضح من الإبر الدقيقة التقليدية. لا تقتصر العلاجات على الوجه، وهي مفيدة بشكل خاص لشدّ البشرة بعد فقدان الوزن.",
     },
     concernsTreated: {
@@ -233,7 +233,7 @@ export const treatments: AestheticTreatment[] = [
       ar: ["ندبات الجلد بما فيها ندبات حب الشباب", "بشرة أكثر تماسكًا ونضارة", "تقليل البقع الداكنة", "التحكم بحجم المسام", "تقليل التجاعيد"],
     },
     duration: {
-      en: "Typically around 30 minutes. A topical anesthetic is applied and can take up to 45 minutes to become fully effective.",
+      en: "Typically around 30 minutes. A topical anaesthetic is applied and can take up to 45 minutes to become fully effective.",
       ar: "نحو 30 دقيقة عادةً. يُطبَّق مخدر موضعي قد يستغرق حتى 45 دقيقة ليصبح فعالًا بالكامل.",
     },
     comfortLevel: {
@@ -241,7 +241,7 @@ export const treatments: AestheticTreatment[] = [
       ar: "يُزيل المخدر معظم الانزعاج — يشعر المرضى بوخز الإبر دون ألم حقيقي. يراقب مقدمو الرعاية الجلسة باستمرار، ويمكن إيقافها في أي وقت.",
     },
     resultTimeline: {
-      en: "Effects can usually be seen right away, but one session is not enough for lasting results.",
+      en: "Some changes may be noticeable soon after treatment, with gradual improvement over several weeks and treatments. More than one session is usually recommended.",
       ar: "غالبًا ما تظهر النتائج فورًا، لكن جلسة واحدة لا تكفي لنتائج دائمة.",
     },
     suggestedCourse: {
@@ -249,8 +249,14 @@ export const treatments: AestheticTreatment[] = [
       ar: "يُنصح ببرامج من 3 أو 5 جلسات للحصول على بشرة متجددة ومتماسكة بشكل مستمر.",
     },
     downtime: {
-      en: "Minimal downtime — avoid strenuous exercise and sun exposure for 48 hours; otherwise resume regular activities with good SPF.",
+      en: "Downtime is usually minimal. Redness, minor swelling and pinpoint bleeding can occur and typically settle within three days. Minor bumps or, rarely, micro-crusting can also occur. Contact the clinic if you have concerns about your recovery.",
       ar: "تعافٍ محدود — يُنصح بتجنب التمارين الشاقة والتعرض للشمس لمدة 48 ساعة، ثم يمكن استئناف النشاط المعتاد مع استخدام واقٍ شمسي جيد.",
+    },
+    // Restored from the supplied RF microneedling source. The ambiguous
+    // "celluloid" mask and unapproved infusion agents remain in the review register.
+    aftercare: {
+      en: "Avoid strenuous exercise and sun exposure for 48 hours after treatment. Follow your clinician's instructions about sunscreen and other skin care products before resuming your usual routine.",
+      ar: "",
     },
     safetyContraindications: {
       en: [
@@ -292,7 +298,7 @@ export const treatments: AestheticTreatment[] = [
     slugAr: "الترا",
     title: { en: "Ultra Treatment", ar: "علاج الترا" },
     summary: {
-      en: "A low-downtime laser that rejuvenates the skin, giving it a brighter tone and improved texture — treating mild to moderate age spots, freckles, sun spots, pigmented lesions, sun damage, actinic keratosis, melasma, and postinflammatory hyperpigmentation.",
+      en: "Ultra is a laser treatment used to improve skin tone and texture and address mild to moderate age spots, freckles, sun spots, benign pigmented lesions, sun damage, melasma and post-inflammatory hyperpigmentation. Suitability is assessed during a consultation.",
       ar: "ليزر بتعافٍ محدود يُجدّد البشرة ويمنحها لونًا أكثر إشراقًا وملمسًا أفضل — لعلاج البقع العمرية الخفيفة إلى المتوسطة، والنمش، وبقع الشمس، والآفات الصبغية، وتلف الشمس، والتقرن السفعي، والكلف، وفرط التصبغ بعد الالتهاب.",
     },
     treatmentAreas: { en: ["Face", "Neck", "Chest"], ar: ["الوجه", "الرقبة", "الصدر"] },
@@ -305,18 +311,22 @@ export const treatments: AestheticTreatment[] = [
       ar: "الانزعاج متفاوت، يُوصف بأنه خفيف إلى متوسط؛ يمكن استخدام كريم تخدير موضعي لتقليله.",
     },
     downtime: {
-      en: "Mild redness following treatment; normal activities can resume immediately. Full healing may take 5–7 days, during which skin has a dry, sandpaper-like texture as it exfoliates — this is normal.",
+      en: "Mild redness can occur after treatment and usually lessens over the following day. Most patients can resume their usual activities. Skin may feel dry and sandpaper-like for 5–6 days as it exfoliates; full healing may take 5–7 days.",
       ar: "احمرار خفيف بعد العلاج؛ يمكن استئناف الأنشطة الطبيعية فورًا. قد يستغرق التعافي الكامل 5-7 أيام، تكون خلالها البشرة جافة وخشنة الملمس أثناء تقشرها — وهذا أمر طبيعي.",
     },
     resultTimeline: {
       en: "Results may appear after a single treatment or require several visits depending on the condition.",
       ar: "قد تظهر النتائج بعد جلسة واحدة أو تتطلب عدة زيارات حسب الحالة.",
     },
+    aftercare: {
+      en: "Follow your practitioner's advice about when to apply makeup while your skin heals.",
+      ar: "",
+    },
     faqs: [
       {
         question: { en: "What can Ultra treatment address?", ar: "ما الذي يعالجه علاج الترا؟" },
         answer: {
-          en: "Mild to moderate age spots, freckles, sun spots, pigmented lesions, sun damage, actinic keratosis, melasma, and postinflammatory hyperpigmentation.",
+          en: "Mild to moderate age spots, freckles, sun spots, benign pigmented lesions, sun damage, melasma and post-inflammatory hyperpigmentation. Your physician will assess the skin changes before recommending treatment.",
           ar: "البقع العمرية الخفيفة إلى المتوسطة، والنمش، وبقع الشمس، والآفات الصبغية، وتلف الشمس، والتقرن السفعي، والكلف، وفرط التصبغ بعد الالتهاب.",
         },
       },
@@ -330,7 +340,7 @@ export const treatments: AestheticTreatment[] = [
       {
         question: { en: "What's recovery like after Ultra treatment?", ar: "كيف يكون التعافي بعد علاج الترا؟" },
         answer: {
-          en: "Mild redness follows treatment and normal activities can resume immediately. Full healing may take 5–7 days, during which skin has a dry, sandpaper-like texture as it exfoliates — this is a normal part of the process.",
+          en: "Mild redness can occur after treatment and usually lessens over the following day. Most patients can resume their usual activities. Skin may feel dry and sandpaper-like for 5–6 days as it exfoliates; full healing may take 5–7 days.",
           ar: "يظهر احمرار خفيف بعد العلاج ويمكن استئناف الأنشطة الطبيعية فورًا. قد يستغرق التعافي الكامل 5-7 أيام، تكون خلالها البشرة جافة وخشنة الملمس أثناء تقشرها — وهذا أمر طبيعي ضمن العملية.",
         },
       },
@@ -357,7 +367,7 @@ export const treatments: AestheticTreatment[] = [
       ar: "حقن البلازما الغنية بالصفائح الدموية في فروة الرأس لتنشيط البصيلات الخاملة وتعزيز نمو شعر أكثف وأكمل — يُجريها الدكتور فرحات.",
     },
     howItWorks: {
-      en: "PRP is a regenerative serum created from the patient's own blood. After a blood draw, plasma is separated and concentrated into a serum rich in growth factors that stimulate inactive hair follicles and improve scalp blood circulation.",
+      en: "Platelet-rich plasma (PRP) is prepared from the patient's own blood. After a blood draw, the blood is processed to concentrate platelets in plasma. The platelets release growth factors involved in tissue repair. PRP is injected into the scalp to support hair growth; results vary.",
       ar: "البلازما الغنية بالصفائح الدموية مصل تجديدي يُستخرج من دم المريض نفسه. بعد سحب عينة دم، يُفصَل البلازما ويُركَّز في مصل غني بعوامل النمو التي تُنشّط بصيلات الشعر الخاملة وتُحسّن الدورة الدموية في فروة الرأس.",
     },
     whoItsFor: {
@@ -375,7 +385,7 @@ export const treatments: AestheticTreatment[] = [
       {
         question: { en: "Who performs PRP at Blue Diamond Medical?", ar: "من يُجري علاج البلازما في بلو دايموند الطبية؟" },
         answer: {
-          en: "PRP treatments are performed by Dr. Farhat, combining advanced technique with personalized care.",
+          en: "PRP treatments are performed by Dr. Farhat.",
           ar: "يُجري الدكتور فرحات علاجات البلازما، جامعًا بين التقنية المتقدمة والرعاية الشخصية.",
         },
       },
@@ -393,7 +403,7 @@ export const treatments: AestheticTreatment[] = [
       ar: "تُستخدم البلازما الغنية بالصفائح الدموية موضعيًا أو عبر حقن دقيقة لتنعيم الخطوط الدقيقة والتجاعيد، وتحسين نضارة البشرة ومرونتها، وتقليل ندبات حب الشباب والتصبغ — يُعرف أحيانًا باسم \"فيشل مصاص الدماء\".",
     },
     howItWorks: {
-      en: "The same patient-derived, growth-factor-rich serum used for hair restoration is applied to the skin, boosting collagen production for firmer, more youthful-looking skin, with no synthetic additives.",
+      en: "Platelet-rich plasma prepared from the patient's own blood is applied to the skin or delivered by microinjections. Platelet-derived growth factors may support collagen production and skin renewal; results vary.",
       ar: "يُستخدم المصل الغني بعوامل النمو المشتق من دم المريض نفسه — ذاته المستخدم لاستعادة الشعر — على البشرة، لتحفيز إنتاج الكولاجين وبشرة أكثر تماسكًا وشبابًا دون أي مواد اصطناعية.",
     },
     duration: { en: "30 to 60 minutes depending on the treatment area.", ar: "من 30 إلى 60 دقيقة حسب المنطقة المعالجة." },
@@ -419,7 +429,7 @@ export const treatments: AestheticTreatment[] = [
       {
         question: { en: "Does this use any synthetic additives?", ar: "هل يستخدم هذا العلاج أي مواد اصطناعية؟" },
         answer: {
-          en: "No — it uses the same patient-derived, growth-factor-rich serum used for PRP hair restoration, with no synthetic additives.",
+          en: "PRP is prepared from your own blood. Ask your physician which preparation products are used and whether anything is added as part of your treatment.",
           ar: "لا — يُستخدم المصل نفسه الغني بعوامل النمو والمشتق من دم المريض، والمستخدم أيضًا لاستعادة الشعر بالبلازما، دون أي مواد اصطناعية.",
         },
       },
@@ -442,7 +452,7 @@ export const treatments: AestheticTreatment[] = [
     slugAr: "تمبشور-فيتاليا",
     title: { en: "TempSure Vitalia", ar: "تمبشور فيتاليا" },
     summary: {
-      en: "A non-surgical, in-clinic treatment for pelvic floor and sexual health concerns. About one in three women experience these concerns at some point in their lives, and many live with them in silence. A consultation with Dr. Farhat establishes whether the treatment is appropriate for you.",
+      en: "TempSure Vitalia is a non-surgical radiofrequency device. If you have pelvic floor or sexual health concerns, a consultation with Dr. Farhat can help assess your symptoms and discuss appropriate treatment options.",
       ar: "جهاز يُعالج العديد من مشاكل قاع الحوض والصحة الجنسية التي تواجهها النساء في مختلف الأعمار ومراحل الحياة — تعاني منها نحو امرأة من كل ثلاث، وغالبًا بصمت.",
     },
     whoItsFor: {
@@ -451,9 +461,9 @@ export const treatments: AestheticTreatment[] = [
     },
     faqs: [
       {
-        question: { en: "How common are the concerns TempSure Vitalia addresses?", ar: "ما مدى شيوع المشاكل التي يعالجها TempSure Vitalia؟" },
+        question: { en: "Can I discuss pelvic floor or sexual health concerns at a consultation?", ar: "ما مدى شيوع المشاكل التي يعالجها TempSure Vitalia؟" },
         answer: {
-          en: "About one in three women experience pelvic floor or sexual health concerns at some point in their lives, and many live with them in silence.",
+          en: "Yes. You can discuss these symptoms with Dr. Farhat. Assessment is needed to identify the cause and consider appropriate treatment options.",
           ar: "تعاني نحو امرأة من كل ثلاث من مشاكل قاع الحوض أو الصحة الجنسية في مرحلة ما، وغالبًا بصمت.",
         },
       },

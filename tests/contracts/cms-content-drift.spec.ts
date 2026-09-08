@@ -85,12 +85,19 @@ const cmsEntries: CmsEntry[] = JSON.parse(
  * REMOVED found only 13 of them: a crawl cannot see drift in a field whose old
  * text was never published as a distinctive phrase, nor drift introduced by a
  * correction that has not shipped yet. That gap is the argument for this test.
+ *
+ * GREW again 2026-09-08 (Calgary medical-audit pass, #66): four more records
+ * qualified — rosacea-redness's summary/FAQ softened from "often work best"
+ * to "may help", and three medical-service summaries/FAQs reworded away from
+ * naming AHS insurance as a blanket guarantee. Same BLOCKED condition as
+ * above: content.publish is still not held by the import identity.
  */
 const KNOWN_CMS_DRIFT: ReadonlySet<string> = new Set([
   "aesthetic-concern:acne-scars",
   "aesthetic-concern:dry-skin",
   "aesthetic-concern:fine-lines-wrinkles",
   "aesthetic-concern:razor-bumps",
+  "aesthetic-concern:rosacea-redness",
   "aesthetic-concern:skin-laxity",
   "aesthetic-concern:skin-revitalization",
   "aesthetic-concern:spider-veins",
@@ -103,10 +110,13 @@ const KNOWN_CMS_DRIFT: ReadonlySet<string> = new Set([
   "aesthetic-treatment:rf-microneedling",
   "aesthetic-treatment:tempsure-vitalia",
   "aesthetic-treatment:ultra",
+  "medical-service:after-hours-care",
   "medical-service:chronic-disease-management",
   "medical-service:eye-screening",
+  "medical-service:minor-procedures",
   "medical-service:pain-management",
   "medical-service:preventive-care",
+  "medical-service:weight-management",
   // No product:* keys. The seven acknowledged here until 2026-09-08 were all
   // SkinMedica records, and that line is archived (src/config/features.ts):
   // they no longer publish, so they no longer pair, and "every acknowledged

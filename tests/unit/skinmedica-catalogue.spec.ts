@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { products, productCategories, productBrands } from "../../src/features/products/data";
+import { products, getProduct, productCategories, productBrands } from "../../src/features/products/data";
 import { archivedSkinMedicaProducts } from "../../src/features/products/archive/skinmedica";
 import { features } from "../../src/config/features";
 import { movedRoutes } from "../../src/lib/routing/moved-routes";
@@ -388,6 +388,16 @@ test("CL-042: professional-only products say so and are never purchasable", () =
     expect(p.purchaseBlocked?.en ?? "", `${p.id} must state it is professional-use`).toMatch(
       /professional/i,
     );
+  }
+});
+
+test("C-Retinol and its pigmentary kit retain the manufacturer safety warnings", () => {
+  for (const id of ["c-retinol", "pigmentary-disorders-kit"]) {
+    const product = getProduct(id);
+    const warnings = product?.safetyWarnings?.en.join(" ") ?? "";
+    expect(warnings, `${id}: pregnancy warning`).toMatch(/pregnant or breastfeeding/i);
+    expect(warnings, `${id}: photosensitivity warning`).toMatch(/sensitivity to sunlight/i);
+    expect(warnings, `${id}: sunscreen instruction`).toMatch(/SPF 30 or higher every two hours/i);
   }
 });
 

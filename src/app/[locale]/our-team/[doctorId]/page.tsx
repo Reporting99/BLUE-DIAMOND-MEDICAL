@@ -79,9 +79,14 @@ export async function generateMetadata({
   // for both, which is why `route` is consulted first.
   const arUrl = `${siteConfig.url}/ar${route?.path.ar ?? `/our-team/${doctor.id}`}`;
 
+  const description = locale === "en"
+    ? `Learn about ${doctor.name.en}, a family physician at Blue Diamond Medical in West Springs, Calgary, including clinical interests and appointment information.`
+    : doctor.bio[locale].slice(0, 155);
+
   return {
     title: doctor.name[locale],
-    description: doctor.bio[locale].slice(0, 155),
+    description,
+    openGraph: { title: doctor.name[locale], description },
     alternates: {
       canonical: locale === "ar" ? arUrl : enUrl,
       languages: { "en-CA": enUrl, "ar-CA": arUrl, "x-default": enUrl },

@@ -78,7 +78,7 @@ export const archivedSkinMedicaProducts: Product[] = [
         ar: "نظام من خطوتين للنهار والليل: خطوة نهارية مصممة للمساعدة في حماية البشرة من الضوء الأزرق والإجهاد البيئي، وخطوة ليلية مصممة لدعم عملية إصلاح البشرة أثناء الليل.",
       },
       whatItIs: {
-        en: "A two-bottle treatment system (Day, Night), not a single product — both bottles are included in this one price/size record.",
+        en: "A two-bottle treatment system with Day and Night formulas. Both bottles are included.",
         ar: "نظام علاجي من زجاجتين (نهار، ليل) وليس منتجًا واحدًا — كلتا الزجاجتين مشمولتان بهذا السعر والحجم.",
       },
       productType: { en: "Two-step antioxidant treatment system", ar: "نظام علاجي مضاد للأكسدة من خطوتين" },
@@ -93,7 +93,7 @@ export const archivedSkinMedicaProducts: Product[] = [
       },
       relatedProductIds: ["vitamin-c-e-complex", "tns-eye-repair"],
       faqs: [
-        { question: { en: "Is this one product or two?", ar: "هل هذا منتج واحد أم اثنان؟" }, answer: { en: "It's a two-bottle system — a Day formula and a Night formula — sold together as one record at this price and size.", ar: "هو نظام من زجاجتين — تركيبة نهارية وأخرى ليلية — تُباع معًا بهذا السعر والحجم." } },
+        { question: { en: "Is this one product or two?", ar: "هل هذا منتج واحد أم اثنان؟" }, answer: { en: "The system includes two bottles: a Day formula and a Night formula.", ar: "هو نظام من زجاجتين — تركيبة نهارية وأخرى ليلية — تُباع معًا بهذا السعر والحجم." } },
         { question: { en: "When do I use each bottle?", ar: "متى أستخدم كل زجاجة؟" }, answer: { en: "The Day formula in the morning and the Night formula in the evening, both after cleansing and toning.", ar: "تركيبة النهار صباحًا وتركيبة الليل مساءً، وكلتاهما بعد التنظيف والتونر." } },
         { question: { en: "What is Lumivive designed to help with?", ar: "ما الذي صُمم نظام لوميفيف للمساعدة فيه؟" }, answer: { en: "Per manufacturer information, the Day formula is designed to help shield skin from blue light and environmental stress, and the Night formula is designed to support the skin's overnight repair process.", ar: "وفق معلومات الشركة المصنّعة، صُممت تركيبة النهار للمساعدة في حماية البشرة من الضوء الأزرق والإجهاد البيئي، وصُممت تركيبة الليل لدعم عملية إصلاح البشرة أثناء الليل." } },
         { question: { en: "Where do I apply it?", ar: "أين أضعه؟" }, answer: { en: "Face, neck, and décolletage.", ar: "الوجه والرقبة وأعلى الصدر." } },
@@ -198,7 +198,7 @@ export const archivedSkinMedicaProducts: Product[] = [
         { question: { en: "Morning, evening, or both?", ar: "صباحًا أم مساءً أم كليهما؟" }, answer: { en: "It can be used as the first step of a morning and/or evening routine.", ar: "يمكن استخدامه كخطوة أولى في الروتين الصباحي و/أو المسائي." } },
         { question: { en: "Is this different from the AHA/BHA Exfoliating Cleanser?", ar: "هل يختلف عن غسول AHA/BHA المقشر؟" }, answer: { en: "Yes — this is a standard foaming cleanser without exfoliating acids; the AHA/BHA Exfoliating Cleanser is a separate, exfoliating product.", ar: "نعم — هذا غسول رغوي عادي دون أحماض مقشرة؛ أما غسول AHA/BHA المقشر فهو منتج منفصل ومقشر." } },
         { question: { en: "What size is this?", ar: "ما الحجم؟" }, answer: { en: "177.4 ml.", ar: "177.4 مل." } },
-        { question: { en: "Does this contain fragrance?", ar: "هل يحتوي على عطر؟" }, answer: { en: "Not confirmed by the research for this record — ask the clinic if fragrance-free formulation matters for your skin.", ar: "لم يتأكد ذلك من خلال البحث لهذا السجل — يُرجى سؤال العيادة إذا كانت التركيبة الخالية من العطور مهمة لبشرتكم." } },
+        { question: { en: "Does this contain fragrance?", ar: "هل يحتوي على عطر؟" }, answer: { en: "Please check the current ingredient label and ask the clinic if you need a fragrance-free product.", ar: "لم يتأكد ذلك من خلال البحث لهذا السجل — يُرجى سؤال العيادة إذا كانت التركيبة الخالية من العطور مهمة لبشرتكم." } },
         { question: { en: "How do I confirm price and availability?", ar: "كيف أتحقق من السعر والتوفر؟" }, answer: { en: "Contact Blue Diamond Medical Clinic directly.", ar: "تواصلوا مباشرة مع عيادة بلو دايموند الطبية." } },
       ],
       sources: [{ url: "https://www.skinmedica.com/us/product-category/facial-cleansers/", ...officialSite }],
@@ -370,7 +370,7 @@ export const archivedSkinMedicaProducts: Product[] = [
         { question: { en: "When do I use this serum?", ar: "متى أستخدم هذا السيروم؟" }, answer: { en: "In the evening, one pump applied to the face and neck.", ar: "مساءً، ضغطة واحدة تُطبَّق على الوجه والرقبة." } },
         { question: { en: "What is this formulated to address?", ar: "لماذا صُمم هذا السيروم؟" }, answer: { en: "The appearance of stubborn skin discolouration, per manufacturer information.", ar: "مظهر تصبغات البشرة العنيدة، وفق معلومات الشركة المصنّعة." } },
         { question: { en: "Do I need sunscreen while using this?", ar: "هل أحتاج واقي شمس أثناء استخدامه؟" }, answer: { en: "Daily sun protection is generally important with pigment-focused treatments — confirm specific guidance with the clinic.", ar: "الحماية اليومية من الشمس مهمة بشكل عام مع علاجات التصبغ — يُرجى تأكيد الإرشادات مع مقدم الرعاية." } },
-        { question: { en: "Is this the same as \"Lytera 2.0 Pigment Correcting Serum\"?", ar: "هل هذا هو نفسه \"Lytera 2.0 Pigment Correcting Serum\"؟" }, answer: { en: "Some current listings use \"Correcting\" rather than \"Brightening\" in the name — same underlying product line; the approved catalogue name is used here.", ar: "تستخدم بعض القوائم الحالية كلمة \"Correcting\" بدل \"Brightening\" في الاسم — لكنه خط المنتج نفسه؛ ويُستخدم هنا الاسم المعتمد في القائمة." } },
+        { question: { en: "Is this the same as \"Lytera 2.0 Pigment Correcting Serum\"?", ar: "هل هذا هو نفسه \"Lytera 2.0 Pigment Correcting Serum\"؟" }, answer: { en: "You may see Lytera 2.0 listed as a Pigment Correcting Serum or Pigment Brightening Serum. Check the package label with the clinic to confirm the product.", ar: "تستخدم بعض القوائم الحالية كلمة \"Correcting\" بدل \"Brightening\" في الاسم — لكنه خط المنتج نفسه؛ ويُستخدم هنا الاسم المعتمد في القائمة." } },
         { question: { en: "What size is this?", ar: "ما الحجم؟" }, answer: { en: "60 ml.", ar: "60 مل." } },
         { question: { en: "How do I confirm current price and availability?", ar: "كيف أتحقق من السعر والتوفر الحاليين؟" }, answer: { en: "Contact Blue Diamond Medical Clinic directly.", ar: "تواصلوا مباشرة مع عيادة بلو دايموند الطبية." } },
       ],
@@ -467,7 +467,7 @@ export const archivedSkinMedicaProducts: Product[] = [
       relatedProductIds: ["total-defence-repair-spf-34-clear", "daily-physical-defense-spf-34"],
       faqs: [
         { question: { en: "Is this tinted or clear?", ar: "هل هو ملون أم شفاف؟" }, answer: { en: "Tinted — with sheer coverage. A clear version is also available as a separate product.", ar: "ملون — بتغطية خفيفة. يتوفر أيضًا إصدار شفاف كمنتج منفصل." } },
-        { question: { en: "Why does the product name say \"Defense\" instead of \"Defence\"?", ar: "لماذا يُكتب اسم المنتج \"Defense\" بدلًا من \"Defence\"؟" }, answer: { en: "\"Defense\" is the manufacturer's current official spelling, confirmed on the official product URL and Canadian retailers — the approved price and size are unchanged.", ar: "\"Defense\" هو الإملاء الرسمي الحالي للشركة المصنّعة، وتم التأكد منه عبر رابط المنتج الرسمي والمتاجر الكندية — مع بقاء السعر والحجم المعتمدين دون تغيير." } },
+        { question: { en: "Why does the product name say \"Defense\" instead of \"Defence\"?", ar: "لماذا يُكتب اسم المنتج \"Defense\" بدلًا من \"Defence\"؟" }, answer: { en: "\"Defense\" is the spelling used in the manufacturer's product name.", ar: "\"Defense\" هو الإملاء الرسمي الحالي للشركة المصنّعة، وتم التأكد منه عبر رابط المنتج الرسمي والمتاجر الكندية — مع بقاء السعر والحجم المعتمدين دون تغيير." } },
         { question: { en: "How often do I reapply?", ar: "كم مرة أعيد التطبيق؟" }, answer: { en: "At least every 2 hours if in direct sunlight.", ar: "كل ساعتين على الأقل عند التعرض المباشر لأشعة الشمس." } },
         { question: { en: "What SPF does this provide?", ar: "ما درجة الحماية SPF التي يوفرها؟" }, answer: { en: "SPF 34, broad spectrum.", ar: "SPF 34، حماية واسعة الطيف." } },
         { question: { en: "What size is this?", ar: "ما الحجم؟" }, answer: { en: "65 g.", ar: "65 غرام." } },
@@ -534,7 +534,7 @@ export const archivedSkinMedicaProducts: Product[] = [
       faqs: [
         { question: { en: "What skin type is this formulated for?", ar: "لأي نوع بشرة صُمم هذا الكريم؟" }, answer: { en: "Normal-to-dry skin, per manufacturer information.", ar: "البشرة العادية إلى الجافة، وفق معلومات الشركة المصنّعة." } },
         { question: { en: "What does it contain?", ar: "ما مكوناته؟" }, answer: { en: "Antioxidant vitamin C and E forms and sodium hyaluronate, per manufacturer information.", ar: "أشكال مضادة للأكسدة من فيتاميني C وE، وهيالورونات الصوديوم، وفق معلومات الشركة المصنّعة." } },
-        { question: { en: "Does this contain ceramides?", ar: "هل يحتوي على السيراميد؟" }, answer: { en: "The research for this record didn't confirm ceramides as a primary ingredient — TNS Ceramide Treatment Cream is SkinMedica's dedicated ceramide-focused product.", ar: "لم يؤكد البحث الخاص بهذا السجل احتواءه على السيراميد كمكون أساسي — يُعد كريم TNS العلاجي بالسيراميد منتج سكين ميديكا المخصص للسيراميد." } },
+        { question: { en: "Does this contain ceramides?", ar: "هل يحتوي على السيراميد؟" }, answer: { en: "Please check the current ingredient label to confirm. TNS Ceramide Treatment Cream is a separate SkinMedica product formulated with ceramides.", ar: "لم يؤكد البحث الخاص بهذا السجل احتواءه على السيراميد كمكون أساسي — يُعد كريم TNS العلاجي بالسيراميد منتج سكين ميديكا المخصص للسيراميد." } },
         { question: { en: "When do I apply this in my routine?", ar: "متى أطبّق هذا الكريم ضمن روتيني؟" }, answer: { en: "As the moisturizing step, typically after any treatment serums.", ar: "كخطوة الترطيب، عادة بعد أي سيروم علاجي." } },
         { question: { en: "What size is this?", ar: "ما الحجم؟" }, answer: { en: "48 g.", ar: "48 غرام." } },
         { question: { en: "How do I confirm current price and availability?", ar: "كيف أتحقق من السعر والتوفر الحاليين؟" }, answer: { en: "Contact Blue Diamond Medical Clinic directly.", ar: "تواصلوا مباشرة مع عيادة بلو دايموند الطبية." } },
@@ -567,7 +567,7 @@ export const archivedSkinMedicaProducts: Product[] = [
         { question: { en: "When do I apply it?", ar: "متى أطبّقه؟" }, answer: { en: "As the moisturizing step of your routine, morning and/or evening.", ar: "كخطوة الترطيب في روتينكم، صباحًا و/أو مساءً." } },
         { question: { en: "How is this different from Ultra Sheer Moisturizer?", ar: "كيف يختلف عن مرطب Ultra Sheer؟" }, answer: { en: "Both are moisturizers in this catalogue with different formulations — ask the clinic which suits your skin type.", ar: "كلاهما مرطبان ضمن هذه القائمة بتركيبتين مختلفتين — يُرجى سؤال العيادة عن الأنسب لنوع بشرتكم." } },
         { question: { en: "What size is this?", ar: "ما الحجم؟" }, answer: { en: "56.7 g.", ar: "56.7 غرام." } },
-        { question: { en: "Is this suitable for all skin types?", ar: "هل يناسب جميع أنواع البشرة؟" }, answer: { en: "Not confirmed by the research for this specific record — ask the clinic about suitability for your skin.", ar: "لم يتأكد ذلك من خلال البحث الخاص بهذا السجل — يُرجى سؤال العيادة عن مدى ملاءمته لبشرتكم." } },
+        { question: { en: "Is this suitable for all skin types?", ar: "هل يناسب جميع أنواع البشرة؟" }, answer: { en: "Ask the clinic whether this product is suitable for your skin.", ar: "لم يتأكد ذلك من خلال البحث الخاص بهذا السجل — يُرجى سؤال العيادة عن مدى ملاءمته لبشرتكم." } },
         { question: { en: "How do I confirm current price and availability?", ar: "كيف أتحقق من السعر والتوفر الحاليين؟" }, answer: { en: "Contact Blue Diamond Medical Clinic directly.", ar: "تواصلوا مباشرة مع عيادة بلو دايموند الطبية." } },
       ],
       sources: [{ url: "https://www.skinmedica.com/us/product-category/moisturizers/", ...officialSite }],
@@ -694,7 +694,7 @@ export const archivedSkinMedicaProducts: Product[] = [
     inStock: true,
     variantOfId: "scar-recovery-gel-large",
     detail: {
-      overview: { en: "A lightweight gel formulated to help minimize the appearance of scars, in the smaller of two approved sizes.", ar: "جل خفيف القوام مصمم للمساعدة في تقليل مظهر الندبات، بالحجم الأصغر من حجمين معتمدين." },
+      overview: { en: "A lightweight gel formulated to help minimize the appearance of scars, in a 14.2 g size.", ar: "جل خفيف القوام مصمم للمساعدة في تقليل مظهر الندبات، بالحجم الأصغر من حجمين معتمدين." },
       whatItIs: { en: "A scar-appearance gel built around Centelline®, a complex of Centella asiatica, Bulbine frutescens, and Oleuropein, per manufacturer information.", ar: "جل لمظهر الندبات يعتمد على مركب Centelline®، وهو مزيج من نبات Centella asiatica وBulbine frutescens وOleuropein، وفق معلومات الشركة المصنّعة." },
       productType: { en: "Scar-appearance gel", ar: "جل لمظهر الندبات" },
       routinePlacement: { en: "Applied directly to a healed scar area, not as part of a general facial routine.", ar: "يُطبَّق مباشرة على منطقة الندبة الملتئمة، وليس كجزء من الروتين العام للوجه." },
@@ -727,7 +727,7 @@ export const archivedSkinMedicaProducts: Product[] = [
     inStock: true,
     variantOfId: "scar-recovery-gel-small",
     detail: {
-      overview: { en: "A lightweight gel formulated to help minimize the appearance of scars, in the larger of two approved sizes.", ar: "جل خفيف القوام مصمم للمساعدة في تقليل مظهر الندبات، بالحجم الأكبر من حجمين معتمدين." },
+      overview: { en: "A lightweight gel formulated to help minimize the appearance of scars, in a 56.7 g size.", ar: "جل خفيف القوام مصمم للمساعدة في تقليل مظهر الندبات، بالحجم الأكبر من حجمين معتمدين." },
       whatItIs: { en: "A scar-appearance gel built around Centelline®, a complex of Centella asiatica, Bulbine frutescens, and Oleuropein, per manufacturer information.", ar: "جل لمظهر الندبات يعتمد على مركب Centelline®، وهو مزيج من نبات Centella asiatica وBulbine frutescens وOleuropein، وفق معلومات الشركة المصنّعة." },
       productType: { en: "Scar-appearance gel", ar: "جل لمظهر الندبات" },
       routinePlacement: { en: "Applied directly to a healed scar area, not as part of a general facial routine.", ar: "يُطبَّق مباشرة على منطقة الندبة الملتئمة، وليس كجزء من الروتين العام للوجه." },
@@ -770,7 +770,7 @@ export const archivedSkinMedicaProducts: Product[] = [
       relatedProductIds: ["tns-recovery-complex", "vitamin-c-e-complex"],
       faqs: [
         { question: { en: "How many growth factors does this contain?", ar: "كم عامل نمو يحتوي هذا السيروم؟" }, answer: { en: "450 total growth factors, per manufacturer information — described as more than any previous TNS formulation.", ar: "450 عامل نمو إجمالًا، وفق معلومات الشركة المصنّعة — وتصفه الشركة بأنه يفوق أي تركيبة سابقة من TNS." } },
-        { question: { en: "Why does the name differ slightly from the approved catalogue?", ar: "لماذا يختلف الاسم قليلًا عن القائمة المعتمدة؟" }, answer: { en: "The approved catalogue listed \"TNS Advanced Plus Serum®\"; the current official naming/trademark styling is \"TNS® Advanced+ Serum.\" The approved price and size are unchanged.", ar: "أدرجت القائمة المعتمدة اسم \"TNS Advanced Plus Serum®\"؛ بينما التسمية الرسمية الحالية هي \"TNS® Advanced+ Serum\". مع بقاء السعر والحجم المعتمدين دون تغيير." } },
+        { question: { en: "Is TNS® Advanced+ Serum also called TNS Advanced Plus Serum?", ar: "لماذا يختلف الاسم قليلًا عن القائمة المعتمدة؟" }, answer: { en: "Yes. \"Advanced+\" is the styling used in the product name; the plus sign is sometimes written as \"Plus.\"", ar: "أدرجت القائمة المعتمدة اسم \"TNS Advanced Plus Serum®\"؛ بينما التسمية الرسمية الحالية هي \"TNS® Advanced+ Serum\". مع بقاء السعر والحجم المعتمدين دون تغيير." } },
         { question: { en: "Should I use this with TNS Recovery Complex?", ar: "هل أستخدمه مع TNS Recovery Complex؟" }, answer: { en: "If using both, apply TNS Recovery Complex first, then this serum, per manufacturer guidance.", ar: "عند استخدام كليهما، يُطبَّق TNS Recovery Complex أولًا، ثم هذا السيروم، وفق إرشادات الشركة المصنّعة." } },
         { question: { en: "When do I apply this?", ar: "متى أطبّق هذا السيروم؟" }, answer: { en: "Morning and evening, after cleansing and toning.", ar: "صباحًا ومساءً، بعد التنظيف والتونر." } },
         { question: { en: "What size is this?", ar: "ما الحجم؟" }, answer: { en: "28.4 g.", ar: "28.4 غرام." } },
@@ -833,7 +833,7 @@ export const archivedSkinMedicaProducts: Product[] = [
       legacyNameNote: { en: "The approved catalogue listed this as \"HA5 Rejuvenative Hydrator.\" Current official and Canadian-retailer naming (confirmed on multiple authorized retailers) is \"HA5® Rejuvenating Hydrator\" — used here; the approved price and size are unchanged.", ar: "أدرجت القائمة المعتمدة هذا المنتج باسم \"HA5 Rejuvenative Hydrator\". أما التسمية الرسمية الحالية لدى المتاجر الكندية المعتمدة (تم التأكد منها عبر عدة متاجر) فهي \"HA5® Rejuvenating Hydrator\" — وقد اعتُمد هذا الشكل هنا، مع بقاء السعر والحجم المعتمدين دون تغيير." },
       relatedProductIds: ["lytera-2-pigment-brightening-serum", "retinol-complex-025"],
       faqs: [
-        { question: { en: "Why does the name differ from the approved catalogue?", ar: "لماذا يختلف الاسم عن القائمة المعتمدة؟" }, answer: { en: "The approved catalogue listed \"HA5 Rejuvenative Hydrator\"; current official/retailer naming is \"HA5® Rejuvenating Hydrator.\" The approved price and size are unchanged, and this is the same product.", ar: "أدرجت القائمة المعتمدة اسم \"HA5 Rejuvenative Hydrator\"؛ بينما التسمية الرسمية/التجارية الحالية هي \"HA5® Rejuvenating Hydrator\". مع بقاء السعر والحجم المعتمدين دون تغيير، وهو المنتج نفسه." } },
+        { question: { en: "Is HA5® Rejuvenating Hydrator also called HA5 Rejuvenative Hydrator?", ar: "لماذا يختلف الاسم عن القائمة المعتمدة؟" }, answer: { en: "Our earlier catalogue used \"Rejuvenative Hydrator.\" This page uses the current name, HA5® Rejuvenating Hydrator.", ar: "أدرجت القائمة المعتمدة اسم \"HA5 Rejuvenative Hydrator\"؛ بينما التسمية الرسمية/التجارية الحالية هي \"HA5® Rejuvenating Hydrator\". مع بقاء السعر والحجم المعتمدين دون تغيير، وهو المنتج نفسه." } },
         { question: { en: "How many types of hyaluronic acid does it contain?", ar: "كم نوعًا من حمض الهيالورونيك يحتوي؟" }, answer: { en: "Five forms, per manufacturer information.", ar: "خمسة أشكال، وفق معلومات الشركة المصنّعة." } },
         { question: { en: "How often do I use it?", ar: "كم مرة أستخدمه؟" }, answer: { en: "Twice daily.", ar: "مرتين يوميًا." } },
         { question: { en: "When do I apply it relative to other treatments?", ar: "متى أطبّقه بالنسبة للعلاجات الأخرى؟" }, answer: { en: "If used with other treatment products, apply it as the last step before moisturizer.", ar: "عند استخدامه مع منتجات علاجية أخرى، يُطبَّق كخطوة أخيرة قبل المرطب." } },

@@ -26,15 +26,16 @@
     "title": "RF Microneedling",
     "fields": {
       "summary": "The Potenza RF microneedling system adds radiofrequency energy to mechanical microneedling for enhanced skin tightening alongside the benefits of micro-injury stimulation.",
-      "downtime": "Minimal downtime — avoid strenuous exercise and sun exposure for 48 hours; otherwise resume regular activities with good SPF.",
-      "duration": "Typically around 30 minutes. A topical anesthetic is applied and can take up to 45 minutes to become fully effective.",
-      "how_it_works": "RF energy is delivered via small needles deep into the dermis, heating underlying layers to cause tightening and stimulate collagen and elastin production — producing faster and more pronounced results than microneedling without RF. Treatments are not limited to the face, and are particularly useful for toning and tightening skin after weight loss.",
+      "downtime": "Downtime is usually minimal. Redness, minor swelling and pinpoint bleeding can occur and typically settle within three days. Minor bumps or, rarely, micro-crusting can also occur. Contact the clinic if you have concerns about your recovery.",
+      "aftercare": "Avoid strenuous exercise and sun exposure for 48 hours after treatment. Follow your clinician's instructions about sunscreen and other skin care products before resuming your usual routine.",
+      "duration": "Typically around 30 minutes. A topical anaesthetic is applied and can take up to 45 minutes to become fully effective.",
+      "how_it_works": "RF energy is delivered through small needles into the dermis, heating the underlying layers to stimulate collagen and elastin production and support skin tightening. Treatments are not limited to the face and may help with skin laxity after weight loss. Results vary.",
       "treatment_id": "rf-microneedling",
       "comfort_level": "A topical numbing agent removes most of the discomfort. Most patients say they can feel the needles working but do not find it painful. A member of the clinical team stays with you throughout, and treatment can be stopped at any point.",
       "technology_ids": [
         "potenza"
       ],
-      "result_timeline": "Effects can usually be seen right away, but one session is not enough for lasting results.",
+      "result_timeline": "Some changes may be noticeable soon after treatment, with gradual improvement over several weeks and treatments. More than one session is usually recommended.",
       "source_verified": true,
       "concerns_treated": [
         "Skin scarring, including acne scars",

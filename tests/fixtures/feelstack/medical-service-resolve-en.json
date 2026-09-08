@@ -26,7 +26,7 @@
     "contentType": "medical-service",
     "title": "After-Hours Care",
     "fields": {
-      "summary": "When the clinic is closed, our patients are referred to a partner Primary Care Network for urgent, non-emergency needs — not left without a path to care.",
+      "summary": "When the clinic is closed, patients can access care through a partner Primary Care Network for medical concerns that need prompt attention but are not emergencies.",
       "service_id": "after-hours-care",
       "booking_channel": "family-doctor",
       "source_verified": true,

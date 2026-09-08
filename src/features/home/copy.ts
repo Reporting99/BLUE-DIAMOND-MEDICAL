@@ -43,7 +43,7 @@ export const homepageCopy = {
     ],
     medicalDepthEyebrow: "MEDICAL CARE",
     medicalDepthHeading: "Care for every stage of life",
-    medicalDepthIntro: "Comprehensive AHS-insured family medicine and walk-in care for patients and families in West Springs.",
+    medicalDepthIntro: "Family medicine and walk-in care for patients and families in West Springs, Calgary.",
     medicalDepthCta: "Explore all medical services",
     // Card title/short text come straight from each service's own
     // `summary`/`whoItsFor` in src/features/medical-services/data.ts — never
@@ -69,7 +69,7 @@ export const homepageCopy = {
       short: { en: "Forms, notes, and other uninsured services, with fees listed in advance.", ar: "نماذج ومذكرات وخدمات أخرى غير مشمولة بالتأمين، برسوم معلنة مسبقًا." },
       long: { en: "Care and paperwork that Alberta Health doesn't cover — travel and work forms, medical notes, and similar administrative requests — priced and listed on our uninsured-services page before your visit.", ar: "رعاية ومعاملات لا يغطيها التأمين الصحي لألبرتا — كنماذج السفر والعمل والمذكرات الطبية وطلبات إدارية مشابهة — مع أسعار معلنة على صفحة الخدمات غير المشمولة قبل زيارتكم." },
     },
-    otherServiceFactsHeading: "Also included in every visit",
+    otherServiceFactsHeading: "Other family medicine services",
     // CL-023 — "Onsite Pediatrician" removed: it is not a current clinic service.
     otherServiceFacts: ["General Family Medicine", "Walk-In Care", "Vaccination", "Mental Health", "Women's Health"],
     medicalGuidance: [
@@ -90,7 +90,7 @@ export const homepageCopy = {
     journeySteps: [
       { t: "Choose a service", d: "Medical care or medical aesthetics — or explore both." },
       { t: "Review information", d: "Read what the service or treatment involves before you book." },
-      { t: "Book through the approved system", d: "Mikata, Skip the Waiting Room, Euclid, a phone call, or in person — not on this website." },
+      { t: "Book your appointment", d: "Use Mikata, Skip the Waiting Room or Euclid, depending on your appointment, or book by phone or in person." },
       { t: "Attend your consultation or appointment", d: "Every aesthetics treatment starts with a physician consultation." },
     ],
     doctorsEyebrow: "OUR PHYSICIANS",
@@ -102,7 +102,7 @@ export const homepageCopy = {
     resourcesHeading: "Useful patient resources",
     resources: [
       { label: "Patient resources", body: "Clinic policies, no-show fees, and appointment guidance.", routeId: "patient-resources-hub" },
-      { label: "Uninsured services", body: "Forms, notes, and fees for services outside AHS coverage.", routeId: "medical-uninsured-services" },
+      { label: "Uninsured services", body: "Forms, notes, and fees for services not covered by Alberta Health.", routeId: "medical-uninsured-services" },
       { label: "After-hours care", body: "PCN partnerships for guidance outside clinic hours.", routeId: "medical-after-hours-care" },
       { label: "Contact the clinic", body: "Questions we haven't answered here.", routeId: "contact" },
     ],
@@ -134,13 +134,13 @@ export const homepageCopy = {
     faqs: [
       { q: "Do you accept walk-in patients?", a: "Yes. Blue Diamond Medical has consistently welcomed walk-in patients since opening in West Springs in July 2022, alongside scheduled family medicine appointments." },
       { q: "Where is the clinic located?", a: "23-8 Weston Drive SW, Calgary, Alberta T3H 5P2, in West Springs." },
-      { q: "What are your hours?", a: "Monday to Saturday, 8:00 AM to 7:00 PM. Closed Sunday and on all statutory holidays." },
+      { q: "What are your hours?", a: "Monday to Saturday, 8:00 a.m. to 7:00 p.m. Closed Sundays and statutory holidays." },
       { q: "Are bookings completed on this website?", a: "No. This website provides information only — booking is completed through Mikata for registered patients, Skip the Waiting Room for new patients and walk-ins, Euclid for eye screening, by calling the clinic, or in person at reception." },
       { q: "How do I book a medical aesthetics consultation?", a: "For all aesthetic treatment appointments, book a 20-minute consultation with Dr. Farhat — through our aesthetics consultation pathway, or call the clinic directly." },
       { q: "Where are Elite iQ™ treatments performed?", a: "At Citizen Studio, a separate address from the West Springs clinic — see the laser hair removal treatment page for details." },
       { q: "How can I ask about the skincare products you carry?", a: "Contact the clinic directly. Product availability and current pricing are confirmed in person, not online." },
       { q: "Can skincare products be purchased online?", a: "No. Online purchasing is not currently available." },
-      { q: "Is Botox covered by insurance?", a: "Botox for migraine, bruxism/TMJ, and hyperhidrosis is covered by a combination of provincial health insurance and either private insurance or our compassionate program. Cosmetic Botox is not insured." },
+      { q: "Is Botox covered by insurance?", a: "Coverage for medical Botox depends on the condition and your insurance eligibility. Provincial coverage, private insurance or the clinic's compassionate program may help with costs. Ask the clinic to confirm your coverage before treatment. Cosmetic Botox is uninsured." },
     ],
     finalActions: { explorMedical: "Explore Medical Care", exploreAesthetics: "Explore Medical Aesthetics" },
   },

@@ -1,0 +1,12 @@
+{
+  "baselineCanonicalRoutes": 129,
+  "candidatePaths": 153,
+  "cmsRecordsCaptured": 69,
+  "cmsBodyEntities": 58,
+  "capturedStringOccurrences": 15283,
+  "capturedDistinctStrings": 2004,
+  "repositoryChangedStringFields": 180,
+  "exactCmsFieldProposals": 57,
+  "cmsRecordsWithExactProposals": 32,
+  "note": "Capture and diff counts are not completed human-review counts. CMS proposal set is partial: inherited edits, structured fields and new aftercare need mapping."
+}

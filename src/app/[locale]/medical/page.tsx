@@ -46,7 +46,7 @@ export async function generateMetadata({
   const safeLocale: Locale = isLocale(locale) ? locale : "en";
   return getRouteMetadata("medical-hub", safeLocale, {
     description: {
-      en: "Family medicine, walk-in care, and AHS-insured services at Blue Diamond Medical Clinic in West Springs, Calgary.",
+      en: "Family medicine and walk-in care at Blue Diamond Medical Clinic in West Springs, Calgary. Explore medical services and appointment options.",
       ar: "طب الأسرة، والرعاية بدون موعد، والخدمات المشمولة بالتأمين الصحي في عيادة بلو دايموند الطبية في ويست سبرينغز، كالغاري.",
     },
   });
@@ -74,7 +74,7 @@ export default async function MedicalHubPage({ params }: { params: Promise<{ loc
       intro:
         "Male and female family physicians, accepting new patients and walk-ins. We provide comprehensive AHS-insured family medicine, along with a listed set of uninsured services and forms.",
       servicesHeading: "Explore our services",
-      otherHeading: "Also included in AHS-insured family medicine",
+      otherHeading: "Other family medicine services",
       uninsuredCta: "View uninsured service fees",
       registeredCta: "Book with your doctor",
       walkInCta: "Book as a new or walk-in patient",
@@ -209,7 +209,7 @@ export default async function MedicalHubPage({ params }: { params: Promise<{ loc
               summary={
                 locale === "ar"
                   ? "بعض إجراءات البوتوكس الطبي مشمولة بالتأمين الصحي — بما في ذلك الشقيقة وصرير الأسنان والتعرق الزائد."
-                  : "Some medical Botox procedures are AHS-insured — including migraine, bruxism, and hyperhidrosis."
+                  : "Medical Botox consultations are available for migraine, bruxism and hyperhidrosis. Ask the clinic to confirm coverage and any fees."
               }
               image={approvedManifestAsset("medical-botox-card")}
               imageRole="treatment"
@@ -234,7 +234,7 @@ export default async function MedicalHubPage({ params }: { params: Promise<{ loc
               summary={
                 locale === "ar"
                   ? "عدد من الخدمات التي يقدمها طبيب أسرتكم غير مشمولة بالتأمين الصحي لألبرتا. يجب سداد جميع الرسوم كاملة قبل تسليم المستندات."
-                  : "A number of services your family doctor provides are not covered by Alberta Health Services. All fees must be paid in full before documents are released."
+                  : "Some services your family doctor provides are not covered by the Alberta Health Care Insurance Plan (AHCIP). All fees must be paid in full before documents are released."
               }
               image={approvedManifestAsset("medical-service-uninsured-services")}
               imageRole="service"

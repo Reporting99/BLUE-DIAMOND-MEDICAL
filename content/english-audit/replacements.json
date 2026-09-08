@@ -1,0 +1,685 @@
+{
+  "version": 1,
+  "status": "EDITORIAL_DRAFT_PENDING_CMS_PUBLICATION",
+  "operations": [
+    {
+      "id": "EN-001",
+      "from": "Comprehensive AHS-insured family medicine and walk-in care for patients and families in West Springs.",
+      "to": "Family medicine and walk-in care for patients and families in West Springs, Calgary.",
+      "category": "TERMINOLOGY",
+      "reason": "Use the correct Alberta insurance-plan name; preserve the distinction between physician services and other costs."
+    },
+    {
+      "id": "EN-002",
+      "from": "A collaboration with Euclid Telehealth offering AHS-covered eye disease screening at our clinic — in keeping with our belief that prevention is better than cure.",
+      "to": "Eye disease screening at our Calgary clinic through Euclid Telehealth, with referral based on your doctor's assessment.",
+      "category": "TERMINOLOGY",
+      "reason": "Use the correct Alberta insurance-plan name; preserve the distinction between physician services and other costs."
+    },
+    {
+      "id": "EN-003",
+      "from": "Yes — this screening is AHS-covered, provided through our collaboration with Euclid Telehealth.",
+      "to": "Eligible eye disease screening is covered by Alberta Health. Euclid Telehealth can confirm your eligibility and any costs before your appointment.",
+      "category": "TERMINOLOGY",
+      "reason": "Use the correct Alberta insurance-plan name; preserve the distinction between physician services and other costs."
+    },
+    {
+      "id": "EN-004",
+      "from": "Referral for AHS-covered eye disease screening",
+      "to": "Referral for eye disease screening when appropriate",
+      "category": "TERMINOLOGY",
+      "reason": "Use the correct Alberta insurance-plan name; preserve the distinction between physician services and other costs."
+    },
+    {
+      "id": "EN-005",
+      "from": "Vaccination, preventive medicine and early-intervention care, and referral for AHS-covered eye disease screening when appropriate.",
+      "to": "Vaccination, preventive medicine and early-intervention care, and referral for eye disease screening when appropriate.",
+      "category": "TERMINOLOGY",
+      "reason": "Use the correct Alberta insurance-plan name; preserve the distinction between physician services and other costs."
+    },
+    {
+      "id": "EN-006",
+      "from": "AHS-insured, ongoing management of chronic conditions through your family physician. Any Blue Diamond family physician can provide chronic-disease management.",
+      "to": "Ongoing care for chronic conditions through your family physician. All Blue Diamond family physicians provide chronic disease management.",
+      "category": "TERMINOLOGY",
+      "reason": "Use the correct Alberta insurance-plan name; preserve the distinction between physician services and other costs."
+    },
+    {
+      "id": "EN-007",
+      "from": "Yes — this is provided as part of AHS-insured family medicine care.",
+      "to": "Medically necessary physician care is covered for eligible patients under the Alberta Health Care Insurance Plan (AHCIP). Coverage for medications and other services is separate.",
+      "category": "TERMINOLOGY",
+      "reason": "Use the correct Alberta insurance-plan name; preserve the distinction between physician services and other costs."
+    },
+    {
+      "id": "EN-008",
+      "from": "Yes, as part of AHS-insured family medicine care.",
+      "to": "Medically necessary physician care is covered for eligible patients under the Alberta Health Care Insurance Plan (AHCIP). Some vaccines and other services may have separate costs; ask the clinic before your appointment.",
+      "category": "TERMINOLOGY",
+      "reason": "Use the correct Alberta insurance-plan name; preserve the distinction between physician services and other costs."
+    },
+    {
+      "id": "EN-009",
+      "from": "AHS-insured weight management support as part of your comprehensive care with your family physician.",
+      "to": "Weight management support as part of your ongoing care with your family physician.",
+      "category": "TERMINOLOGY",
+      "reason": "Use the correct Alberta insurance-plan name; preserve the distinction between physician services and other costs."
+    },
+    {
+      "id": "EN-010",
+      "from": "AHS-insured pain management support from your family physician.",
+      "to": "Assessment and management of pain through your family physician.",
+      "category": "TERMINOLOGY",
+      "reason": "Use the correct Alberta insurance-plan name; preserve the distinction between physician services and other costs."
+    },
+    {
+      "id": "EN-011",
+      "from": "Yes — it's provided as part of AHS-insured family medicine care.",
+      "to": "Medically necessary physician care is covered for eligible patients under the Alberta Health Care Insurance Plan (AHCIP). Coverage for medications and other services is separate.",
+      "category": "TERMINOLOGY",
+      "reason": "Use the correct Alberta insurance-plan name; preserve the distinction between physician services and other costs."
+    },
+    {
+      "id": "EN-012",
+      "from": "Yes — the procedures listed here are AHS-insured.",
+      "to": "Coverage depends on the procedure and whether it is medically necessary. The clinic can confirm Alberta Health coverage and any uninsured fees before your appointment.",
+      "category": "TERMINOLOGY",
+      "reason": "Use the correct Alberta insurance-plan name; preserve the distinction between physician services and other costs."
+    },
+    {
+      "id": "EN-013",
+      "from": "AHS-insured minor procedures performed in-house — suture removal and application, minor skin lesion excision, and joint injections. All of our family physicians provide these procedures. Minor procedures are booked by phone or in person, not online.",
+      "to": "Minor procedures at the clinic include suture placement and removal, minor skin lesion excision, and joint injections. All of our family physicians provide these procedures. Book by phone or in person.",
+      "category": "TERMINOLOGY",
+      "reason": "Use the correct Alberta insurance-plan name; preserve the distinction between physician services and other costs."
+    },
+    {
+      "id": "EN-014",
+      "from": "Suture removal and application",
+      "to": "Suture placement and removal",
+      "category": "TERMINOLOGY",
+      "reason": "Use the correct Alberta insurance-plan name; preserve the distinction between physician services and other costs."
+    },
+    {
+      "id": "EN-015",
+      "from": "Suture removal and application, minor skin lesion excision, and intra-articular injections for degenerative knee, shoulder, and ankle conditions. All of our family physicians provide these.",
+      "to": "Suture placement and removal, minor skin lesion excision, and intra-articular injections for degenerative knee, shoulder, and ankle conditions. All of our family physicians provide these.",
+      "category": "TERMINOLOGY",
+      "reason": "Use the correct Alberta insurance-plan name; preserve the distinction between physician services and other costs."
+    },
+    {
+      "id": "EN-016",
+      "from": "Forms, notes, and fees for services outside AHS coverage.",
+      "to": "Forms, notes, and fees for services not covered by Alberta Health.",
+      "category": "TERMINOLOGY",
+      "reason": "Use the correct Alberta insurance-plan name; preserve the distinction between physician services and other costs."
+    },
+    {
+      "id": "EN-017",
+      "from": "Also included in every visit",
+      "to": "Other family medicine services",
+      "category": "TERMINOLOGY",
+      "reason": "Use the correct Alberta insurance-plan name; preserve the distinction between physician services and other costs."
+    },
+    {
+      "id": "EN-018",
+      "from": "A number of services your family doctor provides are not covered by Alberta Health Services. All fees must be paid in full before documents are released.",
+      "to": "Some services your family doctor provides are not covered by the Alberta Health Care Insurance Plan (AHCIP). All fees must be paid in full before documents are released.",
+      "category": "TERMINOLOGY",
+      "reason": "Use the correct Alberta insurance-plan name; preserve the distinction between physician services and other costs."
+    },
+    {
+      "id": "EN-019",
+      "from": "Family medicine, walk-in care, and AHS-insured services at Blue Diamond Medical Clinic in West Springs, Calgary.",
+      "to": "Family medicine and walk-in care at Blue Diamond Medical Clinic in West Springs, Calgary. Explore medical services and appointment options.",
+      "category": "TERMINOLOGY",
+      "reason": "Use the correct Alberta insurance-plan name; preserve the distinction between physician services and other costs."
+    },
+    {
+      "id": "EN-020",
+      "from": "Male and female family physicians accepting new patients and walk-ins, offering comprehensive AHS-insured family medicine alongside a defined list of uninsured services and forms.",
+      "to": "Male and female family physicians accepting new patients and walk-ins in West Springs, Calgary. We provide family medicine care and a range of uninsured services and forms.",
+      "category": "TERMINOLOGY",
+      "reason": "Use the correct Alberta insurance-plan name; preserve the distinction between physician services and other costs."
+    },
+    {
+      "id": "EN-021",
+      "from": "Also included in AHS-insured family medicine",
+      "to": "Other family medicine services",
+      "category": "TERMINOLOGY",
+      "reason": "Use the correct Alberta insurance-plan name; preserve the distinction between physician services and other costs."
+    },
+    {
+      "id": "EN-022",
+      "from": "Botox for migraine, bruxism/TMJ, and hyperhidrosis is covered by a combination of provincial health insurance and either private insurance or our compassionate program. Cosmetic Botox is not insured.",
+      "to": "Coverage for medical Botox depends on the condition and your insurance eligibility. Provincial coverage, private insurance or the clinic's compassionate program may help with costs. Ask the clinic to confirm your coverage before treatment. Cosmetic Botox is uninsured.",
+      "category": "MEDICAL_CLAIM",
+      "reason": "Qualify broad coverage claims without promising a particular patient's eligibility."
+    },
+    {
+      "id": "EN-023",
+      "from": "Botox for migraine, bruxism, and hyperhidrosis is covered by a combination of provincial health insurance and either private insurance or the clinic's compassionate program, open to all Albertans whether registered with the clinic or not.",
+      "to": "Coverage for Botox for migraine, bruxism and hyperhidrosis depends on the condition and your insurance eligibility. Provincial coverage, private insurance or the clinic's compassionate program may help with costs. Albertans can contact the clinic whether or not they are registered patients. Confirm coverage and any fees before treatment.",
+      "category": "MEDICAL_CLAIM",
+      "reason": "Qualify broad coverage claims without promising a particular patient's eligibility."
+    },
+    {
+      "id": "EN-024",
+      "from": "Some medical Botox procedures are AHS-insured — including migraine, bruxism, and hyperhidrosis.",
+      "to": "Medical Botox consultations are available for migraine, bruxism and hyperhidrosis. Ask the clinic to confirm coverage and any fees.",
+      "category": "MEDICAL_CLAIM",
+      "reason": "Qualify broad coverage claims without promising a particular patient's eligibility."
+    },
+    {
+      "id": "EN-025",
+      "from": "Bruxism (TMJ) & jaw pain",
+      "to": "Bruxism and jaw pain",
+      "category": "MEDICAL_CLAIM",
+      "reason": "Qualify broad coverage claims without promising a particular patient's eligibility."
+    },
+    {
+      "id": "EN-026",
+      "from": "Botox at Blue Diamond Medical is administered by Dr. Farhat and Dr. Hamdi. Every treatment begins with a consultation, and most appointments are short enough to fit into a lunch break, with minimal recovery time afterward.",
+      "to": "Botox at Blue Diamond Medical is administered by Dr. Farhat and Dr. Hamdi. Every treatment begins with a consultation to discuss suitability, the appointment and expected recovery.",
+      "category": "MEDICAL_CLAIM",
+      "reason": "Qualify broad coverage claims without promising a particular patient's eligibility."
+    },
+    {
+      "id": "EN-027",
+      "from": "Book through the approved system",
+      "to": "Book your appointment",
+      "category": "NATIVE_ENGLISH",
+      "reason": "Make patient instructions direct and remove internal production language."
+    },
+    {
+      "id": "EN-028",
+      "from": "Mikata, Skip the Waiting Room, Euclid, a phone call, or in person — not on this website.",
+      "to": "Use Mikata, Skip the Waiting Room or Euclid, depending on your appointment, or book by phone or in person.",
+      "category": "NATIVE_ENGLISH",
+      "reason": "Make patient instructions direct and remove internal production language."
+    },
+    {
+      "id": "EN-029",
+      "from": "When the clinic is closed, our patients are referred to a partner Primary Care Network for urgent, non-emergency needs — not left without a path to care.",
+      "to": "When the clinic is closed, patients can access care through a partner Primary Care Network for medical concerns that need prompt attention but are not emergencies.",
+      "category": "NATIVE_ENGLISH",
+      "reason": "Make patient instructions direct and remove internal production language."
+    },
+    {
+      "id": "EN-030",
+      "from": "Monday to Saturday, 8:00 AM to 7:00 PM. Closed Sunday and on all statutory holidays.",
+      "to": "Monday to Saturday, 8:00 a.m. to 7:00 p.m. Closed Sundays and statutory holidays.",
+      "category": "NATIVE_ENGLISH",
+      "reason": "Make patient instructions direct and remove internal production language."
+    },
+    {
+      "id": "EN-031",
+      "from": "RF microneedling is the treatment linked to this concern; a physician will confirm what's appropriate for your specific scarring during your consultation.",
+      "to": "RF microneedling and laser treatments are options for acne scarring. Your physician will discuss which options suit your skin during your consultation.",
+      "category": "NATIVE_ENGLISH",
+      "reason": "Make patient instructions direct and remove internal production language."
+    },
+    {
+      "id": "EN-032",
+      "from": "RF microneedling and radiofrequency skin tightening are the two treatments connected to this concern, suited to different skin types.",
+      "to": "RF microneedling and radiofrequency skin tightening may soften fine lines and wrinkles. Your physician will assess which treatment suits your skin.",
+      "category": "NATIVE_ENGLISH",
+      "reason": "Make patient instructions direct and remove internal production language."
+    },
+    {
+      "id": "EN-033",
+      "from": "Laser Skin Treatments and the Ultra laser are the two treatments connected to this concern.",
+      "to": "Laser skin treatments and Ultra may help with sun damage and uneven pigmentation. Your physician will assess the areas you want treated.",
+      "category": "NATIVE_ENGLISH",
+      "reason": "Make patient instructions direct and remove internal production language."
+    },
+    {
+      "id": "EN-034",
+      "from": "PRP treatments are performed by Dr. Farhat, combining advanced technique with personalized care.",
+      "to": "PRP treatments are performed by Dr. Farhat.",
+      "category": "NATIVE_ENGLISH",
+      "reason": "Make patient instructions direct and remove internal production language."
+    },
+    {
+      "id": "EN-035",
+      "from": "Radio Frequency",
+      "to": "Radiofrequency",
+      "category": "NATIVE_ENGLISH",
+      "reason": "Make patient instructions direct and remove internal production language."
+    },
+    {
+      "id": "EN-036",
+      "from": "Radio Frequency treatment.",
+      "to": "Radiofrequency treatment.",
+      "category": "NATIVE_ENGLISH",
+      "reason": "Make patient instructions direct and remove internal production language."
+    },
+    {
+      "id": "EN-037",
+      "from": "Does Radio Frequency treatment hurt?",
+      "to": "Does radiofrequency treatment hurt?",
+      "category": "NATIVE_ENGLISH",
+      "reason": "Make patient instructions direct and remove internal production language."
+    },
+    {
+      "id": "EN-038",
+      "from": "Typically around 30 minutes. A topical anesthetic is applied and can take up to 45 minutes to become fully effective.",
+      "to": "Typically around 30 minutes. A topical anaesthetic is applied and can take up to 45 minutes to become fully effective.",
+      "category": "NATIVE_ENGLISH",
+      "reason": "Make patient instructions direct and remove internal production language."
+    },
+    {
+      "id": "EN-039",
+      "from": "You may feel cold air and a slight beep or snapping sensation during treatment.",
+      "to": "You may feel cold air and a slight snapping sensation and hear a beep during treatment.",
+      "category": "NATIVE_ENGLISH",
+      "reason": "Make patient instructions direct and remove internal production language."
+    },
+    {
+      "id": "EN-040",
+      "from": "It uses the Skintel™ device — the first melanin reader on the market cleared by both Health Canada and the FDA — allowing safe treatment of all skin types and areas.",
+      "to": "Elite iQ™ uses the Skintel™ melanin reader to help the practitioner select settings for your skin. Suitability depends on your skin, hair and treatment area.",
+      "category": "MEDICAL_CLAIM",
+      "reason": "Preserve the source mechanism and treatment intent while removing universal safety or guaranteed-outcome wording."
+    },
+    {
+      "id": "EN-041",
+      "from": "The Elite iQ™ device can be safely used on all skin types and anywhere on the body. Your physician will discuss whether it is right for you.",
+      "to": "Elite iQ™ can treat a range of skin types and body areas. Your physician will assess your skin, hair and medical history to determine whether treatment is appropriate.",
+      "category": "MEDICAL_CLAIM",
+      "reason": "Preserve the source mechanism and treatment intent while removing universal safety or guaranteed-outcome wording."
+    },
+    {
+      "id": "EN-042",
+      "from": "Cynosure's Elite iQ™ device offers quick, personalized laser hair treatments using the Skintel™ device — the first melanin reader on the market cleared by both Health Canada and the FDA — allowing safe treatment of all skin types and areas.",
+      "to": "Cynosure's Elite iQ™ laser uses the Skintel™ melanin reader to help practitioners select treatment settings for a range of skin types. Individual suitability is assessed before treatment.",
+      "category": "MEDICAL_CLAIM",
+      "reason": "Preserve the source mechanism and treatment intent while removing universal safety or guaranteed-outcome wording."
+    },
+    {
+      "id": "EN-043",
+      "from": "Before treatment, the Skintel™ device reads your skin's melanin level directly, rather than estimating it from a visual skin-type chart. The Elite iQ™ laser then uses that reading to calibrate its settings to your skin specifically.",
+      "to": "Before treatment, the Skintel™ device measures your skin's melanin level. The practitioner uses this reading to help select suitable Elite iQ™ laser settings.",
+      "category": "MEDICAL_CLAIM",
+      "reason": "Preserve the source mechanism and treatment intent while removing universal safety or guaranteed-outcome wording."
+    },
+    {
+      "id": "EN-044",
+      "from": "Shaving, waxing, plucking, and depilatories are time-consuming and give only temporary results. Laser hair removal at Blue Diamond Medical offers long-lasting reduction anywhere on the body, and the Skintel™ melanin reader allows the laser to be set safely for all skin types.",
+      "to": "Shaving, waxing, plucking and depilatories give temporary results. Laser hair removal offers long-lasting hair reduction on a range of body areas. The Skintel™ melanin reader helps the practitioner select settings for your skin; suitability is assessed before treatment.",
+      "category": "MEDICAL_CLAIM",
+      "reason": "Preserve the source mechanism and treatment intent while removing universal safety or guaranteed-outcome wording."
+    },
+    {
+      "id": "EN-045",
+      "from": "Unwanted hair is treated on the face, back, legs, chest, underarms, bikini area, and upper lip — the Elite iQ™ device can be used anywhere on the body.",
+      "to": "Treatment areas include the face, back, legs, chest, underarms, bikini area and upper lip. Your practitioner will assess whether treatment is suitable for the area you have in mind.",
+      "category": "MEDICAL_CLAIM",
+      "reason": "Preserve the source mechanism and treatment intent while removing universal safety or guaranteed-outcome wording."
+    },
+    {
+      "id": "EN-046",
+      "from": "The gentle flush of rosacea can escalate into redness that's distressing to live with. We take a holistic approach, starting with a full medical consultation to discuss what can be achieved — laser treatments often work best for this condition.",
+      "to": "Rosacea can cause redness that is distressing to live with. Care starts with a medical consultation to discuss your symptoms and treatment options. Laser treatment may help with visible redness and blood vessels.",
+      "category": "MEDICAL_CLAIM",
+      "reason": "Preserve the source mechanism and treatment intent while removing universal safety or guaranteed-outcome wording."
+    },
+    {
+      "id": "EN-047",
+      "from": "Laser treatments often work best for this condition — Laser Skin Treatments is the relevant treatment page.",
+      "to": "Laser treatment may help with visible redness and blood vessels. Your physician will assess your rosacea and discuss suitable options.",
+      "category": "MEDICAL_CLAIM",
+      "reason": "Preserve the source mechanism and treatment intent while removing universal safety or guaranteed-outcome wording."
+    },
+    {
+      "id": "EN-048",
+      "from": "Yes — skin-tightening options are available alongside the line-smoothing treatments, for all skin types.",
+      "to": "Yes, these treatments may also help with skin tightening. Your physician will assess which options are suitable for your skin.",
+      "category": "MEDICAL_CLAIM",
+      "reason": "Preserve the source mechanism and treatment intent while removing universal safety or guaranteed-outcome wording."
+    },
+    {
+      "id": "EN-049",
+      "from": "Anywhere on the body.",
+      "to": "The face and legs are common treatment areas. Your physician will assess whether treatment is appropriate for the area you want treated.",
+      "category": "MEDICAL_CLAIM",
+      "reason": "Preserve the source mechanism and treatment intent while removing universal safety or guaranteed-outcome wording."
+    },
+    {
+      "id": "EN-050",
+      "from": "3–5 treatments spaced 4–6 weeks apart give the best results, which can last up to two years.",
+      "to": "A course of 3–5 treatments spaced 4–6 weeks apart is recommended. Results may last up to two years, although individual responses vary.",
+      "category": "MEDICAL_CLAIM",
+      "reason": "Preserve the source mechanism and treatment intent while removing universal safety or guaranteed-outcome wording."
+    },
+    {
+      "id": "EN-051",
+      "from": "RF energy is delivered via small needles deep into the dermis, heating underlying layers to cause tightening and stimulate collagen and elastin production — producing faster and more pronounced results than microneedling without RF. Treatments are not limited to the face, and are particularly useful for toning and tightening skin after weight loss.",
+      "to": "RF energy is delivered through small needles into the dermis, heating the underlying layers to stimulate collagen and elastin production and support skin tightening. Treatments are not limited to the face and may help with skin laxity after weight loss. Results vary.",
+      "category": "MEDICAL_CLAIM",
+      "reason": "Preserve the source mechanism and treatment intent while removing universal safety or guaranteed-outcome wording."
+    },
+    {
+      "id": "EN-052",
+      "from": "A radiofrequency microneedling system used for tightening and smoothing skin anywhere on the body — for fine lines, or for laxity after rapid weight loss or childbirth.",
+      "to": "A radiofrequency microneedling system used for skin tightening and smoothing on the face and body, including fine lines and skin laxity after weight loss or childbirth. Suitability is assessed during a consultation.",
+      "category": "MEDICAL_CLAIM",
+      "reason": "Preserve the source mechanism and treatment intent while removing universal safety or guaranteed-outcome wording."
+    },
+    {
+      "id": "EN-053",
+      "from": "A non-invasive device for tightening and firming skin anywhere on the body, with little to no downtime.",
+      "to": "A non-invasive radiofrequency device used for skin tightening and firming on the face and body. Downtime is usually minimal; individual responses vary.",
+      "category": "MEDICAL_CLAIM",
+      "reason": "Preserve the source mechanism and treatment intent while removing universal safety or guaranteed-outcome wording."
+    },
+    {
+      "id": "EN-054",
+      "from": "They're uncomfortable and prone to infection, especially when combined with ingrown hairs.",
+      "to": "Razor bumps can be uncomfortable. The affected skin can sometimes become infected.",
+      "category": "MEDICAL_CLAIM",
+      "reason": "Preserve the source mechanism and treatment intent while removing universal safety or guaranteed-outcome wording."
+    },
+    {
+      "id": "EN-055",
+      "from": "Yes — laser hair removal is non-surgical and minimally invasive.",
+      "to": "Laser hair removal is a non-surgical treatment.",
+      "category": "MEDICAL_CLAIM",
+      "reason": "Preserve the source mechanism and treatment intent while removing universal safety or guaranteed-outcome wording."
+    },
+    {
+      "id": "EN-056",
+      "from": "Both — treatment addresses the underlying cause as well as the visible bumps.",
+      "to": "By reducing hair growth, laser hair removal may help reduce the ingrown hairs that cause razor bumps. Results vary.",
+      "category": "MEDICAL_CLAIM",
+      "reason": "Preserve the source mechanism and treatment intent while removing universal safety or guaranteed-outcome wording."
+    },
+    {
+      "id": "EN-057",
+      "from": "Long-lasting hair reduction anywhere on the body using the Cynosure Elite iQ™ laser system.",
+      "to": "Long-lasting hair reduction anywhere on the body using the Cynosure Elite+™ laser system.",
+      "category": "DEVICE_IDENTITY_REVIEW_REQUIRED",
+      "reason": "Revert the unfinished draft's unverified Elite+ to Elite iQ substitution. Preserve the original device claim pending clinic confirmation."
+    },
+    {
+      "id": "EN-058",
+      "from": "Hair grows in a three-phase cycle — anagen (active growth), catagen, and telogen (resting). The laser emits light energy absorbed by melanin in the hair follicle, damaging it and impairing regrowth. Follicles in the anagen phase respond best, so multiple treatments are needed to catch hair actively growing.",
+      "to": "Hair grows in a three-phase cycle: anagen (active growth), catagen (a brief transition when the hair follicle regresses) and telogen (resting). The laser emits light energy absorbed by melanin in the hair follicle and shaft, damaging the follicle and reducing regrowth. Follicles in the anagen phase respond best, so multiple treatments are needed.",
+      "category": "SOURCE_FIDELITY",
+      "reason": "Restore the source's explanation of catagen and the hair shaft; retain the mechanism."
+    },
+    {
+      "id": "EN-059",
+      "from": "PRP is a regenerative serum created from the patient's own blood. After a blood draw, plasma is separated and concentrated into a serum rich in growth factors that stimulate inactive hair follicles and improve scalp blood circulation.",
+      "to": "Platelet-rich plasma (PRP) is prepared from the patient's own blood. After a blood draw, the blood is processed to concentrate platelets in plasma. The platelets release growth factors involved in tissue repair. PRP is injected into the scalp to support hair growth; results vary.",
+      "category": "MEDICAL_TERMINOLOGY",
+      "reason": "PRP is plasma, not serum. NLM MeSH and PRP preparation literature support this correction. Do not promise follicle activation or improved circulation."
+    },
+    {
+      "id": "EN-060",
+      "from": "The same patient-derived, growth-factor-rich serum used for hair restoration is applied to the skin, boosting collagen production for firmer, more youthful-looking skin, with no synthetic additives.",
+      "to": "Platelet-rich plasma prepared from the patient's own blood is applied to the skin or delivered by microinjections. Platelet-derived growth factors may support collagen production and skin renewal; results vary.",
+      "category": "MEDICAL_TERMINOLOGY",
+      "reason": "Correct serum to plasma; retain blood source, delivery and intended collagen effect. The blanket no-additives claim needs protocol confirmation."
+    },
+    {
+      "id": "EN-061",
+      "from": "No — it uses the same patient-derived, growth-factor-rich serum used for PRP hair restoration, with no synthetic additives.",
+      "to": "PRP is prepared from your own blood. Ask your physician which preparation products are used and whether anything is added as part of your treatment.",
+      "category": "MEDICAL_REVIEW_REQUIRED",
+      "reason": "PRP preparation may involve anticoagulants or activation products; the clinic's no-additives claim cannot be established from the supplied reference."
+    },
+    {
+      "id": "EN-062",
+      "from": "Effects can usually be seen right away, but one session is not enough for lasting results.",
+      "to": "Some changes may be noticeable soon after treatment, with gradual improvement over several weeks and treatments. More than one session is usually recommended.",
+      "category": "MEDICAL_CLAIM",
+      "reason": "Qualify immediate-results wording; restore the source's gradual progression."
+    },
+    {
+      "id": "EN-063",
+      "from": "Minimal downtime — avoid strenuous exercise and sun exposure for 48 hours; otherwise resume regular activities with good SPF.",
+      "to": "Downtime is usually minimal. Redness, minor swelling and pinpoint bleeding can occur and typically settle within three days. Minor bumps or, rarely, micro-crusting can also occur. Contact the clinic if you have concerns about your recovery.",
+      "category": "SOURCE_FIDELITY",
+      "reason": "Restore documented recovery detail. The 48-hour precautions are retained in the new aftercare field."
+    },
+    {
+      "id": "EN-064",
+      "from": "A low-downtime laser that rejuvenates the skin, giving it a brighter tone and improved texture — treating mild to moderate age spots, freckles, sun spots, pigmented lesions, sun damage, actinic keratosis, melasma, and postinflammatory hyperpigmentation.",
+      "to": "Ultra is a laser treatment used to improve skin tone and texture and address mild to moderate age spots, freckles, sun spots, benign pigmented lesions, sun damage, melasma and post-inflammatory hyperpigmentation. Suitability is assessed during a consultation.",
+      "category": "MEDICAL_REVIEW_REQUIRED",
+      "reason": "Standardize post-inflammatory; hold actinic keratosis indication already marked GAP-013, pending clinician and device-label verification."
+    },
+    {
+      "id": "EN-065",
+      "from": "Mild to moderate age spots, freckles, sun spots, pigmented lesions, sun damage, actinic keratosis, melasma, and postinflammatory hyperpigmentation.",
+      "to": "Mild to moderate age spots, freckles, sun spots, benign pigmented lesions, sun damage, melasma and post-inflammatory hyperpigmentation. Your physician will assess the skin changes before recommending treatment.",
+      "category": "MEDICAL_REVIEW_REQUIRED",
+      "reason": "Hold the unapproved actinic keratosis indication and preserve other listed concerns."
+    },
+    {
+      "id": "EN-066",
+      "from": "Mild redness following treatment; normal activities can resume immediately. Full healing may take 5–7 days, during which skin has a dry, sandpaper-like texture as it exfoliates — this is normal.",
+      "to": "Mild redness can occur after treatment and usually lessens over the following day. Most patients can resume their usual activities. Skin may feel dry and sandpaper-like for 5–6 days as it exfoliates; full healing may take 5–7 days.",
+      "category": "SOURCE_FIDELITY",
+      "reason": "Keep the separate 5–6-day texture and 5–7-day healing timelines in the source; qualify individual recovery."
+    },
+    {
+      "id": "EN-067",
+      "from": "Mild redness follows treatment and normal activities can resume immediately. Full healing may take 5–7 days, during which skin has a dry, sandpaper-like texture as it exfoliates — this is a normal part of the process.",
+      "to": "Mild redness can occur after treatment and usually lessens over the following day. Most patients can resume their usual activities. Skin may feel dry and sandpaper-like for 5–6 days as it exfoliates; full healing may take 5–7 days.",
+      "category": "SOURCE_FIDELITY",
+      "reason": "Keep the separate texture and healing timelines."
+    },
+    {
+      "id": "EN-068",
+      "from": "A non-surgical, in-clinic treatment for pelvic floor and sexual health concerns. About one in three women experience these concerns at some point in their lives, and many live with them in silence. A consultation with Dr. Farhat establishes whether the treatment is appropriate for you.",
+      "to": "TempSure Vitalia is a non-surgical radiofrequency device. If you have pelvic floor or sexual health concerns, a consultation with Dr. Farhat can help assess your symptoms and discuss appropriate treatment options.",
+      "category": "MEDICAL_REVIEW_REQUIRED",
+      "reason": "Remove the unsupported prevalence statistic and broad treatment-efficacy implication. The Canadian manufacturer describes narrower device purposes; clinical indications remain under review."
+    },
+    {
+      "id": "EN-069",
+      "from": "How common are the concerns TempSure Vitalia addresses?",
+      "to": "Can I discuss pelvic floor or sexual health concerns at a consultation?",
+      "category": "MEDICAL_REVIEW_REQUIRED",
+      "reason": "Replace an unsupported prevalence FAQ with the source-supported consultation question."
+    },
+    {
+      "id": "EN-070",
+      "from": "About one in three women experience pelvic floor or sexual health concerns at some point in their lives, and many live with them in silence.",
+      "to": "Yes. You can discuss these symptoms with Dr. Farhat. Assessment is needed to identify the cause and consider appropriate treatment options.",
+      "category": "MEDICAL_REVIEW_REQUIRED",
+      "reason": "No verified source establishes the combined one-in-three statistic."
+    },
+    {
+      "id": "EN-071",
+      "from": "A radiofrequency device used for pelvic floor and sexual health concerns that women may experience at any age or stage of life.",
+      "to": "TempSure Vitalia is a radiofrequency device. Women with pelvic floor or sexual health concerns can discuss their symptoms and suitable treatment options with a physician.",
+      "category": "MEDICAL_REVIEW_REQUIRED",
+      "reason": "Avoid claiming treatment of all pelvic floor and sexual health conditions."
+    },
+    {
+      "id": "EN-072",
+      "from": "TempSure Vitalia uses radiofrequency energy in a non-surgical approach designed for pelvic floor and sexual health concerns.",
+      "to": "TempSure Vitalia delivers temperature-controlled radiofrequency energy to tissue. A physician must assess the proposed use, suitability, risks and expected benefits.",
+      "category": "MEDICAL_REVIEW_REQUIRED",
+      "reason": "Use the manufacturer's mechanism without adding indications."
+    },
+    {
+      "id": "EN-073",
+      "from": "Calgary's climate is unusually harsh on skin, which is part of why ongoing nourishment support can be worthwhile for many patients here.",
+      "to": "Calgary's dry climate can contribute to dry, uncomfortable skin.",
+      "category": "CALGARY_LOCALIZATION",
+      "reason": "Remove the unsupported climate comparison."
+    },
+    {
+      "id": "EN-074",
+      "from": "Calgary's climate is unusually harsh on skin. Using RF microneedling to infuse topicals — including moisturizers and pigment regulators — we help skin stay nourished and comfortable for months after treatment.",
+      "to": "Calgary's dry climate can contribute to dry, uncomfortable skin. The clinic's RF microneedling approach includes topical products such as moisturizers and pigment regulators. Your physician will assess whether this approach is appropriate for your skin.",
+      "category": "MEDICAL_REVIEW_REQUIRED",
+      "reason": "Retain the legacy approach without promising months of benefit. Topical infusion remains a clinical review item."
+    },
+    {
+      "id": "EN-075",
+      "from": "It's used to infuse topicals — including moisturizers and pigment regulators — helping skin stay nourished for months after treatment.",
+      "to": "The clinic's approach uses RF microneedling with topical products, including moisturizers and pigment regulators. Your physician will discuss suitability and the risks and benefits of the proposed products.",
+      "category": "MEDICAL_REVIEW_REQUIRED",
+      "reason": "Remove guaranteed duration and record topical-infusion review."
+    },
+    {
+      "id": "EN-076",
+      "from": "Effects can last for months after treatment, though this varies by individual.",
+      "to": "The response and its duration vary. Your physician can discuss what to expect for your skin and the proposed treatment.",
+      "category": "MEDICAL_REVIEW_REQUIRED",
+      "reason": "The reference does not substantiate a predictable months-long effect."
+    },
+    {
+      "id": "EN-077",
+      "from": "Dr. Hamdi is board certified by the College of Family Physicians of Canada (CFPC) and has been granted Fellowship of the College (FCFP). She is an Assistant Clinical Professor at the University of Calgary and holds a Master's degree in Health Science Education from the University of Alberta.",
+      "to": "Dr. Hamdi is certified by the College of Family Physicians of Canada (CFPC) and holds Fellowship in the College (FCFP). She is an assistant clinical professor at the University of Calgary and holds a master's degree in health science education from the University of Alberta.",
+      "category": "TERMINOLOGY",
+      "reason": "Use Canadian certification terminology; preserve every supplied credential, institution and role."
+    },
+    {
+      "id": "EN-078",
+      "from": "All patients, and especially people with diabetes or a family history of eye disease.",
+      "to": "Patients referred by their doctor, particularly people with diabetes or a family history of eye disease.",
+      "category": "MEDICAL_CLAIM",
+      "reason": "Avoid universal eligibility while preserving risk factors and the documented referral pathway."
+    },
+    {
+      "id": "EN-079",
+      "from": "It's available to all patients, and particularly relevant for people with diabetes or a family history of eye disease, since both are recognized risk factors for vision loss.",
+      "to": "People with diabetes or a family history of eye disease may benefit from screening. Your doctor can assess whether a referral is appropriate.",
+      "category": "MEDICAL_CLAIM",
+      "reason": "Keep the answer aligned with the documented referral requirement."
+    },
+    {
+      "id": "EN-080",
+      "from": "The first articles are on their way",
+      "to": "Health articles",
+      "category": "NATURALNESS",
+      "reason": "Use a factual empty-state heading without promising unpublished work."
+    },
+    {
+      "id": "EN-081",
+      "from": "Nothing has been published here yet. Our physicians are preparing the first articles, and each one is reviewed before it goes up. In the meantime, please call the clinic or ask at your next appointment.",
+      "to": "No articles have been published yet. For questions about your health, please call the clinic or speak with your physician at your next appointment.",
+      "category": "FACTUAL",
+      "reason": "Remove an unverified assertion about articles being prepared and reviewed."
+    },
+    {
+      "id": "EN-082",
+      "from": "A two-bottle treatment system (Day, Night), not a single product — both bottles are included in this one price/size record.",
+      "to": "A two-bottle treatment system with Day and Night formulas. Both bottles are included.",
+      "category": "NATURALNESS",
+      "reason": "Explain the bundle without internal catalogue terminology."
+    },
+    {
+      "id": "EN-083",
+      "from": "It's a two-bottle system — a Day formula and a Night formula — sold together as one record at this price and size.",
+      "to": "The system includes two bottles: a Day formula and a Night formula.",
+      "category": "NATURALNESS",
+      "reason": "Answer the patient question directly."
+    },
+    {
+      "id": "EN-084",
+      "from": "Not confirmed by the research for this record — ask the clinic if fragrance-free formulation matters for your skin.",
+      "to": "Please check the current ingredient label and ask the clinic if you need a fragrance-free product.",
+      "category": "NATURALNESS",
+      "reason": "Do not present internal research status as product advice."
+    },
+    {
+      "id": "EN-085",
+      "from": "The research for this record didn't confirm ceramides as a primary ingredient — TNS Ceramide Treatment Cream is SkinMedica's dedicated ceramide-focused product.",
+      "to": "Please check the current ingredient label to confirm. TNS Ceramide Treatment Cream is a separate SkinMedica product formulated with ceramides.",
+      "category": "NATURALNESS",
+      "reason": "Preserve uncertainty and distinguish the products."
+    },
+    {
+      "id": "EN-086",
+      "from": "A lightweight gel formulated to help minimize the appearance of scars, in the smaller of two approved sizes.",
+      "to": "A lightweight gel formulated to help minimize the appearance of scars, in a 14.2 g size.",
+      "category": "NATURALNESS",
+      "reason": "Use the actual package size instead of internal approval language."
+    },
+    {
+      "id": "EN-087",
+      "from": "A lightweight gel formulated to help minimize the appearance of scars, in the larger of two approved sizes.",
+      "to": "A lightweight gel formulated to help minimize the appearance of scars, in a 56.7 g size.",
+      "category": "NATURALNESS",
+      "reason": "Use the actual package size instead of internal approval language."
+    },
+    {
+      "id": "EN-088",
+      "from": "Not confirmed by the research for this specific record — ask the clinic about suitability for your skin.",
+      "to": "Ask the clinic whether this product is suitable for your skin.",
+      "category": "NATURALNESS",
+      "reason": "Use patient-facing wording and qualify suitability or recovery without changing device identity, price or duration."
+    },
+    {
+      "id": "EN-089",
+      "from": "Some current listings use \"Correcting\" rather than \"Brightening\" in the name — same underlying product line; the approved catalogue name is used here.",
+      "to": "You may see Lytera 2.0 listed as a Pigment Correcting Serum or Pigment Brightening Serum. Check the package label with the clinic to confirm the product.",
+      "category": "NATURALNESS",
+      "reason": "Use patient-facing wording and qualify suitability or recovery without changing device identity, price or duration."
+    },
+    {
+      "id": "EN-090",
+      "from": "\"Defense\" is the manufacturer's current official spelling, confirmed on the official product URL and Canadian retailers — the approved price and size are unchanged.",
+      "to": "\"Defense\" is the spelling used in the manufacturer's product name.",
+      "category": "NATURALNESS",
+      "reason": "Use patient-facing wording and qualify suitability or recovery without changing device identity, price or duration."
+    },
+    {
+      "id": "EN-091",
+      "from": "Why does the name differ slightly from the approved catalogue?",
+      "to": "Is TNS® Advanced+ Serum also called TNS Advanced Plus Serum?",
+      "category": "NATURALNESS",
+      "reason": "Use patient-facing wording and qualify suitability or recovery without changing device identity, price or duration."
+    },
+    {
+      "id": "EN-092",
+      "from": "The approved catalogue listed \"TNS Advanced Plus Serum®\"; the current official naming/trademark styling is \"TNS® Advanced+ Serum.\" The approved price and size are unchanged.",
+      "to": "Yes. \"Advanced+\" is the styling used in the product name; the plus sign is sometimes written as \"Plus.\"",
+      "category": "NATURALNESS",
+      "reason": "Use patient-facing wording and qualify suitability or recovery without changing device identity, price or duration."
+    },
+    {
+      "id": "EN-093",
+      "from": "Why does the name differ from the approved catalogue?",
+      "to": "Is HA5® Rejuvenating Hydrator also called HA5 Rejuvenative Hydrator?",
+      "category": "NATURALNESS",
+      "reason": "Use patient-facing wording and qualify suitability or recovery without changing device identity, price or duration."
+    },
+    {
+      "id": "EN-094",
+      "from": "The approved catalogue listed \"HA5 Rejuvenative Hydrator\"; current official/retailer naming is \"HA5® Rejuvenating Hydrator.\" The approved price and size are unchanged, and this is the same product.",
+      "to": "Our earlier catalogue used \"Rejuvenative Hydrator.\" This page uses the current name, HA5® Rejuvenating Hydrator.",
+      "category": "NATURALNESS",
+      "reason": "Use patient-facing wording and qualify suitability or recovery without changing device identity, price or duration."
+    },
+    {
+      "id": "EN-095",
+      "from": "Virtually no downtime — you can return to your usual activities right away. A medical-grade sunscreen is recommended to protect and preserve results.",
+      "to": "Downtime is not typically expected, although individual responses vary. Most patients can return to their usual activities right away. Follow your clinician's advice about sunscreen after treatment.",
+      "category": "CLAIM_QUALIFICATION",
+      "reason": "Use patient-facing wording and qualify suitability or recovery without changing device identity, price or duration."
+    },
+    {
+      "id": "EN-096",
+      "from": "Long-lasting hair reduction anywhere on the body using the Cynosure Elite+™ laser system.",
+      "to": "Long-lasting hair reduction on suitable areas of the face and body using the Cynosure Elite+™ laser system. Treatment areas and suitability are assessed during consultation.",
+      "category": "CLAIM_QUALIFICATION",
+      "reason": "Use patient-facing wording and qualify suitability or recovery without changing device identity, price or duration."
+    },
+    {
+      "id": "EN-097",
+      "from": "Dr. Hamdi completed her Family Medicine residency at the University of Calgary in 2015, followed by additional training (R3) in maternity and newborn care. She has practised family medicine in Calgary ever since, and joined Blue Diamond Medical in 2023.\n\nShe also works in the Labour and Delivery unit at Peter Lougheed Hospital and maintains a shared-care practice with the Lougheed Maternity Group (LMG).\n\nDr. Hamdi is board certified by the College of Family Physicians of Canada (CFPC) and has been granted Fellowship of the College (FCFP). She is an Assistant Clinical Professor at the University of Calgary and holds a Master's degree in Health Science Education from the University of Alberta.\n\nShe cares for a wide range of health concerns, including chronic disease, women's health (contraceptive management and IUD insertion, menopause, and prenatal and maternity care), well-child visits, and mental health. She is also certified to provide Botox injections for pain management as well as cosmetic indications.",
+      "to": "Dr. Hamdi completed her Family Medicine residency at the University of Calgary in 2015, followed by additional training (R3) in maternity and newborn care. She has practised family medicine in Calgary ever since, and joined Blue Diamond Medical in 2023.\n\nShe also works in the Labour and Delivery unit at Peter Lougheed Hospital and maintains a shared-care practice with the Lougheed Maternity Group (LMG).\n\nDr. Hamdi is certified by the College of Family Physicians of Canada (CFPC) and has been granted Fellowship of the College (FCFP). She is an Assistant Clinical Professor at the University of Calgary and holds a Master's degree in Health Science Education from the University of Alberta.\n\nShe cares for a wide range of health concerns, including chronic disease, women's health (contraceptive management and IUD insertion, menopause, and prenatal and maternity care), well-child visits, and mental health. She is also certified to provide Botox injections for pain management as well as cosmetic indications.",
+      "category": "TERMINOLOGY",
+      "reason": "Use CFPC certification terminology; preserve all supplied credentials and biography details. https://www.cfpc.ca/en/members-list"
+    }
+  ]
+}

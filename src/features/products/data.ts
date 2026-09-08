@@ -819,6 +819,14 @@ const myriadeProducts: Product[] = [
         "Pomegranate Extract",
       ],
     },
+    // Manufacturer warning verified 2026-09-08: https://conceptmyriade.com/en/product/the-c-retinol/
+    safetyWarnings: {
+      en: [
+        "Do not use C-Retinol while pregnant or breastfeeding.",
+        "C-Retinol can increase sensitivity to sunlight. Avoid using it during periods of sun exposure and avoid direct UV exposure. Apply sunscreen with SPF 30 or higher every two hours, even in the shade.",
+      ],
+      ar: [],
+    },
     images: [
       {
         path: "/blue-diamond/products/myriade/brightening/c-retinol.jpg",
@@ -1902,6 +1910,14 @@ const myriadeProducts: Product[] = [
         "The Ultra Protective Cream 50 ml",
         "The C-Retinol 50 ml",
       ],
+    },
+    // Manufacturer warning verified 2026-09-08: https://conceptmyriade.com/en/product/the-c-retinol/
+    safetyWarnings: {
+      en: [
+        "Do not use C-Retinol while pregnant or breastfeeding.",
+        "C-Retinol can increase sensitivity to sunlight. Avoid using it during periods of sun exposure and avoid direct UV exposure. Apply sunscreen with SPF 30 or higher every two hours, even in the shade.",
+      ],
+      ar: [],
     },
     images: [
       {

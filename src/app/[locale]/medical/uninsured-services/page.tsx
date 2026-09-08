@@ -35,7 +35,7 @@ export default async function UninsuredServicesPage({ params }: { params: Promis
     en: {
       title: "Uninsured Services & Fees",
       intro:
-        "A number of services your family doctor provides are not covered by Alberta Health Services. All fees must be paid in full before documents are released.",
+        "Some services your family doctor provides are not covered by the Alberta Health Care Insurance Plan (AHCIP). All fees must be paid in full before documents are released.",
     },
     ar: {
       title: "الخدمات والرسوم غير المشمولة بالتأمين الصحي",

@@ -13,11 +13,11 @@ export const medicalServices: MedicalServiceContent[] = [
     slugAr: "فحص-العين",
     title: { en: "Eye Disease Screening", ar: "فحص أمراض العين" },
     summary: {
-      en: "A collaboration with Euclid Telehealth offering AHS-covered eye disease screening at our clinic — in keeping with our belief that prevention is better than cure.",
+      en: "Eye disease screening at our Calgary clinic through Euclid Telehealth, with referral based on your doctor's assessment.",
       ar: "بالتعاون مع Euclid Telehealth، نقدّم فحصًا لأمراض العين مشمولًا بالتأمين الصحي في عيادتنا — انطلاقًا من إيماننا بأن الوقاية خير من العلاج.",
     },
     whoItsFor: {
-      en: "All patients, and especially people with diabetes or a family history of eye disease.",
+      en: "Patients referred by their doctor, particularly people with diabetes or a family history of eye disease.",
       ar: "جميع المرضى، وخصوصًا مرضى السكري ومن لديهم تاريخ عائلي لأمراض العين.",
     },
     whatsIncluded: {
@@ -46,7 +46,7 @@ export const medicalServices: MedicalServiceContent[] = [
       {
         question: { en: "Is the eye disease screening covered by Alberta Health?", ar: "هل فحص أمراض العين مشمول بالتأمين الصحي لألبرتا؟" },
         answer: {
-          en: "Yes — this screening is AHS-covered, provided through our collaboration with Euclid Telehealth.",
+          en: "Eligible eye disease screening is covered by Alberta Health. Euclid Telehealth can confirm your eligibility and any costs before your appointment.",
           ar: "نعم — هذا الفحص مشمول بالتأمين الصحي لألبرتا (AHS)، ويُقدَّم من خلال تعاوننا مع Euclid Telehealth.",
         },
       },
@@ -67,7 +67,7 @@ export const medicalServices: MedicalServiceContent[] = [
       {
         question: { en: "Who should consider this screening?", ar: "لمن يُنصح بهذا الفحص؟" },
         answer: {
-          en: "It's available to all patients, and particularly relevant for people with diabetes or a family history of eye disease, since both are recognized risk factors for vision loss.",
+          en: "People with diabetes or a family history of eye disease may benefit from screening. Your doctor can assess whether a referral is appropriate.",
           ar: "متاح لجميع المرضى، ويُنصح به بشكل خاص لمرضى السكري أو من لديهم تاريخ عائلي لأمراض العين، إذ يُعدّان من عوامل الخطر المعروفة لفقدان البصر.",
         },
       },
@@ -94,7 +94,7 @@ export const medicalServices: MedicalServiceContent[] = [
     slugAr: "الرعاية-خارج-أوقات-الدوام",
     title: { en: "After-Hours Care", ar: "الرعاية خارج أوقات الدوام" },
     summary: {
-      en: "When the clinic is closed, our patients are referred to a partner Primary Care Network for urgent, non-emergency needs — not left without a path to care.",
+      en: "When the clinic is closed, patients can access care through a partner Primary Care Network for medical concerns that need prompt attention but are not emergencies.",
       ar: "عند إغلاق العيادة، يُحال مرضانا إلى شبكة رعاية أولية شريكة لتلبية الاحتياجات العاجلة غير الطارئة — دون أن يبقوا دون خيار للرعاية.",
     },
     urgentCareNote: {
@@ -189,7 +189,7 @@ export const medicalServices: MedicalServiceContent[] = [
     slugAr: "إدارة-الأمراض-المزمنة",
     title: { en: "Chronic Disease Management", ar: "إدارة الأمراض المزمنة" },
     summary: {
-      en: "AHS-insured, ongoing management of chronic conditions through your family physician. Any Blue Diamond family physician can provide chronic-disease management.",
+      en: "Ongoing care for chronic conditions through your family physician. All Blue Diamond family physicians provide chronic disease management.",
       ar: "إدارة مستمرة للأمراض المزمنة مشمولة بالتأمين الصحي عبر طبيب أسرتكم. ويمكن لأي من أطباء الأسرة في بلو دايموند تقديم إدارة الأمراض المزمنة.",
     },
     whoItsFor: {
@@ -204,7 +204,7 @@ export const medicalServices: MedicalServiceContent[] = [
       {
         question: { en: "Is chronic disease management covered by Alberta Health?", ar: "هل إدارة الأمراض المزمنة مشمولة بالتأمين الصحي لألبرتا؟" },
         answer: {
-          en: "Yes — this is provided as part of AHS-insured family medicine care.",
+          en: "Medically necessary physician care is covered for eligible patients under the Alberta Health Care Insurance Plan (AHCIP). Coverage for medications and other services is separate.",
           ar: "نعم — تُقدَّم هذه الخدمة كجزء من رعاية طب الأسرة المشمولة بالتأمين الصحي لألبرتا (AHS).",
         },
       },
@@ -249,7 +249,7 @@ export const medicalServices: MedicalServiceContent[] = [
       ar: '"الوقاية خير من العلاج" هو جوهر أسلوبنا في الممارسة الطبية — من التطعيمات إلى تركيز الدكتورة سعيد السريري على الطب الوقائي والتدخل المبكر.',
     },
     whatsIncluded: {
-      en: ["Vaccination", "Preventive medicine and early-intervention care", "Referral for AHS-covered eye disease screening"],
+      en: ["Vaccination", "Preventive medicine and early-intervention care", "Referral for eye disease screening when appropriate"],
       ar: ["التطعيمات", "الطب الوقائي والرعاية بالتدخل المبكر", "الإحالة لفحص أمراض العين المشمول بالتأمين الصحي"],
     },
     relatedDoctorIds: ["omaima-saeed"],
@@ -258,14 +258,14 @@ export const medicalServices: MedicalServiceContent[] = [
       {
         question: { en: "What's included in preventive care here?", ar: "ما الذي تشمله الرعاية الوقائية هنا؟" },
         answer: {
-          en: "Vaccination, preventive medicine and early-intervention care, and referral for AHS-covered eye disease screening when appropriate.",
+          en: "Vaccination, preventive medicine and early-intervention care, and referral for eye disease screening when appropriate.",
           ar: "التطعيمات، والطب الوقائي والرعاية بالتدخل المبكر، والإحالة لفحص أمراض العين المشمول بالتأمين الصحي عند الحاجة.",
         },
       },
       {
         question: { en: "Is preventive care covered by Alberta Health?", ar: "هل الرعاية الوقائية مشمولة بالتأمين الصحي لألبرتا؟" },
         answer: {
-          en: "Yes, as part of AHS-insured family medicine care.",
+          en: "Medically necessary physician care is covered for eligible patients under the Alberta Health Care Insurance Plan (AHCIP). Some vaccines and other services may have separate costs; ask the clinic before your appointment.",
           ar: "نعم، كجزء من رعاية طب الأسرة المشمولة بالتأمين الصحي لألبرتا (AHS).",
         },
       },
@@ -299,7 +299,7 @@ export const medicalServices: MedicalServiceContent[] = [
     slugAr: "إدارة-الوزن",
     title: { en: "Weight Management", ar: "إدارة الوزن" },
     summary: {
-      en: "AHS-insured weight management support as part of your comprehensive care with your family physician.",
+      en: "Weight management support as part of your ongoing care with your family physician.",
       ar: "دعم إدارة الوزن المشمول بالتأمين الصحي كجزء من رعايتكم الشاملة مع طبيب أسرتكم.",
     },
     relatedDoctorIds: [],
@@ -308,7 +308,7 @@ export const medicalServices: MedicalServiceContent[] = [
       {
         question: { en: "Is weight management covered by Alberta Health?", ar: "هل إدارة الوزن مشمولة بالتأمين الصحي لألبرتا؟" },
         answer: {
-          en: "Yes — it's provided as part of AHS-insured family medicine care.",
+          en: "Medically necessary physician care is covered for eligible patients under the Alberta Health Care Insurance Plan (AHCIP). Coverage for medications and other services is separate.",
           ar: "نعم — تُقدَّم كجزء من رعاية طب الأسرة المشمولة بالتأمين الصحي لألبرتا (AHS).",
         },
       },
@@ -342,7 +342,7 @@ export const medicalServices: MedicalServiceContent[] = [
     slugAr: "إدارة-الألم",
     title: { en: "Pain Management", ar: "إدارة الألم" },
     summary: {
-      en: "AHS-insured pain management support from your family physician.",
+      en: "Assessment and management of pain through your family physician.",
       ar: "دعم إدارة الألم المشمول بالتأمين الصحي من طبيب أسرتكم.",
     },
     relatedDoctorIds: [],
@@ -351,7 +351,7 @@ export const medicalServices: MedicalServiceContent[] = [
       {
         question: { en: "Is pain management covered by Alberta Health?", ar: "هل إدارة الألم مشمولة بالتأمين الصحي لألبرتا؟" },
         answer: {
-          en: "Yes — it's provided as part of AHS-insured family medicine care.",
+          en: "Medically necessary physician care is covered for eligible patients under the Alberta Health Care Insurance Plan (AHCIP). Coverage for medications and other services is separate.",
           ar: "نعم — تُقدَّم كجزء من رعاية طب الأسرة المشمولة بالتأمين الصحي لألبرتا (AHS).",
         },
       },
@@ -385,12 +385,12 @@ export const medicalServices: MedicalServiceContent[] = [
     slugAr: "الإجراءات-البسيطة",
     title: { en: "Minor Procedures", ar: "الإجراءات البسيطة" },
     summary: {
-      en: "AHS-insured minor procedures performed in-house — suture removal and application, minor skin lesion excision, and joint injections. All of our family physicians provide these procedures. Minor procedures are booked by phone or in person, not online.",
+      en: "Minor procedures at the clinic include suture placement and removal, minor skin lesion excision, and joint injections. All of our family physicians provide these procedures. Book by phone or in person.",
       ar: "إجراءات بسيطة مشمولة بالتأمين الصحي تُجرى داخل العيادة — إزالة الغرز وتركيبها، واستئصال الآفات الجلدية البسيطة، والحقن المفصلية. ويقدّم جميع أطباء الأسرة لدينا هذه الإجراءات. تُحجز الإجراءات البسيطة عبر الهاتف أو بالحضور شخصيًا، وليس عبر الإنترنت.",
     },
     whatsIncluded: {
       en: [
-        "Suture removal and application",
+        "Suture placement and removal",
         "Minor skin lesion excision",
         "Intra-articular injections for degenerative knee, shoulder, and ankle conditions",
       ],
@@ -409,14 +409,14 @@ export const medicalServices: MedicalServiceContent[] = [
       {
         question: { en: "Are minor procedures covered by Alberta Health?", ar: "هل الإجراءات البسيطة مشمولة بالتأمين الصحي لألبرتا؟" },
         answer: {
-          en: "Yes — the procedures listed here are AHS-insured.",
+          en: "Coverage depends on the procedure and whether it is medically necessary. The clinic can confirm Alberta Health coverage and any uninsured fees before your appointment.",
           ar: "نعم — الإجراءات المذكورة هنا مشمولة بالتأمين الصحي لألبرتا (AHS).",
         },
       },
       {
         question: { en: "What minor procedures are available?", ar: "ما الإجراءات البسيطة المتوفرة؟" },
         answer: {
-          en: "Suture removal and application, minor skin lesion excision, and intra-articular injections for degenerative knee, shoulder, and ankle conditions. All of our family physicians provide these.",
+          en: "Suture placement and removal, minor skin lesion excision, and intra-articular injections for degenerative knee, shoulder, and ankle conditions. All of our family physicians provide these.",
           ar: "إزالة الغرز وتركيبها، واستئصال الآفات الجلدية البسيطة، والحقن المفصلية لحالات تنكس الركبة والكتف والكاحل. ويقدّمها جميع أطباء الأسرة لدينا.",
         },
       },
