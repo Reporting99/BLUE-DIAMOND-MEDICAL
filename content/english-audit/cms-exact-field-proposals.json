@@ -1,6 +1,7 @@
 [
   {
-    "operationId": "EN-073",
+    "proposalId": "CMS-001",
+    "replacementId": "EN-073",
     "cmsPath": "/aesthetics/concerns/dry-skin",
     "entityId": "80c98c11-9c6c-4c30-9744-da5bf290cae5",
     "publicEnvelopePath": [
@@ -20,7 +21,8 @@
     }
   },
   {
-    "operationId": "EN-075",
+    "proposalId": "CMS-002",
+    "replacementId": "EN-075",
     "cmsPath": "/aesthetics/concerns/dry-skin",
     "entityId": "80c98c11-9c6c-4c30-9744-da5bf290cae5",
     "publicEnvelopePath": [
@@ -40,7 +42,8 @@
     }
   },
   {
-    "operationId": "EN-076",
+    "proposalId": "CMS-003",
+    "replacementId": "EN-076",
     "cmsPath": "/aesthetics/concerns/dry-skin",
     "entityId": "80c98c11-9c6c-4c30-9744-da5bf290cae5",
     "publicEnvelopePath": [
@@ -60,7 +63,8 @@
     }
   },
   {
-    "operationId": "EN-048",
+    "proposalId": "CMS-004",
+    "replacementId": "EN-048",
     "cmsPath": "/aesthetics/concerns/fine-lines-wrinkles",
     "entityId": "98c6a1c8-0712-4588-821b-326c1e326032",
     "publicEnvelopePath": [
@@ -80,7 +84,8 @@
     }
   },
   {
-    "operationId": "EN-054",
+    "proposalId": "CMS-005",
+    "replacementId": "EN-054",
     "cmsPath": "/aesthetics/concerns/razor-bumps",
     "entityId": "663ce5c2-cd39-4824-91cb-61484dd65512",
     "publicEnvelopePath": [
@@ -100,7 +105,8 @@
     }
   },
   {
-    "operationId": "EN-056",
+    "proposalId": "CMS-006",
+    "replacementId": "EN-056",
     "cmsPath": "/aesthetics/concerns/razor-bumps",
     "entityId": "663ce5c2-cd39-4824-91cb-61484dd65512",
     "publicEnvelopePath": [
@@ -120,7 +126,8 @@
     }
   },
   {
-    "operationId": "EN-046",
+    "proposalId": "CMS-007",
+    "replacementId": "EN-046",
     "cmsPath": "/aesthetics/concerns/rosacea-redness",
     "entityId": "70576868-4451-4ce3-865e-f33cdd02a35e",
     "publicEnvelopePath": [
@@ -138,7 +145,8 @@
     }
   },
   {
-    "operationId": "EN-047",
+    "proposalId": "CMS-008",
+    "replacementId": "EN-047",
     "cmsPath": "/aesthetics/concerns/rosacea-redness",
     "entityId": "70576868-4451-4ce3-865e-f33cdd02a35e",
     "publicEnvelopePath": [
@@ -158,7 +166,8 @@
     }
   },
   {
-    "operationId": "EN-049",
+    "proposalId": "CMS-009",
+    "replacementId": "EN-049",
     "cmsPath": "/aesthetics/concerns/spider-veins",
     "entityId": "d3fa75b6-eaf5-4007-b0d0-5ab8d0afa869",
     "publicEnvelopePath": [
@@ -178,7 +187,8 @@
     }
   },
   {
-    "operationId": "EN-043",
+    "proposalId": "CMS-010",
+    "replacementId": "EN-043",
     "cmsPath": "/aesthetics/technologies/elite-iq",
     "entityId": "0b101bea-6875-4510-be4d-69e00939734c",
     "publicEnvelopePath": [
@@ -196,7 +206,8 @@
     }
   },
   {
-    "operationId": "EN-033",
+    "proposalId": "CMS-011",
+    "replacementId": "EN-033",
     "cmsPath": "/aesthetics/concerns/sun-damage-pigmentation",
     "entityId": "270a4594-ae4a-4462-bd3c-7f2b7cabf3d9",
     "publicEnvelopePath": [
@@ -216,7 +227,8 @@
     }
   },
   {
-    "operationId": "EN-036",
+    "proposalId": "CMS-012",
+    "replacementId": "EN-036",
     "cmsPath": "/aesthetics/technologies/tempsure",
     "entityId": "30245ae4-2f16-490d-8f15-e9c765c6e69f",
     "publicEnvelopePath": [
@@ -236,7 +248,8 @@
     }
   },
   {
-    "operationId": "EN-059",
+    "proposalId": "CMS-013",
+    "replacementId": "EN-059",
     "cmsPath": "/aesthetics/treatments/prp-hair-restoration",
     "entityId": "d30e1c87-d4a8-4c1f-ba2c-512c8711732a",
     "publicEnvelopePath": [
@@ -254,7 +267,8 @@
     }
   },
   {
-    "operationId": "EN-034",
+    "proposalId": "CMS-014",
+    "replacementId": "EN-034",
     "cmsPath": "/aesthetics/treatments/prp-hair-restoration",
     "entityId": "d30e1c87-d4a8-4c1f-ba2c-512c8711732a",
     "publicEnvelopePath": [
@@ -274,7 +288,8 @@
     }
   },
   {
-    "operationId": "EN-096",
+    "proposalId": "CMS-015",
+    "replacementId": "EN-096",
     "cmsPath": "/aesthetics/treatments/laser-hair-removal",
     "entityId": "d3aef8df-feb3-4965-97f9-28527e9e419c",
     "publicEnvelopePath": [
@@ -292,7 +307,8 @@
     }
   },
   {
-    "operationId": "EN-058",
+    "proposalId": "CMS-016",
+    "replacementId": "EN-058",
     "cmsPath": "/aesthetics/treatments/laser-hair-removal",
     "entityId": "d3aef8df-feb3-4965-97f9-28527e9e419c",
     "publicEnvelopePath": [
@@ -310,7 +326,8 @@
     }
   },
   {
-    "operationId": "EN-039",
+    "proposalId": "CMS-017",
+    "replacementId": "EN-039",
     "cmsPath": "/aesthetics/treatments/laser-hair-removal",
     "entityId": "d3aef8df-feb3-4965-97f9-28527e9e419c",
     "publicEnvelopePath": [
@@ -328,7 +345,8 @@
     }
   },
   {
-    "operationId": "EN-061",
+    "proposalId": "CMS-018",
+    "replacementId": "EN-061",
     "cmsPath": "/aesthetics/treatments/prp-skin-rejuvenation",
     "entityId": "a64fe8ed-aeef-4ddd-9ae3-06423d47f6d8",
     "publicEnvelopePath": [
@@ -348,7 +366,8 @@
     }
   },
   {
-    "operationId": "EN-069",
+    "proposalId": "CMS-019",
+    "replacementId": "EN-069",
     "cmsPath": "/aesthetics/treatments/tempsure-vitalia",
     "entityId": "bac734ca-0701-4733-8823-4832650b9766",
     "publicEnvelopePath": [
@@ -368,7 +387,8 @@
     }
   },
   {
-    "operationId": "EN-035",
+    "proposalId": "CMS-020",
+    "replacementId": "EN-035",
     "cmsPath": "/aesthetics/treatments/radio-frequency",
     "entityId": "98c8e33c-5dc0-4f1f-9a51-b40f969c9e76",
     "publicEnvelopePath": [
@@ -380,7 +400,8 @@
     "status": "MANUAL_ADMIN_MAPPING_REQUIRED"
   },
   {
-    "operationId": "EN-037",
+    "proposalId": "CMS-021",
+    "replacementId": "EN-037",
     "cmsPath": "/aesthetics/treatments/radio-frequency",
     "entityId": "98c8e33c-5dc0-4f1f-9a51-b40f969c9e76",
     "publicEnvelopePath": [
@@ -400,7 +421,8 @@
     }
   },
   {
-    "operationId": "EN-064",
+    "proposalId": "CMS-022",
+    "replacementId": "EN-064",
     "cmsPath": "/aesthetics/treatments/ultra",
     "entityId": "5296f2bb-c454-4c1e-b092-df2482144757",
     "publicEnvelopePath": [
@@ -418,7 +440,8 @@
     }
   },
   {
-    "operationId": "EN-066",
+    "proposalId": "CMS-023",
+    "replacementId": "EN-066",
     "cmsPath": "/aesthetics/treatments/ultra",
     "entityId": "5296f2bb-c454-4c1e-b092-df2482144757",
     "publicEnvelopePath": [
@@ -436,7 +459,8 @@
     }
   },
   {
-    "operationId": "EN-065",
+    "proposalId": "CMS-024",
+    "replacementId": "EN-065",
     "cmsPath": "/aesthetics/treatments/ultra",
     "entityId": "5296f2bb-c454-4c1e-b092-df2482144757",
     "publicEnvelopePath": [
@@ -456,7 +480,8 @@
     }
   },
   {
-    "operationId": "EN-067",
+    "proposalId": "CMS-025",
+    "replacementId": "EN-067",
     "cmsPath": "/aesthetics/treatments/ultra",
     "entityId": "5296f2bb-c454-4c1e-b092-df2482144757",
     "publicEnvelopePath": [
@@ -476,7 +501,8 @@
     }
   },
   {
-    "operationId": "EN-063",
+    "proposalId": "CMS-026",
+    "replacementId": "EN-063",
     "cmsPath": "/aesthetics/treatments/rf-microneedling",
     "entityId": "7a0a7423-0c3f-4123-936b-c716c11e2d66",
     "publicEnvelopePath": [
@@ -494,7 +520,8 @@
     }
   },
   {
-    "operationId": "EN-038",
+    "proposalId": "CMS-027",
+    "replacementId": "EN-038",
     "cmsPath": "/aesthetics/treatments/rf-microneedling",
     "entityId": "7a0a7423-0c3f-4123-936b-c716c11e2d66",
     "publicEnvelopePath": [
@@ -512,7 +539,8 @@
     }
   },
   {
-    "operationId": "EN-029",
+    "proposalId": "CMS-028",
+    "replacementId": "EN-029",
     "cmsPath": "/medical/after-hours-care",
     "entityId": "28158c82-399b-458b-9e6d-0699d3fc9172",
     "publicEnvelopePath": [
@@ -530,7 +558,8 @@
     }
   },
   {
-    "operationId": "EN-010",
+    "proposalId": "CMS-029",
+    "replacementId": "EN-010",
     "cmsPath": "/medical/pain-management",
     "entityId": "95d32601-f641-4605-85a1-97ef236a2c88",
     "publicEnvelopePath": [
@@ -548,7 +577,8 @@
     }
   },
   {
-    "operationId": "EN-011",
+    "proposalId": "CMS-030",
+    "replacementId": "EN-011",
     "cmsPath": "/medical/pain-management",
     "entityId": "95d32601-f641-4605-85a1-97ef236a2c88",
     "publicEnvelopePath": [
@@ -568,7 +598,8 @@
     }
   },
   {
-    "operationId": "EN-013",
+    "proposalId": "CMS-031",
+    "replacementId": "EN-013",
     "cmsPath": "/medical/minor-procedures",
     "entityId": "dc849465-c82e-4e6d-8572-4c2a2d02c6de",
     "publicEnvelopePath": [
@@ -586,7 +617,8 @@
     }
   },
   {
-    "operationId": "EN-014",
+    "proposalId": "CMS-032",
+    "replacementId": "EN-014",
     "cmsPath": "/medical/minor-procedures",
     "entityId": "dc849465-c82e-4e6d-8572-4c2a2d02c6de",
     "publicEnvelopePath": [
@@ -605,7 +637,8 @@
     }
   },
   {
-    "operationId": "EN-012",
+    "proposalId": "CMS-033",
+    "replacementId": "EN-012",
     "cmsPath": "/medical/minor-procedures",
     "entityId": "dc849465-c82e-4e6d-8572-4c2a2d02c6de",
     "publicEnvelopePath": [
@@ -625,7 +658,8 @@
     }
   },
   {
-    "operationId": "EN-015",
+    "proposalId": "CMS-034",
+    "replacementId": "EN-015",
     "cmsPath": "/medical/minor-procedures",
     "entityId": "dc849465-c82e-4e6d-8572-4c2a2d02c6de",
     "publicEnvelopePath": [
@@ -645,7 +679,8 @@
     }
   },
   {
-    "operationId": "EN-002",
+    "proposalId": "CMS-035",
+    "replacementId": "EN-002",
     "cmsPath": "/medical/eye-screening",
     "entityId": "be085cb6-ded9-4274-84a5-43e5d663f1ca",
     "publicEnvelopePath": [
@@ -663,7 +698,8 @@
     }
   },
   {
-    "operationId": "EN-003",
+    "proposalId": "CMS-036",
+    "replacementId": "EN-003",
     "cmsPath": "/medical/eye-screening",
     "entityId": "be085cb6-ded9-4274-84a5-43e5d663f1ca",
     "publicEnvelopePath": [
@@ -683,7 +719,8 @@
     }
   },
   {
-    "operationId": "EN-079",
+    "proposalId": "CMS-037",
+    "replacementId": "EN-079",
     "cmsPath": "/medical/eye-screening",
     "entityId": "be085cb6-ded9-4274-84a5-43e5d663f1ca",
     "publicEnvelopePath": [
@@ -703,7 +740,8 @@
     }
   },
   {
-    "operationId": "EN-006",
+    "proposalId": "CMS-038",
+    "replacementId": "EN-006",
     "cmsPath": "/medical/chronic-disease-management",
     "entityId": "298dddc5-2baa-47f6-b52d-a8e25f8c7d9a",
     "publicEnvelopePath": [
@@ -721,7 +759,8 @@
     }
   },
   {
-    "operationId": "EN-007",
+    "proposalId": "CMS-039",
+    "replacementId": "EN-007",
     "cmsPath": "/medical/chronic-disease-management",
     "entityId": "298dddc5-2baa-47f6-b52d-a8e25f8c7d9a",
     "publicEnvelopePath": [
@@ -741,7 +780,8 @@
     }
   },
   {
-    "operationId": "EN-009",
+    "proposalId": "CMS-040",
+    "replacementId": "EN-009",
     "cmsPath": "/medical/weight-management",
     "entityId": "e9e9ecca-2d0e-4629-ac2b-853a5ab62922",
     "publicEnvelopePath": [
@@ -759,7 +799,8 @@
     }
   },
   {
-    "operationId": "EN-011",
+    "proposalId": "CMS-041",
+    "replacementId": "EN-011",
     "cmsPath": "/medical/weight-management",
     "entityId": "e9e9ecca-2d0e-4629-ac2b-853a5ab62922",
     "publicEnvelopePath": [
@@ -779,7 +820,8 @@
     }
   },
   {
-    "operationId": "EN-004",
+    "proposalId": "CMS-042",
+    "replacementId": "EN-004",
     "cmsPath": "/medical/preventive-care",
     "entityId": "eec7dcb1-ddaf-477a-bd6a-e10454de33a9",
     "publicEnvelopePath": [
@@ -798,7 +840,8 @@
     }
   },
   {
-    "operationId": "EN-005",
+    "proposalId": "CMS-043",
+    "replacementId": "EN-005",
     "cmsPath": "/medical/preventive-care",
     "entityId": "eec7dcb1-ddaf-477a-bd6a-e10454de33a9",
     "publicEnvelopePath": [
@@ -818,7 +861,8 @@
     }
   },
   {
-    "operationId": "EN-008",
+    "proposalId": "CMS-044",
+    "replacementId": "EN-008",
     "cmsPath": "/medical/preventive-care",
     "entityId": "eec7dcb1-ddaf-477a-bd6a-e10454de33a9",
     "publicEnvelopePath": [
@@ -838,7 +882,8 @@
     }
   },
   {
-    "operationId": "EN-093",
+    "proposalId": "CMS-045",
+    "replacementId": "EN-093",
     "cmsPath": "/shop/ha5-rejuvenative-hydrator",
     "entityId": "c6445318-7fe3-4d73-83b7-7f363fbdac8c",
     "publicEnvelopePath": [
@@ -858,7 +903,8 @@
     }
   },
   {
-    "operationId": "EN-094",
+    "proposalId": "CMS-046",
+    "replacementId": "EN-094",
     "cmsPath": "/shop/ha5-rejuvenative-hydrator",
     "entityId": "c6445318-7fe3-4d73-83b7-7f363fbdac8c",
     "publicEnvelopePath": [
@@ -878,7 +924,8 @@
     }
   },
   {
-    "operationId": "EN-085",
+    "proposalId": "CMS-047",
+    "replacementId": "EN-085",
     "cmsPath": "/shop/dermal-repair-cream",
     "entityId": "ef94310e-96b4-406f-9baf-14f455ae3718",
     "publicEnvelopePath": [
@@ -898,7 +945,8 @@
     }
   },
   {
-    "operationId": "EN-084",
+    "proposalId": "CMS-048",
+    "replacementId": "EN-084",
     "cmsPath": "/shop/facial-cleanser",
     "entityId": "9ab16b51-f967-43d2-b3f1-83e579172c48",
     "publicEnvelopePath": [
@@ -918,7 +966,8 @@
     }
   },
   {
-    "operationId": "EN-089",
+    "proposalId": "CMS-049",
+    "replacementId": "EN-089",
     "cmsPath": "/shop/lytera-2-pigment-brightening-serum",
     "entityId": "a145f6f4-d02d-40c0-ba4e-a4a91179cbc5",
     "publicEnvelopePath": [
@@ -938,7 +987,8 @@
     }
   },
   {
-    "operationId": "EN-082",
+    "proposalId": "CMS-050",
+    "replacementId": "EN-082",
     "cmsPath": "/shop/lumivive-system-day-night",
     "entityId": "1fbede5a-95bd-4761-8eb9-1b4cadee83f0",
     "publicEnvelopePath": [
@@ -956,7 +1006,8 @@
     }
   },
   {
-    "operationId": "EN-083",
+    "proposalId": "CMS-051",
+    "replacementId": "EN-083",
     "cmsPath": "/shop/lumivive-system-day-night",
     "entityId": "1fbede5a-95bd-4761-8eb9-1b4cadee83f0",
     "publicEnvelopePath": [
@@ -976,7 +1027,8 @@
     }
   },
   {
-    "operationId": "EN-088",
+    "proposalId": "CMS-052",
+    "replacementId": "EN-088",
     "cmsPath": "/shop/rejuvenative-moisturizer",
     "entityId": "f6735a4c-1e10-45f2-bc81-8934b040a9ae",
     "publicEnvelopePath": [
@@ -996,7 +1048,8 @@
     }
   },
   {
-    "operationId": "EN-087",
+    "proposalId": "CMS-053",
+    "replacementId": "EN-087",
     "cmsPath": "/shop/scar-recovery-gel-with-centelline-large",
     "entityId": "95b4d4e1-09f8-49c7-8c34-c835e628d52f",
     "publicEnvelopePath": [
@@ -1014,7 +1067,8 @@
     }
   },
   {
-    "operationId": "EN-091",
+    "proposalId": "CMS-054",
+    "replacementId": "EN-091",
     "cmsPath": "/shop/tns-advanced-plus-serum",
     "entityId": "5887878e-7889-4bb6-b824-85115b53911d",
     "publicEnvelopePath": [
@@ -1034,7 +1088,8 @@
     }
   },
   {
-    "operationId": "EN-092",
+    "proposalId": "CMS-055",
+    "replacementId": "EN-092",
     "cmsPath": "/shop/tns-advanced-plus-serum",
     "entityId": "5887878e-7889-4bb6-b824-85115b53911d",
     "publicEnvelopePath": [
@@ -1054,7 +1109,8 @@
     }
   },
   {
-    "operationId": "EN-086",
+    "proposalId": "CMS-056",
+    "replacementId": "EN-086",
     "cmsPath": "/shop/scar-recovery-gel-with-centelline-small",
     "entityId": "c46f1271-5cec-4805-aa2a-01e9d4868cc3",
     "publicEnvelopePath": [
@@ -1072,7 +1128,8 @@
     }
   },
   {
-    "operationId": "EN-090",
+    "proposalId": "CMS-057",
+    "replacementId": "EN-090",
     "cmsPath": "/shop/total-defence-repair-spf-34-tinted",
     "entityId": "c19f02e1-0ab1-46f6-933e-2419b3c31c6d",
     "publicEnvelopePath": [

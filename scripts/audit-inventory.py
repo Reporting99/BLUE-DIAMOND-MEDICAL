@@ -32,7 +32,7 @@ for c in cms:
  for path,value in flatten(c['payload']):
   if value in lookup and path[0] in ['data','relations']:
    o=lookup[value]
-   proposal={'operationId':o['id'],'cmsPath':c['path'],'entityId':c['payload']['data']['id'],'publicEnvelopePath':list(path),'from':value,'to':o['to'],'status':'DRAFT_REQUIRES_PUBLISH_PERMISSION'}
+   proposal={'proposalId':f'CMS-{len(proposals)+1:03}','replacementId':o['id'],'cmsPath':c['path'],'entityId':c['payload']['data']['id'],'publicEnvelopePath':list(path),'from':value,'to':o['to'],'status':'DRAFT_REQUIRES_PUBLISH_PERMISSION'}
    if path[:2] == ('data','fields'):
     proposal['adminOperation']={'kind':'entry.field.set','recordId':proposal['entityId'],'field':path[2]}
    elif path[:2] == ('relations','faqs') and len(path) == 4:
