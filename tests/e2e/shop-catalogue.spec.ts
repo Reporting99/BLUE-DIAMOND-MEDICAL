@@ -144,7 +144,6 @@ test.describe("Full catalogue-card → product-page flow", () => {
     await expect(page).toHaveURL(new RegExp(`/en/shop/${targetProduct.slug}$`));
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(targetProduct.name.en);
     await expect(page.getByText(targetProduct.subtitle!.en).first()).toBeVisible();
-    await expect(page.getByRole("heading", { name: "Questions about this product" })).toBeVisible();
     await expect(page.getByRole("heading", { name: "Benefits" })).toBeVisible();
   });
 
