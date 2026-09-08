@@ -21,6 +21,21 @@ import type { Locale } from "@/i18n/config";
 interface RouteMetadataOverrides {
   description: { en: string; ar: string };
   ogImagePath?: string;
+  /**
+   * An exact, client-approved <title> for one or both locales.
+   *
+   * Titles normally come from the route registry and pick up the layout's
+   * `%s · Blue Diamond Medical` template, which is right for the 28 routes
+   * that have no separately approved title. Where the client HAS approved a
+   * specific string (e.g. /careers), that string is the title verbatim —
+   * hence `absolute`, which opts out of the template rather than producing
+   * "Careers at Blue Diamond Medical | Join Our Team · Blue Diamond Medical".
+   *
+   * Per-locale and optional on both: a locale with no approved title keeps
+   * the registry title, so supplying English alone never forces a
+   * machine-translated Arabic one.
+   */
+  title?: Partial<Record<Locale, string>>;
 }
 
 /**
@@ -89,8 +104,16 @@ export function getRouteMetadata(
   // the tags entirely is the honest state: the page has no public URL yet.
   const urlsArePublishable = siteUrlIsConfigured();
 
+  // The approved override when there is one, else the registry title. Used
+  // for og:title and twitter:title too, so a share card and the browser tab
+  // never disagree about what the page is called.
+  const approvedTitle = overrides.title?.[locale];
+  const socialTitle = approvedTitle ?? route.title[locale];
+
   return {
-    title: route.title[locale],
+    // `absolute` only when a title was actually approved for this locale;
+    // otherwise the plain string still flows through the layout template.
+    title: approvedTitle ? { absolute: approvedTitle } : route.title[locale],
     description: overrides.description[locale],
     ...(urlsArePublishable
       ? {
@@ -117,7 +140,7 @@ export function getRouteMetadata(
         ? { index: true, follow: true }
         : { index: false, follow: false },
     openGraph: {
-      title: route.title[locale],
+      title: socialTitle,
       description: overrides.description[locale],
       // Same rule as the canonical above: an absolute og:url only once a real
       // origin exists. A relative og:url is meaningless to every consumer.
@@ -136,7 +159,7 @@ export function getRouteMetadata(
     },
     twitter: {
       card: ogImage ? "summary_large_image" : "summary",
-      title: route.title[locale],
+      title: socialTitle,
       description: overrides.description[locale],
       ...(ogImage ? { images: [ogImage] } : {}),
     },
