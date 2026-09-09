@@ -91,7 +91,7 @@ export const aestheticPriceRows: AestheticPriceRow[] = [
   { id: "PR-075", treatmentId: "ultra", group: ultraPrp, area: { en: "Face", ar: "الوجه" }, priceCents: 75000, technologyIds: ["ultra"], publicDisplay: true, source: "workbook" },
   { id: "PR-076", treatmentId: "ultra", group: ultraPrp, area: { en: "Hair Restoration", ar: "استعادة الشعر" }, priceCents: 75000, technologyIds: ["ultra"], publicDisplay: true, source: "workbook" },
 
-  // ── Radio Frequency · TempSure — workbook rows 29–35, 38 ──────────────────
+  // ── Radiofrequency · TempSure — workbook rows 29–35, 38 ──────────────────
   { id: "PR-025", treatmentId: "radio-frequency", group: tempSureEnvi, area: { en: "Perioral (smile lines)", ar: "حول الفم (خطوط الابتسامة)" }, priceCents: 30000, technologyIds: ["tempsure"], publicDisplay: true, source: "workbook" },
   { id: "PR-026", treatmentId: "radio-frequency", group: tempSureEnvi, area: { en: "Periorbital (eyes)", ar: "حول العينين" }, priceCents: 30000, technologyIds: ["tempsure"], publicDisplay: true, source: "workbook" },
   { id: "PR-027", treatmentId: "radio-frequency", group: tempSureEnvi, area: { en: "Full Face", ar: "كامل الوجه" }, priceCents: 65000, technologyIds: ["tempsure"], publicDisplay: true, source: "workbook" },

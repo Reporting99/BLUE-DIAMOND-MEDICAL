@@ -325,7 +325,7 @@ export const concerns: AestheticConcern[] = [
       {
         question: { en: "Are spider veins a health concern?", ar: "هل الأوردة العنكبوتية مشكلة صحية؟" },
         answer: {
-          en: "They're generally harmless but can be unsightly — treatment is typically for cosmetic reasons, though your physician will assess your specific case.",
+          en: "They're generally harmless, though many patients find them distracting. Treatment is typically for cosmetic reasons, and your physician will assess your specific case.",
           ar: "غير ضارة عادةً لكنها قد تكون مزعجة جماليًا — ويكون العلاج عادةً لأسباب تجميلية، إلا أن طبيبكم سيقيّم حالتكم تحديدًا.",
         },
       },
