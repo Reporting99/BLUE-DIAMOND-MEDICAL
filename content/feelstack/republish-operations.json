@@ -7,7 +7,7 @@
     "source": "GET /public/v1/sites/blue-diamond-medical/resolve (public, unauthenticated)"
   },
   "counts": {
-    "applicable": 63,
+    "applicable": 66,
     "excluded": 6
   },
   "operations": [
