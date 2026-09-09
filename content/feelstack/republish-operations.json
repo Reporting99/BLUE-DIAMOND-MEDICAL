@@ -877,6 +877,40 @@
       "field": "description",
       "from": "إدارة مستمرة للأمراض المزمنة مشمولة بالتأمين الصحي عبر طبيب أسرتكم، مع تركيز خاص من الدكتور باكاري على إدارة الأمراض المزمنة والرعاية التلطيفية.",
       "to": "إدارة مستمرة للأمراض المزمنة مشمولة بالتأمين الصحي عبر طبيب أسرتكم. ويمكن لأي من أطباء الأسرة في بلو دايموند تقديم إدارة الأمراض المزمنة."
+    },
+    {
+      "opId": "OP-064",
+      "applicable": true,
+      "kind": "entry.field.set",
+      "recordId": "d3fa75b6-eaf5-4007-b0d0-5ab8d0afa869",
+      "route": "/aesthetics/concerns/spider-veins",
+      "locale": "en",
+      "field": "summary",
+      "from": "Damaged blood vessels under the skin that can appear red, blue, or purple — generally harmless but unsightly. Laser treatments can remove them from anywhere on the body quickly and painlessly.",
+      "to": "Damaged blood vessels under the skin that can appear red, blue, or purple. They are generally harmless, though many patients find them distracting. Laser treatment may reduce their appearance on the face and legs, and most patients describe the sessions as quick and comfortable. Results vary, and a consultation confirms whether it suits you."
+    },
+    {
+      "opId": "OP-065",
+      "applicable": true,
+      "kind": "faq.update",
+      "recordId": "d3fa75b6-eaf5-4007-b0d0-5ab8d0afa869",
+      "faqId": "69e50c28-24d8-4e94-95a4-c524c504ab86",
+      "route": "/aesthetics/concerns/spider-veins",
+      "locale": "en",
+      "field": "answer",
+      "from": "They're generally harmless but can be unsightly — treatment is typically for cosmetic reasons, though your physician will assess your specific case.",
+      "to": "They're generally harmless, though many patients find them distracting. Treatment is typically for cosmetic reasons, and your physician will assess your specific case."
+    },
+    {
+      "opId": "OP-066",
+      "applicable": true,
+      "kind": "entry.field.set",
+      "recordId": "a64fe8ed-aeef-4ddd-9ae3-06423d47f6d8",
+      "route": "/aesthetics/treatments/prp-skin-rejuvenation",
+      "locale": "en",
+      "field": "summary",
+      "from": "PRP used topically or via microinjections to smooth fine lines and wrinkles, improve tone and elasticity, and reduce acne scars and pigmentation — often called the \"vampire facial.\"",
+      "to": "PRP used topically or via microinjections to smooth fine lines and wrinkles, improve tone and elasticity, and reduce the appearance of acne scars and pigmentation."
     }
   ],
   "note": "Repository-controlled CMS correction set, read by scripts/feelstack-republish.mjs. Tracked: it used to live under the gitignored evidence/, so the script it drives could not run from a fresh checkout at all. Every from/to pair was captured from the PUBLIC resolver and is re-checked against the live value before any write."
