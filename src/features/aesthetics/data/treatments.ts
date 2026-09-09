@@ -6,7 +6,7 @@ import type { AestheticTreatment } from "@/features/aesthetics/types";
  * "Cosmetic Botox" and "Skin Tightening" from the brief's route list are
  * built (route, typed data, template — see `gatedTreatments` below) but
  * kept feature-flagged off since the only available source content for
- * each would duplicate the Botox hub / Radio Frequency page rather than
+ * each would duplicate the Botox hub / Radiofrequency page rather than
  * add anything unique. See docs/CONTENT_MODEL.md.
  */
 export const treatments: AestheticTreatment[] = [
@@ -399,7 +399,7 @@ export const treatments: AestheticTreatment[] = [
     slugAr: "تجديد-البشرة-بالبلازما",
     title: { en: "PRP Skin Rejuvenation", ar: "تجديد البشرة بالبلازما" },
     summary: {
-      en: 'PRP used topically or via microinjections to smooth fine lines and wrinkles, improve tone and elasticity, and reduce acne scars and pigmentation — often called the "vampire facial."',
+      en: "PRP used topically or via microinjections to smooth fine lines and wrinkles, improve tone and elasticity, and reduce the appearance of acne scars and pigmentation.",
       ar: "تُستخدم البلازما الغنية بالصفائح الدموية موضعيًا أو عبر حقن دقيقة لتنعيم الخطوط الدقيقة والتجاعيد، وتحسين نضارة البشرة ومرونتها، وتقليل ندبات حب الشباب والتصبغ — يُعرف أحيانًا باسم \"فيشل مصاص الدماء\".",
     },
     howItWorks: {
@@ -527,7 +527,7 @@ export const gatedTreatments: (AestheticTreatment & { requiresFeature: string })
     slugAr: "شد-البشرة",
     title: { en: "Skin Tightening", ar: "شد البشرة" },
     summary: {
-      en: "Skin tightening at Blue Diamond is delivered through our Radio Frequency (TempSure) treatment — see that page for the full clinical detail.",
+      en: "Skin tightening at Blue Diamond is delivered through our Radiofrequency (TempSure) treatment — see that page for the full clinical detail.",
       ar: "يُقدَّم شدّ البشرة في بلو دايموند عبر علاج الترددات الراديوية (TempSure) — راجعوا تلك الصفحة للتفاصيل السريرية الكاملة.",
     },
     relatedTreatmentIds: ["radio-frequency"],

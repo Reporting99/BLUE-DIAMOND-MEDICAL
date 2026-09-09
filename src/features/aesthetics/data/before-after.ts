@@ -312,10 +312,10 @@ export const beforeAfterPairs: BeforeAfterPair[] = [
     pairId: "radio-frequency-01",
     treatmentId: "radio-frequency",
     technologyId: "tempsure",
-    description: { en: "Clinical example published on Blue Diamond's original Radio Frequency page.", ar: "مثال سريري كان منشورًا على صفحة الترددات الراديوية في موقع بلو دايموند الأصلي." },
+    description: { en: "Clinical example published on Blue Diamond's original Radiofrequency page.", ar: "مثال سريري كان منشورًا على صفحة الترددات الراديوية في موقع بلو دايموند الأصلي." },
     before: {
       imagekitPath: "/blue-diamond/before-after/radio-frequency-01-before.png",
-      alt: { en: "Clinical example 1 — before Radio Frequency", ar: "مثال سريري قبل الترددات الراديوية 1" },
+      alt: { en: "Clinical example 1 — before Radiofrequency", ar: "مثال سريري قبل الترددات الراديوية 1" },
       sourceUrl: "https://uploads.commoninja.com/before_after/1731554603454_TempSure_Before.png",
       originalFilename: "1731554603454_TempSure_Before.png",
       width: 398,
@@ -324,7 +324,7 @@ export const beforeAfterPairs: BeforeAfterPair[] = [
     },
     after: {
       imagekitPath: "/blue-diamond/before-after/radio-frequency-01-after.png",
-      alt: { en: "Clinical example 1 — after Radio Frequency", ar: "مثال سريري بعد الترددات الراديوية 1" },
+      alt: { en: "Clinical example 1 — after Radiofrequency", ar: "مثال سريري بعد الترددات الراديوية 1" },
       sourceUrl: "https://cdn.commoninja.com/asset/51876c60-5434-4f9d-8d57-41a401de89c0.png",
       originalFilename: "51876c60-5434-4f9d-8d57-41a401de89c0.png",
       width: 397,
@@ -346,10 +346,10 @@ export const beforeAfterPairs: BeforeAfterPair[] = [
     pairId: "radio-frequency-02",
     treatmentId: "radio-frequency",
     technologyId: "tempsure",
-    description: { en: "Clinical example published on Blue Diamond's original Radio Frequency page.", ar: "مثال سريري كان منشورًا على صفحة الترددات الراديوية في موقع بلو دايموند الأصلي." },
+    description: { en: "Clinical example published on Blue Diamond's original Radiofrequency page.", ar: "مثال سريري كان منشورًا على صفحة الترددات الراديوية في موقع بلو دايموند الأصلي." },
     before: {
       imagekitPath: "/blue-diamond/before-after/radio-frequency-02-before.png",
-      alt: { en: "Clinical example 2 — before Radio Frequency", ar: "مثال سريري قبل الترددات الراديوية 2" },
+      alt: { en: "Clinical example 2 — before Radiofrequency", ar: "مثال سريري قبل الترددات الراديوية 2" },
       sourceUrl: "https://uploads.commoninja.com/before_after/1731554683080_PRD_4497_TempSureEnvi_BampA_Standard_Format-921-000-0000_b4.png",
       originalFilename: "1731554683080_PRD_4497_TempSureEnvi_BampA_Standard_Format-921-000-0000_b4.png",
       width: 962,
@@ -358,7 +358,7 @@ export const beforeAfterPairs: BeforeAfterPair[] = [
     },
     after: {
       imagekitPath: "/blue-diamond/before-after/radio-frequency-02-after.png",
-      alt: { en: "Clinical example 2 — after Radio Frequency", ar: "مثال سريري بعد الترددات الراديوية 2" },
+      alt: { en: "Clinical example 2 — after Radiofrequency", ar: "مثال سريري بعد الترددات الراديوية 2" },
       sourceUrl: "https://cdn.commoninja.com/asset/b093592d-bf76-48ae-b5b3-a47ba77a67a4.png",
       originalFilename: "b093592d-bf76-48ae-b5b3-a47ba77a67a4.png",
       width: 964,
@@ -379,10 +379,10 @@ export const beforeAfterPairs: BeforeAfterPair[] = [
   {
     pairId: "radio-frequency-03",
     treatmentId: "radio-frequency",
-    description: { en: "Clinical example published on Blue Diamond's original Radio Frequency page.", ar: "مثال سريري كان منشورًا على صفحة الترددات الراديوية في موقع بلو دايموند الأصلي." },
+    description: { en: "Clinical example published on Blue Diamond's original Radiofrequency page.", ar: "مثال سريري كان منشورًا على صفحة الترددات الراديوية في موقع بلو دايموند الأصلي." },
     before: {
       imagekitPath: "/blue-diamond/before-after/radio-frequency-03-before.png",
-      alt: { en: "Clinical example 3 — before Radio Frequency", ar: "مثال سريري قبل الترددات الراديوية 3" },
+      alt: { en: "Clinical example 3 — before Radiofrequency", ar: "مثال سريري قبل الترددات الراديوية 3" },
       sourceUrl: "https://uploads.commoninja.com/before_after/1737139634411_skin_tone.png",
       originalFilename: "1737139634411_skin_tone.png",
       width: 2048,
@@ -391,7 +391,7 @@ export const beforeAfterPairs: BeforeAfterPair[] = [
     },
     after: {
       imagekitPath: "/blue-diamond/before-after/radio-frequency-03-after.png",
-      alt: { en: "Clinical example 3 — after Radio Frequency", ar: "مثال سريري بعد الترددات الراديوية 3" },
+      alt: { en: "Clinical example 3 — after Radiofrequency", ar: "مثال سريري بعد الترددات الراديوية 3" },
       sourceUrl: "https://cdn.commoninja.com/asset/b8476ddf-03ba-4c8a-b06b-0faa7cc6b14c.png",
       originalFilename: "b8476ddf-03ba-4c8a-b06b-0faa7cc6b14c.png",
       width: 2048,
