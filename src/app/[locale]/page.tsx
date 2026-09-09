@@ -536,11 +536,6 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
             ))}
           </div>
 
-          <div data-reveal="up" className="mt-10 border-t border-border pt-6">
-            <p className="text-xs font-semibold tracking-[0.08em] text-primary uppercase">{copy.otherServiceFactsHeading}</p>
-            <p className="mt-2 text-sm text-text-secondary">{copy.otherServiceFacts.join(" · ")}</p>
-          </div>
-
           <div className="mt-10 grid gap-6 border-t border-border pt-8 sm:grid-cols-2 lg:grid-cols-4">
             {copy.medicalGuidance.map((item, i) => (
               <div key={item.label} data-reveal="up" data-reveal-delay={String(i % 4)}>
