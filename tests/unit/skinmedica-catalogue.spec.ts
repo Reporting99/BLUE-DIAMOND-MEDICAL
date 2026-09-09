@@ -364,20 +364,48 @@ test("CL-042: 31 Myriade records publish, 23 SkinMedica records are archived, 54
   expect(products.length).toBe(features.skinMedicaEnabled ? 54 : 31);
 });
 
+// 2026-09-09 — 18 more Myriade records received a client-approved price
+// (see the task's authoritative mapping). Everything else about this guard
+// is unchanged: stock and purchase-path claims are still forbidden, and any
+// price OUTSIDE this exact approved set is still exactly the failure this
+// test exists to catch.
+const APPROVED_MYRIADE_PRICE_CENTS: Record<string, number> = {
+  "purifying-peeling": 18800, // pre-existing, "188 + GST" from the flyer
+  regenerating: 7400,
+  "lift-eye-contour": 7800,
+  "dermo-repair-complex-2": 8200,
+  "dermo-repair-complex-1": 8100,
+  "collagen-activator-serum": 10000,
+  "c-retinol": 10800,
+  "c-serum": 9200,
+  "c-eye-contour": 7400,
+  "ultra-protective": 7400,
+  "soothing-mask": 9200,
+  "soothing-gel": 5800,
+  "aha-cream": 7200,
+  "aha-mask": 9200,
+  "aha-bha-lotion": 7200,
+  "charcoal-purifier": 5200,
+  "skin-resurfacing-kit": 5200,
+  "oily-skin-kit": 5200,
+  "normal-skin-kit": 5200,
+};
+
 test("CL-042: no Myriade record claims a price, stock or purchase path it was not given", () => {
   const problems: string[] = [];
   for (const p of myriadeProducts) {
     if (p.inStock) problems.push(`${p.id}: claims stock`);
     if (!p.purchaseBlocked?.en) problems.push(`${p.id}: no purchaseBlocked note`);
-    // The flyer supplied exactly one price. Any other non-null price would be
-    // borrowed or estimated, which is the failure this guards.
-    if (p.id !== "purifying-peeling" && p.priceCents !== null) {
-      problems.push(`${p.id}: has a price the source never supplied`);
+    const approved = APPROVED_MYRIADE_PRICE_CENTS[p.id];
+    if (approved === undefined) {
+      if (p.priceCents !== null) problems.push(`${p.id}: has a price the source never supplied`);
+    } else if (p.priceCents !== approved) {
+      problems.push(`${p.id}: expected the approved price ${approved}, has ${p.priceCents}`);
     }
   }
   expect(problems, problems.join("\n")).toEqual([]);
   const priced = myriadeProducts.filter((p) => p.priceCents !== null);
-  expect(priced.map((p) => p.id)).toEqual(["purifying-peeling"]);
+  expect(new Set(priced.map((p) => p.id))).toEqual(new Set(Object.keys(APPROVED_MYRIADE_PRICE_CENTS)));
 });
 
 test("CL-042: professional-only products say so and are never purchasable", () => {

@@ -89,6 +89,17 @@ export function buildClinicGraph(locale: Locale): JsonLdNode {
         ...(siteOrigin() ? { url: siteOrigin() } : {}),
         telephone: siteConfig.clinic.phoneDisplay,
         faxNumber: siteConfig.clinic.faxDisplay,
+        // Explicit ContactPoint, distinct from the aesthetics department's
+        // own one below — CONF-001 (2026-09-09): the two departments have
+        // separate numbers again, so this must not be inferred from a single
+        // top-level `telephone` field alone.
+        contactPoint: {
+          "@type": "ContactPoint",
+          telephone: siteConfig.clinic.phoneDisplay,
+          contactType: "Medical Clinic",
+          areaServed: "CA",
+          availableLanguage: ["en", "ar"],
+        },
         address: {
           "@type": "PostalAddress",
           streetAddress: siteConfig.clinic.address.line1,
@@ -130,6 +141,13 @@ export function buildClinicGraph(locale: Locale): JsonLdNode {
           ...(siteOrigin() ? { url: siteOrigin() } : {}),
           telephone: siteConfig.aesthetics.phoneDisplay,
           faxNumber: siteConfig.aesthetics.faxDisplay,
+          contactPoint: {
+            "@type": "ContactPoint",
+            telephone: siteConfig.aesthetics.phoneDisplay,
+            contactType: "Medical Aesthetics",
+            areaServed: "CA",
+            availableLanguage: ["en", "ar"],
+          },
           address: {
             "@type": "PostalAddress",
             streetAddress: siteConfig.clinic.address.line1,

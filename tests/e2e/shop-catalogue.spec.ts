@@ -74,14 +74,41 @@ test.describe("Shop catalogue page", () => {
     const firstCard = page.locator("ul li a[href*='/en/shop/']:not([href*='/category/']):not([href*='/concern/'])").first();
     await expect(firstCard.getByText("View Product Details")).toBeVisible();
 
-    // The price assertion is now a two-sided one, because the live catalogue
-    // is Myriade and the supplied flyer carried exactly ONE price. Asserting
-    // "$x CAD on the first card" would have been asserting that a price the
-    // client never sent had appeared from somewhere.
+    // The price assertion is two-sided: only records with a client-approved
+    // price show one, at the exact approved value. 2026-09-09 added 18 more
+    // approved prices to the pre-existing "purifying-peeling" one (19 total);
+    // still not every record — asserting the exact set (not just "any
+    // price") keeps this test failing if a price appears from anywhere else.
     const priced = products.filter((p) => p.priceCents !== null);
-    expect(priced.map((p) => p.id), "the source supplies exactly one price").toEqual(["purifying-peeling"]);
-    const pricedCard = page.locator(`ul li a[href$='/${priced[0].slug}']`).first();
+    expect(new Set(priced.map((p) => p.id)), "exactly the 19 records with an approved price").toEqual(
+      new Set([
+        "purifying-peeling",
+        "regenerating",
+        "lift-eye-contour",
+        "dermo-repair-complex-2",
+        "dermo-repair-complex-1",
+        "collagen-activator-serum",
+        "c-retinol",
+        "c-serum",
+        "c-eye-contour",
+        "ultra-protective",
+        "soothing-mask",
+        "soothing-gel",
+        "aha-cream",
+        "aha-mask",
+        "aha-bha-lotion",
+        "charcoal-purifier",
+        "skin-resurfacing-kit",
+        "oily-skin-kit",
+        "normal-skin-kit",
+      ]),
+    );
+    const purifyingPeeling = priced.find((p) => p.id === "purifying-peeling")!;
+    const pricedCard = page.locator(`ul li a[href$='/${purifyingPeeling.slug}']`).first();
     await expect(pricedCard).toContainText("188 + GST");
+    const regenerating = priced.find((p) => p.id === "regenerating")!;
+    const newlyPricedCard = page.locator(`ul li a[href$='/${regenerating.slug}']`).first();
+    await expect(newlyPricedCard).toContainText("$74");
     // ...and a card with no supplied price shows no price at all, not a zero,
     // a dash, or a sibling's.
     const unpricedCard = page.locator("ul li a[href$='/the-cleanser']").first();

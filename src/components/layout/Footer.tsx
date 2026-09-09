@@ -71,12 +71,29 @@ export function Footer({ locale }: { locale: Locale }) {
               {siteConfig.clinic.address.line1}, {siteConfig.clinic.address.city} {siteConfig.clinic.address.region}{" "}
               {siteConfig.clinic.address.postalCode}
             </p>
+            {/* 2026-09-09 — both department lines, each explicitly labeled.
+                A bare number here previously read as "the" clinic phone with
+                no department attached; two distinct lines now exist
+                (CONF-001), so an unlabeled number is ambiguous. */}
+            <p className="mt-2 text-xs" style={{ color: "var(--footer-text-muted)" }}>
+              {locale === "ar" ? "العيادة الطبية" : "Medical Clinic"}
+            </p>
             <a
-              className="ltr-run mt-1 inline-block text-sm font-medium hover:text-[color:var(--footer-link-hover)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--footer-focus)]"
+              className="ltr-run inline-block text-sm font-medium hover:text-[color:var(--footer-link-hover)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--footer-focus)]"
               style={{ color: "var(--footer-text)" }}
               href={`tel:${siteConfig.clinic.phone}`}
             >
               {siteConfig.clinic.phoneDisplay}
+            </a>
+            <p className="mt-2 text-xs" style={{ color: "var(--footer-text-muted)" }}>
+              {locale === "ar" ? "التجميل الطبي" : "Medical Aesthetics"}
+            </p>
+            <a
+              className="ltr-run inline-block text-sm font-medium hover:text-[color:var(--footer-link-hover)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--footer-focus)]"
+              style={{ color: "var(--footer-text)" }}
+              href={`tel:${siteConfig.aesthetics.phone}`}
+            >
+              {siteConfig.aesthetics.phoneDisplay}
             </a>
           </div>
           {/* CL-009 — the footer renders on every page, so the published

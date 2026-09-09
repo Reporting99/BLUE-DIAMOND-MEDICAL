@@ -22,21 +22,6 @@ import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
 import { PageSchema } from "@/components/shared/schema";
 import { siteConfig } from "@/config/site";
 
-/**
- * AHS-insured services with no dedicated page yet — listed plainly, no
- * fabricated detail.
- *
- * CL-023: "Onsite Paediatrician" / "طبيب أطفال في العيادة" removed. The
- * clinic does not currently have an onsite paediatrician, so advertising one
- * here (and in the homepage's matching strip, `otherServiceFacts`) told
- * patients they could bring a child to a specialist who is not in the
- * building. Both copies of the list were corrected together.
- */
-const otherInsuredServices = {
-  en: ["General Family Medicine", "Vaccination", "Mental Health", "Women's Health"],
-  ar: ["طب الأسرة العام", "التطعيمات", "الصحة النفسية", "صحة المرأة"],
-};
-
 export async function generateMetadata({
   params,
 }: {
@@ -74,7 +59,6 @@ export default async function MedicalHubPage({ params }: { params: Promise<{ loc
       intro:
         "Male and female family physicians, accepting new patients and walk-ins. We provide comprehensive AHS-insured family medicine, along with a listed set of uninsured services and forms.",
       servicesHeading: "Explore our services",
-      otherHeading: "Other family medicine services",
       uninsuredCta: "View uninsured service fees",
       registeredCta: "Book with your doctor",
       walkInCta: "Book as a new or walk-in patient",
@@ -85,7 +69,6 @@ export default async function MedicalHubPage({ params }: { params: Promise<{ loc
       intro:
         "أطباء وطبيبات أسرة يستقبلون مرضى جددًا وحالات بدون موعد مسبق، ويقدّمون رعاية طب أسرة شاملة مشمولة بالتأمين الصحي، إلى جانب قائمة محددة من الخدمات والنماذج غير المشمولة.",
       servicesHeading: "تصفّح خدماتنا",
-      otherHeading: "خدمات إضافية ضمن طب الأسرة المشمول بالتأمين الصحي",
       uninsuredCta: "عرض رسوم الخدمات غير المشمولة",
       registeredCta: "احجز مع طبيبك",
       walkInCta: "احجز كمريض جديد أو بدون موعد",
@@ -255,19 +238,10 @@ export default async function MedicalHubPage({ params }: { params: Promise<{ loc
       <SectionTransition from="var(--surface)" to="var(--background)" />
       <section className="section-y">
         <Container>
-          <h2 data-reveal="up" className="text-display-2 font-heading">{copy.otherHeading}</h2>
-          <ul className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {otherInsuredServices[locale].map((item, i) => (
-              <li key={item} data-reveal="up" data-reveal-delay={String(i % 3)} className="rounded-md border border-border bg-surface px-4 py-3 text-sm">
-                {item}
-              </li>
-            ))}
-          </ul>
-
           <Link
             data-reveal="up"
             href={`/${locale}${uninsuredRoute.path[locale]}`}
-            className="mt-8 inline-flex items-center gap-1 font-medium text-primary hover:text-primary-hover"
+            className="inline-flex items-center gap-1 font-medium text-primary hover:text-primary-hover"
           >
             {copy.uninsuredCta} <ArrowRight className="size-4 rtl:rotate-180" />
           </Link>

@@ -5,7 +5,7 @@ import { PageHero } from "@/components/layout/PageHero";
 import { SectionTransition } from "@/components/layout/SectionTransition";
 import { isLocale, type Locale } from "@/i18n/config";
 import { getRouteMetadata } from "@/lib/seo/metadata";
-import { getBookingUrl, isBookable, type BookingChannel } from "@/config/booking";
+import { getBookingUrl, isBookable, NEW_PATIENT_ONLINE_BOOKING_URL, type BookingChannel } from "@/config/booking";
 import { siteConfig } from "@/config/site";
 import { AccessOptions } from "@/components/shared/AccessOptions";
 import { NewPatientNotice } from "@/components/shared/NewPatientNotice";
@@ -44,15 +44,33 @@ const options: { channel: BookingChannel; description: { en: string; ar: string 
       ar: "فحص مجاني لأمراض العين مشمول بالتأمين الصحي مع Euclid Telehealth، في العيادة مرة شهريًا.",
     },
   },
-  {
-    channel: "aesthetics-consultation",
-    description: {
-      // CL-008 — provider, duration and destination agree with the CTA label.
-      en: "For all aesthetic treatment appointments, book a 20-minute consultation with Dr. Farhat.",
-      ar: "تبدأ جميع مواعيد العلاجات التجميلية باستشارة مع الطبيب.",
-    },
-  },
 ];
+
+/**
+ * 2026-09-09 release — replaces the former "Book a 20-minute consultation"
+ * card (Mikata-linked) in this grid. This card is NOT driven by
+ * `bookingDestinations["aesthetics-consultation"]`: that channel still points
+ * to Mikata and remains correct everywhere else it's used (AccessOptions
+ * below, treatment/concern pages, the homepage) for the actual aesthetics
+ * consultation booking flow. This card is a distinct, page-specific
+ * promotion of the Skip the Waiting Room walk-in queue, approved verbatim —
+ * do not shorten, rephrase, or merge it back into the channel table.
+ */
+const SKIP_BOOKING_CARD = {
+  title: {
+    en: "Visit or call us to book",
+    ar: "زرنا في العيادة أو اتصل بنا للحجز",
+  },
+  body: {
+    en: "Visit Blue Diamond Medical or call our medical clinic at +1 (825) 413-1113 or our medical aesthetics clinic at +1 (403) 247-1418. For eligible appointments, you can also book online through Skip the Waiting Room.",
+    ar: "يمكنك زيارة عيادة بلو دايموند الطبية أو الاتصال بالعيادة الطبية على ‎+1 (825) 413-1113، أو عيادة التجميل الطبي على ‎+1 (403) 247-1418. وللمواعيد المؤهلة، يمكنك أيضاً الحجز عبر Skip the Waiting Room.",
+  },
+  cta: {
+    en: "Book with Skip the Waiting Room",
+    ar: "احجز عبر Skip the Waiting Room",
+  },
+  href: NEW_PATIENT_ONLINE_BOOKING_URL!,
+} as const;
 
 export async function generateMetadata({
   params,
@@ -152,6 +170,29 @@ export default async function BookAppointmentPage({ params }: { params: Promise<
               </a>
             );
           })}
+
+          {/* 2026-09-09 — dedicated card, not channel-driven. See
+              SKIP_BOOKING_CARD above for why this can't reuse the loop. The
+              entire card is the external link (no nested anchors), so the
+              two phone numbers inside it are plain text, not `tel:` links —
+              both numbers still get real `tel:` links elsewhere on this same
+              page (the "How to book" block below) and sitewide. */}
+          <a
+            data-reveal="up"
+            data-reveal-delay={String(options.length % 2)}
+            href={SKIP_BOOKING_CARD.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group flex flex-col justify-between rounded-lg border border-border bg-surface p-6 transition-[border-color,box-shadow] duration-[var(--motion-normal)] ease-[var(--motion-ease)] hover:border-primary hover:shadow-[0_10px_30px_rgba(29,86,120,0.10)]"
+          >
+            <div>
+              <h2 className="text-h4 font-heading">{SKIP_BOOKING_CARD.title[locale]}</h2>
+              <p className="mt-2 text-sm text-text-secondary">{SKIP_BOOKING_CARD.body[locale]}</p>
+            </div>
+            <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-primary">
+              {SKIP_BOOKING_CARD.cta[locale]} <ArrowUpRight className="size-4" />
+            </span>
+          </a>
         </div>
 
         {/* CL-005 — online, by phone, and in person, all three stated on the

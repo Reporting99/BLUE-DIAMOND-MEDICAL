@@ -69,9 +69,6 @@ export const homepageCopy = {
       short: { en: "Forms, notes, and other uninsured services, with fees listed in advance.", ar: "نماذج ومذكرات وخدمات أخرى غير مشمولة بالتأمين، برسوم معلنة مسبقًا." },
       long: { en: "Care and paperwork that Alberta Health doesn't cover — travel and work forms, medical notes, and similar administrative requests — priced and listed on our uninsured-services page before your visit.", ar: "رعاية ومعاملات لا يغطيها التأمين الصحي لألبرتا — كنماذج السفر والعمل والمذكرات الطبية وطلبات إدارية مشابهة — مع أسعار معلنة على صفحة الخدمات غير المشمولة قبل زيارتكم." },
     },
-    otherServiceFactsHeading: "Other family medicine services",
-    // CL-023 — "Onsite Pediatrician" removed: it is not a current clinic service.
-    otherServiceFacts: ["General Family Medicine", "Walk-In Care", "Vaccination", "Mental Health", "Women's Health"],
     medicalGuidance: [
       { label: "Registered patients", body: "Book online with your own family physician through Mikata, or call the clinic." },
       { label: "New patients and walk-ins", body: "Call the clinic or come to reception — walk-ins have been welcomed consistently since the clinic opened in July 2022." },
@@ -178,8 +175,6 @@ export const homepageCopy = {
       short: { en: "Forms, notes, and other uninsured services, with fees listed in advance.", ar: "نماذج ومذكرات وخدمات أخرى غير مشمولة بالتأمين، برسوم معلنة مسبقًا." },
       long: { en: "Care and paperwork that Alberta Health doesn't cover — travel and work forms, medical notes, and similar administrative requests — priced and listed on our uninsured-services page before your visit.", ar: "رعاية ومعاملات لا يغطيها التأمين الصحي لألبرتا — كنماذج السفر والعمل والمذكرات الطبية وطلبات إدارية مشابهة — مع أسعار معلنة على صفحة الخدمات غير المشمولة قبل زيارتكم." },
     },
-    otherServiceFactsHeading: "مشمول أيضًا في كل زيارة",
-    otherServiceFacts: ["طب الأسرة العام", "الرعاية بدون موعد", "التطعيمات", "الصحة النفسية", "صحة المرأة"],
     medicalGuidance: [
       { label: "المرضى المسجّلون", body: "احجزوا عبر الإنترنت مع طبيب أسرتكم من خلال نظام Mikata، أو اتصلوا بالعيادة." },
       { label: "المرضى الجدد والزيارات بدون موعد", body: "اتصلوا بالعيادة أو توجّهوا إلى الاستقبال — يُرحَّب بالحالات بدون موعد باستمرار منذ افتتاح العيادة في يوليو 2022." },
@@ -255,8 +250,9 @@ export const homepageCopy = {
 // registry ("HEADER, DISCLAIMER REMOVAL, COUNTERS AND SERVICE-CARD
 // INTERACTIONS" pass §7). "General Family Medicine," "Walk-In Care,"
 // "Vaccination," "Pediatrics," "Mental Health," and "Women's Health" have
-// no dedicated page — they're shown as a plain informational strip below
-// the cards (`otherServiceFacts`), never as a dead/fake-linked card.
+// no dedicated page, so none of them appears as a dead/fake-linked card
+// here. (They previously also had a plain informational strip below the
+// cards, `otherServiceFacts` — removed 2026-09-09, client instruction.)
 export const SERVICE_CARD_ORDER = [
   "eye-screening",
   "after-hours-care",

@@ -492,7 +492,7 @@ const myriadeProducts: Product[] = [
     categoryIds: ["daily-care"],
     concernIds: [],
     sizeLabel: "50 ml",
-    priceCents: null,
+    priceCents: 7400,
     benefits: {
       en: [
         "Helps maintain facial hydration throughout the day.",
@@ -557,7 +557,7 @@ const myriadeProducts: Product[] = [
     categoryIds: ["daily-care"],
     concernIds: [],
     sizeLabel: "100 ml",
-    priceCents: null,
+    priceCents: 5800,
     benefits: {
       en: [
         "Promotes healing and quickly soothes redness and skin discomfort.",
@@ -626,7 +626,7 @@ const myriadeProducts: Product[] = [
     categoryIds: ["daily-care"],
     concernIds: [],
     sizeLabel: "150 ml",
-    priceCents: null,
+    priceCents: 9200,
     benefits: {
       en: [
         "Improves skin appearance and reduces visible signs of aging.",
@@ -766,7 +766,7 @@ const myriadeProducts: Product[] = [
     categoryIds: ["brightening"],
     concernIds: [],
     sizeLabel: "50 ml",
-    priceCents: null,
+    priceCents: 10800,
     benefits: {
       en: [
         "Reduces visible signs of skin aging.",
@@ -849,7 +849,7 @@ const myriadeProducts: Product[] = [
     categoryIds: ["brightening"],
     concernIds: [],
     sizeLabel: "15 ml",
-    priceCents: null,
+    priceCents: 7400,
     benefits: {
       en: [
         "Reduces and helps prevent hyperpigmentation around the eyes.",
@@ -933,7 +933,7 @@ const myriadeProducts: Product[] = [
     categoryIds: ["brightening"],
     concernIds: [],
     sizeLabel: "30 ml",
-    priceCents: null,
+    priceCents: 9200,
     benefits: {
       en: [
         "Protects skin against free-radical damage associated with skin aging.",
@@ -996,7 +996,7 @@ const myriadeProducts: Product[] = [
     categoryIds: ["purifying"],
     concernIds: [],
     sizeLabel: "130 ml",
-    priceCents: null,
+    priceCents: 5200,
     benefits: {
       en: [
         "Removes dead skin cells and impurities from surface layers.",
@@ -1069,7 +1069,7 @@ const myriadeProducts: Product[] = [
     categoryIds: ["purifying"],
     concernIds: [],
     sizeLabel: "30 ml",
-    priceCents: null,
+    priceCents: 7200,
     benefits: {
       en: [
         "Controls sebum and skin breakouts.",
@@ -1136,7 +1136,7 @@ const myriadeProducts: Product[] = [
     categoryIds: ["purifying"],
     concernIds: [],
     sizeLabel: "150 ml",
-    priceCents: null,
+    priceCents: 9200,
     benefits: {
       en: [
         "Tightens pores and helps prevent blackheads.",
@@ -1215,7 +1215,7 @@ const myriadeProducts: Product[] = [
     categoryIds: ["purifying"],
     concernIds: [],
     sizeLabel: "50 ml",
-    priceCents: null,
+    priceCents: 7200,
     benefits: {
       en: [
         "Brightens and exfoliates skin.",
@@ -1288,7 +1288,7 @@ const myriadeProducts: Product[] = [
     categoryIds: ["anti-aging-repairing"],
     concernIds: [],
     sizeLabel: "50 ml",
-    priceCents: null,
+    priceCents: 7400,
     benefits: {
       en: [
         "Reduces and soothes redness associated with rosacea, weather, AHAs, and retinoids.",
@@ -1367,7 +1367,7 @@ const myriadeProducts: Product[] = [
     categoryIds: ["anti-aging-repairing"],
     concernIds: [],
     sizeLabel: "50 ml",
-    priceCents: null,
+    priceCents: 8100,
     benefits: {
       en: [
         "Repairs and protects skin after ablative procedures, and skin that is extremely dehydrated.",
@@ -1442,7 +1442,7 @@ const myriadeProducts: Product[] = [
     categoryIds: ["anti-aging-repairing"],
     concernIds: [],
     sizeLabel: "50 ml",
-    priceCents: null,
+    priceCents: 8200,
     benefits: {
       en: [
         "Repairs skin during healing after ablative dermo-aesthetic treatments.",
@@ -1513,7 +1513,7 @@ const myriadeProducts: Product[] = [
     categoryIds: ["anti-aging-repairing"],
     concernIds: [],
     sizeLabel: "15 ml",
-    priceCents: null,
+    priceCents: 7800,
     benefits: {
       en: [
         "Reduces and helps prevent wrinkles, fine lines, puffiness, and dark circles.",
@@ -1590,7 +1590,7 @@ const myriadeProducts: Product[] = [
     categoryIds: ["anti-aging-repairing"],
     concernIds: [],
     sizeLabel: "30 ml",
-    priceCents: null,
+    priceCents: 10000,
     benefits: {
       en: [
         "Stimulates collagen production.",
@@ -1941,7 +1941,7 @@ const myriadeProducts: Product[] = [
     categoryIds: ["kits"],
     concernIds: [],
     sizeLabel: "Complete set",
-    priceCents: null,
+    priceCents: 5200,
     kitContents: {
       en: [
         "The Cleanser 30 ml",
@@ -1978,7 +1978,7 @@ const myriadeProducts: Product[] = [
     categoryIds: ["kits"],
     concernIds: [],
     sizeLabel: "Complete set",
-    priceCents: null,
+    priceCents: 5200,
     kitContents: {
       en: [
         "The Cleanser 30 ml",
@@ -2015,7 +2015,7 @@ const myriadeProducts: Product[] = [
     categoryIds: ["kits"],
     concernIds: [],
     sizeLabel: "Complete set",
-    priceCents: null,
+    priceCents: 5200,
     kitContents: {
       en: [
         "The Cleanser 30 ml",

@@ -183,22 +183,25 @@ export default async function ContactPage({
                 {siteConfig.clinic.address.region} {siteConfig.clinic.address.postalCode}
               </dd>
             </div>
-            {/* CL-042 asked for two named phone rows, because the page used to
-                show one unattributed number and hid the separate aesthetics
-                line. CONF-001 then retired that second line: the clinic
-                publishes ONE number for both services. Keeping two rows meant
-                printing the same number twice, in two different formats, under
-                two labels — which reads as two lines that do not exist. One
-                row, named for both services, is the honest rendering. */}
+            {/* CL-042 originally asked for two named phone rows. CONF-001 then
+                merged them into one row for a period when both departments
+                shared a single number. The 2026-09-09 release re-opened
+                CONF-001: Medical Aesthetics has its own number again, so two
+                honest rows are restored rather than one row naming both
+                services against a single number. */}
             <div>
-              <dt className="text-sm text-text-secondary">
-                {locale === "ar"
-                  ? "الهاتف — العيادة الطبية والتجميل الطبي"
-                  : "Phone — medical clinic and medical aesthetics"}
-              </dt>
+              <dt className="text-sm text-text-secondary">{locale === "ar" ? "العيادة الطبية" : "Medical Clinic"}</dt>
               <dd>
                 <a className="ltr-run hover:text-primary" href={`tel:${siteConfig.clinic.phone}`}>
                   {siteConfig.clinic.phoneDisplay}
+                </a>
+              </dd>
+            </div>
+            <div>
+              <dt className="text-sm text-text-secondary">{locale === "ar" ? "التجميل الطبي" : "Medical Aesthetics"}</dt>
+              <dd>
+                <a className="ltr-run hover:text-primary" href={`tel:${siteConfig.aesthetics.phone}`}>
+                  {siteConfig.aesthetics.phoneDisplay}
                 </a>
               </dd>
             </div>
