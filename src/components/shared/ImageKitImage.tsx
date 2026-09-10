@@ -7,6 +7,18 @@ import { cn } from "@/lib/utils";
 interface ImageKitImageProps {
   /** ImageKit path, e.g. "/doctors/farhat.jpg". Ignored when status !== "approved". */
   path: string;
+  /**
+   * Cache-busting version token for this asset (e.g. `ResolvedMedia.version`
+   * — the FeelStack media assignment's own id, today's most stable proxy for
+   * "the image behind this path changed"). Forwarded to the ImageKit SDK's
+   * `queryParameters` option, which is additive to the transformation string
+   * it builds from `preset` — see `imagePresets` — so it can never collide
+   * with or displace a crop/format/quality param. Omitted (not `undefined`
+   * stringified) when there is no version to bust with, so an asset that
+   * predates this field, or comes from a static (non-CMS) source, renders
+   * the exact same URL it always has.
+   */
+  version?: string;
   preset: ImagePresetKey;
   role: ImageRole;
   status: ImageStatus;
@@ -56,6 +68,7 @@ interface ImageKitImageProps {
  */
 export function ImageKitImage({
   path,
+  version,
   preset,
   role,
   status,
@@ -95,6 +108,7 @@ export function ImageKitImage({
         <ImageKitSdkImage
           src={path}
           transformation={[imagePresets[preset]]}
+          {...(version ? { queryParameters: { v: version } } : {})}
           alt={altText}
           width={width}
           height={height}

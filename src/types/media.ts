@@ -27,4 +27,13 @@ export interface ImageKitAsset {
   caption?: { en: string; ar: string };
   role: ImageRole;
   status: ImageStatus;
+  /**
+   * Optional cache-busting version token appended to the ImageKit request as
+   * a `queryParameters` entry (see `ResolvedMedia` in
+   * src/lib/feelstack/media.ts). Optional because not every `ImageKitAsset`
+   * value originates from a FeelStack media assignment (e.g. static/manifest
+   * assets) — those simply never append a version param and behave exactly
+   * as before.
+   */
+  version?: string;
 }

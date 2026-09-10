@@ -119,6 +119,7 @@ export function MediaCard({
         {image ? (
           <ImageKitImage
             path={image.path}
+            version={image.version}
             preset={preset}
             role={image.role}
             status={image.status}

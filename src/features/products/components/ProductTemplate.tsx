@@ -142,6 +142,7 @@ export function ProductTemplate({ product, locale }: { product: Product; locale:
             src: coverImage.path,
             urlEndpoint: imagekitConfig.urlEndpoint,
             transformation: [imagePresets["product-gallery"]],
+            ...(coverImage.version ? { queryParameters: { v: coverImage.version } } : {}),
           }),
         }
       : {}),
@@ -160,6 +161,7 @@ export function ProductTemplate({ product, locale }: { product: Product; locale:
         <div className="aspect-square overflow-hidden rounded-lg">
           <ImageKitImage
             path={coverImage.path}
+            version={coverImage.version}
             preset="product"
             role="product"
             status={coverImage.status}
