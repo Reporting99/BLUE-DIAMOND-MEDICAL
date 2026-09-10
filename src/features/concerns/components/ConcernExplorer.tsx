@@ -84,6 +84,7 @@ export function ConcernExplorer({
                  is only used when the library supplied no alt text at all. */
               <ImageKitImage
                 path={activeImage.path}
+                version={activeImage.version}
                 preset="concern"
                 role={activeImage.role}
                 status={activeImage.status}

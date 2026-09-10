@@ -189,7 +189,18 @@ export interface Product {
   /** For a kit: the products it contains, as supplied. */
   kitContents?: { en: string[]; ar: string[] };
   sizeLabel?: string; // e.g. "56.7 g" — not translated, a measurement
-  images: { path: string; status: ImageStatus; alt: Bilingual }[];
+  images: {
+    path: string;
+    status: ImageStatus;
+    alt: Bilingual;
+    /**
+     * Cache-busting version token — see `ResolvedMedia` in
+     * src/lib/feelstack/media.ts. Always undefined for these static,
+     * repo-authored entries; present only once a CMS-resolved assignment
+     * (see `productCardImage`) is merged in ahead of it.
+     */
+    version?: string;
+  }[];
   approvalStatus: "approved" | "pending";
   inStock: boolean;
   /**

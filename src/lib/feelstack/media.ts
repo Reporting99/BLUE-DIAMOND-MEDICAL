@@ -121,12 +121,32 @@ export function toImageStatus(approvalStatus: string): ImageStatus {
 export interface ResolvedMedia extends ImageKitAsset {
   slot: string;
   sortOrder: number;
+  /**
+   * Cache-busting version token for this asset, forwarded to `ImageKitImage`
+   * as an ImageKit `queryParameters` entry (never hand-concatenated onto
+   * `path`, which must stay a bare ImageKit-relative path per
+   * `feelstackMediaAssignmentSchema`).
+   *
+   * FeelStack's public media contract does not (yet) expose ImageKit's own
+   * file version/ID, an `updatedAt` timestamp, or a content checksum on a
+   * media assignment row -- `feelstackMediaAssignmentSchema` above is the
+   * complete shape it sends. The assignment `id` is the most stable value
+   * actually available today: it identifies one asset-to-slot assignment,
+   * so it stays constant across unrelated edits (alt text, caption, sort
+   * order) and only changes when the assigned asset itself changes -- a
+   * replacement is a new assignment row, not an in-place mutation of this
+   * one (see `BRAND_MARK_PATH`'s note on ImageKit's import endpoint
+   * refusing to overwrite a path in place). When FeelStack starts emitting
+   * a real version/updatedAt/checksum field, prefer that here instead.
+   */
+  version?: string;
 }
 
 export function adaptMediaAssignment(item: FeelstackMediaAssignment): ResolvedMedia {
   return {
     id: item.id,
     path: item.path,
+    version: item.id,
     width: item.width,
     height: item.height,
     aspectRatio: (item.aspectRatio ?? item.width / item.height).toFixed(6),

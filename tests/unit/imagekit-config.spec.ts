@@ -1,8 +1,10 @@
 import { test, expect } from "@playwright/test";
+import { buildSrc } from "@imagekit/javascript";
 import {
   normalizeImagekitEndpoint,
   imagekitConfig,
   imagekitIsConfigured,
+  imagePresets,
 } from "../../src/config/imagekit";
 
 /**
@@ -75,5 +77,64 @@ test.describe("imagekit environment state", () => {
     // configured.
     expect(imagekitConfig.urlEndpoint).toMatch(/^https:\/\/[^/]+\/.+$/);
     expect(imagekitConfig.urlEndpoint.endsWith("/")).toBe(false);
+  });
+});
+
+/**
+ * Cache-busting version parameter — built the exact way `ImageKitImage`
+ * builds it: `queryParameters` alongside `transformation`, both handed to the
+ * same `@imagekit/next`/`@imagekit/javascript` URL builder used in
+ * production (`buildSrc` — see `imagekitSrc` in src/config/imagekit.ts). This
+ * exercises the SDK's own combination of the two rather than a hand-rolled
+ * string, so a future SDK change that alters how it merges them would fail
+ * this test instead of silently shipping a broken or colliding URL.
+ */
+test.describe("cache-busting version query parameter", () => {
+  test("appends the version as its own query param alongside the transform", () => {
+    const url = buildSrc({
+      urlEndpoint: imagekitConfig.urlEndpoint,
+      src: "/blue-diamond/treatments/rf-microneedling-hero.png",
+      transformation: [imagePresets.hero],
+      queryParameters: { v: "3f7c1a9e-0000-4000-8000-000000000001" },
+    });
+    const parsed = new URL(url);
+    expect(parsed.searchParams.get("v")).toBe("3f7c1a9e-0000-4000-8000-000000000001");
+    // The transform is still present and untouched — the version param is
+    // additive, never a replacement for the crop/format/quality string.
+    expect(parsed.searchParams.get("tr")).toBeTruthy();
+  });
+
+  test("the version param never collides with or overwrites the transform param", () => {
+    const withVersion = buildSrc({
+      urlEndpoint: imagekitConfig.urlEndpoint,
+      src: "/blue-diamond/treatments/rf-microneedling-hero.png",
+      transformation: [imagePresets.hero],
+      queryParameters: { v: "some-id" },
+    });
+    const withoutVersion = buildSrc({
+      urlEndpoint: imagekitConfig.urlEndpoint,
+      src: "/blue-diamond/treatments/rf-microneedling-hero.png",
+      transformation: [imagePresets.hero],
+    });
+    const trWith = new URL(withVersion).searchParams.get("tr");
+    const trWithout = new URL(withoutVersion).searchParams.get("tr");
+    // Adding `v` must not change the `tr` transform string at all.
+    expect(trWith).toBe(trWithout);
+    expect(new URL(withoutVersion).searchParams.has("v")).toBe(false);
+  });
+
+  test("omitting the version produces the exact same URL as before this change", () => {
+    // Graceful fallback: a caller with no version (a stale cached URL, a
+    // static/manifest asset that never carried one) renders precisely the
+    // pre-existing URL — no `?v=undefined`, no empty `v=`, nothing appended.
+    const url = buildSrc({
+      urlEndpoint: imagekitConfig.urlEndpoint,
+      src: "/blue-diamond/treatments/rf-microneedling-hero.png",
+      transformation: [imagePresets.hero],
+    });
+    expect(url).not.toContain("v=undefined");
+    expect(url).not.toContain("?v=");
+    expect(url).not.toContain("&v=");
+    expect(() => new URL(url)).not.toThrow();
   });
 });

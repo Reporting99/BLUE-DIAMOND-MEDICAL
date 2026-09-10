@@ -34,7 +34,13 @@ export function ProductCard({
    * shop index shows a placeholder for a product whose own detail page renders
    * a real photograph. Optional so every existing caller keeps working.
    */
-  resolved?: { path: string; status: Product["images"][number]["status"]; alt: Product["images"][number]["alt"] };
+  resolved?: {
+    path: string;
+    status: Product["images"][number]["status"];
+    alt: Product["images"][number]["alt"];
+    /** Cache-busting version token, when the source assignment has one — see `ResolvedMedia`. */
+    version?: string;
+  };
   /**
    * Stagger index within its grid, for the scroll-reveal entrance. Callers
    * pass the map index; it is taken modulo the column count by the CSS, so a
@@ -66,6 +72,7 @@ export function ProductCard({
           {image ? (
             <ImageKitImage
               path={image.path}
+              version={image.version}
               preset="product"
               role="product"
               status={image.status}

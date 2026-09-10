@@ -183,6 +183,34 @@ test.describe("adaptation to the domain model", () => {
     );
     expect(asset.focalPoint).toEqual({ x: 40, y: 25 });
   });
+
+  // Cache-busting: FeelStack's public media contract carries no
+  // updatedAt/imagekitFileId/checksum field today (see the schema above),
+  // so the assignment's own `id` is the most stable value that changes only
+  // when the assigned asset changes — a replacement is a new assignment
+  // row, never an in-place mutation of this one.
+  test("exposes the assignment id as the cache-busting version token", () => {
+    const asset = adaptMediaAssignment(
+      feelstackMediaAssignmentSchema.parse(
+        mediaItem({ id: "3f7c1a9e-0000-4000-8000-0000000000ff" }),
+      ),
+    );
+    expect(asset.version).toBe("3f7c1a9e-0000-4000-8000-0000000000ff");
+  });
+
+  test("two assignments with different ids get different version tokens", () => {
+    const a = adaptMediaAssignment(
+      feelstackMediaAssignmentSchema.parse(
+        mediaItem({ id: "3f7c1a9e-0000-4000-8000-000000000aaa" }),
+      ),
+    );
+    const b = adaptMediaAssignment(
+      feelstackMediaAssignmentSchema.parse(
+        mediaItem({ id: "3f7c1a9e-0000-4000-8000-000000000bbb" }),
+      ),
+    );
+    expect(a.version).not.toBe(b.version);
+  });
 });
 
 test.describe("slot access", () => {

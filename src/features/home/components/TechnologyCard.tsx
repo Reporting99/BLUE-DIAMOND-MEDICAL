@@ -61,6 +61,7 @@ function TechnologyCard({
         {resolved ? (
           <ImageKitImage
             path={resolved.path}
+            version={resolved.version}
             preset="technology"
             role={resolved.role}
             status={resolved.status}

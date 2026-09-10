@@ -37,7 +37,10 @@ import type { Product } from "./types";
  * renders. Deriving both sides from `Product` keeps them in step anyway — a
  * change to the image shape breaks this line too.
  */
-export type ResolvedProductImage = Pick<Product["images"][number], "path" | "status" | "alt">;
+export type ResolvedProductImage = Pick<Product["images"][number], "path" | "status" | "alt"> & {
+  /** Cache-busting version token, when the source assignment has one — see `ResolvedMedia`. */
+  version?: string;
+};
 
 /**
  * Fan out over `products` and return their CMS media, keyed by product id.
@@ -87,5 +90,6 @@ export function productCardImage(
     path: assigned.path,
     status: assigned.status,
     alt: cmsAlt(assigned) ?? product.images[0]?.alt ?? { en: "", ar: "" },
+    version: assigned.version,
   };
 }

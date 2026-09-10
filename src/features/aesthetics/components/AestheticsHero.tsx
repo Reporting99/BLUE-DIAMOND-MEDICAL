@@ -217,6 +217,7 @@ export function AestheticsHero({
         {photograph ? (
           <ImageKitImage
             path={photograph.path}
+            version={photograph.version}
             preset="hero"
             role={photograph.role}
             status={photograph.status}
