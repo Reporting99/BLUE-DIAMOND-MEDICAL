@@ -365,7 +365,7 @@ export const medicalServices: MedicalServiceContent[] = [
       {
         question: { en: "Who performs joint injections and other minor in-clinic procedures for pain?", ar: "من يقدّم الإجراءات البسيطة داخل العيادة المتعلقة بالألم، مثل الحقن المفصلية؟" },
         answer: {
-          en: "Our family physicians perform intra-articular injections for degenerative knee, shoulder, and ankle conditions in-house — see the Minor Procedures page for detail. These are booked by phone or in person, not online.",
+          en: "Our family physicians perform intra-articular injections for degenerative knee, shoulder, and ankle conditions in-house — see the Minor Procedures page for details. These are booked by phone or in person, not online.",
           ar: "يُجري أطباء الأسرة لدينا حقنًا مفصلية لحالات تنكس الركبة والكتف والكاحل داخل العيادة — راجعوا صفحة الإجراءات البسيطة للتفاصيل. وتُحجز هذه الإجراءات عبر الهاتف أو بالحضور شخصيًا، وليس عبر الإنترنت.",
         },
       },
