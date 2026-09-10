@@ -73,12 +73,17 @@ for (const viewport of VIEWPORTS) {
 }
 
 test.describe("Closing CTA content and contrast", () => {
-  test("primary and secondary actions, and the phone link, are all present and readable", async ({ page }) => {
+  test("primary and secondary actions, and both phone lines, are all present and readable", async ({ page }) => {
     await page.goto("/en");
     const cta = page.locator("section", { has: page.getByRole("link", { name: "Explore Booking Options" }) });
     await expect(cta.getByRole("link", { name: /book an appointment/i })).toBeVisible();
     await expect(cta.getByRole("link", { name: "Explore Booking Options" })).toBeVisible();
-    await expect(cta.locator("a[href^='tel:']")).toBeVisible();
+    // The closing CTA renders outside /medical, so it publishes both lines
+    // (src/config/phone-lines.ts) — clinic and aesthetics — not one.
+    const telLinks = cta.locator("a[href^='tel:']");
+    await expect(telLinks).toHaveCount(2);
+    await expect(telLinks.first()).toBeVisible();
+    await expect(telLinks.last()).toBeVisible();
   });
 
   test("both CTA actions resolve to the internal booking hub (external booking preserved downstream)", async ({ page }) => {
