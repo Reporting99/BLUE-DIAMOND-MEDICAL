@@ -24,6 +24,8 @@ export interface Doctor {
      * legitimate Arabic layout.
      */
     locales?: Locale[];
+    /** Cache-busting version token when this image comes from a FeelStack media assignment. */
+    version?: string;
   };
   bookingChannel: "family-doctor" | "phone-medical-botox";
 }

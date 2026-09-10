@@ -139,6 +139,7 @@ export default async function DoctorsIndexPage({ params }: { params: Promise<{ l
           <div className="relative aspect-[600/451] w-full overflow-hidden rounded-lg lg:aspect-auto lg:rounded-none">
             <ImageKitImage
               path={teamPhoto.path}
+              version={teamPhoto.version}
               preset="team-group"
               role={teamPhoto.role}
               status={teamPhoto.status}
@@ -184,6 +185,7 @@ export default async function DoctorsIndexPage({ params }: { params: Promise<{ l
                 <div className="facet-corner-sm relative aspect-[4/5] overflow-hidden">
                   <ImageKitImage
                     path={portrait.path}
+                    version={portrait.version}
                     preset="doctor-card"
                     role="doctor"
                     status={portrait.status}

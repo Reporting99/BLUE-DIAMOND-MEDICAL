@@ -132,6 +132,15 @@ export interface SlotImageRef {
   path: string;
   status: ImageStatus;
   photoDeclined?: boolean;
+  /**
+   * Cache-busting version token, carried through from the FeelStack
+   * assignment's own `ResolvedMedia.version` (see `./media.ts`). Absent for a
+   * static/fallback reference, which has no assignment to version against —
+   * `ImageKitImage` already treats a missing version as "render the path
+   * exactly as it always has", so leaving this undefined here is correct, not
+   * an omission.
+   */
+  version?: string;
 }
 
 export function resolveSlotImageRef({
@@ -148,7 +157,11 @@ export function resolveSlotImageRef({
   if (isHardOverride(override)) return fallback;
   const assigned = firstAssigned(media, slot);
   if (!assigned) return fallback;
-  return { path: assigned.path, status: assigned.status };
+  return {
+    path: assigned.path,
+    status: assigned.status,
+    ...(assigned.version ? { version: assigned.version } : {}),
+  };
 }
 
 /**

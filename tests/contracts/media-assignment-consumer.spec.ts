@@ -288,3 +288,118 @@ test.describe("galleries", () => {
     expect(resolveSlotGallery(media, ["gallery"], { status: "disabled" })).toEqual([]);
   });
 });
+
+/**
+ * `resolveSlotImageRef` returned a narrowed `{path, status, photoDeclined?}`
+ * that dropped `ResolvedMedia.version` before it reached the doctor domain
+ * type, so the ImageKit cache-busting `#71` shipped everywhere except the
+ * /our-team roster and each doctor's profile: replacing a portrait in the
+ * CMS did not change the URL those two surfaces requested, so a stale
+ * browser/CDN copy could keep rendering. This guards the fix, not the
+ * feature `#71` already covers elsewhere.
+ */
+test.describe("cache-busting version survives the doctor-shaped resolver", () => {
+  test("a CMS assignment's version reaches the resolved ref", () => {
+    const resolved = resolveSlotImageRef({
+      media: [assignment({ version: "assignment-1" })],
+      slot: "doctorPortrait",
+      fallback: { path: "", status: "disabled" },
+    });
+    expect(resolved.version).toBe("assignment-1");
+    // The path itself is untouched by carrying the version alongside it.
+    expect(resolved.path).toBe(assignment().path);
+  });
+
+  test("a static fallback with no assignment has no version, not an invented one", () => {
+    const resolved = resolveSlotImageRef({
+      media: [],
+      slot: "doctorPortrait",
+      fallback: { path: "/blue-diamond/doctors/hamdi.jpg", status: "pending" },
+    });
+    expect(resolved.version).toBeUndefined();
+    expect(resolved).toEqual({ path: "/blue-diamond/doctors/hamdi.jpg", status: "pending" });
+  });
+
+  test("an assignment with no version leaves the field absent, never `undefined` as a key", () => {
+    const resolved = resolveSlotImageRef({
+      media: [assignment({ version: undefined })],
+      slot: "doctorPortrait",
+      fallback: { path: "", status: "disabled" },
+    });
+    expect("version" in resolved).toBe(false);
+  });
+
+  test("the doctor contract carries the assignment's version through to the domain object", () => {
+    const doctor = doctorCmsContract.adapt({
+      locale: "en",
+      id: "aed7273b-16fe-47a8-8742-9bdfe3ed0489",
+      fields: {
+        displayName: "Dr. Mohamed Farhat",
+        professionalTitle: "Family Physician · Founder",
+        biography: "…",
+        metadata: {
+          doctorId: "mohamed-farhat",
+          routeId: "doctor-farhat",
+          practicesAesthetics: true,
+          bookingChannel: "family-doctor",
+          imagePath: "/doctors/farhat.jpg",
+          imageStatus: "pending",
+        },
+      },
+      faqs: [],
+      relations: [],
+      path: "/our-team/mohamed-farhat",
+      media: [assignment({ version: "assignment-1" })],
+    });
+
+    expect(doctor.image.version).toBe("assignment-1");
+    // Unchanged behaviour: the path is still the assignment's, not the stale metadata.
+    expect(doctor.image.path).toBe("/blue-diamond/shared/legacy/094975f21717-Dr.Farhat.jpg");
+  });
+
+  test("Dr. Omaima Saeed's consent-safe substitute never carries a stray version", () => {
+    // Her fallback is a repository record, not a CMS assignment, so even
+    // though an assignment is attached in this fixture, the hard override
+    // must win before any version is read.
+    const doctor = doctorCmsContract.adapt({
+      locale: "en",
+      id: "ce09aa53-0f1e-4d95-b5a9-3d2a7cfed4c4",
+      fields: {
+        displayName: "Dr. Omaima Saeed",
+        professionalTitle: "Family Physician",
+        biography: "…",
+        metadata: {
+          doctorId: "omaima-saeed",
+          routeId: "doctor-saeed",
+          practicesAesthetics: false,
+          bookingChannel: "family-doctor",
+          imagePath: "",
+          imageStatus: "disabled",
+          photoDeclined: true,
+        },
+      },
+      faqs: [],
+      relations: [],
+      path: "/our-team/omaima-saeed",
+      media: [assignment({ version: "assignment-1" })],
+    });
+
+    expect(doctor.image.version).toBeUndefined();
+  });
+
+  test("ImageKitImage forwards `version` as `queryParameters.v` only when present, never `v: undefined`", () => {
+    // Grep-level guard on the actual render branch, mirroring "no source file
+    // promotes a status" above: the conditional spread must stay conditional,
+    // and any future edit that hard-codes `queryParameters: { v: version }`
+    // unconditionally would send `v=undefined` for every static/manifest
+    // asset that legitimately has none.
+    const source = readFileSync(
+      path.join(process.cwd(), "src", "components", "shared", "ImageKitImage.tsx"),
+      "utf8",
+    );
+    expect(source).toMatch(/\.\.\.\(version \? \{ queryParameters: \{ v: version \} \} : \{\}\)/);
+    // The transformation preset is a sibling prop, not something the version
+    // spread can ever displace.
+    expect(source).toMatch(/transformation=\{\[imagePresets\[preset\]\]\}/);
+  });
+});
