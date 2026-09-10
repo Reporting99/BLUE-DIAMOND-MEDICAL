@@ -48,7 +48,7 @@ Covers traditional SEO, Generative Engine Optimization (GEO — signals that hel
 
 ### Not yet implemented (honest gaps)
 
-- `Product`/`Offer` schema — moot while shop is gated (SkinMedica data is imported, but photography isn't — see `docs/MEDIA.md`).
+- `Product` schema — emitted per published product page (`ProductTemplate.tsx`). No `Offer` node: the catalogue is informational, nothing is purchasable online, and 12 of the 31 Myriade products have no client-approved price (the other 19 do), so a uniform Offer would have to invent one for those 12.
 - `Article` schema — moot while Health Hub has zero published articles.
 - Open Graph images beyond the homepage — the plumbing is real and tested, but only one page uses it so far.
 

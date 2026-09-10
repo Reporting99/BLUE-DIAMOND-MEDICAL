@@ -15,13 +15,20 @@
  * `siteConfig` rather than retyped, so this file never becomes a second
  * competing copy of the clinic facts.
  *
- * NOTE ON THE PHONE LINE — docs/SOURCE_CONFLICT_REGISTER.md CONF-001, now
- * resolved. Blue Diamond publishes ONE telephone number, +1 (825) 413-1113.
- * The legacy aesthetics line (403) 247-1418 was retired by the client's
- * 2026-09-07 instruction, which named it outdated. Because `primaryLocation`
- * below feeds the homepage card, its map pin, and its phone CTA, that stale
- * number was reaching patients on the clinic's own address. Do not reintroduce
- * a second line without a new approved source.
+ * NOTE ON THE TWO PHONE LINES — docs/SOURCE_CONFLICT_REGISTER.md CONF-001.
+ * Blue Diamond runs two genuinely different published lines: the medical /
+ * walk-in line +1 (825) 413-1113 and the aesthetics line (403) 247-1418.
+ * That register's approved resolution is to keep BOTH as distinct structured
+ * facts — not to merge them — and that still holds.
+ *
+ * CHANGED 2026-09-07 on the client's instruction: every page OUTSIDE the
+ * medical section now publishes BOTH lines, each on its own labelled row;
+ * `/medical/*` publishes the clinic line alone. That list, with its labels,
+ * lives in src/config/phone-lines.ts — this file keeps only the location's
+ * own number. The change is additive to CONF-001, not a departure from it:
+ * the two numbers remain separate facts with separate `tel:` targets. What
+ * must still never happen is collapsing them into one unlabelled "Phone"
+ * row, or overwriting one number with the other.
  */
 
 import { siteConfig } from "./site";
@@ -46,6 +53,13 @@ export interface CanonicalLocation {
    * T3B 5N4") and the brief pins both verbatim. One value, both locales.
    */
   displayLines: readonly [string, string];
+  /**
+   * The aesthetics reception line, when this location publishes one.
+   *
+   * This is the LOCATION's own number. Surfaces that publish the clinic's
+   * contact block read src/config/phone-lines.ts instead, which carries both
+   * lines with their labels — do not add a second phone field here.
+   */
   phone?: string;
   phoneDisplay?: string;
   fax?: string;

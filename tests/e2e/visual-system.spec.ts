@@ -390,10 +390,12 @@ test.describe("Listing cards carry imagery", () => {
       // BUDGET, NOT ASSERTION. This test walks an entire listing page in
       // half-viewport steps and then waits for every card's image to decode.
       // The products listing grew from 23 cards to 54 with the Myriade
-      // catalogue (CL-042), so the same work now takes roughly 2.3x as long
-      // and overran the 30s default on chromium-mobile — for a page in which
-      // nothing was wrong. Nothing this test checks is relaxed; it is simply
-      // given time to finish the walk it has always done.
+      // catalogue (CL-042) and is back to 31 now that SkinMedica is archived
+      // (2026-09-07), so the same work took roughly 2.3x as long and overran
+      // the 30s default on chromium-mobile — for a page in which nothing was
+      // wrong. The budget stays generous rather than being re-tuned to
+      // today's count: it is a ceiling, not a measurement. Nothing this test
+      // checks is relaxed; it is simply given time to finish the walk.
       test.setTimeout(90_000);
       await page.goto(listing.path);
       await scrollThroughAndSettle(page);
@@ -455,10 +457,12 @@ test.describe("Listing cards carry imagery", () => {
       // BUDGET, NOT ASSERTION. This test walks an entire listing page in
       // half-viewport steps and then waits for every card's image to decode.
       // The products listing grew from 23 cards to 54 with the Myriade
-      // catalogue (CL-042), so the same work now takes roughly 2.3x as long
-      // and overran the 30s default on chromium-mobile — for a page in which
-      // nothing was wrong. Nothing this test checks is relaxed; it is simply
-      // given time to finish the walk it has always done.
+      // catalogue (CL-042) and is back to 31 now that SkinMedica is archived
+      // (2026-09-07), so the same work took roughly 2.3x as long and overran
+      // the 30s default on chromium-mobile — for a page in which nothing was
+      // wrong. The budget stays generous rather than being re-tuned to
+      // today's count: it is a ceiling, not a measurement. Nothing this test
+      // checks is relaxed; it is simply given time to finish the walk.
       test.setTimeout(90_000);
       await page.goto(listing.path);
       await scrollThroughAndSettle(page);

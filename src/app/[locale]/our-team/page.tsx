@@ -85,9 +85,11 @@ export default async function DoctorsIndexPage({ params }: { params: Promise<{ l
           a real, clinic-supplied group photograph of the team. The rule in
           docs/UI_UX_FOUNDATION.md §18 was never "no photograph on this page"
           — it was "no generated or stock face", and this is neither. It sits
-          beside the copy rather than behind it because a full-bleed hero
-          would crop through its faces and lay the readability wash over them;
-          see the `aside` prop in PageHero.
+          beside the copy rather than behind it because a hero that runs the
+          picture the full width of the section would crop through its faces
+          and lay the readability wash over them; as an aside it fills its own
+          half edge to edge and no text is ever laid over it. See the `aside`
+          prop and `asideBalance: "bleed"` in PageHero.
 
           `status` comes from the manifest rather than being restated here, so
           the approval gate has exactly one control point (manifestAsset). */}
@@ -103,43 +105,53 @@ export default async function DoctorsIndexPage({ params }: { params: Promise<{ l
           ar: "عيادة بلو دايموند الطبية، ويست سبرينغز، كالغاري",
         }}
         breadcrumbs={<Breadcrumbs locale={locale} items={[{ label: ownRoute.title[locale] }]} />}
-        /* An equal half for the photograph rather than a content-sized track.
-           The team picture is this page's subject, not an ornament beside it,
-           and on the content-sized track it sat centred in a wider column with
-           slack on both edges — smaller than the space it was given. */
-        asideBalance="half"
+        /* The picture is not an ornament beside the copy on this page, it is
+           the page's subject, so it takes the whole of its side: `bleed` runs
+           it to the section's top and bottom edges and out to the viewport's
+           inline-end edge with nothing of the hero's backdrop showing around
+           it. `half` — an equal column, but still a card with slack above,
+           below and outside it — was the previous behaviour. It bleeds from
+           `lg` up only; below that the columns stack and the picture is a
+           full-width card, because a group portrait cropped into a narrow
+           two-column layout loses the person at each end.
+
+           THE COST, because it is a real one. The supplied original is 600px
+           wide (src/lib/media/image-manifest.ts) and this column is 50vw, so
+           from ~1200px up the browser is scaling it beyond its native size:
+           roughly 1.25x at 1440, 1.6x at 1920, and double that again on a
+           2x display. It stays acceptable because it is a wide group shot
+           being softened, not detail being lost, but the fix is a larger
+           original, not a larger preset — ImageKit cannot add pixels the
+           upload does not have. When one is supplied, raise `width`/`height`
+           in the manifest AND the "team-group" preset width in
+           src/config/imagekit.ts together, never one without the other. */
+        asideBalance="bleed"
         aside={
-          /* The wrapper fills its half, capped at the asset's NATIVE 600px
-             (src/lib/media/image-manifest.ts). The cap is what keeps `half`
-             from becoming an upscale: at the 1280px container a half is ~592px,
-             so the picture reaches its full size and stops there rather than
-             being stretched on a wider viewport. Raise this only when a
-             higher-resolution original is supplied — together with the
-             "team-group" preset width in src/config/imagekit.ts, never one
-             without the other. */
-          <div className="w-full max-w-[600px] drop-shadow-[0_18px_40px_rgba(29,86,120,0.20)]">
-            {/* `facet-corner` is the same diamond cut the doctor portraits
-                carry, so the hero visual belongs to the page it opens rather
-                than floating above it as a plain rectangle. drop-shadow, not
-                box-shadow, sits on the wrapper: a box-shadow would be clipped
-                away by the facet's clip-path, while a filter follows it. */}
-            <div className="facet-corner relative aspect-[600/451] overflow-hidden rounded-lg">
-              <ImageKitImage
-                path={teamPhoto.path}
-                preset="team-group"
-                role={teamPhoto.role}
-                status={teamPhoto.status}
-                alt={teamPhoto.alt}
-                locale={locale}
-                width={teamPhoto.width}
-                height={teamPhoto.height}
-                /* Above the fold on this route, and the largest thing in the
-                   hero — the LCP candidate, so it is not lazy-loaded. */
-                preload
-                sizes="(min-width: 768px) 560px, 100vw"
-                className="h-full w-full"
-              />
-            </div>
+          /* No cap, no shadow and no `facet-corner`: all three belong to a
+             picture that sits ON the hero, and this one IS the hero's
+             inline-end half — the diamond cut in particular would take a wedge
+             of background out of an edge that is supposed to be flush.
+
+             Below `lg` the columns stack and nothing bleeds, so there it stays
+             a card: the ratio and the rounding hold, and both are dropped from
+             `lg` up where the panel takes its height from its column
+             (`aspect-auto`, then stretched to the row by the hero). */
+          <div className="relative aspect-[600/451] w-full overflow-hidden rounded-lg lg:aspect-auto lg:rounded-none">
+            <ImageKitImage
+              path={teamPhoto.path}
+              preset="team-group"
+              role={teamPhoto.role}
+              status={teamPhoto.status}
+              alt={teamPhoto.alt}
+              locale={locale}
+              width={teamPhoto.width}
+              height={teamPhoto.height}
+              /* Above the fold on this route, and the largest thing in the
+                 hero — the LCP candidate, so it is not lazy-loaded. */
+              preload
+              sizes="(min-width: 1024px) 50vw, 100vw"
+              className="h-full w-full"
+            />
           </div>
         }
       />

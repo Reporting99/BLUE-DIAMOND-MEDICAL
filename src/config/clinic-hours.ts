@@ -36,18 +36,23 @@ export const clinicHours: DailyHours[] = [
 /**
  * The aesthetics arm keeps its own published phone line and its own hours
  * (docs/SOURCE_CONFLICT_REGISTER.md CONF-001). CL-009 governs the CLINIC
- * schedule and does not restate the aesthetics arm's, so the approved
- * 09:00–17:00 window stands, on the same Monday–Saturday pattern the clinic
- * itself now keeps.
+ * schedule and does not restate the aesthetics arm's, so the aesthetics
+ * window is held separately here, on the same Monday–Saturday pattern the
+ * clinic itself keeps.
+ *
+ * Closing time is 19:00 per the client's 2026-09-07 instruction ("it closes
+ * at 7"), which supersedes the earlier 17:00 reading. The 09:00 opening is
+ * unchanged — the client corrected the close only, so the clinic's 08:00
+ * open is deliberately NOT copied over it.
  */
 export const aestheticsHours: DailyHours[] = [
   { day: 0, open: null, close: null },
-  { day: 1, open: "09:00", close: "17:00" },
-  { day: 2, open: "09:00", close: "17:00" },
-  { day: 3, open: "09:00", close: "17:00" },
-  { day: 4, open: "09:00", close: "17:00" },
-  { day: 5, open: "09:00", close: "17:00" },
-  { day: 6, open: "09:00", close: "17:00" },
+  { day: 1, open: "09:00", close: "19:00" },
+  { day: 2, open: "09:00", close: "19:00" },
+  { day: 3, open: "09:00", close: "19:00" },
+  { day: 4, open: "09:00", close: "19:00" },
+  { day: 5, open: "09:00", close: "19:00" },
+  { day: 6, open: "09:00", close: "19:00" },
 ];
 
 /**

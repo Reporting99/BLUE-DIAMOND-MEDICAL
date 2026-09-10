@@ -7,6 +7,8 @@ import { href, getRoute } from "@/lib/routing";
 import { getDictionary, type Locale } from "@/i18n/config";
 import { features } from "@/config/features";
 import { ClinicHoursBlock } from "@/components/shared/ClinicHoursBlock";
+import { FooterPhones } from "./FooterPhones";
+import { medicalPhoneLines, publishedPhoneLines } from "@/config/phone-lines";
 
 /**
  * Dark premium footer — homepage surface rhythm §6 of the correction
@@ -17,6 +19,13 @@ import { ClinicHoursBlock } from "@/components/shared/ClinicHoursBlock";
 export function Footer({ locale }: { locale: Locale }) {
   const dict = getDictionary(locale);
   const year = new Date().getFullYear();
+  // Resolved here, on the server, from the route registry — see FooterPhones
+  // for why these are passed down instead of hardcoded, and why the Arabic
+  // locale needs both its pretty path and the English-slug rewrite target.
+  const medicalRoute = getRoute("medical-hub")!;
+  const medicalPathPrefixes = Array.from(
+    new Set([medicalRoute.path[locale], medicalRoute.path.en]),
+  ).map((path) => `/${locale}${path}`);
 
   const columns = [
     {
@@ -71,30 +80,12 @@ export function Footer({ locale }: { locale: Locale }) {
               {siteConfig.clinic.address.line1}, {siteConfig.clinic.address.city} {siteConfig.clinic.address.region}{" "}
               {siteConfig.clinic.address.postalCode}
             </p>
-            {/* 2026-09-09 — both department lines, each explicitly labeled.
-                A bare number here previously read as "the" clinic phone with
-                no department attached; two distinct lines now exist
-                (CONF-001), so an unlabeled number is ambiguous. */}
-            <p className="mt-2 text-xs" style={{ color: "var(--footer-text-muted)" }}>
-              {locale === "ar" ? "العيادة الطبية" : "Medical Clinic"}
-            </p>
-            <a
-              className="ltr-run inline-block text-sm font-medium hover:text-[color:var(--footer-link-hover)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--footer-focus)]"
-              style={{ color: "var(--footer-text)" }}
-              href={`tel:${siteConfig.clinic.phone}`}
-            >
-              {siteConfig.clinic.phoneDisplay}
-            </a>
-            <p className="mt-2 text-xs" style={{ color: "var(--footer-text-muted)" }}>
-              {locale === "ar" ? "التجميل الطبي" : "Medical Aesthetics"}
-            </p>
-            <a
-              className="ltr-run inline-block text-sm font-medium hover:text-[color:var(--footer-link-hover)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--footer-focus)]"
-              style={{ color: "var(--footer-text)" }}
-              href={`tel:${siteConfig.aesthetics.phone}`}
-            >
-              {siteConfig.aesthetics.phoneDisplay}
-            </a>
+            <FooterPhones
+              locale={locale}
+              lines={publishedPhoneLines}
+              medicalLines={medicalPhoneLines}
+              medicalPathPrefixes={medicalPathPrefixes}
+            />
           </div>
           {/* CL-009 — the footer renders on every page, so the published
               schedule is one click from nowhere. Same source as the Contact

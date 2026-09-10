@@ -3,7 +3,7 @@ import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { Container } from "./Container";
 import { Button } from "@/components/ui/button";
 import { getRoute } from "@/lib/routing";
-import { siteConfig } from "@/config/site";
+import { publishedPhoneLines } from "@/config/phone-lines";
 import { getDictionary, type Locale } from "@/i18n/config";
 
 export type ClosingVariant = "light" | "editorial" | "deep";
@@ -107,13 +107,25 @@ export function SiteClosingExperience({ locale, variant = "light" }: { locale: L
             {t.exploreBooking} <ArrowRight className="ms-1 size-4 rtl:rotate-180" />
           </Button>
         </div>
-        <a
-          href={`tel:${siteConfig.clinic.phone}`}
-          className="ltr-run mt-5 inline-flex items-center gap-1 text-sm font-semibold hover:text-white"
-          style={{ color: "var(--closing-text-muted)" }}
-        >
-          {siteConfig.clinic.phoneDisplay} <ArrowUpRight className="size-4" />
-        </a>
+        {/* Both published lines, each labelled. This component only ever
+            renders outside the medical section, so it takes the default
+            two-line list rather than a route check. */}
+        <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:gap-8">
+          {publishedPhoneLines.map((line) => (
+            <span key={line.id} className="flex flex-col gap-0.5">
+              <span className="text-xs" style={{ color: "var(--closing-text-muted)" }}>
+                {line.label[locale]}
+              </span>
+              <a
+                href={`tel:${line.tel}`}
+                className="ltr-run inline-flex items-center gap-1 text-sm font-semibold hover:text-white"
+                style={{ color: "var(--closing-text-muted)" }}
+              >
+                {line.display} <ArrowUpRight className="size-4" />
+              </a>
+            </span>
+          ))}
+        </div>
       </Container>
     </section>
   );

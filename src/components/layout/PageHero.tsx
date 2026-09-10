@@ -199,6 +199,18 @@ const sizeClasses: Record<PageHeroSize, string> = {
   standard: "pt-10 pb-2 lg:pt-14 lg:pb-3",
 };
 
+/**
+ * `asideBalance: "bleed"` hands the container's vertical padding to the copy
+ * column so the picture column can reach the section's edges. The `lg` half of
+ * `sizeClasses`, and it must stay in step with it: this is one band of padding
+ * rendered in one of two places, not two independent metrics. Only `lg`,
+ * because that is the only breakpoint at which the bleed composition exists.
+ */
+const asideBleedCopyClasses: Record<PageHeroSize, string> = {
+  compact: "lg:pt-10 lg:pb-3",
+  standard: "lg:pt-14 lg:pb-3",
+};
+
 export interface PageHeroProps {
   locale: Locale;
   /** Small uppercase line above the title. Optional but usual. */
@@ -299,8 +311,21 @@ export interface PageHeroProps {
    * legitimately grow to the column — the call site still caps it at the
    * asset's native width, because a half is a maximum, never a licence to
    * upscale.
+   *
+   * `bleed` is `half` with the picture's column released from the container:
+   * it runs to the section's own top and bottom edges and out to the
+   * viewport's inline-end edge, so the photograph IS that side of the hero
+   * rather than a card floating on it. The copy column carries the vertical
+   * padding the container gives up, so only the picture bleeds. Below `lg`
+   * nothing bleeds and the columns stay stacked — see the row's own note for
+   * why the split waits a breakpoint longer here than it does for `half`.
+   *
+   * The asset has to survive both the crop AND the width: that column is
+   * `50vw`, so anything whose native width is under half the viewport is
+   * being upscaled by the browser. `half` caps at the native width and is
+   * the right choice whenever the supplied original is small.
    */
-  asideBalance?: "content" | "half";
+  asideBalance?: "content" | "half" | "bleed";
   /**
    * Reserve height for the full-bleed backdrop so its photograph is legible.
    * See `PageHeroBackdrop`. Ignored by the `split` and `aside` layouts, whose
@@ -339,6 +364,8 @@ export function PageHero({
    * put a placeholder tile into the picture half rather than a picture.
    */
   const split = mediaLayout === "split" && image?.status === "approved";
+  /** See `asideBalance`. Only ever true for a hero that actually has an aside. */
+  const asideBleed = Boolean(aside) && asideBalance === "bleed";
   /**
    * Which wash the picture gets.
    *
@@ -552,6 +579,12 @@ export function PageHero({
         className={cn(
           "flex flex-col justify-center",
           sizeClasses[size],
+          /* `bleed` moves this padding onto the copy column (below), because a
+             picture cannot reach the section's top and bottom edges through
+             the container's own padding. Only the vertical band moves; the
+             inline padding stays, and the picture escapes that with a
+             negative margin instead. */
+          asideBleed && "lg:pt-0 lg:pb-0",
           /* Only the bleed layout crops its picture to the copy's height, so
              only it has anything to reserve. `justify-center` above then keeps
              the copy centred in the taller band instead of pinned to its top. */
@@ -563,7 +596,24 @@ export function PageHero({
         {aside ? (
           <div
             className={cn(
-              "flex flex-col gap-10 md:flex-row md:items-center md:gap-8 lg:gap-12",
+              "flex flex-col gap-10",
+              /* WHY THE BLEED WAITS FOR `lg`. The other two balances split the
+                 row from `md`. This one cannot: at 768-1023 the copy column is
+                 narrow enough that the headline and its paragraph are taller
+                 than the picture's own aspect at that width, so a picture
+                 stretched to the row is cropped to something near a square —
+                 and cropping a wide GROUP portrait vertically takes the person
+                 standing at each end. Below `lg` the columns therefore stay
+                 stacked, exactly as they are on a phone, and the whole
+                 photograph is visible.
+
+                 Stretch, not centre, once they do split: the picture's column
+                 has to be as tall as the row before it can be as tall as the
+                 section. The copy centres itself instead (below), keeping the
+                 position `items-center` gave it. */
+              asideBleed
+                ? "lg:flex-row lg:items-stretch lg:gap-12"
+                : "md:flex-row md:items-center md:gap-8 lg:gap-12",
               measureOffsetClasses[measure],
             )}
           >
@@ -583,7 +633,19 @@ export function PageHero({
                 visual's column absorbs the difference, which it has room for:
                 the floor only binds at widths where the lock-up is at its
                 smallest. */}
-            <div className={cn("md:min-w-min", asideBalance === "half" ? "md:w-1/2" : "md:w-[42%]")}>{copy}</div>
+            <div
+              className={cn(
+                "md:min-w-min",
+                asideBalance === "content" && "md:w-[42%]",
+                asideBalance === "half" && "md:w-1/2",
+                /* The container's vertical padding, now that the container has
+                   given it up, plus the vertical centring the row's
+                   `items-stretch` no longer does for it. */
+                asideBleed && ["lg:w-1/2 lg:self-center", asideBleedCopyClasses[size]],
+              )}
+            >
+              {copy}
+            </div>
             {/* `content`: growing rather than a fixed percentage is what keeps
                 the visual centred in the leftover space instead of pinned
                 beside the copy or against the container's inline-end edge.
@@ -592,8 +654,37 @@ export function PageHero({
                 whatever the copy happened to leave. */}
             <div
               className={cn(
-                "flex justify-center md:shrink-0",
-                asideBalance === "half" ? "md:w-1/2" : "md:grow",
+                "flex justify-center",
+                asideBalance === "content" && "md:grow md:shrink-0",
+                asideBalance === "half" && "md:w-1/2 md:shrink-0",
+                /* HOW THE BLEED IS MEASURED, since it is one expression doing
+                   all of it.
+
+                   The column is the last flex item, so growing it consumes
+                   every pixel of free space in the row; the negative
+                   inline-end margin ADDS to that free space by exactly the
+                   distance from the container's content edge to the viewport
+                   edge. Percentage margins resolve against the flex
+                   container's inline size, so `50% - 50vw` is
+                   `(containerWidth - 100vw) / 2` — precisely that gutter,
+                   negated. The column therefore settles at 50vw, starting on
+                   the row's midpoint and ending on the viewport's edge, with
+                   no viewport-unit arithmetic hardcoded anywhere and no
+                   assumption about how wide the container is at this
+                   breakpoint. The section clips the overshoot (it is
+                   `overflow-hidden`), so the page still cannot be dragged
+                   sideways — including the scrollbar's width, which `100vw`
+                   counts and the layout does not.
+
+                   `min-h` is the floor: with `items-stretch` the row's height
+                   would otherwise come from the copy alone, and a hero whose
+                   picture is as tall as three lines of text is a letterbox
+                   through the middle of a photograph. */
+                asideBleed && [
+                  "lg:grow lg:basis-0 lg:shrink-0",
+                  "lg:me-[calc(50%_-_50vw)]",
+                  "lg:min-h-[420px]",
+                ],
               )}
             >
               {aside}

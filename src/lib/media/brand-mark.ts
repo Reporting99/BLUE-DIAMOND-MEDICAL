@@ -38,8 +38,9 @@ import { manifestAsset } from "./image-manifest";
  *
  * `width`/`height` come from the manifest and describe the ASPECT the browser
  * should reserve, not the pixels delivered: the `logo` preset asks ImageKit
- * for a 240px-wide render, which is ~1.2x the largest size the mark is ever
- * displayed at (the About lock-up's 66px on a 3x screen).
+ * for a 240px-wide render, which is ~3.2x the largest size the mark is ever
+ * displayed at (the About lock-up's 70px on a 3x screen is 210px, and 240 is
+ * the next size up that does not enlarge the 424px original).
  */
 const asset = manifestAsset("brand-mark");
 

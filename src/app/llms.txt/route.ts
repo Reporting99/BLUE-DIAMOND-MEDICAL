@@ -1,4 +1,5 @@
 import { siteConfig } from "@/config/site";
+import { publishedPhoneLines } from "@/config/phone-lines";
 import { isIndexingEnabled } from "@/config/launch";
 
 // Request-time, like robots.txt and sitemap.xml — indexability is a property
@@ -50,7 +51,7 @@ Blue Diamond Medical Clinic opened July 4, 2022 in West Springs, Calgary, founde
 
 ## Location & Contact
 ${siteConfig.clinic.address.line1}, ${siteConfig.clinic.address.city}, ${siteConfig.clinic.address.region} ${siteConfig.clinic.address.postalCode}, Canada
-Phone: ${siteConfig.clinic.phoneDisplay}
+${publishedPhoneLines.map((line) => `${line.label.en}: ${line.display}`).join("\n")}
 Fax: ${siteConfig.clinic.faxDisplay}
 `;
 

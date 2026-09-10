@@ -223,6 +223,11 @@ field, and two are the generic string "Blue Diamond Medical".
 
 ## A12. Products — SkinMedica (lines 497–570)
 
+> **Historical.** This section classifies the legacy site's own product content
+> as it was extracted, and is kept unchanged as that record. The SkinMedica
+> line was archived on 2026-09-07 and none of it publishes today — see
+> `docs/archive/SKINMEDICA_ARCHIVE.md`. The live catalogue is Myriade.
+
 | Source site | Source page | Line range | Source heading | Summary | Classification | Entity family | Canonical entity | Canonical EN route | Canonical AR route | Reason | Approval status |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | medical | /products | 497–501 | Meta title | "Products \| Blue Diamond Medical Clinic" | SUPERSEDED_BY_NEWER_SOURCE | SEO metadata | `shop-hub` | `/shop` | `/المتجر` | Registry title "SkinMedica Products" is accurate; the catalogue carries SkinMedica exclusively | Approved |

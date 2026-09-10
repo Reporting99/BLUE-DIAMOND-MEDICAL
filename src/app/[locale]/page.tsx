@@ -34,8 +34,8 @@ import { getRoute, href } from "@/lib/routing";
 import { publishableBeforeAfterPairs } from "@/features/aesthetics/data/before-after";
 import { BeforeAfterGallery } from "@/features/aesthetics/components/BeforeAfterGallery";
 import { getBookingUrl, isBookable } from "@/config/booking";
-import { siteConfig } from "@/config/site";
 import { eliteIQLocation, mapDirectionsUrl, primaryLocation } from "@/config/locations";
+import { publishedPhoneLines } from "@/config/phone-lines";
 import { LocationMap } from "@/components/shared/LocationMap";
 import { aestheticsHours, getOpenStatus, statutoryHolidayNotice } from "@/config/clinic-hours";
 import { formatPrice } from "@/types/pricing";
@@ -713,7 +713,9 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           itself, not Contact, since that's what "View all products" actually
           points to — button wording must match its destination.
           Neither the heading nor this comment names a brand: the showcase ids
-          live in home/copy.ts and follow whatever the catalogue carries. */}
+          (src/features/home/copy.ts) moved from SkinMedica to Myriade when
+          the SkinMedica line was archived on 2026-09-07, and a brand named in
+          markup here would have to be edited again next time. */}
       <section className="section-y bg-background">
         <Container>
           <div className="flex flex-wrap items-end justify-between gap-4">
@@ -827,16 +829,17 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           nothing factual lives in the locale dictionaries, which is what
           makes EN and AR structurally incapable of disagreeing.
 
-          On the phone number: the clinic publishes ONE line, (825) 413-1113,
-          and this card renders it like every other channel. It used to render
-          a separate (403) 247-1418 aesthetics line; the 2026-09-07 client
-          instruction retired that number, which resolved
-          docs/SOURCE_CONFLICT_REGISTER.md CONF-001. Do not reintroduce a
-          second number here.
+          On the phone numbers: the card publishes BOTH approved lines, each
+          on its own labelled row — the (825) 413-1113 medical/walk-in clinic
+          line and the (403) 247-1418 aesthetics line (client instruction,
+          2026-09-07). They stay two distinct facts with two distinct `tel:`
+          targets, which is what docs/SOURCE_CONFLICT_REGISTER.md CONF-001
+          requires; what it forbids is merging them into one number or one
+          unlabelled "Phone" row. Do not "reconcile" them.
 
           Hours status is computed from `aestheticsHours`, not the default
-          clinic schedule: this card is the aesthetics location and its
-          approved hours are 09:00-17:00, where the clinic's are 08:00-19:00.
+          clinic schedule: this card is the aesthetics location and it keeps
+          its own 09:00-19:00 window, where the clinic's is 08:00-19:00.
           "Open now" is never static text. */}
       <section className="section-y bg-surface" style={{ "--text-secondary": "var(--grey-4)" } as React.CSSProperties}>
         <Container className="grid gap-10 lg:grid-cols-2 lg:items-center">
@@ -879,15 +882,21 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                 </dd>
               </div>
 
-              <div className="grid grid-cols-[auto_1fr] items-start gap-x-3">
-                <Phone className="row-span-2 mt-0.5 size-5 shrink-0 text-primary" aria-hidden="true" />
-                <dt className="text-sm text-text-secondary">{copy.location.phoneLabel}</dt>
-                <dd className="mt-0.5">
-                  <a className="ltr-run hover:text-primary" href={`tel:${primaryLocation.phone}`}>
-                    {primaryLocation.phoneDisplay}
-                  </a>
-                </dd>
-              </div>
+              {/* Clinic line first — it is the medical/walk-in number, the one
+                  a caller who does not yet know which arm they need should
+                  reach. Both rows come from `publishedPhoneLines`, so the
+                  label can never be paired with the other desk's number. */}
+              {publishedPhoneLines.map((line) => (
+                <div key={line.id} className="grid grid-cols-[auto_1fr] items-start gap-x-3">
+                  <Phone className="row-span-2 mt-0.5 size-5 shrink-0 text-primary" aria-hidden="true" />
+                  <dt className="text-sm text-text-secondary">{line.label[locale]}</dt>
+                  <dd className="mt-0.5">
+                    <a className="ltr-run hover:text-primary" href={`tel:${line.tel}`}>
+                      {line.display}
+                    </a>
+                  </dd>
+                </div>
+              ))}
 
               {/* Fax is deliberately not a link — it is reference information,
                   never a contact action. */}
@@ -989,15 +998,26 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                 </a>
               );
             })}
-            <a
+            {/* Two numbers means this can no longer be one big <a>: a card
+                that is itself a link cannot contain two different link
+                targets. It is a div holding two labelled tel links. */}
+            <div
               data-reveal="up"
               data-reveal-delay="3"
-              href={`tel:${siteConfig.clinic.phone}`}
-              className="flex min-h-40 flex-col gap-2.5 rounded-lg border border-border bg-surface p-7 transition-colors hover:border-primary"
+              className="flex min-h-40 flex-col gap-2.5 rounded-lg border border-border bg-surface p-7"
             >
               <span className="text-xs font-semibold tracking-[0.08em] text-primary uppercase">{copy.callCard.label}</span>
-              <span className="ltr-run mt-auto text-h4 font-heading">{copy.callCard.value}</span>
-            </a>
+              <div className="mt-auto flex flex-col gap-3">
+                {publishedPhoneLines.map((line) => (
+                  <span key={line.id} className="flex flex-col">
+                    <span className="text-xs text-text-secondary">{line.label[locale]}</span>
+                    <a className="ltr-run text-h4 font-heading hover:text-primary" href={`tel:${line.tel}`}>
+                      {line.display}
+                    </a>
+                  </span>
+                ))}
+              </div>
+            </div>
           </div>
 
           {/* CL-005 — online, by phone, and in person, with the registered /

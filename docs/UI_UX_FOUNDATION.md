@@ -301,10 +301,10 @@ No mandatory skill was unavailable; none was silently skipped or replaced.
 - All doctor photography (all 6 doctors) — pending, using abstract facet tiles.
 - ImageKit account/credentials — not yet provisioned; system built against placeholder env vars, `status: pending` on every media reference.
 - FeelStack endpoint/site key — not yet provisioned; adapter built with typed local fallback content.
-- Aesthetic treatment pricing — not supplied (only uninsured medical-service fees and the legacy SkinMedica product price list were supplied); aesthetics pricing page stays feature-flagged off.
+- Aesthetic treatment pricing — not supplied (only uninsured medical-service fees and the legacy SkinMedica product price list — itself archived on 2026-09-07 — were supplied); aesthetics pricing page stays feature-flagged off.
 - Before/after photography — none supplied; feature-flagged off.
 - Legal pages (Terms, Privacy) — legacy site shows literal "Coming soon" placeholders, which is explicitly not publishable; routes built but excluded from nav/sitemap/indexing until real legal copy is supplied.
-- Product brand approval (SkinMedica) beyond the legacy price list — shop stays feature-flagged off pending explicit client approval per §18 of the master brief.
+- Product brand approval — resolved, then superseded. SkinMedica was approved and published, and archived on 2026-09-07 when the clinic stopped carrying it (`skinMedicaEnabled: false`, `docs/archive/SKINMEDICA_ARCHIVE.md`). The shop is live and carries Myriade; only cart/checkout remain flagged off.
 
 ---
 

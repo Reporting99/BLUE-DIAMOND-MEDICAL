@@ -1,6 +1,5 @@
 // Homepage-only copy and showcase ordering. Extracted from the route file so
 // src/app/[locale]/page.tsx composes sections rather than carrying content.
-import { siteConfig } from "@/config/site";
 import type { BookingChannel } from "@/config/booking";
 
 /**
@@ -111,7 +110,9 @@ export const homepageCopy = {
       heading: "See us in person",
       body: "You are welcome to visit during regular business hours. Our team is happy to answer questions about laser treatments, RF microneedling, and radiofrequency skin tightening.",
       addressLabel: "Address",
-      phoneLabel: "Phone",
+      // No phone label here: the card publishes BOTH approved lines and each
+      // label travels with its own number in src/config/phone-lines.ts, so a
+      // number can never be rendered under the wrong desk's name.
       faxLabel: "Fax",
       mapTitle: "Interactive map showing Blue Diamond Medical Aesthetics at 23-8 Weston Drive SW, Calgary",
       directions: "Get Directions",
@@ -125,7 +126,7 @@ export const homepageCopy = {
       { channel: "walk-in" as BookingChannel, label: "NEW OR WALK-IN PATIENT" },
       { channel: "aesthetics-consultation" as BookingChannel, label: "MEDICAL AESTHETICS" },
     ],
-    callCard: { label: "CALL THE CLINIC", value: siteConfig.clinic.phoneDisplay },
+    callCard: { label: "CALL THE CLINIC" },
     faqEyebrow: "COMMON QUESTIONS",
     faqHeading: "Questions, answered",
     faqs: [
@@ -214,7 +215,6 @@ export const homepageCopy = {
       heading: "زورونا في عيادتنا",
       body: "نحن نقدّر عملاءنا، فلا تترددوا في زيارتنا خلال ساعات العمل المعتادة للاستفسار عن العلاج بالليزر، والإبر الدقيقة التجميلية، وموجات الترددات الراديوية.",
       addressLabel: "العنوان",
-      phoneLabel: "الهاتف",
       faxLabel: "الفاكس",
       mapTitle: "خريطة تفاعلية توضح موقع Blue Diamond Medical Aesthetics في 23-8 Weston Drive SW، كالغاري",
       directions: "الحصول على الاتجاهات",
@@ -228,7 +228,7 @@ export const homepageCopy = {
       { channel: "walk-in" as BookingChannel, label: "مريض جديد أو بدون موعد" },
       { channel: "aesthetics-consultation" as BookingChannel, label: "التجميل الطبي" },
     ],
-    callCard: { label: "اتصلوا بالعيادة", value: siteConfig.clinic.phoneDisplay },
+    callCard: { label: "اتصلوا فينا" },
     faqEyebrow: "الأسئلة الشائعة",
     faqHeading: "الأسئلة الشائعة.",
     faqs: [
