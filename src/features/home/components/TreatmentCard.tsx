@@ -43,6 +43,7 @@ function TreatmentCard({
           {resolved ? (
             <ImageKitImage
               path={resolved.path}
+              version={resolved.id}
               preset="treatment"
               role={resolved.role}
               status={resolved.status}
@@ -72,6 +73,7 @@ function TreatmentCard({
       {resolved ? (
         <ImageKitImage
           path={resolved.path}
+          version={resolved.id}
           preset="treatment"
           role={resolved.role}
           status={resolved.status}

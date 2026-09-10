@@ -448,6 +448,7 @@ export function PageHero({
           >
             <ImageKitImage
               path={image.path}
+              version={image.id}
               preset="hero"
               role={image.role}
               status={image.status}
@@ -487,6 +488,7 @@ export function PageHero({
         {image ? (
           <ImageKitImage
             path={image.path}
+            version={image.id}
             preset="hero"
             role={image.role}
             status={image.status}

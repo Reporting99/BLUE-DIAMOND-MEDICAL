@@ -132,6 +132,13 @@ export interface SlotImageRef {
   path: string;
   status: ImageStatus;
   photoDeclined?: boolean;
+  /**
+   * The assignment's asset id, when this ref came from a real CMS assignment
+   * rather than a static fallback — see `ImageKitImage`'s `version` prop.
+   * Absent on a fallback, which is fine: `ImageKitImage` renders it exactly
+   * as before, just without cache-busting.
+   */
+  id?: string;
 }
 
 export function resolveSlotImageRef({
@@ -148,7 +155,7 @@ export function resolveSlotImageRef({
   if (isHardOverride(override)) return fallback;
   const assigned = firstAssigned(media, slot);
   if (!assigned) return fallback;
-  return { path: assigned.path, status: assigned.status };
+  return { path: assigned.path, status: assigned.status, id: assigned.id };
 }
 
 /**

@@ -87,12 +87,14 @@ export const productCmsContract = defineEntityContract<ProductFields, Product>({
     const resolveProductImages = () => {
       const assigned = resolveSlotGallery(media, ["productPrimary", "productGallery"]);
       if (assigned.length) {
-        return assigned.map((m) => ({ path: m.path, status: m.status, alt: m.alt }));
+        return assigned.map((m) => ({ path: m.path, status: m.status, alt: m.alt, id: m.id }));
       }
       return f.images.map((i) => ({
         path: i.path,
         status: i.status as ImageStatus,
         alt: localizedBilingual(locale, i.alt),
+        // Static catalogue entries carry no CMS assignment id — `version`
+        // is simply omitted for these, so they render exactly as before.
       }));
     };
     const detail: ProductDetail = {

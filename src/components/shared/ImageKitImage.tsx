@@ -5,8 +5,37 @@ import { FacetTile } from "./FacetTile";
 import { cn } from "@/lib/utils";
 
 interface ImageKitImageProps {
-  /** ImageKit path, e.g. "/doctors/farhat.jpg". Ignored when status !== "approved". */
+  /**
+   * ImageKit path, e.g. "/doctors/farhat.jpg". Ignored when status !== "approved".
+   *
+   * This is the CMS-assigned identity string, preserved byte-for-byte —
+   * several contracts (`tests/contracts/media-assignment-consumer.spec.ts`)
+   * depend on comparing it verbatim, so it must never be mutated to carry a
+   * cache-busting param. Use `version` for that instead.
+   */
   path: string;
+  /**
+   * Stable content-version token for this asset — the FeelStack media
+   * assignment's own `id` (see `ResolvedMedia`/`ImageKitAsset` in
+   * `src/types/media.ts` and `adaptMediaAssignment` in
+   * `src/lib/feelstack/media.ts`). It identifies the ASSET, not the slot it
+   * is assigned to, so a replacement image gets a new id and therefore a new
+   * delivery URL, while every unrelated re-render of the same image keeps
+   * requesting the same URL and can be cached aggressively.
+   *
+   * Passed through to the official SDK's own `queryParameters` option (its
+   * documented mechanism for exactly this — "especially useful if you want
+   * to add a versioning parameter to your URLs") rather than hand-appended
+   * to `path`, so it can never collide with or get dropped by the SDK's own
+   * `tr=` transformation query string, and `path` itself stays the pristine
+   * CMS-assigned value everywhere else in the app relies on.
+   *
+   * Optional: absent for callers outside the FeelStack media pipeline (the
+   * brand mark, static manifest imagery) or when an assignment has no id —
+   * the image still renders, it just won't auto-bust on replacement, which
+   * is the pre-existing behaviour, not a regression.
+   */
+  version?: string;
   preset: ImagePresetKey;
   role: ImageRole;
   status: ImageStatus;
@@ -56,6 +85,7 @@ interface ImageKitImageProps {
  */
 export function ImageKitImage({
   path,
+  version,
   preset,
   role,
   status,
@@ -95,6 +125,7 @@ export function ImageKitImage({
         <ImageKitSdkImage
           src={path}
           transformation={[imagePresets[preset]]}
+          {...(version ? { queryParameters: { v: version } } : {})}
           alt={altText}
           width={width}
           height={height}

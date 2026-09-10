@@ -176,6 +176,7 @@ export default async function AestheticsHubPage({ params }: { params: Promise<{ 
                 <div aria-hidden="true" className="relative aspect-[16/9] overflow-hidden">
                   <ImageKitImage
                     path={card.asset.path}
+                    version={card.asset.id}
                     preset="treatment"
                     role={card.asset.role}
                     status={card.asset.status}

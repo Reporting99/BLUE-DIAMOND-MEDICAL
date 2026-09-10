@@ -81,6 +81,7 @@ export function ConcernResults({
               <div className="relative aspect-4/3 overflow-hidden rounded-lg border border-border bg-surface">
                 <ImageKitImage
                   path={technologyImage?.path ?? ""}
+                  version={technologyImage?.id}
                   preset="technology"
                   role="technology"
                   status={technologyImage?.status ?? "pending"}

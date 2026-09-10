@@ -195,6 +195,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           {homeHero ? (
             <ImageKitImage
               path={homeHero.path}
+              version={homeHero.id}
               preset="hero"
               role={homeHero.role}
               status={homeHero.status}
@@ -383,6 +384,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                 <>
                   <ImageKitImage
                     path={medicalPathwayMedia.path}
+                    version={medicalPathwayMedia.id}
                     preset="hero"
                     role={medicalPathwayMedia.role}
                     status={medicalPathwayMedia.status}
@@ -430,6 +432,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
               {aestheticsPathwayMedia ? (
                 <ImageKitImage
                   path={aestheticsPathwayMedia.path}
+                  version={aestheticsPathwayMedia.id}
                   preset="hero"
                   role={aestheticsPathwayMedia.role}
                   status={aestheticsPathwayMedia.status}
@@ -736,6 +739,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                 <div className="facet-corner-sm aspect-square overflow-hidden rounded">
                   <ImageKitImage
                     path={(featured(`product:${product.id}`, "productPrimary") ?? product.images[0]!).path}
+                    version={(featured(`product:${product.id}`, "productPrimary") ?? product.images[0]!).id}
                     preset="product"
                     role="product"
                     status={(featured(`product:${product.id}`, "productPrimary") ?? product.images[0]!).status}

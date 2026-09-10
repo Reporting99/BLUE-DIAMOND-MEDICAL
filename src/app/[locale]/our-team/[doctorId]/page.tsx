@@ -122,6 +122,7 @@ export default async function DoctorProfilePage({
         <div className="facet-corner aspect-[4/5] overflow-hidden rounded-lg lg:sticky lg:top-24">
           <ImageKitImage
             path={portrait.path}
+            version={portrait.id}
             preset="doctor"
             role="doctor"
             status={portrait.status}

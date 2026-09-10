@@ -147,6 +147,7 @@ export default async function ContactPage({
                 <div className="size-16 shrink-0 overflow-hidden rounded-md">
                   <ImageKitImage
                     path={productImage.path}
+                    version={productImage.id}
                     preset="thumbnail"
                     role="product"
                     status={productImage.status}

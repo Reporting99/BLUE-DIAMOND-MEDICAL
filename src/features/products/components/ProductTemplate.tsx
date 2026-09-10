@@ -160,6 +160,7 @@ export function ProductTemplate({ product, locale }: { product: Product; locale:
         <div className="aspect-square overflow-hidden rounded-lg">
           <ImageKitImage
             path={coverImage.path}
+            version={coverImage.id}
             preset="product"
             role="product"
             status={coverImage.status}

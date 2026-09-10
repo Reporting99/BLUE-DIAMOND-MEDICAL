@@ -189,7 +189,7 @@ export interface Product {
   /** For a kit: the products it contains, as supplied. */
   kitContents?: { en: string[]; ar: string[] };
   sizeLabel?: string; // e.g. "56.7 g" — not translated, a measurement
-  images: { path: string; status: ImageStatus; alt: Bilingual }[];
+  images: { path: string; status: ImageStatus; alt: Bilingual; id?: string }[];
   approvalStatus: "approved" | "pending";
   inStock: boolean;
   /**

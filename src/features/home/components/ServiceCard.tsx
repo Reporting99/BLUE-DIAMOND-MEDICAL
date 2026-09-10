@@ -58,6 +58,7 @@ function ServiceCard({
         {resolved ? (
           <ImageKitImage
             path={resolved.path}
+            version={resolved.id}
             preset="service"
             role={resolved.role}
             status={resolved.status}

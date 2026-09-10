@@ -24,6 +24,13 @@ export interface Doctor {
      * legitimate Arabic layout.
      */
     locales?: Locale[];
+    /**
+     * The CMS assignment's asset id, when this portrait came from a real
+     * FeelStack assignment rather than the static roster record — see
+     * `ImageKitImage`'s `version` prop. Absent for the static record, which
+     * is fine: it renders exactly as before, just without cache-busting.
+     */
+    id?: string;
   };
   bookingChannel: "family-doctor" | "phone-medical-botox";
 }
