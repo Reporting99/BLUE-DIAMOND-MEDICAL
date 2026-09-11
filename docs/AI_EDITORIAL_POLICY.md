@@ -32,6 +32,20 @@ above) is blocked in the CMS, that's a FeelStack role/permission problem to
 fix through the normal FeelStack admin path — it is not evidence that the
 edit itself needs medical review.
 
+**Resolved 2026-09-11.** The project now has a dedicated, project-scoped
+publisher identity: `bd-content-publisher` on project
+`d1a870a4-a514-4719-bf71-6cff26b18dcb`, `roleKey: "publisher"`, `isRoot:
+false`, no membership in any other project. Reuse this identity for future
+Blue Diamond CMS publish operations rather than creating another one or
+reaching for the root credential. It was created through FeelStack's own
+admin endpoints (`POST /api/users?projectId=...` then
+`PUT /api/admin/v1/projects/:id/memberships`) using the built-in `publisher`
+role, which already carries exactly `content.publish`/`page.publish` plus the
+read/write/media permissions publishing needs — nothing broader. It is
+deliberately separate from `bd-media-import` (import stays import-only;
+publishing is a distinct editorial act, matching the reasoning already
+encoded in `PLATFORM_PERMISSIONS.MEDIA_APPROVE` in the FeelStack source).
+
 ## Stop and check only for a genuine clinical-claim change
 
 Only pause for real medical verification when a change would introduce or
