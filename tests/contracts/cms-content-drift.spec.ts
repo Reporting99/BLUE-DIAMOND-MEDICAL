@@ -93,14 +93,14 @@ const cmsEntries: CmsEntry[] = JSON.parse(
  * above: content.publish is still not held by the import identity.
  */
 /**
- * NARROWED 2026-09-11 to field-exact acknowledgement. Every remaining entry
- * here is EITHER a repository FAQ that has no matching CMS record at all
- * (needs `content/faqs` create + `faq-assignments`, not a field update --
- * tracked as NOT_READY / create-required in
- * content/english-audit/remaining-drift-proposals.json) OR a field this pass
- * did not reach before stopping. driftFor() only checks fields the CMS
- * already models, so an entity with just a missing-FAQ gap still shows here
- * even though every synced field matches.
+ * NARROWED 2026-09-11 to field-exact acknowledgement, then fully published
+ * down to this set. Every remaining entry is a repository FAQ with no
+ * matching CMS record at all (needs `content/faqs` create + `faq-
+ * assignments`, not a field update -- tracked as NOT_READY / create-required
+ * in content/english-audit/remaining-drift-proposals.json, 11 records across
+ * these 9 entities). driftFor() only checks fields the CMS already models, so
+ * an entity with just a missing-FAQ gap still shows here even though every
+ * synced field matches.
  */
 const KNOWN_CMS_DRIFT: ReadonlySet<string> = new Set([
   "aesthetic-concern:dry-skin",
@@ -109,10 +109,7 @@ const KNOWN_CMS_DRIFT: ReadonlySet<string> = new Set([
   "aesthetic-treatment:radio-frequency",
   "aesthetic-treatment:rf-microneedling",
   "aesthetic-treatment:ultra",
-  "medical-service:chronic-disease-management",
-  "medical-service:eye-screening",
   "medical-service:pain-management",
-  "medical-service:preventive-care",
   "technology:elite-iq",
   "technology:potenza",
 ]);

@@ -1040,7 +1040,7 @@
     "classification": "EDITORIAL",
     "publicationEligibility": "READY",
     "sourceReference": "docs/ENGLISH_CONTENT_AUDIT_REPORT.md",
-    "status": "READY_UNPUBLISHED"
+    "status": "PUBLISHED"
   },
   {
     "proposalId": "RD-067",
@@ -1055,7 +1055,7 @@
     "classification": "MEDICAL_MEANING_CHANGE",
     "publicationEligibility": "READY",
     "sourceReference": "docs/ENGLISH_CONTENT_AUDIT_REPORT.md",
-    "status": "READY_UNPUBLISHED"
+    "status": "PUBLISHED"
   },
   {
     "proposalId": "RD-068",
@@ -1085,7 +1085,7 @@
     "classification": "GRAMMAR",
     "publicationEligibility": "READY",
     "sourceReference": "docs/CANADIAN_ENGLISH_HOUSE_STYLE.md",
-    "status": "READY_UNPUBLISHED"
+    "status": "PUBLISHED"
   },
   {
     "proposalId": "RD-070",
@@ -1102,6 +1102,6 @@
     "classification": "GRAMMAR",
     "publicationEligibility": "READY",
     "sourceReference": "original task brief: Preventive Care subject-verb agreement",
-    "status": "READY_UNPUBLISHED"
+    "status": "PUBLISHED"
   }
 ]

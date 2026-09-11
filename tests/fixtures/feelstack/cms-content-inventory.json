@@ -771,7 +771,7 @@
       {
         "id": "4a1df9a4-0dfd-4da3-a965-64bb68bdcb10",
         "question": "Do I need to see a particular physician for chronic disease management?",
-        "answer": "No — every Blue Diamond family physician provides chronic-disease management as part of general family medicine. See whichever of our family physicians you are registered with."
+        "answer": "No — every Blue Diamond family physician provides chronic-disease management as part of general family medicine. Book with whichever of our family physicians you are registered with."
       },
       {
         "id": "dc157ea0-8cb3-4c73-af37-17122e0729c5",
@@ -794,7 +794,7 @@
     "fields": {
       "summary": "Eye disease screening at our Calgary clinic through Euclid Telehealth, with referral based on your doctor's assessment.",
       "service_id": "eye-screening",
-      "who_its_for": "All patients, especially diabetics and those with a family history of eye disease.",
+      "who_its_for": "Patients referred by their doctor, particularly people with diabetes or a family history of eye disease.",
       "contact_note": "Euclid Telehealth patient support: patientsupport@euclidtelehealth.org or 1-800-511-5661.",
       "booking_channel": "eye-screening",
       "how_appointments_work": "Based on your doctor's recommendation, Euclid Telehealth will contact you directly to schedule your screening."
@@ -907,7 +907,7 @@
     "updatedAt": "2026-08-23T10:42:24.126Z",
     "title": "Preventive Care",
     "fields": {
-      "summary": "\"Prevention is better than cure\" is at the core of how we practice — from vaccination to Dr. Saeed's clinical focus on preventive medicine and early intervention.",
+      "summary": "\"Prevention is better than cure\" is at the core of how we practise — from vaccination to Dr. Saeed's clinical focus on preventive medicine and early intervention.",
       "service_id": "preventive-care",
       "booking_channel": "family-doctor"
     },
@@ -925,7 +925,7 @@
       {
         "id": "7a19fe8c-90b9-41a0-8f86-177712865eea",
         "question": "Do I need to see Dr. Saeed specifically for preventive care?",
-        "answer": "Preventive medicine and early intervention is a particular clinical focus of Dr. Saeed's, but preventive care in general is available from any of our family physicians."
+        "answer": "Preventive medicine and early intervention are particular clinical interests of Dr. Saeed's, but preventive care is available from any of our family physicians."
       },
       {
         "id": "888ee5cd-803a-4f19-b569-689883076b46",
