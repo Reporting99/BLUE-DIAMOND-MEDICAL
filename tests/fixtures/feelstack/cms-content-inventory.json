@@ -50,12 +50,12 @@
     "faqs": [
       {
         "id": "eca20065-558b-4244-a08f-84562eaa90ce",
-        "question": "Why is Calgary's climate mentioned for dry skin care?",
+        "question": "Does Calgary's climate affect dry skin?",
         "answer": "Calgary's dry climate can contribute to dry, uncomfortable skin."
       },
       {
         "id": "b13993e8-bd5e-4ea9-b47a-cf9ed47f2b02",
-        "question": "How does RF micro-needling help with dry skin?",
+        "question": "How does RF microneedling help with dry skin?",
         "answer": "The clinic's approach uses RF microneedling with topical products, including moisturizers and pigment regulators. Your physician will discuss suitability and the risks and benefits of the proposed products."
       },
       {
@@ -172,12 +172,12 @@
     "faqs": [
       {
         "id": "c295532a-f7a5-4ee8-a52c-cba67687e96b",
-        "question": "How does radio-frequency treatment address skin laxity?",
+        "question": "How does radiofrequency treatment address skin laxity?",
         "answer": "It promotes collagen and elastin production, which helps tighten and smooth skin across the body."
       },
       {
         "id": "86f6df37-e9a8-4c77-885c-eb870eec06c8",
-        "question": "How long does a session take?",
+        "question": "How long does a radiofrequency session take?",
         "answer": "About 15 minutes."
       },
       {
@@ -304,7 +304,7 @@
       },
       {
         "id": "d838e92e-46f5-4952-9619-75c205f646e2",
-        "question": "What's the manufacturer of the Elite iQ™ device?",
+        "question": "Who makes the Elite iQ™ device?",
         "answer": "Cynosure."
       },
       {
@@ -345,7 +345,7 @@
       },
       {
         "id": "d5658ddc-0a0a-4bbb-8098-3b91fc2a1a75",
-        "question": "What's the manufacturer of the Potenza device?",
+        "question": "Who makes the Potenza device?",
         "answer": "Cynosure."
       }
     ]
@@ -461,8 +461,8 @@
       },
       {
         "id": "021f409e-4b3f-4af5-b989-732d2032f15e",
-        "question": "How many treatments will I need?",
-        "answer": "Treatment times vary by area but typically take less than 30 minutes. Speak to your provider for a consultation to discuss treatment areas."
+        "question": "How many laser hair removal treatments will I need?",
+        "answer": "Several sessions are needed, because only the hairs that are actively growing respond to each treatment. A session usually takes less than 30 minutes, depending on the area. Book a consultation to discuss the areas you would like treated."
       }
     ]
   },
@@ -595,7 +595,7 @@
       },
       {
         "id": "7ca04559-2dba-4c84-a218-e3f1b8153bbd",
-        "question": "How long does a session take?",
+        "question": "How long does a radiofrequency session take?",
         "answer": "Face and neck treatments take 40–90 minutes depending on the area; body areas are treated with non-invasive pads over about 20 minutes."
       },
       {
@@ -634,7 +634,7 @@
     "faqs": [
       {
         "id": "637c6376-33d5-4a7c-a6b4-02a035c76f61",
-        "question": "Why RF micro-needling vs. non-RF micro-needling?",
+        "question": "How is RF microneedling different from standard microneedling?",
         "answer": "Potenza delivers focused RF technology to heat the skin, triggering the body's natural response to increase collagen and elastin production, resulting in enhanced skin revitalization."
       }
     ]
@@ -700,7 +700,7 @@
       },
       {
         "id": "853f5e87-7a09-4328-9de2-77052097eec7",
-        "question": "Will one session be enough?",
+        "question": "Will one Ultra treatment be enough?",
         "answer": "Results may appear after a single treatment or require several visits, depending on the condition being treated."
       }
     ]
@@ -890,7 +890,7 @@
       },
       {
         "id": "53c5ef03-ce70-4be4-aa1c-0a8f7cac0a43",
-        "question": "For minor in-clinic procedures related to pain, like joint injections, who provides those?",
+        "question": "Who performs joint injections and other minor in-clinic procedures for pain?",
         "answer": "Our family physicians perform intra-articular injections for degenerative knee, shoulder, and ankle conditions in-house — see the Minor Procedures page for details. These are booked by phone or in person, not online."
       },
       {

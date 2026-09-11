@@ -94,25 +94,20 @@ const cmsEntries: CmsEntry[] = JSON.parse(
  */
 /**
  * NARROWED 2026-09-11 to field-exact acknowledgement, then fully published
- * down to this set. Every remaining entry is a repository FAQ with no
- * matching CMS record at all (needs `content/faqs` create + `faq-
- * assignments`, not a field update -- tracked as NOT_READY / create-required
- * in content/english-audit/remaining-drift-proposals.json, 11 records across
- * these 9 entities). driftFor() only checks fields the CMS already models, so
- * an entity with just a missing-FAQ gap still shows here even though every
- * synced field matches.
+ * down to empty. The last 9 entities looked like missing FAQs -- driftFor()
+ * matches an FAQ by exact question text or a 22-character question prefix,
+ * and none of these 11 matched either way -- but a read-only CMS precheck
+ * before any write found every one of them ALREADY existed in the CMS,
+ * correctly assigned to the right entity, just under an older question
+ * phrasing (10 of 11) or an older answer too (1 of 11, laser-hair-removal).
+ * Creating "missing" FAQs here would have shipped duplicate/near-duplicate
+ * FAQs on public pages. Fixed as question/answer field updates instead, the
+ * same content.publish path as every other record in this file's history --
+ * zero new FAQ records were created. See content/english-audit/
+ * remaining-drift-proposals.json for the record of what each of those 11
+ * actually turned out to be.
  */
-const KNOWN_CMS_DRIFT: ReadonlySet<string> = new Set([
-  "aesthetic-concern:dry-skin",
-  "aesthetic-concern:skin-laxity",
-  "aesthetic-treatment:laser-hair-removal",
-  "aesthetic-treatment:radio-frequency",
-  "aesthetic-treatment:rf-microneedling",
-  "aesthetic-treatment:ultra",
-  "medical-service:pain-management",
-  "technology:elite-iq",
-  "technology:potenza",
-]);
+const KNOWN_CMS_DRIFT: ReadonlySet<string> = new Set<string>([]);
 
 type Localized = { en: string; ar: string };
 const isLocalized = (v: unknown): v is Localized =>

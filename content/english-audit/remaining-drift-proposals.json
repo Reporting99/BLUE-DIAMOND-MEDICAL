@@ -93,7 +93,8 @@
     "classification": "SOURCE_SYNC",
     "publicationEligibility": "NOT_READY_DIFFERENT_OPERATION",
     "sourceReference": "Repository FAQ has no matching CMS record; requires a create+assign operation, not a field update. Not executed in this pass.",
-    "status": "NOT_READY"
+    "status": "RESOLVED_VIA_UPDATE_NOT_CREATE",
+    "resolutionNote": "Read-only CMS precheck (2026-09-11) found this FAQ already existed in the CMS, correctly assigned to the right entity, under different question wording (and for laser-hair-removal, a different answer too). Resolved as a question/answer field update via bd-content-publisher -- no new FAQ record was created, avoiding a duplicate."
   },
   {
     "proposalId": "RD-007",
@@ -108,7 +109,8 @@
     "classification": "SOURCE_SYNC",
     "publicationEligibility": "NOT_READY_DIFFERENT_OPERATION",
     "sourceReference": "Repository FAQ has no matching CMS record; requires a create+assign operation, not a field update. Not executed in this pass.",
-    "status": "NOT_READY"
+    "status": "RESOLVED_VIA_UPDATE_NOT_CREATE",
+    "resolutionNote": "Read-only CMS precheck (2026-09-11) found this FAQ already existed in the CMS, correctly assigned to the right entity, under different question wording (and for laser-hair-removal, a different answer too). Resolved as a question/answer field update via bd-content-publisher -- no new FAQ record was created, avoiding a duplicate."
   },
   {
     "proposalId": "RD-008",
@@ -219,7 +221,8 @@
     "classification": "SOURCE_SYNC",
     "publicationEligibility": "NOT_READY_DIFFERENT_OPERATION",
     "sourceReference": "Repository FAQ has no matching CMS record; requires a create+assign operation, not a field update. Not executed in this pass.",
-    "status": "NOT_READY"
+    "status": "RESOLVED_VIA_UPDATE_NOT_CREATE",
+    "resolutionNote": "Read-only CMS precheck (2026-09-11) found this FAQ already existed in the CMS, correctly assigned to the right entity, under different question wording (and for laser-hair-removal, a different answer too). Resolved as a question/answer field update via bd-content-publisher -- no new FAQ record was created, avoiding a duplicate."
   },
   {
     "proposalId": "RD-015",
@@ -234,7 +237,8 @@
     "classification": "SOURCE_SYNC",
     "publicationEligibility": "NOT_READY_DIFFERENT_OPERATION",
     "sourceReference": "Repository FAQ has no matching CMS record; requires a create+assign operation, not a field update. Not executed in this pass.",
-    "status": "NOT_READY"
+    "status": "RESOLVED_VIA_UPDATE_NOT_CREATE",
+    "resolutionNote": "Read-only CMS precheck (2026-09-11) found this FAQ already existed in the CMS, correctly assigned to the right entity, under different question wording (and for laser-hair-removal, a different answer too). Resolved as a question/answer field update via bd-content-publisher -- no new FAQ record was created, avoiding a duplicate."
   },
   {
     "proposalId": "RD-016",
@@ -379,7 +383,8 @@
     "classification": "SOURCE_SYNC",
     "publicationEligibility": "NOT_READY_DIFFERENT_OPERATION",
     "sourceReference": "Repository FAQ has no matching CMS record; requires a create+assign operation, not a field update. Not executed in this pass.",
-    "status": "NOT_READY"
+    "status": "RESOLVED_VIA_UPDATE_NOT_CREATE",
+    "resolutionNote": "Read-only CMS precheck (2026-09-11) found this FAQ already existed in the CMS, correctly assigned to the right entity, under different question wording (and for laser-hair-removal, a different answer too). Resolved as a question/answer field update via bd-content-publisher -- no new FAQ record was created, avoiding a duplicate."
   },
   {
     "proposalId": "RD-025",
@@ -475,7 +480,8 @@
     "classification": "SOURCE_SYNC",
     "publicationEligibility": "NOT_READY_DIFFERENT_OPERATION",
     "sourceReference": "Repository FAQ has no matching CMS record; requires a create+assign operation, not a field update. Not executed in this pass.",
-    "status": "NOT_READY"
+    "status": "RESOLVED_VIA_UPDATE_NOT_CREATE",
+    "resolutionNote": "Read-only CMS precheck (2026-09-11) found this FAQ already existed in the CMS, correctly assigned to the right entity, under different question wording (and for laser-hair-removal, a different answer too). Resolved as a question/answer field update via bd-content-publisher -- no new FAQ record was created, avoiding a duplicate."
   },
   {
     "proposalId": "RD-031",
@@ -635,7 +641,8 @@
     "classification": "SOURCE_SYNC",
     "publicationEligibility": "NOT_READY_DIFFERENT_OPERATION",
     "sourceReference": "Repository FAQ has no matching CMS record; requires a create+assign operation, not a field update. Not executed in this pass.",
-    "status": "NOT_READY"
+    "status": "RESOLVED_VIA_UPDATE_NOT_CREATE",
+    "resolutionNote": "Read-only CMS precheck (2026-09-11) found this FAQ already existed in the CMS, correctly assigned to the right entity, under different question wording (and for laser-hair-removal, a different answer too). Resolved as a question/answer field update via bd-content-publisher -- no new FAQ record was created, avoiding a duplicate."
   },
   {
     "proposalId": "RD-041",
@@ -819,7 +826,8 @@
     "classification": "SOURCE_SYNC",
     "publicationEligibility": "NOT_READY_DIFFERENT_OPERATION",
     "sourceReference": "Repository FAQ has no matching CMS record; requires a create+assign operation, not a field update. Not executed in this pass.",
-    "status": "NOT_READY"
+    "status": "RESOLVED_VIA_UPDATE_NOT_CREATE",
+    "resolutionNote": "Read-only CMS precheck (2026-09-11) found this FAQ already existed in the CMS, correctly assigned to the right entity, under different question wording (and for laser-hair-removal, a different answer too). Resolved as a question/answer field update via bd-content-publisher -- no new FAQ record was created, avoiding a duplicate."
   },
   {
     "proposalId": "RD-053",
@@ -959,7 +967,8 @@
     "classification": "SOURCE_SYNC",
     "publicationEligibility": "NOT_READY_DIFFERENT_OPERATION",
     "sourceReference": "Repository FAQ has no matching CMS record; requires a create+assign operation, not a field update. Not executed in this pass.",
-    "status": "NOT_READY"
+    "status": "RESOLVED_VIA_UPDATE_NOT_CREATE",
+    "resolutionNote": "Read-only CMS precheck (2026-09-11) found this FAQ already existed in the CMS, correctly assigned to the right entity, under different question wording (and for laser-hair-removal, a different answer too). Resolved as a question/answer field update via bd-content-publisher -- no new FAQ record was created, avoiding a duplicate."
   },
   {
     "proposalId": "RD-062",
@@ -1023,7 +1032,8 @@
     "classification": "SOURCE_SYNC",
     "publicationEligibility": "NOT_READY_DIFFERENT_OPERATION",
     "sourceReference": "Repository FAQ has no matching CMS record; requires a create+assign operation, not a field update. Not executed in this pass.",
-    "status": "NOT_READY"
+    "status": "RESOLVED_VIA_UPDATE_NOT_CREATE",
+    "resolutionNote": "Read-only CMS precheck (2026-09-11) found this FAQ already existed in the CMS, correctly assigned to the right entity, under different question wording (and for laser-hair-removal, a different answer too). Resolved as a question/answer field update via bd-content-publisher -- no new FAQ record was created, avoiding a duplicate."
   },
   {
     "proposalId": "RD-066",
@@ -1070,7 +1080,8 @@
     "classification": "SOURCE_SYNC",
     "publicationEligibility": "NOT_READY_DIFFERENT_OPERATION",
     "sourceReference": "Repository FAQ has no matching CMS record; requires a create+assign operation, not a field update. Not executed in this pass.",
-    "status": "NOT_READY"
+    "status": "RESOLVED_VIA_UPDATE_NOT_CREATE",
+    "resolutionNote": "Read-only CMS precheck (2026-09-11) found this FAQ already existed in the CMS, correctly assigned to the right entity, under different question wording (and for laser-hair-removal, a different answer too). Resolved as a question/answer field update via bd-content-publisher -- no new FAQ record was created, avoiding a duplicate."
   },
   {
     "proposalId": "RD-069",
