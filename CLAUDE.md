@@ -1,1 +1,2 @@
 @AGENTS.md
+@docs/AI_EDITORIAL_POLICY.md
