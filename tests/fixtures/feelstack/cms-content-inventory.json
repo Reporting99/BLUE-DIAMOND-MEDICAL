@@ -6,14 +6,14 @@
     "updatedAt": "2026-08-23T11:25:34.635Z",
     "title": "Acne Scars",
     "fields": {
-      "summary": "Comprehensive care for acne scarring — medical consultations, prescriptions where necessary, and RF micro-needling and laser treatments to reduce scarring, under the supervision of one of our physicians.",
+      "summary": "Comprehensive care for acne scarring — medical consultations, prescriptions where necessary, and RF microneedling and laser treatments to reduce scarring, under the supervision of one of our physicians.",
       "concern_id": "acne-scars"
     },
     "faqs": [
       {
         "id": "4732dc63-ba8b-4951-b45a-ae7508bdc141",
         "question": "How does care for acne scarring start?",
-        "answer": "With a medical consultation — from there, a physician may recommend a prescription where necessary, alongside treatments like RF micro-needling and laser."
+        "answer": "With a medical consultation — from there, a physician may recommend a prescription where necessary, alongside treatments like RF microneedling and laser."
       },
       {
         "id": "e75b87bc-c99f-40f5-a0c8-904766b46c2c",
@@ -23,7 +23,7 @@
       {
         "id": "b96c661e-0c48-4996-abe1-e1b3e00a7acc",
         "question": "Which treatment is used for acne scarring?",
-        "answer": "RF micro-needling is the treatment linked to this concern; a physician will confirm what's appropriate for your specific scarring during your consultation."
+        "answer": "RF microneedling and laser treatments are options for acne scarring. Your physician will discuss which options suit your skin during your consultation."
       },
       {
         "id": "d4bb9bc5-27e5-4296-90a4-828b24994508",
@@ -33,7 +33,7 @@
       {
         "id": "5c305078-48ab-4894-a02a-7b1e039dc579",
         "question": "How do I book a consultation?",
-        "answer": "Through Jane App, our external booking system for aesthetics consultations."
+        "answer": "Through Mikata, our external booking system. For all aesthetic treatment appointments, book a 20-minute consultation with Dr. Farhat."
       }
     ]
   },
@@ -44,7 +44,7 @@
     "updatedAt": "2026-08-23T11:25:37.751Z",
     "title": "Dry Skin",
     "fields": {
-      "summary": "Calgary's climate is unusually harsh on skin. Using RF micro-needling to infuse topicals — including moisturizers and pigment regulators — we help skin stay nourished and glowing for months after treatment.",
+      "summary": "Calgary's dry climate can contribute to dry, uncomfortable skin. The clinic's RF microneedling approach includes topical products such as moisturizers and pigment regulators. Your physician will assess whether this approach is appropriate for your skin.",
       "concern_id": "dry-skin"
     },
     "faqs": [
@@ -72,19 +72,19 @@
     "updatedAt": "2026-08-23T11:25:38.996Z",
     "title": "Fine Lines & Wrinkles",
     "fields": {
-      "summary": "State-of-the-art technologies to smooth and erase fine lines and wrinkles, alongside skin-tightening options for all skin types — bespoke treatments as individual as you are.",
+      "summary": "Fine lines and wrinkles develop as skin gradually loses collagen and elasticity. Blue Diamond Medical offers radiofrequency and RF microneedling treatments that may soften their appearance and firm the skin, planned around your skin type and goals during a consultation.",
       "concern_id": "fine-lines-wrinkles"
     },
     "faqs": [
       {
         "id": "189323e5-0313-4712-997b-74f22ab2a2ed",
         "question": "What treatments address fine lines and wrinkles?",
-        "answer": "RF micro-needling and radio-frequency skin-tightening are the two treatments connected to this concern, suited to different skin types."
+        "answer": "RF microneedling and radiofrequency skin tightening may soften fine lines and wrinkles. Your physician will assess which treatment suits your skin."
       },
       {
         "id": "65d280a5-6266-42fc-bcc3-ff6f115c7e7b",
         "question": "Is treatment the same for everyone?",
-        "answer": "No — treatments are bespoke, tailored to your specific skin during a consultation."
+        "answer": "No — each treatment is planned around your own skin during a consultation."
       },
       {
         "id": "17eb6804-d282-440f-bbf5-3d51ab458023",
@@ -100,7 +100,7 @@
     "updatedAt": "2026-08-23T11:25:54.132Z",
     "title": "Razor Bumps",
     "fields": {
-      "summary": "Uncomfortable and prone to infection when combined with ingrown hairs. Our technologies can remove razor bumps, treat the underlying cause, and give you smoother, softer skin with minimally invasive treatment.",
+      "summary": "Razor bumps form when shaved hairs curl back into the skin, and they can be uncomfortable and prone to infection where ingrown hairs are also present. Laser hair removal at Blue Diamond Medical addresses the underlying cause by reducing the hair that produces them, which may improve both comfort and skin texture. Results vary, and a consultation confirms whether the treatment suits your skin and hair type.",
       "concern_id": "razor-bumps"
     },
     "faqs": [
@@ -122,7 +122,7 @@
       {
         "id": "f61f87ed-bf1c-4914-8f51-c0a86049442c",
         "question": "Is this a minimally invasive treatment?",
-        "answer": "Yes."
+        "answer": "Laser hair removal is a non-surgical treatment."
       }
     ]
   },
@@ -166,7 +166,7 @@
     "updatedAt": "2026-08-23T11:25:50.138Z",
     "title": "Skin Laxity",
     "fields": {
-      "summary": "Radio-frequency waves promote collagen and elastin production to tighten and smooth skin all over the body — a quick, pain-free treatment (about 15 minutes) with easy, visible results and no downtime.",
+      "summary": "Skin loses firmness as the collagen and elastin that support it gradually decline. Radiofrequency treatment at Blue Diamond Medical warms the deeper layers of the skin to encourage collagen production, which may help tighten and smooth areas of laxity on the face and body. Sessions take about 15 minutes, most patients find them comfortable, and downtime is usually minimal. Results vary, and a consultation confirms whether the treatment suits you.",
       "concern_id": "skin-laxity"
     },
     "faqs": [
@@ -183,7 +183,7 @@
       {
         "id": "aa71a4dd-8f1d-4b59-9361-c9f2727baef5",
         "question": "Is there downtime after treatment?",
-        "answer": "No downtime is associated with this treatment."
+        "answer": "This treatment is not typically associated with downtime, though your physician will confirm what to expect for the area being treated."
       }
     ]
   },
@@ -194,7 +194,7 @@
     "updatedAt": "2026-08-23T11:25:52.725Z",
     "title": "Skin Revitalization",
     "fields": {
-      "summary": "Harsh weather and daily stresses can leave skin looking tired. We can refresh skin in under 45 minutes, exposing a natural glow and reducing the appearance of fine lines and wrinkles.",
+      "summary": "Harsh weather and daily stresses can leave skin looking tired. A session takes under 45 minutes and can leave skin looking refreshed, with a natural glow and a softer appearance to fine lines and wrinkles.",
       "concern_id": "skin-revitalization"
     },
     "faqs": [
@@ -211,7 +211,7 @@
       {
         "id": "5ec7e080-9ac6-479e-a54f-f3bcd6e1f883",
         "question": "Which treatments are used for skin revitalization?",
-        "answer": "Laser Skin Treatments and RF micro-needling."
+        "answer": "Laser Skin Treatments and RF microneedling."
       }
     ]
   },
@@ -229,7 +229,7 @@
       {
         "id": "69e50c28-24d8-4e94-95a4-c524c504ab86",
         "question": "Are spider veins a health concern?",
-        "answer": "They're generally harmless but can be unsightly — treatment is typically for cosmetic reasons, though your physician will assess your specific case."
+        "answer": "They're generally harmless, though many patients find them distracting. Treatment is typically for cosmetic reasons, and your physician will assess your specific case."
       },
       {
         "id": "801a25fb-ef3c-4acf-b487-866575a9f2dd",
@@ -238,7 +238,7 @@
       },
       {
         "id": "11e171a4-9599-40e2-a4f3-52f220e627bc",
-        "question": "What causes the discoloration in spider veins?",
+        "question": "What causes the discolouration in spider veins?",
         "answer": "They're damaged blood vessels under the skin, which can appear red, blue, or purple."
       }
     ]
@@ -250,14 +250,14 @@
     "updatedAt": "2026-08-23T11:24:34.523Z",
     "title": "Sun Damage & Pigmentation",
     "fields": {
-      "summary": "Sun spots and liver spots from time in the sun can be easily reduced using our state-of-the-art laser technologies.",
+      "summary": "Sun spots, liver spots, and uneven pigmentation build up after years of sun exposure. Laser treatment at Blue Diamond Medical may reduce how visible they are and even out skin tone. The number of sessions depends on the depth and extent of the pigmentation, and results vary between patients.",
       "concern_id": "sun-damage-pigmentation"
     },
     "faqs": [
       {
         "id": "6c67eea5-b19d-4887-9966-f44af0690b4f",
         "question": "What causes sun spots and pigmentation?",
-        "answer": "Time in the sun, over the years."
+        "answer": "Years of sun exposure. Sun spots, liver spots, and uneven pigmentation build up gradually over time."
       },
       {
         "id": "7bc807c9-35d1-47df-8c43-1a67756c067b",
@@ -278,7 +278,7 @@
     "updatedAt": "2026-08-23T12:02:19.085Z",
     "title": "Elite iQ™",
     "fields": {
-      "summary": "Cynosure's Elite iQ™ device offers quick, personalized laser hair treatments using the Skintel™ device — the first Health Canada and FDA cleared melanin reader on the market — allowing safe treatment of all skin types and areas.",
+      "summary": "Cynosure's Elite iQ™ laser uses the Skintel™ melanin reader to help practitioners select treatment settings for a range of skin types. Individual suitability is assessed before treatment.",
       "safety_note": "The melanin-reading step exists specifically to support safe treatment across a range of skin types; individual suitability is still assessed during a consultation.",
       "how_it_works": "Before treatment, the Skintel™ device measures your skin's melanin level. The practitioner uses this reading to help select suitable Elite iQ™ laser settings.",
       "manufacturer": "Cynosure",
@@ -310,7 +310,7 @@
       {
         "id": "36feb78b-2994-4d7c-a380-4f4d9ed7e821",
         "question": "How do I book a consultation for a treatment using this device?",
-        "answer": "Book a consultation through Jane App — see the laser hair removal treatment page for the direct link."
+        "answer": "Book a consultation through Mikata — see the laser hair removal treatment page for the direct link."
       }
     ]
   },
@@ -321,8 +321,8 @@
     "updatedAt": "2026-08-23T12:03:14.578Z",
     "title": "Potenza",
     "fields": {
-      "summary": "A one-of-a-kind radio-frequency micro-needling system, ideal for skin tightening and smoothing all over the body — for fine lines or tightening after rapid weight loss or post-birth.",
-      "how_it_works": "Potenza combines micro-needling — fine needles creating controlled micro-injuries in the skin — with radio-frequency energy delivered through those same needles, adding a tightening effect to the skin's natural response to micro-injury.",
+      "summary": "A radiofrequency microneedling system used for skin tightening and smoothing on the face and body, including fine lines and skin laxity after weight loss or childbirth. Suitability is assessed during a consultation.",
+      "how_it_works": "Potenza combines microneedling — fine needles creating controlled micro-injuries in the skin — with radiofrequency energy delivered through those same needles, adding a tightening effect to the skin's natural response to micro-injury.",
       "manufacturer": "Cynosure",
       "technology_id": "potenza",
       "what_it_addresses": "Skin tightening and smoothing across the body, including fine lines or laxity following rapid weight loss or after childbirth."
@@ -330,8 +330,8 @@
     "faqs": [
       {
         "id": "f4b04fc6-f0b4-480d-9fa7-f9bcb34fab5e",
-        "question": "What's the difference between Potenza and standard micro-needling?",
-        "answer": "Potenza adds radio-frequency energy delivered through the needles, combining the micro-injury response of standard micro-needling with an additional tightening effect."
+        "question": "What's the difference between Potenza and standard microneedling?",
+        "answer": "Potenza adds radiofrequency energy delivered through the needles, combining the micro-injury response of standard microneedling with an additional tightening effect."
       },
       {
         "id": "0e75a5e5-273f-4071-95e2-8b1472a3d033",
@@ -341,7 +341,7 @@
       {
         "id": "f9f1c576-dff4-4549-98ff-2a1453bf609e",
         "question": "Which treatment uses the Potenza device?",
-        "answer": "RF Micro-Needling."
+        "answer": "RF Microneedling."
       },
       {
         "id": "d5658ddc-0a0a-4bbb-8098-3b91fc2a1a75",
@@ -357,8 +357,8 @@
     "updatedAt": "2026-08-23T12:03:16.221Z",
     "title": "TempSure",
     "fields": {
-      "summary": "A non-invasive tool for tightening and firming skin all over the body, with zero downtime.",
-      "how_it_works": "TempSure uses radio-frequency energy to gently heat the deeper layers of the skin, encouraging a natural tightening and firming response without breaking the skin's surface.",
+      "summary": "A non-invasive radiofrequency device used for skin tightening and firming on the face and body. Downtime is usually minimal; individual responses vary.",
+      "how_it_works": "TempSure uses radiofrequency energy to gently heat the deeper layers of the skin, encouraging a natural tightening and firming response without breaking the skin's surface.",
       "manufacturer": "Cynosure",
       "technology_id": "tempsure",
       "what_it_addresses": "Skin tightening and firming across the body."
@@ -367,12 +367,12 @@
       {
         "id": "96505e17-c62e-4d8b-8caf-66422630e27c",
         "question": "Does TempSure treatment involve any downtime?",
-        "answer": "No — it's a non-invasive treatment with zero downtime."
+        "answer": "There is little to no downtime — the treatment is non-invasive, and most patients return to their usual activities right away."
       },
       {
         "id": "35ed42a9-238b-4051-9929-4eb6fb9b525c",
         "question": "How does TempSure tighten skin without surgery?",
-        "answer": "It heats the deeper layers of the skin using radio-frequency energy, which encourages the skin's own natural tightening response."
+        "answer": "It heats the deeper layers of the skin using radiofrequency energy, which encourages the skin's own natural tightening response."
       },
       {
         "id": "63575a0a-fb57-43ff-a618-84e6050f90f9",
@@ -388,8 +388,8 @@
     "updatedAt": "2026-08-23T12:03:18.572Z",
     "title": "TempSure Vitalia",
     "fields": {
-      "summary": "Equipment addressing many pelvic floor issues and sexual health concerns women experience at all ages and stages of life.",
-      "how_it_works": "TempSure Vitalia uses radio-frequency energy in a non-surgical approach designed for pelvic floor and sexual health concerns.",
+      "summary": "TempSure Vitalia is a radiofrequency device. Women with pelvic floor or sexual health concerns can discuss their symptoms and suitable treatment options with a physician.",
+      "how_it_works": "TempSure Vitalia delivers temperature-controlled radiofrequency energy to tissue. A physician must assess the proposed use, suitability, risks and expected benefits.",
       "manufacturer": "Cynosure",
       "technology_id": "tempsure-vitalia",
       "what_it_addresses": "Pelvic floor issues and sexual health concerns women may experience at various ages and life stages."
@@ -398,7 +398,7 @@
       {
         "id": "be0fa8cf-bba8-4396-9574-9280086abe89",
         "question": "Is TempSure Vitalia surgical?",
-        "answer": "No — it's a non-surgical, radio-frequency-based approach."
+        "answer": "No — it is a non-surgical treatment that uses radiofrequency energy."
       },
       {
         "id": "bf3defd7-968d-46da-9682-2c7e39560597",
@@ -452,12 +452,12 @@
       {
         "id": "fc19e3fe-97a6-4211-b739-d42d2c5269cc",
         "question": "How does Elite iQ™ work?",
-        "answer": "It uses the Skintel™ device — the first Health Canada and FDA cleared melanin reader on the market — allowing safe treatment of all skin types and areas."
+        "answer": "Elite iQ™ uses the Skintel™ melanin reader to help the practitioner select settings for your skin. Suitability depends on your skin, hair and treatment area."
       },
       {
         "id": "adb619b9-3b79-459e-9915-8514eb988fe0",
         "question": "Is this treatment right for me?",
-        "answer": "The Elite iQ™ device can be safely used on all skin types and anywhere on the body. Talk with your provider to discuss candidacy."
+        "answer": "Elite iQ™ can treat a range of skin types and body areas. Your physician will assess your skin, hair and medical history to determine whether treatment is appropriate."
       },
       {
         "id": "021f409e-4b3f-4af5-b989-732d2032f15e",
@@ -473,11 +473,11 @@
     "updatedAt": "2026-08-23T11:05:28.953Z",
     "title": "Laser Skin Treatments",
     "fields": {
-      "summary": "State-of-the-art laser equipment for smoother complexions, brightening damaged skin, removing benign pigmented lesions, and treating face and leg veins.",
+      "summary": "Laser treatment for a smoother complexion, brighter sun-damaged skin, benign pigmented lesions, and visible face and leg veins. Each protocol is tailored to your skin tone and the concern being treated.",
       "preparation": "Avoid sun exposure for one week before a Laser Facial treatment.",
       "how_it_works": "A Laser Facial is suited to sun-damaged skin, red or ruddy complexions, light telangiectasia (spider veins), and uneven pigmentation — most often on the face but usable almost anywhere on the body. Each protocol is tailored to skin tone and needs.",
       "treatment_id": "laser-skin-treatments",
-      "suggested_course": "Laser Facial: 3–6 treatments usually required for lasting results. Benign pigmented lesions: visible uniformity of color in as little as 2 treatments, full course of 4 treatments at 3–4 week intervals. Vascular treatments (spider veins): eliminated in as little as 2 treatments, spaced 4–8 weeks apart."
+      "suggested_course": "Laser Facial: 3–6 treatments usually required for lasting results. Benign pigmented lesions: more even colour is often visible in as few as 2 treatments, with a full course of 4 at 3–4 week intervals. Vascular treatments (spider veins): often clear in as few as 2 treatments, spaced 4–8 weeks apart."
     },
     "faqs": [
       {
@@ -503,7 +503,7 @@
       {
         "id": "c1583628-4688-44ea-8a9c-98c244099ff5",
         "question": "How many sessions for pigmented lesions or spider veins specifically?",
-        "answer": "Benign pigmented lesions: visible uniformity of color in as little as 2 treatments, with a full course of 4 at 3–4 week intervals. Vascular treatments (spider veins): eliminated in as little as 2 treatments, spaced 4–8 weeks apart."
+        "answer": "Benign pigmented lesions: more even colour is often visible in as few as 2 treatments, with a full course of 4 at 3–4 week intervals. Vascular treatments (spider veins): often clear in as few as 2 treatments, spaced 4–8 weeks apart."
       },
       {
         "id": "74a9be25-e323-44bc-a039-13cda10780a9",
@@ -519,7 +519,7 @@
     "updatedAt": "2026-08-23T11:05:42.651Z",
     "title": "PRP Hair Restoration",
     "fields": {
-      "summary": "Platelet-Rich Plasma injected into the scalp to stimulate inactive hair follicles and promote denser, fuller hair growth — performed by Dr. Farhat.",
+      "summary": "Platelet-rich plasma injected into the scalp to stimulate inactive hair follicles and support denser, fuller growth. Performed by Dr. Farhat; results vary between patients.",
       "downtime": "Sessions are quick with little to no downtime.",
       "duration": "30 to 60 minutes depending on the treatment area.",
       "who_its_for": "Individuals noticing thinning hair or early hair loss.",
@@ -544,7 +544,7 @@
     "fields": {
       "summary": "PRP used topically or via microinjections to smooth fine lines and wrinkles, improve tone and elasticity, and reduce the appearance of acne scars and pigmentation.",
       "duration": "30 to 60 minutes depending on the treatment area.",
-      "how_it_works": "The same patient-derived, growth-factor-rich serum used for hair restoration is applied to the skin, boosting collagen production for firmer, more youthful skin using no synthetic additives.",
+      "how_it_works": "Platelet-rich plasma prepared from the patient's own blood is applied to the skin or delivered by microinjections. Platelet-derived growth factors may support collagen production and skin renewal; results vary.",
       "treatment_id": "prp-skin-rejuvenation",
       "suggested_course": "Most people benefit from a series of 3–4 treatments spaced a few weeks apart; maintenance sessions may be recommended."
     },
@@ -579,19 +579,19 @@
     "title": "Radiofrequency",
     "fields": {
       "summary": "Non-invasive tightening and smoothing of skin all over the body using RF waves (TempSure), improving tone and reducing the appearance of fine lines and wrinkles.",
-      "downtime": "Virtually no downtime — you're free to return to normal daily life immediately. A medical-grade sunscreen is recommended to protect and preserve results.",
+      "downtime": "Downtime is not typically expected, although individual responses vary. Most patients can return to their usual activities right away. Follow your clinician's advice about sunscreen after treatment.",
       "duration": "Face and neck treatments (handheld roller over face, neck, and décolletage) take 40–90 minutes depending on area. Body areas are treated with non-invasive pads over about 20 minutes.",
-      "how_it_works": "A handheld device passes RF waves across the treatment area in a circular motion, gently raising the skin's temperature. The resulting heat penetrates the skin layers and stimulates collagen and elastin production for firmer, more youthful skin.",
+      "how_it_works": "A handheld device passes RF waves across the treatment area in a circular motion, gently raising the skin's temperature. The resulting heat penetrates the skin layers and stimulates collagen and elastin production for firmer, more youthful-looking skin.",
       "treatment_id": "radio-frequency",
-      "comfort_level": "Not painful — most patients report a therapeutic, massage-like effect.",
-      "result_timeline": "Not an instant-fix procedure — skin looks fresher within a few days, but the most noticeable results appear approximately 6–8 weeks after the first treatment.",
-      "suggested_course": "3–5 treatments 4–6 weeks apart provide optimal results, with positive effects lasting up to 2 years."
+      "comfort_level": "Most patients find it comfortable, and often describe a warm, massage-like sensation.",
+      "result_timeline": "Results are gradual rather than immediate — skin looks fresher within a few days, but the most noticeable results appear about 6–8 weeks after the first treatment.",
+      "suggested_course": "A course of 3–5 treatments spaced 4–6 weeks apart is recommended. Results may last up to two years, although individual responses vary."
     },
     "faqs": [
       {
         "id": "24c66cf2-18f3-4a0e-acea-bf2b14c3d485",
         "question": "Does radiofrequency treatment hurt?",
-        "answer": "It's not painful — most patients report a therapeutic, massage-like effect."
+        "answer": "Most patients find it comfortable and describe a warm, massage-like sensation rather than pain."
       },
       {
         "id": "7ca04559-2dba-4c84-a218-e3f1b8153bbd",
@@ -601,17 +601,17 @@
       {
         "id": "9699ce64-f340-46e5-b62c-c382d91b658e",
         "question": "Is there any downtime?",
-        "answer": "Virtually none — you can return to normal daily life immediately. A medical-grade sunscreen is recommended afterward to protect results."
+        "answer": "Virtually none — you can return to your usual activities right away. A medical-grade sunscreen is recommended afterward to protect results."
       },
       {
         "id": "e4d6a28a-dce7-4576-becc-1e2226936b73",
         "question": "When will I see results?",
-        "answer": "It isn't an instant-fix procedure — skin looks fresher within a few days, but the most noticeable results appear roughly 6–8 weeks after the first treatment."
+        "answer": "Results are gradual rather than immediate — skin looks fresher within a few days, but the most noticeable results appear roughly 6–8 weeks after the first treatment."
       },
       {
         "id": "164b95b1-729f-4bfc-84d9-d8e7396fd82c",
         "question": "How many sessions are recommended, and how long do results last?",
-        "answer": "3–5 treatments spaced 4–6 weeks apart provide optimal results, with positive effects lasting up to 2 years."
+        "answer": "A course of 3–5 treatments spaced 4–6 weeks apart is recommended. Results may last up to two years, although individual responses vary."
       }
     ]
   },
@@ -620,16 +620,16 @@
     "entryId": "7a0a7423-0c3f-4123-936b-c716c11e2d66",
     "contentType": "aesthetic-treatment",
     "updatedAt": "2026-08-23T11:02:47.148Z",
-    "title": "RF Micro-Needling",
+    "title": "RF Microneedling",
     "fields": {
       "summary": "The Potenza RF microneedling system adds radiofrequency energy to mechanical microneedling for enhanced skin tightening alongside the benefits of micro-injury stimulation.",
       "downtime": "Downtime is usually minimal. Redness, minor swelling and pinpoint bleeding can occur and typically settle within three days. Minor bumps or, rarely, micro-crusting can also occur. Contact the clinic if you have concerns about your recovery.",
       "duration": "Typically around 30 minutes. A topical anaesthetic is applied and can take up to 45 minutes to become fully effective.",
-      "how_it_works": "RF energy is delivered via small needles deep into the dermis, heating underlying layers to cause tightening and stimulate collagen and elastin production — producing faster, more dramatic results than non-RF micro-needling. Treatments aren't limited to the face and are particularly useful for toning and retracting skin post-weight-loss.",
+      "how_it_works": "RF energy is delivered through small needles into the dermis, heating the underlying layers to stimulate collagen and elastin production and support skin tightening. Treatments are not limited to the face and may help with skin laxity after weight loss. Results vary.",
       "treatment_id": "rf-microneedling",
-      "comfort_level": "The numbing agent removes most discomfort — patients report feeling the needling but not actual pain. Providers monitor continuously and treatment can be halted at any time.",
-      "result_timeline": "Effects can usually be seen straight away, but one session isn't enough for lasting results.",
-      "suggested_course": "3- and 5-session packages are recommended for continuous, rejuvenated, firm skin."
+      "comfort_level": "A topical numbing agent removes most of the discomfort. Most patients say they can feel the needles working but do not find it painful. A member of the clinical team stays with you throughout, and treatment can be stopped at any point.",
+      "result_timeline": "Some changes may be noticeable soon after treatment, with gradual improvement over several weeks and treatments. More than one session is usually recommended.",
+      "suggested_course": "Three- and five-session packages are recommended to build and maintain firmer, refreshed-looking skin."
     },
     "faqs": [
       {
@@ -646,7 +646,7 @@
     "updatedAt": "2026-08-23T11:05:44.837Z",
     "title": "TempSure Vitalia",
     "fields": {
-      "summary": "Equipment addressing many pelvic floor issues and sexual health concerns that women experience at all ages and stages of life — roughly 1 in 3 women, often in silence.",
+      "summary": "TempSure Vitalia is a non-surgical radiofrequency device. If you have pelvic floor or sexual health concerns, a consultation with Dr. Farhat can help assess your symptoms and discuss appropriate treatment options.",
       "who_its_for": "Women experiencing pelvic floor or sexual health concerns who want to discuss whether this simple, in-clinic procedure may be right for them.",
       "treatment_id": "tempsure-vitalia"
     },
@@ -654,12 +654,12 @@
       {
         "id": "37f77dd8-1326-4475-bd2b-76ebbaea4f1b",
         "question": "Can I discuss pelvic floor or sexual health concerns at a consultation?",
-        "answer": "Roughly 1 in 3 women experience pelvic floor or sexual health concerns at some point, often in silence."
+        "answer": "Yes. You can discuss these symptoms with Dr. Farhat. Assessment is needed to identify the cause and consider appropriate treatment options."
       },
       {
         "id": "e197fb6d-4288-4b4f-9ba5-15f13024df7c",
         "question": "Is this a surgical procedure?",
-        "answer": "No — it's described as a simple, in-clinic procedure."
+        "answer": "No. TempSure Vitalia is a straightforward, non-surgical procedure carried out in the clinic."
       },
       {
         "id": "f9b3dcb4-df87-4263-a801-1ddb54abbaab",

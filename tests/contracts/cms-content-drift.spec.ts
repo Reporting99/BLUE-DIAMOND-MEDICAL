@@ -92,35 +92,29 @@ const cmsEntries: CmsEntry[] = JSON.parse(
  * naming AHS insurance as a blanket guarantee. Same BLOCKED condition as
  * above: content.publish is still not held by the import identity.
  */
+/**
+ * NARROWED 2026-09-11 to field-exact acknowledgement. Every remaining entry
+ * here is EITHER a repository FAQ that has no matching CMS record at all
+ * (needs `content/faqs` create + `faq-assignments`, not a field update --
+ * tracked as NOT_READY / create-required in
+ * content/english-audit/remaining-drift-proposals.json) OR a field this pass
+ * did not reach before stopping. driftFor() only checks fields the CMS
+ * already models, so an entity with just a missing-FAQ gap still shows here
+ * even though every synced field matches.
+ */
 const KNOWN_CMS_DRIFT: ReadonlySet<string> = new Set([
-  "aesthetic-concern:acne-scars",
   "aesthetic-concern:dry-skin",
-  "aesthetic-concern:fine-lines-wrinkles",
-  "aesthetic-concern:razor-bumps",
   "aesthetic-concern:skin-laxity",
-  "aesthetic-concern:skin-revitalization",
-  "aesthetic-concern:spider-veins",
-  "aesthetic-concern:sun-damage-pigmentation",
   "aesthetic-treatment:laser-hair-removal",
-  "aesthetic-treatment:laser-skin-treatments",
-  "aesthetic-treatment:prp-hair-restoration",
-  "aesthetic-treatment:prp-skin-rejuvenation",
   "aesthetic-treatment:radio-frequency",
   "aesthetic-treatment:rf-microneedling",
-  "aesthetic-treatment:tempsure-vitalia",
   "aesthetic-treatment:ultra",
   "medical-service:chronic-disease-management",
   "medical-service:eye-screening",
   "medical-service:pain-management",
   "medical-service:preventive-care",
-  // No product:* keys. The seven acknowledged here until 2026-09-08 were all
-  // SkinMedica records, and that line is archived (src/config/features.ts):
-  // they no longer publish, so they no longer pair, and "every acknowledged
-  // record still exists in the CMS capture" below would name them as stale.
   "technology:elite-iq",
   "technology:potenza",
-  "technology:tempsure",
-  "technology:tempsure-vitalia",
 ]);
 
 type Localized = { en: string; ar: string };
