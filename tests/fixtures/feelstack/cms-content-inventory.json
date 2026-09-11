@@ -51,17 +51,17 @@
       {
         "id": "eca20065-558b-4244-a08f-84562eaa90ce",
         "question": "Why is Calgary's climate mentioned for dry skin care?",
-        "answer": "Calgary's climate is unusually harsh on skin, which is part of why ongoing nourishment support can be worthwhile for many patients here."
+        "answer": "Calgary's dry climate can contribute to dry, uncomfortable skin."
       },
       {
         "id": "b13993e8-bd5e-4ea9-b47a-cf9ed47f2b02",
         "question": "How does RF micro-needling help with dry skin?",
-        "answer": "It's used to infuse topicals — including moisturizers and pigment regulators — helping skin stay nourished for months after treatment."
+        "answer": "The clinic's approach uses RF microneedling with topical products, including moisturizers and pigment regulators. Your physician will discuss suitability and the risks and benefits of the proposed products."
       },
       {
         "id": "081fdf86-84f5-4fa8-827f-add86f4d03ed",
         "question": "How long does the nourishing effect last?",
-        "answer": "Effects can last for months after treatment, though this varies by individual."
+        "answer": "The response and its duration vary. Your physician can discuss what to expect for your skin and the proposed treatment."
       }
     ]
   },
@@ -89,7 +89,7 @@
       {
         "id": "17eb6804-d282-440f-bbf5-3d51ab458023",
         "question": "Do these treatments also help with skin tightening, not just lines?",
-        "answer": "Yes — skin-tightening options are available alongside the line-smoothing treatments, for all skin types."
+        "answer": "Yes, these treatments may also help with skin tightening. Your physician will assess which options are suitable for your skin."
       }
     ]
   },
@@ -107,12 +107,12 @@
       {
         "id": "0c628039-55a1-4cd1-b661-6e21138b8149",
         "question": "Why are razor bumps a concern beyond appearance?",
-        "answer": "They're uncomfortable and prone to infection, especially when combined with ingrown hairs."
+        "answer": "Razor bumps can be uncomfortable. The affected skin can sometimes become infected."
       },
       {
         "id": "8ec51ecc-5f2a-44de-90b9-9ea6ab9c2372",
         "question": "Does treatment just remove the bumps, or address the cause?",
-        "answer": "Both — treatment addresses the underlying cause as well as the visible bumps."
+        "answer": "By reducing hair growth, laser hair removal may help reduce the ingrown hairs that cause razor bumps. Results vary."
       },
       {
         "id": "af048da7-dcb2-4c9c-9def-8ef68eee27c1",
@@ -133,7 +133,7 @@
     "updatedAt": "2026-08-23T11:25:36.348Z",
     "title": "Rosacea & Redness",
     "fields": {
-      "summary": "The gentle flush of rosacea can escalate into redness that's distressing to live with. We take a holistic approach, starting with a full medical consultation to discuss what can be achieved — laser treatments often work best for this condition.",
+      "summary": "Rosacea can cause redness that is distressing to live with. Care starts with a medical consultation to discuss your symptoms and treatment options. Laser treatment may help with visible redness and blood vessels.",
       "concern_id": "rosacea-redness"
     },
     "faqs": [
@@ -145,7 +145,7 @@
       {
         "id": "92ac57aa-4dee-4929-9f85-77e1d8bef0fc",
         "question": "What treatment is generally used for rosacea and redness?",
-        "answer": "Laser treatments often work best for this condition — Laser Skin Treatments is the relevant treatment page."
+        "answer": "Laser treatment may help with visible redness and blood vessels. Your physician will assess your rosacea and discuss suitable options."
       },
       {
         "id": "12625e87-3899-4981-bb13-aa412fe5c2da",
@@ -219,10 +219,10 @@
     "cmsPath": "/aesthetics/concerns/spider-veins",
     "entryId": "d3fa75b6-eaf5-4007-b0d0-5ab8d0afa869",
     "contentType": "aesthetic-concern",
-    "updatedAt": "2026-08-23T11:25:51.478Z",
+    "updatedAt": "2026-09-09T13:55:37.235Z",
     "title": "Spider Veins",
     "fields": {
-      "summary": "Damaged blood vessels under the skin that can appear red, blue, or purple — generally harmless but unsightly. Laser treatments can remove them from anywhere on the body quickly and painlessly.",
+      "summary": "Damaged blood vessels under the skin that can appear red, blue, or purple. They are generally harmless, though many patients find them distracting. Laser treatment may reduce their appearance on the face and legs, and most patients describe the sessions as quick and comfortable. Results vary, and a consultation confirms whether it suits you.",
       "concern_id": "spider-veins"
     },
     "faqs": [
@@ -234,7 +234,7 @@
       {
         "id": "801a25fb-ef3c-4acf-b487-866575a9f2dd",
         "question": "Where on the body can spider veins be treated?",
-        "answer": "Anywhere on the body."
+        "answer": "The face and legs are common treatment areas. Your physician will assess whether treatment is appropriate for the area you want treated."
       },
       {
         "id": "11e171a4-9599-40e2-a4f3-52f220e627bc",
@@ -262,7 +262,7 @@
       {
         "id": "7bc807c9-35d1-47df-8c43-1a67756c067b",
         "question": "What treatments address sun damage and pigmentation?",
-        "answer": "Laser Skin Treatments and the Ultra laser are the two treatments connected to this concern."
+        "answer": "Laser skin treatments and Ultra may help with sun damage and uneven pigmentation. Your physician will assess the areas you want treated."
       },
       {
         "id": "d72430f9-ccc5-4986-853c-9b1bcf14bf6e",
@@ -280,7 +280,7 @@
     "fields": {
       "summary": "Cynosure's Elite iQ™ device offers quick, personalized laser hair treatments using the Skintel™ device — the first Health Canada and FDA cleared melanin reader on the market — allowing safe treatment of all skin types and areas.",
       "safety_note": "The melanin-reading step exists specifically to support safe treatment across a range of skin types; individual suitability is still assessed during a consultation.",
-      "how_it_works": "Before treatment, the Skintel™ device reads your skin's melanin level directly, rather than estimating it from a visual skin-type chart. The Elite iQ™ laser then uses that reading to calibrate its settings to your skin specifically.",
+      "how_it_works": "Before treatment, the Skintel™ device measures your skin's melanin level. The practitioner uses this reading to help select suitable Elite iQ™ laser settings.",
       "manufacturer": "Cynosure",
       "technology_id": "elite-iq",
       "what_it_addresses": "Unwanted hair, across a range of skin types and treatment areas, made possible by the melanin-reading calibration step.",
@@ -377,7 +377,7 @@
       {
         "id": "63575a0a-fb57-43ff-a618-84e6050f90f9",
         "question": "Which treatment uses the TempSure device?",
-        "answer": "Radio Frequency treatment."
+        "answer": "Radiofrequency treatment."
       }
     ]
   },
@@ -440,11 +440,11 @@
     "updatedAt": "2026-08-23T11:05:27.599Z",
     "title": "Laser Hair Removal",
     "fields": {
-      "summary": "Long-lasting hair reduction anywhere on the body using the Cynosure Elite+™ laser system.",
+      "summary": "Long-lasting hair reduction on suitable areas of the face and body using the Cynosure Elite+™ laser system. Treatment areas and suitability are assessed during consultation.",
       "preparation": "Shave the treatment area beforehand so the laser's energy is delivered effectively.",
-      "how_it_works": "Hair grows in a three-phase cycle — anagen (active growth), catagen, and telogen (resting). The laser emits light energy absorbed by melanin in the hair follicle, damaging it and impairing regrowth. Follicles in the anagen phase respond best, so multiple treatments are needed to catch hair actively growing.",
+      "how_it_works": "Hair grows in a three-phase cycle: anagen (active growth), catagen (a brief transition when the hair follicle regresses) and telogen (resting). The laser emits light energy absorbed by melanin in the hair follicle and shaft, damaging the follicle and reducing regrowth. Follicles in the anagen phase respond best, so multiple treatments are needed.",
       "treatment_id": "laser-hair-removal",
-      "comfort_level": "You may feel cold air and a slight beep or snapping sensation during treatment.",
+      "comfort_level": "You may feel cold air and a slight snapping sensation and hear a beep during treatment.",
       "result_timeline": "Hairs present at the time of treatment fall out over the following weeks. Regrowth becomes thinner and lighter with each subsequent treatment; multiple sessions are needed since not all hairs are actively growing at once.",
       "service_location_note": "All Elite iQ™ treatments are performed exclusively at Citizen Studio, 45 Greenbriar Dr NW, Calgary, AB T3B 5N4 — not at the West Springs clinic."
     },
@@ -523,7 +523,7 @@
       "downtime": "Sessions are quick with little to no downtime.",
       "duration": "30 to 60 minutes depending on the treatment area.",
       "who_its_for": "Individuals noticing thinning hair or early hair loss.",
-      "how_it_works": "PRP is a regenerative serum created from the patient's own blood. After a blood draw, plasma is separated and concentrated into a serum rich in growth factors that stimulate inactive hair follicles and improve scalp blood circulation.",
+      "how_it_works": "Platelet-rich plasma (PRP) is prepared from the patient's own blood. After a blood draw, the blood is processed to concentrate platelets in plasma. The platelets release growth factors involved in tissue repair. PRP is injected into the scalp to support hair growth; results vary.",
       "treatment_id": "prp-hair-restoration",
       "suggested_course": "Most people benefit from a series of 3–4 treatments spaced a few weeks apart; maintenance sessions may be recommended."
     },
@@ -531,7 +531,7 @@
       {
         "id": "76cf658e-9510-4ff0-8a50-2a764586223f",
         "question": "Who performs PRP at Blue Diamond Medical?",
-        "answer": "PRP treatments are performed by Dr. Farhat, combining advanced technique with personalized care."
+        "answer": "PRP treatments are performed by Dr. Farhat."
       }
     ]
   },
@@ -539,10 +539,10 @@
     "cmsPath": "/aesthetics/treatments/prp-skin-rejuvenation",
     "entryId": "a64fe8ed-aeef-4ddd-9ae3-06423d47f6d8",
     "contentType": "aesthetic-treatment",
-    "updatedAt": "2026-08-23T11:05:43.365Z",
+    "updatedAt": "2026-09-09T13:54:10.283Z",
     "title": "PRP Skin Rejuvenation",
     "fields": {
-      "summary": "PRP used topically or via microinjections to smooth fine lines and wrinkles, improve tone and elasticity, and reduce acne scars and pigmentation — often called the \"vampire facial.\"",
+      "summary": "PRP used topically or via microinjections to smooth fine lines and wrinkles, improve tone and elasticity, and reduce the appearance of acne scars and pigmentation.",
       "duration": "30 to 60 minutes depending on the treatment area.",
       "how_it_works": "The same patient-derived, growth-factor-rich serum used for hair restoration is applied to the skin, boosting collagen production for firmer, more youthful skin using no synthetic additives.",
       "treatment_id": "prp-skin-rejuvenation",
@@ -562,7 +562,7 @@
       {
         "id": "3e2b95c1-a1d0-42e0-8687-725cf80d8273",
         "question": "Does this use any synthetic additives?",
-        "answer": "No — it uses the same patient-derived, growth-factor-rich serum used for PRP hair restoration, with no synthetic additives."
+        "answer": "PRP is prepared from your own blood. Ask your physician which preparation products are used and whether anything is added as part of your treatment."
       },
       {
         "id": "d9bbd25f-b83b-45f4-8f79-72937ae0b12b",
@@ -576,7 +576,7 @@
     "entryId": "98c8e33c-5dc0-4f1f-9a51-b40f969c9e76",
     "contentType": "aesthetic-treatment",
     "updatedAt": "2026-08-23T11:05:31.231Z",
-    "title": "Radio Frequency",
+    "title": "Radiofrequency",
     "fields": {
       "summary": "Non-invasive tightening and smoothing of skin all over the body using RF waves (TempSure), improving tone and reducing the appearance of fine lines and wrinkles.",
       "downtime": "Virtually no downtime — you're free to return to normal daily life immediately. A medical-grade sunscreen is recommended to protect and preserve results.",
@@ -590,7 +590,7 @@
     "faqs": [
       {
         "id": "24c66cf2-18f3-4a0e-acea-bf2b14c3d485",
-        "question": "Does Radio Frequency treatment hurt?",
+        "question": "Does radiofrequency treatment hurt?",
         "answer": "It's not painful — most patients report a therapeutic, massage-like effect."
       },
       {
@@ -623,8 +623,8 @@
     "title": "RF Micro-Needling",
     "fields": {
       "summary": "The Potenza RF microneedling system adds radiofrequency energy to mechanical microneedling for enhanced skin tightening alongside the benefits of micro-injury stimulation.",
-      "downtime": "Minimal downtime — avoid strenuous exercise and sun exposure for 48 hours; otherwise resume regular activities with good SPF.",
-      "duration": "Typically around 30 minutes. A topical anesthetic is applied and can take up to 45 minutes to become fully effective.",
+      "downtime": "Downtime is usually minimal. Redness, minor swelling and pinpoint bleeding can occur and typically settle within three days. Minor bumps or, rarely, micro-crusting can also occur. Contact the clinic if you have concerns about your recovery.",
+      "duration": "Typically around 30 minutes. A topical anaesthetic is applied and can take up to 45 minutes to become fully effective.",
       "how_it_works": "RF energy is delivered via small needles deep into the dermis, heating underlying layers to cause tightening and stimulate collagen and elastin production — producing faster, more dramatic results than non-RF micro-needling. Treatments aren't limited to the face and are particularly useful for toning and retracting skin post-weight-loss.",
       "treatment_id": "rf-microneedling",
       "comfort_level": "The numbing agent removes most discomfort — patients report feeling the needling but not actual pain. Providers monitor continuously and treatment can be halted at any time.",
@@ -653,7 +653,7 @@
     "faqs": [
       {
         "id": "37f77dd8-1326-4475-bd2b-76ebbaea4f1b",
-        "question": "How common are the concerns TempSure Vitalia addresses?",
+        "question": "Can I discuss pelvic floor or sexual health concerns at a consultation?",
         "answer": "Roughly 1 in 3 women experience pelvic floor or sexual health concerns at some point, often in silence."
       },
       {
@@ -675,8 +675,8 @@
     "updatedAt": "2026-08-23T11:05:41.155Z",
     "title": "Ultra Treatment",
     "fields": {
-      "summary": "A low-downtime laser that rejuvenates the skin, giving it a brighter tone and improved texture — treating mild to moderate age spots, freckles, sun spots, pigmented lesions, sun damage, actinic keratosis, melasma, and postinflammatory hyperpigmentation.",
-      "downtime": "Mild redness following treatment; normal activities can resume immediately. Full healing may take 5–7 days, during which skin has a dry, sandpaper-like texture as it exfoliates — this is normal.",
+      "summary": "Ultra is a laser treatment used to improve skin tone and texture and address mild to moderate age spots, freckles, sun spots, benign pigmented lesions, sun damage, melasma and post-inflammatory hyperpigmentation. Suitability is assessed during a consultation.",
+      "downtime": "Mild redness can occur after treatment and usually lessens over the following day. Most patients can resume their usual activities. Skin may feel dry and sandpaper-like for 5–6 days as it exfoliates; full healing may take 5–7 days.",
       "duration": "10–20 minutes depending on the area treated — sometimes called a \"Lunchtime Facial.\"",
       "treatment_id": "ultra",
       "comfort_level": "Discomfort is variable, described as mild to moderate; a topical numbing cream may be applied to minimize it.",
@@ -686,7 +686,7 @@
       {
         "id": "257a9240-5b35-413c-9649-6fbc629de5ed",
         "question": "What can Ultra treatment address?",
-        "answer": "Mild to moderate age spots, freckles, sun spots, pigmented lesions, sun damage, actinic keratosis, melasma, and postinflammatory hyperpigmentation."
+        "answer": "Mild to moderate age spots, freckles, sun spots, benign pigmented lesions, sun damage, melasma and post-inflammatory hyperpigmentation. Your physician will assess the skin changes before recommending treatment."
       },
       {
         "id": "dcce323b-eb27-4084-9d74-5ea9db891bad",
@@ -696,7 +696,7 @@
       {
         "id": "38e61ac5-2d55-44d8-ae56-93efe089cc1f",
         "question": "What's recovery like after Ultra treatment?",
-        "answer": "Mild redness follows treatment and normal activities can resume immediately. Full healing may take 5–7 days, during which skin has a dry, sandpaper-like texture as it exfoliates — this is a normal part of the process."
+        "answer": "Mild redness can occur after treatment and usually lessens over the following day. Most patients can resume their usual activities. Skin may feel dry and sandpaper-like for 5–6 days as it exfoliates; full healing may take 5–7 days."
       },
       {
         "id": "853f5e87-7a09-4328-9de2-77052097eec7",
@@ -712,7 +712,7 @@
     "updatedAt": "2026-08-23T10:37:59.532Z",
     "title": "After-Hours Care",
     "fields": {
-      "summary": "When the clinic is closed, our patients are referred to a partner Primary Care Network for urgent, non-emergency needs — not left without a path to care.",
+      "summary": "When the clinic is closed, patients can access care through a partner Primary Care Network for medical concerns that need prompt attention but are not emergencies.",
       "service_id": "after-hours-care",
       "booking_channel": "family-doctor",
       "urgent_care_note": "This referral pathway is for urgent, non-emergency needs only — it is not a substitute for calling 911 in a true emergency."
@@ -752,7 +752,7 @@
     "updatedAt": "2026-08-23T10:42:22.322Z",
     "title": "Chronic Disease Management",
     "fields": {
-      "summary": "AHS-insured, ongoing management of chronic conditions through your family physician. Any Blue Diamond family physician can provide chronic-disease management.",
+      "summary": "Ongoing care for chronic conditions through your family physician. All Blue Diamond family physicians provide chronic disease management.",
       "service_id": "chronic-disease-management",
       "who_its_for": "Patients living with an ongoing health condition that needs regular monitoring and a coordinated care plan.",
       "booking_channel": "family-doctor"
@@ -761,7 +761,7 @@
       {
         "id": "67f33701-4c55-4ed1-aef7-3aaf42696c70",
         "question": "Is chronic disease management covered by Alberta Health?",
-        "answer": "Yes — this is provided as part of AHS-insured family medicine care."
+        "answer": "Medically necessary physician care is covered for eligible patients under the Alberta Health Care Insurance Plan (AHCIP). Coverage for medications and other services is separate."
       },
       {
         "id": "4b1f3503-d980-4f80-a9ce-66545230f8c7",
@@ -792,7 +792,7 @@
     "updatedAt": "2026-08-23T10:41:58.961Z",
     "title": "Eye Disease Screening",
     "fields": {
-      "summary": "A collaboration with Euclid Telehealth offering AHS-covered eye disease screening at our clinic — in keeping with our belief that prevention is better than cure.",
+      "summary": "Eye disease screening at our Calgary clinic through Euclid Telehealth, with referral based on your doctor's assessment.",
       "service_id": "eye-screening",
       "who_its_for": "All patients, especially diabetics and those with a family history of eye disease.",
       "contact_note": "Euclid Telehealth patient support: patientsupport@euclidtelehealth.org or 1-800-511-5661.",
@@ -803,7 +803,7 @@
       {
         "id": "5bd554c5-1fa0-46db-86e8-d97011242123",
         "question": "Is the eye disease screening covered by Alberta Health?",
-        "answer": "Yes — this screening is AHS-covered, provided through our collaboration with Euclid Telehealth."
+        "answer": "Eligible eye disease screening is covered by Alberta Health. Euclid Telehealth can confirm your eligibility and any costs before your appointment."
       },
       {
         "id": "ae139aec-37f0-47fc-9417-4d71dfb44594",
@@ -818,7 +818,7 @@
       {
         "id": "0063501f-571d-437e-9861-dd5c7382476a",
         "question": "Who should consider this screening?",
-        "answer": "It's available to all patients, and particularly relevant for people with diabetes or a family history of eye disease, since both are recognized risk factors for vision loss."
+        "answer": "People with diabetes or a family history of eye disease may benefit from screening. Your doctor can assess whether a referral is appropriate."
       },
       {
         "id": "d9307986-fef1-4f78-910f-a61eae0bf0ee",
@@ -839,7 +839,7 @@
     "updatedAt": "2026-08-23T10:42:34.689Z",
     "title": "Minor Procedures",
     "fields": {
-      "summary": "AHS-insured minor procedures performed in-house — suture removal and application, minor skin lesion excision, and joint injections. All of our family physicians provide these procedures. Minor procedures are booked by phone or in person, not online.",
+      "summary": "Minor procedures at the clinic include suture placement and removal, minor skin lesion excision, and joint injections. All of our family physicians provide these procedures. Book by phone or in person.",
       "service_id": "minor-procedures",
       "booking_channel": "family-doctor"
     },
@@ -847,12 +847,12 @@
       {
         "id": "8add6a73-2053-4972-bee9-491c50a27572",
         "question": "Are minor procedures covered by Alberta Health?",
-        "answer": "Yes — the procedures listed here are AHS-insured."
+        "answer": "Coverage depends on the procedure and whether it is medically necessary. The clinic can confirm Alberta Health coverage and any uninsured fees before your appointment."
       },
       {
         "id": "93c0059c-65c6-4478-a79f-4ffb90672be9",
         "question": "What minor procedures are available?",
-        "answer": "Suture removal and application, minor skin lesion excision, and intra-articular injections for degenerative knee, shoulder, and ankle conditions. All of our family physicians provide these."
+        "answer": "Suture placement and removal, minor skin lesion excision, and intra-articular injections for degenerative knee, shoulder, and ankle conditions. All of our family physicians provide these."
       },
       {
         "id": "994516a4-2caa-4558-9c4d-6c8a44ccea59",
@@ -873,7 +873,7 @@
     "updatedAt": "2026-08-23T10:42:33.468Z",
     "title": "Pain Management",
     "fields": {
-      "summary": "AHS-insured pain management support from your family physician.",
+      "summary": "Assessment and management of pain through your family physician.",
       "service_id": "pain-management",
       "booking_channel": "family-doctor"
     },
@@ -881,7 +881,7 @@
       {
         "id": "6c48d37a-0073-4398-88ca-e077d894b55d",
         "question": "Is pain management covered by Alberta Health?",
-        "answer": "Yes — it's provided as part of AHS-insured family medicine care."
+        "answer": "Medically necessary physician care is covered for eligible patients under the Alberta Health Care Insurance Plan (AHCIP). Coverage for medications and other services is separate."
       },
       {
         "id": "2603cb05-fe70-4d36-bc8f-2731be407dad",
@@ -891,7 +891,7 @@
       {
         "id": "53c5ef03-ce70-4be4-aa1c-0a8f7cac0a43",
         "question": "For minor in-clinic procedures related to pain, like joint injections, who provides those?",
-        "answer": "Our family physicians perform intra-articular injections for degenerative knee, shoulder, and ankle conditions in-house — see the Minor Procedures page for detail. These are booked by phone or in person, not online."
+        "answer": "Our family physicians perform intra-articular injections for degenerative knee, shoulder, and ankle conditions in-house — see the Minor Procedures page for details. These are booked by phone or in person, not online."
       },
       {
         "id": "f6a6d84c-fa70-48cb-8aaf-375829a3b226",
@@ -915,12 +915,12 @@
       {
         "id": "3120be6b-9e85-4a9e-9e73-60b2210d0326",
         "question": "What's included in preventive care here?",
-        "answer": "Vaccination, preventive medicine and early-intervention care, and referral for AHS-covered eye disease screening when appropriate."
+        "answer": "Vaccination, preventive medicine and early-intervention care, and referral for eye disease screening when appropriate."
       },
       {
         "id": "0b8346ce-65f6-4674-8fe2-a943a2a6c8c0",
         "question": "Is preventive care covered by Alberta Health?",
-        "answer": "Yes, as part of AHS-insured family medicine care."
+        "answer": "Medically necessary physician care is covered for eligible patients under the Alberta Health Care Insurance Plan (AHCIP). Some vaccines and other services may have separate costs; ask the clinic before your appointment."
       },
       {
         "id": "7a19fe8c-90b9-41a0-8f86-177712865eea",
@@ -946,7 +946,7 @@
     "updatedAt": "2026-08-23T10:42:32.293Z",
     "title": "Weight Management",
     "fields": {
-      "summary": "AHS-insured weight management support as part of your comprehensive care with your family physician.",
+      "summary": "Weight management support as part of your ongoing care with your family physician.",
       "service_id": "weight-management",
       "booking_channel": "family-doctor"
     },
@@ -954,7 +954,7 @@
       {
         "id": "2b5952d8-8159-4e9b-8fc0-1a885805bbc5",
         "question": "Is weight management covered by Alberta Health?",
-        "answer": "Yes — it's provided as part of AHS-insured family medicine care."
+        "answer": "Medically necessary physician care is covered for eligible patients under the Alberta Health Care Insurance Plan (AHCIP). Coverage for medications and other services is separate."
       },
       {
         "id": "6d6bcc2b-b07b-4350-9f48-0823962e1332",
@@ -1162,7 +1162,7 @@
       {
         "id": "35c9f5ee-3409-4b75-b54b-bc4768bb59fe",
         "question": "Does this contain ceramides?",
-        "answer": "The research for this record didn't confirm ceramides as a primary ingredient — TNS Ceramide Treatment Cream is SkinMedica's dedicated ceramide-focused product."
+        "answer": "Please check the current ingredient label to confirm. TNS Ceramide Treatment Cream is a separate SkinMedica product formulated with ceramides."
       },
       {
         "id": "13759ef0-6a05-4e26-a928-03ec2a3387fe",
@@ -1223,7 +1223,7 @@
       {
         "id": "73a20ed9-58e2-4f02-b51d-e6f63b836f91",
         "question": "Does this contain fragrance?",
-        "answer": "Not confirmed by the research for this record — ask the clinic if fragrance-free formulation matters for your skin."
+        "answer": "Please check the current ingredient label and ask the clinic if you need a fragrance-free product."
       },
       {
         "id": "2dcf8d98-6b5c-489e-af4a-2dd004053099",
@@ -1254,8 +1254,8 @@
     "faqs": [
       {
         "id": "7e1b2c58-deda-46e4-9082-58baf70fa47d",
-        "question": "Why does the name differ from the approved catalogue?",
-        "answer": "The approved catalogue listed \"HA5 Rejuvenative Hydrator\"; current official/retailer naming is \"HA5® Rejuvenating Hydrator.\" The approved price and size are unchanged, and this is the same product."
+        "question": "Is HA5® Rejuvenating Hydrator also called HA5 Rejuvenative Hydrator?",
+        "answer": "Our earlier catalogue used \"Rejuvenative Hydrator.\" This page uses the current name, HA5® Rejuvenating Hydrator."
       },
       {
         "id": "ddf5e928-fad1-4175-928b-3262c1599af0",
@@ -1296,7 +1296,7 @@
       "how_to_use": "Apply 1 pump of the Day formula in the morning and 1 pump of the Night formula in the evening, after cleansing and toning, to face, neck, and décolletage.",
       "product_id": "lumivive-system",
       "size_label": "28.4 g",
-      "what_it_is": "A two-bottle treatment system (Day, Night), not a single product — both bottles are included in this one price/size record.",
+      "what_it_is": "A two-bottle treatment system with Day and Night formulas. Both bottles are included.",
       "product_type": "Two-step antioxidant treatment system",
       "price_currency": "CAD",
       "approval_status": "approved",
@@ -1306,7 +1306,7 @@
       {
         "id": "47f4693f-18f5-4c3e-9c87-72bfc1fae285",
         "question": "Is this one product or two?",
-        "answer": "It's a two-bottle system — a Day formula and a Night formula — sold together as one record at this price and size."
+        "answer": "The system includes two bottles: a Day formula and a Night formula."
       },
       {
         "id": "d3b8793f-8160-4422-a75f-1a708b123a41",
@@ -1374,7 +1374,7 @@
       {
         "id": "f2079bbd-17dc-4102-8589-3a9975d78037",
         "question": "Is this the same as \"Lytera 2.0 Pigment Correcting Serum\"?",
-        "answer": "Some current listings use \"Correcting\" rather than \"Brightening\" in the name — same underlying product line; the approved catalogue name is used here."
+        "answer": "You may see Lytera 2.0 listed as a Pigment Correcting Serum or Pigment Brightening Serum. Check the package label with the clinic to confirm the product."
       },
       {
         "id": "48807b24-948f-42cd-ba15-af5f9783fc1d",
@@ -1430,7 +1430,7 @@
       {
         "id": "4f3f81e5-7204-425f-a9d0-b998278732ad",
         "question": "Is this suitable for all skin types?",
-        "answer": "Not confirmed by the research for this specific record — ask the clinic about suitability for your skin."
+        "answer": "Ask the clinic whether this product is suitable for your skin."
       },
       {
         "id": "2b35be94-a821-41d9-8cd7-ff8cc338bc4f",
@@ -1660,7 +1660,7 @@
     "title": "Scar Recovery Gel with Centelline® (Large)",
     "fields": {
       "brand_id": "skinmedica",
-      "overview": "A lightweight gel formulated to help minimize the appearance of scars, in the larger of two approved sizes.",
+      "overview": "A lightweight gel formulated to help minimize the appearance of scars, in a 56.7 g size.",
       "how_to_use": "Apply morning and evening after the wound has healed, directly to scars. Continue use until the scar appears flat and without redness.",
       "product_id": "scar-recovery-gel-large",
       "size_label": "56.7 g",
@@ -1712,7 +1712,7 @@
     "title": "Scar Recovery Gel with Centelline® (Small)",
     "fields": {
       "brand_id": "skinmedica",
-      "overview": "A lightweight gel formulated to help minimize the appearance of scars, in the smaller of two approved sizes.",
+      "overview": "A lightweight gel formulated to help minimize the appearance of scars, in a 14.2 g size.",
       "how_to_use": "Apply morning and evening after the wound has healed, directly to scars, on smaller incisions and everyday cuts. Continue use until the scar appears flat and without redness.",
       "product_id": "scar-recovery-gel-small",
       "size_label": "14.2 g",
@@ -1783,8 +1783,8 @@
       },
       {
         "id": "72f0f2c2-b8c8-4a30-bed5-8bab7806fd70",
-        "question": "Why does the name differ slightly from the approved catalogue?",
-        "answer": "The approved catalogue listed \"TNS Advanced Plus Serum®\"; the current official naming/trademark styling is \"TNS® Advanced+ Serum.\" The approved price and size are unchanged."
+        "question": "Is TNS® Advanced+ Serum also called TNS Advanced Plus Serum?",
+        "answer": "Yes. \"Advanced+\" is the styling used in the product name; the plus sign is sometimes written as \"Plus.\""
       },
       {
         "id": "01be5095-8254-40c7-95fc-8f7ab454c3fb",
@@ -2041,7 +2041,7 @@
       {
         "id": "aa31839e-b607-46f9-9dc5-161fccbc6a6f",
         "question": "Why does the product name say \"Defense\" instead of \"Defence\"?",
-        "answer": "\"Defense\" is the manufacturer's current official spelling, confirmed on the official product URL and Canadian retailers — the approved price and size are unchanged."
+        "answer": "\"Defense\" is the spelling used in the manufacturer's product name."
       },
       {
         "id": "4a3164f3-78c7-4339-9fda-e48e4393469c",

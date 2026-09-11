@@ -97,7 +97,6 @@ const KNOWN_CMS_DRIFT: ReadonlySet<string> = new Set([
   "aesthetic-concern:dry-skin",
   "aesthetic-concern:fine-lines-wrinkles",
   "aesthetic-concern:razor-bumps",
-  "aesthetic-concern:rosacea-redness",
   "aesthetic-concern:skin-laxity",
   "aesthetic-concern:skin-revitalization",
   "aesthetic-concern:spider-veins",
@@ -110,13 +109,10 @@ const KNOWN_CMS_DRIFT: ReadonlySet<string> = new Set([
   "aesthetic-treatment:rf-microneedling",
   "aesthetic-treatment:tempsure-vitalia",
   "aesthetic-treatment:ultra",
-  "medical-service:after-hours-care",
   "medical-service:chronic-disease-management",
   "medical-service:eye-screening",
-  "medical-service:minor-procedures",
   "medical-service:pain-management",
   "medical-service:preventive-care",
-  "medical-service:weight-management",
   // No product:* keys. The seven acknowledged here until 2026-09-08 were all
   // SkinMedica records, and that line is archived (src/config/features.ts):
   // they no longer publish, so they no longer pair, and "every acknowledged
