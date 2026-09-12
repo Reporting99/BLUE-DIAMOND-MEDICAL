@@ -974,6 +974,78 @@
     ]
   },
   {
+    "cmsPath": "/our-team/ahmed-gwea",
+    "entryId": "e1285ddb-1ae4-473e-b85b-5150beef59b6",
+    "contentType": "person_profile",
+    "updatedAt": "2026-09-01T21:44:10.956Z",
+    "title": "Dr. Ahmed Gwea",
+    "fields": {
+      "doctor_id": "ahmed-gwea",
+      "biography": "Dr. Ahmed Gwea completed his Family Medicine residency at Hamad Medical Corporation in Qatar and holds a Diploma in Dermatology from the Royal College of Physicians of Ireland. He provides compassionate, patient-centred care, with a focus on preventive health, health promotion, chronic disease management, and mental well-being. His clinical interests include dermatology, minor office-based and dermatological procedures, and plasma therapy. He places particular emphasis on helping patients feel comfortable, informed, and supported in their care. He is one of the physicians leading Blue Diamond Medical's full-time walk-in clinic."
+    },
+    "faqs": []
+  },
+  {
+    "cmsPath": "/our-team/bakare",
+    "entryId": "003739b5-88d6-4f12-9e93-0f8a45582a32",
+    "contentType": "person_profile",
+    "updatedAt": "2026-09-01T21:44:11.132Z",
+    "title": "Dr. Bakare",
+    "fields": {
+      "doctor_id": "bakare",
+      "biography": "Dr. Bakare has been a family physician since 2006 and also works as a hospitalist, maintaining his hospital credentials alongside his practice here. He has extensive experience in chronic disease management, palliative care, and teaching. His clinical interests include minor skin lesion excision and intra-articular injections for the knee, shoulder, and ankle, all of which are done in-house."
+    },
+    "faqs": []
+  },
+  {
+    "cmsPath": "/our-team/mohamed-farhat",
+    "entryId": "aed7273b-16fe-47a8-8742-9bdfe3ed0489",
+    "contentType": "person_profile",
+    "updatedAt": "2026-09-01T21:44:11.191Z",
+    "title": "Dr. Mohamed Farhat",
+    "fields": {
+      "doctor_id": "mohamed-farhat",
+      "biography": "Dr. Mohamed Farhat is a family physician with over 30 years in practice, and the founder of Blue Diamond Medical. He looks after patients across the full range of family medicine, from managing long-term medical conditions to performing minor surgical procedures in the clinic.\n\nAlongside his family practice, Dr. Farhat has completed advanced training in cosmetic medicine. He offers Botox, dermal fillers, RF microneedling, and laser therapies for skin concerns such as aging, pigmentation, scarring, and uneven texture.\n\nHe also provides hair restoration treatments: laser hair restoration combined with PRP, PRP on its own, and PRP injections to support scalp health and hair regrowth. He performs PRP injections under the eyes to soften the appearance of dark circles and refresh the skin, and these can be paired with microneedling to support skin renewal and collagen stimulation.\n\nHis warm manner, attention to detail, and patient-centred approach have made him a trusted physician in the community."
+    },
+    "faqs": []
+  },
+  {
+    "cmsPath": "/our-team/omaima-saeed",
+    "entryId": "ce09aa53-0f1e-4d95-b5a9-3d2a7cfed4c4",
+    "contentType": "person_profile",
+    "updatedAt": "2026-09-01T21:44:11.243Z",
+    "title": "Dr. Omaima Saeed",
+    "fields": {
+      "doctor_id": "omaima-saeed",
+      "biography": "Dr. Omaima Saeed is a family physician with postgraduate training in Family Medicine from Pakistan, now practising in Calgary. She provides comprehensive, patient-centred care for patients of all ages, with clinical interests in preventive medicine, women's health, and compassionate, stigma-free mental health support. She is one of the physicians leading Blue Diamond Medical's full-time walk-in clinic."
+    },
+    "faqs": []
+  },
+  {
+    "cmsPath": "/our-team/omonijo",
+    "entryId": "40ce8071-5abc-4cfe-9863-df428f01cd20",
+    "contentType": "person_profile",
+    "updatedAt": "2026-09-01T21:44:11.293Z",
+    "title": "Dr. Omonijo",
+    "fields": {
+      "doctor_id": "omonijo",
+      "biography": "Dr. Omonijo has 12 years of experience in community and hospital settings. She completed her Family Medicine residency in the United Kingdom and enjoys caring for patients and their families. She is one of the physicians leading Blue Diamond Medical's full-time walk-in clinic."
+    },
+    "faqs": []
+  },
+  {
+    "cmsPath": "/our-team/reem-hamdi",
+    "entryId": "ee9fb76a-2468-478f-b0d5-fd95a33c7b48",
+    "contentType": "person_profile",
+    "updatedAt": "2026-09-01T21:44:11.345Z",
+    "title": "Dr. Reem Hamdi",
+    "fields": {
+      "doctor_id": "reem-hamdi",
+      "biography": "Dr. Hamdi completed her Family Medicine residency at the University of Calgary in 2015, followed by additional training (R3) in maternity and newborn care. She has practised family medicine in Calgary ever since, and joined Blue Diamond Medical in 2023.\n\nShe also works in the Labour and Delivery unit at Peter Lougheed Hospital and maintains a shared-care practice with the Lougheed Maternity Group (LMG).\n\nDr. Hamdi is certified by the College of Family Physicians of Canada (CFPC) and has been granted Fellowship of the College (FCFP). She is an Assistant Clinical Professor at the University of Calgary and holds a Master's degree in Health Science Education from the University of Alberta.\n\nShe cares for a wide range of health concerns, including chronic disease, women's health (contraceptive management and IUD insertion, menopause, and prenatal and maternity care), well-child visits, and mental health. She is also certified to provide Botox injections for pain management as well as cosmetic indications."
+    },
+    "faqs": []
+  },
+  {
     "cmsPath": "/shop/aha-bha-cream",
     "entryId": "3539d299-8007-47b3-972a-1ceec2182fc9",
     "contentType": "product",

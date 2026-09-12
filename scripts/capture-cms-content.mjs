@@ -48,6 +48,7 @@ const FAMILIES = [
   "/aesthetics/technologies/",
   "/medical/",
   "/shop/",
+  "/our-team/",
 ];
 
 const inventory = await json(`${API}/public/v1/sites/${SITE}/routes?locale=en&limit=500`);
@@ -59,6 +60,27 @@ const paths = (inventory.items ?? [])
 const rows = [];
 for (const path of paths.sort()) {
   const env = await json(`${API}/public/v1/sites/${SITE}/resolve?path=${encodeURIComponent(path)}&locale=en`);
+  if (env.type === "person_profile") {
+    // First-class doctor records: fields live at the TOP LEVEL of `data`
+    // (biography, professionalTitle), not under `data.fields` -- see
+    // docs history on person_profile's transport shape. Keyed here by
+    // `doctorId` (data.metadata.doctorId), the same stable id
+    // src/features/doctors/data.ts uses, so this can be compared without
+    // reconstructing a path.
+    rows.push({
+      cmsPath: path,
+      entryId: env.data?.id ?? null,
+      contentType: "person_profile",
+      updatedAt: env.route?.updatedAt ?? null,
+      title: env.data?.displayName ?? null,
+      fields: {
+        doctor_id: env.data?.metadata?.doctorId ?? "",
+        biography: env.data?.biography ?? "",
+      },
+      faqs: [],
+    });
+    continue;
+  }
   if (env.type !== "content_entry") continue;
   // Only the editorial surface. Ids, media, relations and prices are compared
   // by their own contract tests; duplicating them here would make this fixture

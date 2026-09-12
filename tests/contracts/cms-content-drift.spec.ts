@@ -6,6 +6,7 @@ import { technologies } from "@/features/technologies/data";
 import { treatments } from "@/features/aesthetics/data/treatments";
 import { medicalServices } from "@/features/medical-services/data";
 import { products } from "@/features/products/data";
+import { doctors } from "@/features/doctors/data";
 
 /**
  * CMS_CONTENT_DRIFT — the repository's approved English copy versus the copy
@@ -250,5 +251,56 @@ test.describe("CMS_CONTENT_DRIFT — published copy matches approved repository 
     const keys = new Set(pairs.map((p) => p.key));
     const stale = [...KNOWN_CMS_DRIFT].filter((k) => !keys.has(k));
     expect(stale, `KNOWN_CMS_DRIFT names records that are no longer published:\n${stale.join("\n")}`).toEqual([]);
+  });
+});
+
+/**
+ * DOCTOR_CONTENT_DRIFT — separate from the check above because `person_profile`
+ * is a first-class CMS model, not a `content_entry`: its fields (`biography`,
+ * `displayName`) live at the top level of `data`, keyed by `metadata.doctorId`,
+ * not `data.fields` keyed by a `*_id` field. Reusing `driftFor`/`repoEntitiesFor`
+ * for this shape would silently compare nothing.
+ *
+ * Found live 2026-09-12: all 6 published doctor biographies had drifted from
+ * the approved repository copy since the 2026-09-07 editorial pass — the CMS
+ * side of that pass was never published, and nothing caught it because no test
+ * covered `person_profile`. Every symptom named in the original English audit
+ * ("finished her Family Medicine Residency", "board certified from", "has
+ * Masters", "women health", "well child visits", the dropped closing sentence)
+ * was still live on bluediamondmedical.ca. Fixed via bd-content-publisher; this
+ * test exists so that specific silent failure mode cannot recur unnoticed.
+ */
+const DOCTOR_KNOWN_DRIFT: ReadonlySet<string> = new Set([]);
+
+const doctorPairs = cmsEntries
+  .filter((entry) => entry.contentType === "person_profile")
+  .map((entry) => {
+    const doctorId = entry.fields.doctor_id;
+    const repoDoctor = (doctors as { id: string; bio: { en: string } }[]).find((d) => d.id === doctorId);
+    return { doctorId, entry, repoDoctor };
+  })
+  .filter((p): p is { doctorId: string; entry: CmsEntry; repoDoctor: { id: string; bio: { en: string } } } =>
+    !!p.doctorId && !!p.repoDoctor,
+  );
+
+test.describe("DOCTOR_CONTENT_DRIFT — published biography matches approved repository copy", () => {
+  test("the capture covers every published doctor", () => {
+    expect(doctorPairs.length, "no person_profile entry matched a repository doctor").toBeGreaterThanOrEqual(6);
+  });
+
+  test("no unacknowledged doctor biography has drifted", () => {
+    const drifted = doctorPairs
+      .filter((p) => norm(p.entry.fields.biography) !== norm(p.repoDoctor.bio.en))
+      .map((p) => p.doctorId)
+      .filter((id) => !DOCTOR_KNOWN_DRIFT.has(id));
+    expect(drifted, `Doctor biographies drifted from the approved repository copy:\n${drifted.join("\n")}`).toEqual([]);
+  });
+
+  test("DOCTOR_KNOWN_DRIFT contains no doctor that has since been fixed", () => {
+    const fixed = doctorPairs
+      .filter((p) => DOCTOR_KNOWN_DRIFT.has(p.doctorId))
+      .filter((p) => norm(p.entry.fields.biography) === norm(p.repoDoctor.bio.en))
+      .map((p) => p.doctorId);
+    expect(fixed, `These doctors no longer drift — remove them from DOCTOR_KNOWN_DRIFT:\n${fixed.join("\n")}`).toEqual([]);
   });
 });
