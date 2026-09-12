@@ -40,7 +40,7 @@ import { siteConfig } from "@/config/site";
 /** Single source for this page's description: consumed by both generateMetadata
  * and the page's JSON-LD node, so the two can never drift apart (brief §9). */
 const PAGE_DESCRIPTION = {
-  en: "Choose what you'd like to treat — unwanted hair, hair loss, acne scars, redness, fine lines, skin laxity and more — and see the physician-led treatment options Blue Diamond Medical offers for it.",
+  en: "Choose what you'd like to treat — unwanted hair, hair loss, acne scars, redness, fine lines, skin laxity and more — and see the physician-led treatment options Blue Diamond Medical offers.",
   ar: "اختاروا ما ترغبون في علاجه — الشعر غير المرغوب فيه، وتساقط الشعر، وندبات حب الشباب، والاحمرار، والخطوط الدقيقة، وترهل البشرة وغيرها — واطّلعوا على خيارات العلاج بإشراف طبي في بلو دايموند الطبية.",
 } as const;
 
