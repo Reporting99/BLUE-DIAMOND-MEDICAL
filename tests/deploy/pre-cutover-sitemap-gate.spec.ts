@@ -155,6 +155,56 @@ test.describe("pre-cutover sitemap gate: behaviour", () => {
     }
   });
 
+  test("THE ACTUAL INCIDENT: a large real-sized valid sitemap (>64KB, past the pipe buffer) still passes", async () => {
+    // Regression test for a real production incident: every deploy of a
+    // genuinely-correct build was rejected because the gate piped a large
+    // body through `printf '%s' "$body" | grep -q PATTERN`. grep -q exits
+    // the instant it finds a match near the START of the body (here,
+    // `<urlset` on line 2) without reading the rest of its stdin; once the
+    // unread remainder exceeds the kernel pipe buffer (64KB on Linux),
+    // `printf` blocks trying to write it and is killed with SIGPIPE when
+    // `grep -q` closes the pipe. Under this script's `set -o pipefail`,
+    // that SIGPIPE-killed `printf` -- not `grep`'s real (successful) exit
+    // code -- became the pipeline's reported status, so `if ! ... | grep -q
+    // ...` misread a perfectly valid sitemap as "not found". The 168-entry
+    // GOOD_SITEMAP fixture above is only ~9KB (well under the 64KB
+    // threshold), which is exactly why the existing tests never caught
+    // this: it needs a body large enough to actually overflow the pipe.
+    // The fix replaced every `printf '%s' "$var" | grep ...` with
+    // `grep ... <<< "$var"`, which reads from a herestring (a real fd, not
+    // a live pipe to another process) and cannot SIGPIPE a producer.
+    const largeSitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+${Array.from(
+  { length: 168 },
+  (_, i) => `<url>
+<loc>https://bluediamondmedical.ca/en/some-realistically-long-service-page-slug-${i}</loc>
+<xhtml:link rel="alternate" hreflang="en-CA" href="https://bluediamondmedical.ca/en/some-realistically-long-service-page-slug-${i}" />
+<xhtml:link rel="alternate" hreflang="ar-CA" href="https://bluediamondmedical.ca/ar/some-realistically-long-service-page-slug-${i}" />
+<xhtml:link rel="alternate" hreflang="x-default" href="https://bluediamondmedical.ca/en/some-realistically-long-service-page-slug-${i}" />
+</url>`,
+).join("\n")}
+</urlset>`;
+    expect(largeSitemap.length).toBeGreaterThan(64 * 1024);
+
+    const candidate = await startRoutedServer({
+      "/sitemap.xml": { body: largeSitemap },
+      "/robots.txt": { body: GOOD_ROBOTS, contentType: "text/plain" },
+    });
+    const previous = await startRoutedServer({
+      "/sitemap.xml": { body: largeSitemap },
+    });
+    try {
+      const r = await runGate(dir, candidate.port, previous.port);
+      expect(r.stdout).toContain("SITEMAP_GATE_OK");
+      expect(r.stdout).toContain("168 URLs");
+      expect(r.status).toBe(0);
+    } finally {
+      candidate.close();
+      previous.close();
+    }
+  });
+
   test("THE ACTUAL DEFECT: an empty sitemap (0 URLs, cold-start ISR bake) is rejected", async () => {
     const emptySitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n</urlset>`;
     const candidate = await startRoutedServer({

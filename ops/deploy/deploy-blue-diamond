@@ -110,7 +110,7 @@ verify_served_sha() {
 
   for attempt in $(seq 1 30); do
     response="$(curl -sS --max-time 10 "${base}/api/version" 2>/dev/null || true)"
-    served_sha="$(printf '%s' "$response" | grep -oE '[0-9a-f]{40}' | head -n 1 || true)"
+    served_sha="$(grep -oE '[0-9a-f]{40}' <<< "$response" | head -n 1 || true)"
     [ "$served_sha" = "$expected_sha" ] && return 0
     sleep 2
   done
@@ -134,17 +134,16 @@ verify_served_sha() {
 # wait_for_http_200/verify_served_sha gates above, and additive to them
 # rather than a replacement.
 #
-# Retries with backoff: immediately after restart the candidate can still be
-# warming up (Next.js/FeelStack client not fully ready for the very first
-# request), which reads identically to a real empty/broken sitemap at the
-# instant this gate first probes it. verify_served_sha and wait_for_http_200
-# already tolerate exactly this kind of startup lag via their own retry
-# loops above; this gate had no such allowance, so a transient cold-start
-# 0-URL response was indistinguishable from a genuine defect and triggered
-# an automatic rollback. Bounded to 5 attempts, 15s apart (60s total,
-# consistent with the other gates' budgets), so a real, persistent failure
-# still fails the deploy -- only a self-healing cold start gets the extra
-# time to warm up.
+# Retries with backoff: kept as defense-in-depth against a genuine candidate
+# warm-up race (verify_served_sha and wait_for_http_200 above already
+# tolerate the same kind of startup lag via their own retry loops), even
+# though the actual incident that motivated this gate turned out to be a
+# different, deterministic bug -- see the SIGPIPE/pipefail note below, fixed
+# by switching every check off `printf '%s' "$var" | grep ...` and onto
+# `grep ... <<< "$var"`. That bug reproduced on every single attempt
+# regardless of how long the candidate had been up, so retrying alone would
+# never have fixed it; a real, persistent failure still exhausts all 5
+# attempts (15s apart, 60s total) and fails the deploy.
 verify_candidate_sitemap_and_robots() {
   # Nested on purpose: this inner function holds the actual, unmodified
   # check-and-fail logic, and is defined INSIDE the outer function so that
@@ -165,29 +164,43 @@ verify_candidate_sitemap_and_robots() {
     return 1
   fi
 
-  if ! printf '%s' "$sitemap_body" | grep -q '<urlset' || ! printf '%s' "$sitemap_body" | grep -q '</urlset>'; then
+  # Every check below reads via a herestring (`<<< "$var"`), never
+  # `printf '%s' "$var" | grep ...`. Under this script's `set -o pipefail`,
+  # piping a large body into `grep -q` is broken: `-q` exits the instant it
+  # finds a match (here, `<urlset` on line 2 of a 90KB+ real sitemap) without
+  # reading the rest of stdin, so `printf` is killed by SIGPIPE trying to
+  # write the unread remainder past the kernel's 64KB pipe buffer --
+  # `pipefail` then reports THAT (nonzero) as the pipeline's status instead
+  # of grep's real (successful) one, and every one of these `if` checks
+  # misread a perfectly valid, fully-populated sitemap as "not found". This
+  # is what actually failed every production deploy of this gate, not a
+  # candidate warm-up race -- see tests/deploy/pre-cutover-sitemap-gate.spec.ts's
+  # ">64KB" regression test, which reproduces it with a realistically-sized
+  # body (the existing small fixtures never exceed the pipe buffer, which is
+  # why this went undetected until a real deploy).
+  if ! grep -q '<urlset' <<< "$sitemap_body" || ! grep -q '</urlset>' <<< "$sitemap_body"; then
     echo "SITEMAP_GATE_FAILED: /sitemap.xml on port ${candidate_port} is not valid sitemap XML (no <urlset>...</urlset>)." >&2
     return 1
   fi
 
-  loc_count="$(printf '%s' "$sitemap_body" | grep -oE '<loc>[^<]+</loc>' | wc -l | tr -d ' ')"
+  loc_count="$(grep -oE '<loc>[^<]+</loc>' <<< "$sitemap_body" | wc -l | tr -d ' ')"
   if [ "$loc_count" -eq 0 ]; then
     echo "SITEMAP_GATE_FAILED: /sitemap.xml on port ${candidate_port} has 0 URLs. Refusing to cut traffic to an empty sitemap." >&2
     return 1
   fi
 
-  uniq_count="$(printf '%s' "$sitemap_body" | grep -oE '<loc>[^<]+</loc>' | sort -u | wc -l | tr -d ' ')"
+  uniq_count="$(grep -oE '<loc>[^<]+</loc>' <<< "$sitemap_body" | sort -u | wc -l | tr -d ' ')"
   if [ "$uniq_count" -ne "$loc_count" ]; then
     echo "SITEMAP_GATE_FAILED: /sitemap.xml on port ${candidate_port} contains duplicate <loc> entries (${loc_count} total, ${uniq_count} unique)." >&2
     return 1
   fi
 
-  if printf '%s' "$sitemap_body" | grep -qE '<loc>https?://(localhost|127\.0\.0\.1|[^<]*\.(local|test|invalid|internal)[^<]*)'; then
+  if grep -qE '<loc>https?://(localhost|127\.0\.0\.1|[^<]*\.(local|test|invalid|internal)[^<]*)' <<< "$sitemap_body"; then
     echo "SITEMAP_GATE_FAILED: /sitemap.xml on port ${candidate_port} leaks a localhost/staging URL." >&2
     return 1
   fi
 
-  if ! printf '%s' "$sitemap_body" | grep -q '<loc>https://bluediamondmedical\.ca/'; then
+  if ! grep -q '<loc>https://bluediamondmedical\.ca/' <<< "$sitemap_body"; then
     echo "SITEMAP_GATE_FAILED: /sitemap.xml on port ${candidate_port} does not use the canonical host bluediamondmedical.ca." >&2
     return 1
   fi
@@ -221,17 +234,17 @@ verify_candidate_sitemap_and_robots() {
     return 1
   fi
 
-  if printf '%s' "$robots_body" | grep -qE '^[[:space:]]*Disallow:[[:space:]]*/[[:space:]]*$'; then
+  if grep -qE '^[[:space:]]*Disallow:[[:space:]]*/[[:space:]]*$' <<< "$robots_body"; then
     echo "SITEMAP_GATE_FAILED: /robots.txt on port ${candidate_port} carries a blanket 'Disallow: /'." >&2
     return 1
   fi
 
-  if ! printf '%s' "$robots_body" | grep -q '^Sitemap: https://bluediamondmedical\.ca/sitemap\.xml'; then
+  if ! grep -q '^Sitemap: https://bluediamondmedical\.ca/sitemap\.xml' <<< "$robots_body"; then
     echo "SITEMAP_GATE_FAILED: /robots.txt on port ${candidate_port} is missing the correct 'Sitemap:' line." >&2
     return 1
   fi
 
-  if printf '%s' "$robots_body" | grep -qiE 'localhost|127\.0\.0\.1|\.(local|test|invalid|internal)\b'; then
+  if grep -qiE 'localhost|127\.0\.0\.1|\.(local|test|invalid|internal)\b' <<< "$robots_body"; then
     echo "SITEMAP_GATE_FAILED: /robots.txt on port ${candidate_port} leaks a localhost/staging URL." >&2
     return 1
   fi
