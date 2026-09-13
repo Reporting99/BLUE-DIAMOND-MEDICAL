@@ -98,7 +98,14 @@ async function runGate(
     `#!/usr/bin/env bash\nset -uo pipefail\n${fn}\nverify_candidate_sitemap_and_robots ${candidatePort} ${previousPort}\n`,
   );
   try {
-    const { stdout, stderr } = await execFileAsync("bash", [script]);
+    // The gate's real retry loop (5 attempts, 15s apart) exists to survive a
+    // candidate's genuine warm-up lag in production; against these tests'
+    // synchronous local servers there is nothing to wait for, so override to
+    // a single attempt with no delay -- otherwise every rejection case would
+    // take up to 75s and blow past this suite's per-test timeout.
+    const { stdout, stderr } = await execFileAsync("bash", [script], {
+      env: { ...process.env, SITEMAP_GATE_MAX_ATTEMPTS: "1", SITEMAP_GATE_RETRY_INTERVAL: "0" },
+    });
     return { status: 0, stdout, stderr };
   } catch (error) {
     const err = error as { code?: number; stdout?: string; stderr?: string };

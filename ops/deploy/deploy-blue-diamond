@@ -241,7 +241,12 @@ verify_candidate_sitemap_and_robots() {
   }
 
   local candidate_port="$1" previous_port="$2"
-  local max_attempts=5 attempt last_status=1
+  # Overridable so tests can exercise the real retry loop without actually
+  # waiting 75s per rejection case -- production deploys get the real 5x15s
+  # budget via these defaults; nothing here changes for a real deploy.
+  local max_attempts="${SITEMAP_GATE_MAX_ATTEMPTS:-5}"
+  local retry_interval="${SITEMAP_GATE_RETRY_INTERVAL:-15}"
+  local attempt last_status=1
 
   for attempt in $(seq 1 "$max_attempts"); do
     # `verify_..._once && last_status=0 || last_status=$?` (rather than
@@ -256,8 +261,8 @@ verify_candidate_sitemap_and_robots() {
     verify_candidate_sitemap_and_robots_once "$candidate_port" "$previous_port" && last_status=0 || last_status=$?
     [ "$last_status" -eq 0 ] && return 0
     if [ "$attempt" -lt "$max_attempts" ]; then
-      echo "SITEMAP_GATE_RETRY: attempt ${attempt}/${max_attempts} failed for candidate port ${candidate_port}, retrying in 15s (possible startup warm-up)." >&2
-      sleep 15
+      echo "SITEMAP_GATE_RETRY: attempt ${attempt}/${max_attempts} failed for candidate port ${candidate_port}, retrying in ${retry_interval}s (possible startup warm-up)." >&2
+      sleep "$retry_interval"
     fi
   done
 
