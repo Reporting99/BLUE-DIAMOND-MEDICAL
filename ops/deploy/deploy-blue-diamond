@@ -133,7 +133,26 @@ verify_served_sha() {
 # the current slot serving and stops the deploy -- exactly like the existing
 # wait_for_http_200/verify_served_sha gates above, and additive to them
 # rather than a replacement.
+#
+# Retries with backoff: immediately after restart the candidate can still be
+# warming up (Next.js/FeelStack client not fully ready for the very first
+# request), which reads identically to a real empty/broken sitemap at the
+# instant this gate first probes it. verify_served_sha and wait_for_http_200
+# already tolerate exactly this kind of startup lag via their own retry
+# loops above; this gate had no such allowance, so a transient cold-start
+# 0-URL response was indistinguishable from a genuine defect and triggered
+# an automatic rollback. Bounded to 5 attempts, 15s apart (60s total,
+# consistent with the other gates' budgets), so a real, persistent failure
+# still fails the deploy -- only a self-healing cold start gets the extra
+# time to warm up.
 verify_candidate_sitemap_and_robots() {
+  # Nested on purpose: this inner function holds the actual, unmodified
+  # check-and-fail logic, and is defined INSIDE the outer function so that
+  # extracting "verify_candidate_sitemap_and_robots() { ... }" as one
+  # self-contained unit (e.g. tests/deploy/pre-cutover-sitemap-gate.spec.ts)
+  # still carries its definition along -- there is nothing to wire up
+  # separately.
+  verify_candidate_sitemap_and_robots_once() {
   local candidate_port="$1" previous_port="$2"
   local sitemap_body robots_body candidate_count previous_count loc_count uniq_count
 
@@ -219,6 +238,31 @@ verify_candidate_sitemap_and_robots() {
 
   echo "SITEMAP_GATE_OK: candidate port ${candidate_port} sitemap has ${candidate_count} URLs, robots.txt indexable and correct."
   return 0
+  }
+
+  local candidate_port="$1" previous_port="$2"
+  local max_attempts=5 attempt last_status=1
+
+  for attempt in $(seq 1 "$max_attempts"); do
+    # `verify_..._once && last_status=0 || last_status=$?` (rather than
+    # `if verify_..._once; then ...; fi`) is deliberate: under this script's
+    # `set -e`, a bare failing command run directly as a for-loop statement
+    # would abort the whole deploy immediately instead of letting this
+    # function retry it; and `if cmd; then ...; fi` with no `else` reports
+    # exit status 0 for the compound itself when the condition is false,
+    # which would silently discard the real failure code. The && / ||
+    # form is exempt from `set -e` (same as an `if` condition would be) and
+    # captures the true per-attempt exit status either way.
+    verify_candidate_sitemap_and_robots_once "$candidate_port" "$previous_port" && last_status=0 || last_status=$?
+    [ "$last_status" -eq 0 ] && return 0
+    if [ "$attempt" -lt "$max_attempts" ]; then
+      echo "SITEMAP_GATE_RETRY: attempt ${attempt}/${max_attempts} failed for candidate port ${candidate_port}, retrying in 15s (possible startup warm-up)." >&2
+      sleep 15
+    fi
+  done
+
+  echo "SITEMAP_GATE_FAILED: candidate port ${candidate_port} did not pass after ${max_attempts} attempts." >&2
+  return "$last_status"
 }
 
 [ "$#" -eq 2 ] || usage
