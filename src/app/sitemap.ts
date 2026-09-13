@@ -6,6 +6,7 @@ import { isIndexingEnabled } from "@/config/launch";
 import { getSiteConfig, listRoutes } from "@/lib/feelstack/client";
 import { getFeelstackContentMode } from "@/lib/feelstack/content-mode";
 import { locales, type Locale } from "@/i18n/config";
+import { logFeelstackEvent } from "@/lib/feelstack/errors";
 
 // Time-based revalidation, matching Dfeelings' src/app/sitemap.ts exactly.
 // On-demand freshness within this window is still guaranteed: `listRoutes()`
@@ -45,59 +46,77 @@ async function cmsOnlyEntries(
   knownPaths: ReadonlySet<string>,
   knownEnglishPaths: ReadonlySet<string>,
 ): Promise<MetadataRoute.Sitemap> {
-  if (getFeelstackContentMode() === "static") return [];
+  try {
+    if (getFeelstackContentMode() === "static") return [];
 
-  // `sitemap.enabled` is an advisory SITE-level setting the CMS exposes and
-  // nothing server-side acts on, so honouring it is the frontend's job. It
-  // gates only CMS-OWNED rows: the local route registry is Blue Diamond's own
-  // inventory and is not FeelStack's to switch off.
-  //
-  // Fail OPEN — only an explicit `false` suppresses. `sitemap` is
-  // `settings?.sitemap ?? {}` on the backend, so an unconfigured tenant sends
-  // `{}`, and treating that absence as "off" would silently empty the CMS half
-  // of the sitemap for every project that never touched the setting.
-  const config = await getSiteConfig();
-  if (config?.sitemap.enabled === false) return [];
+    // `sitemap.enabled` is an advisory SITE-level setting the CMS exposes and
+    // nothing server-side acts on, so honouring it is the frontend's job. It
+    // gates only CMS-OWNED rows: the local route registry is Blue Diamond's own
+    // inventory and is not FeelStack's to switch off.
+    //
+    // Fail OPEN — only an explicit `false` suppresses. `sitemap` is
+    // `settings?.sitemap ?? {}` on the backend, so an unconfigured tenant sends
+    // `{}`, and treating that absence as "off" would silently empty the CMS half
+    // of the sitemap for every project that never touched the setting.
+    const config = await getSiteConfig();
+    if (config?.sitemap.enabled === false) return [];
 
-  const perLocale = await Promise.all(
-    locales.map(async (locale: Locale) => {
-      const cmsRoutes = await listRoutes(locale);
-      return cmsRoutes
-        .filter((route) => !knownPaths.has(`${locale}:${route.path}`))
-        /*
-         * ...and not the SAME page under its ASCII CMS slug.
-         *
-         * `UpdatePageDto.slugSegment` is `^[a-z0-9]+(?:-[a-z0-9]+)*$`, so a
-         * FeelStack *page* record is stored at the English path in BOTH
-         * locales and disambiguated by `locale` — the Arabic /aesthetics page
-         * is `/aesthetics`, not `/التجميل-الطبي`. `knownPaths` is keyed by the
-         * app's own Arabic path, so it does not match, and publishing that
-         * record would add a second, non-canonical `/ar/aesthetics` row beside
-         * the canonical `/ar/التجميل-الطبي` one the registry already emits.
-         *
-         * Matching the English path across every locale closes that: a CMS
-         * route whose path is a local route's English path is that local
-         * route, whatever locale it is being listed for. CMS *content
-         * entries* are unaffected — they carry real Arabic paths, which never
-         * collide with an English one — so genuinely CMS-only rows still
-         * appear.
-         */
-        .filter((route) => !knownEnglishPaths.has(route.path))
-        .map((route) => {
-          // Same trailing-slash normalisation as absoluteRouteUrl: a CMS route
-          // whose path is "/" would otherwise put a URL in the sitemap that
-          // answers a 308.
-          const url = `${siteConfig.url}/${locale}${route.path}`;
-          const lastModified = toValidLastModified(route.lastModified);
-          return {
-            url: encodeSitemapUrl(url.endsWith("/") ? url.slice(0, -1) : url),
-            ...(lastModified ? { lastModified } : {}),
-          };
-        });
-    }),
-  );
+    const perLocale = await Promise.all(
+      locales.map(async (locale: Locale) => {
+        const cmsRoutes = await listRoutes(locale);
+        return cmsRoutes
+          .filter((route) => !knownPaths.has(`${locale}:${route.path}`))
+          /*
+           * ...and not the SAME page under its ASCII CMS slug.
+           *
+           * `UpdatePageDto.slugSegment` is `^[a-z0-9]+(?:-[a-z0-9]+)*$`, so a
+           * FeelStack *page* record is stored at the English path in BOTH
+           * locales and disambiguated by `locale` — the Arabic /aesthetics page
+           * is `/aesthetics`, not `/التجميل-الطبي`. `knownPaths` is keyed by the
+           * app's own Arabic path, so it does not match, and publishing that
+           * record would add a second, non-canonical `/ar/aesthetics` row beside
+           * the canonical `/ar/التجميل-الطبي` one the registry already emits.
+           *
+           * Matching the English path across every locale closes that: a CMS
+           * route whose path is a local route's English path is that local
+           * route, whatever locale it is being listed for. CMS *content
+           * entries* are unaffected — they carry real Arabic paths, which never
+           * collide with an English one — so genuinely CMS-only rows still
+           * appear.
+           */
+          .filter((route) => !knownEnglishPaths.has(route.path))
+          .map((route) => {
+            // Same trailing-slash normalisation as absoluteRouteUrl: a CMS route
+            // whose path is "/" would otherwise put a URL in the sitemap that
+            // answers a 308.
+            const url = `${siteConfig.url}/${locale}${route.path}`;
+            const lastModified = toValidLastModified(route.lastModified);
+            return {
+              url: encodeSitemapUrl(url.endsWith("/") ? url.slice(0, -1) : url),
+              ...(lastModified ? { lastModified } : {}),
+            };
+          });
+      }),
+    );
 
-  return perLocale.flat();
+    return perLocale.flat();
+  } catch (error) {
+    // This function must never throw. `getSiteConfig()`/`listRoutes()` already
+    // degrade network failures to undefined/[] (src/lib/feelstack/client.ts),
+    // but a schema/contract-validation failure (FeelStackSiteConfigContractError,
+    // FeelStackRouteInventoryContractError) or a configuration error
+    // (FeelStackConfigurationError) throws — and an uncaught throw here escapes
+    // the Next.js metadata route entirely, taking down the WHOLE sitemap
+    // (including the local-registry half) instead of just the CMS-owned rows.
+    // Degrade to an empty CMS contribution instead: better a briefly incomplete
+    // sitemap than a 500 that gets the whole inventory dropped from Search
+    // Console.
+    logFeelstackEvent({
+      category: "INVALID_RESPONSE",
+      upstreamContext: error instanceof Error ? `${error.name}: ${error.message}` : "unknown cmsOnlyEntries failure",
+    });
+    return [];
+  }
 }
 
 /**
