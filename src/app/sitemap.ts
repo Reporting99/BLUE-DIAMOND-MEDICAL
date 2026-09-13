@@ -7,8 +7,25 @@ import { getSiteConfig, listRoutes } from "@/lib/feelstack/client";
 import { getFeelstackContentMode } from "@/lib/feelstack/content-mode";
 import { locales, type Locale } from "@/i18n/config";
 
-// Request-time, for the same reason as robots.ts — see src/config/launch.ts.
-export const dynamic = "force-dynamic";
+// Time-based revalidation, matching Dfeelings' src/app/sitemap.ts exactly.
+// On-demand freshness within this window is still guaranteed: `listRoutes()`
+// tags its fetch with `cacheTags.routes`/`cacheTags.sitemap`, and the
+// FeelStack webhook handler (src/lib/feelstack/revalidation.ts) already
+// invalidates both tags on any disposition that can add, remove, or change a
+// route's publication state — see `tagsForDisposition`.
+export const revalidate = 1800;
+
+/**
+ * Parses a FeelStack-supplied timestamp into a valid `Date`, or `undefined`
+ * if it is missing or unparseable — mirrors Dfeelings'
+ * `toValidLastModified()` (src/app/sitemap.ts). Never fabricates "now": a
+ * sitemap entry with no trustworthy timestamp simply omits `lastModified`.
+ */
+function toValidLastModified(value?: string): Date | undefined {
+  if (!value) return undefined;
+  const parsed = new Date(value);
+  return Number.isNaN(parsed.getTime()) ? undefined : parsed;
+}
 
 /**
  * CMS-owned pages that exist in FeelStack but have no entry in the local route
@@ -71,7 +88,11 @@ async function cmsOnlyEntries(
           // whose path is "/" would otherwise put a URL in the sitemap that
           // answers a 308.
           const url = `${siteConfig.url}/${locale}${route.path}`;
-          return { url: encodeSitemapUrl(url.endsWith("/") ? url.slice(0, -1) : url) };
+          const lastModified = toValidLastModified(route.lastModified);
+          return {
+            url: encodeSitemapUrl(url.endsWith("/") ? url.slice(0, -1) : url),
+            ...(lastModified ? { lastModified } : {}),
+          };
         });
     }),
   );
