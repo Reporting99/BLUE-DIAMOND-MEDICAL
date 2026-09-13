@@ -119,6 +119,108 @@ verify_served_sha() {
   return 1
 }
 
+# Pre-cutover SEO gate. /sitemap.xml is a time-based ISR route
+# (`revalidate = 1800` in src/app/sitemap.ts): its first rendered value comes
+# from the BUILD-time prerender, and a build missing the indexing env bakes in
+# an empty sitemap that then serves for up to 30 minutes -- a real post-deploy
+# SEO blackout, not a cosmetic gap. The build-time fix
+# (deploy-production.yml) closes the common case; this is the second,
+# independent line of defence at the point that actually gates production
+# traffic, so a bad artifact still cannot go live even if the build-time
+# check is ever bypassed, misconfigured, or wrong.
+#
+# Runs on the CANDIDATE slot, before Nginx is touched. A failure here leaves
+# the current slot serving and stops the deploy -- exactly like the existing
+# wait_for_http_200/verify_served_sha gates above, and additive to them
+# rather than a replacement.
+verify_candidate_sitemap_and_robots() {
+  local candidate_port="$1" previous_port="$2"
+  local sitemap_body robots_body candidate_count previous_count loc_count uniq_count
+
+  sitemap_body="$(curl -sS --max-time 15 -w '\n%{http_code}' "http://127.0.0.1:${candidate_port}/sitemap.xml" 2>/dev/null || true)"
+  local sitemap_status="${sitemap_body##*$'\n'}"
+  sitemap_body="${sitemap_body%$'\n'*}"
+
+  if [ "$sitemap_status" != "200" ]; then
+    echo "SITEMAP_GATE_FAILED: /sitemap.xml on port ${candidate_port} returned ${sitemap_status:-no response}, expected 200." >&2
+    return 1
+  fi
+
+  if ! printf '%s' "$sitemap_body" | grep -q '<urlset' || ! printf '%s' "$sitemap_body" | grep -q '</urlset>'; then
+    echo "SITEMAP_GATE_FAILED: /sitemap.xml on port ${candidate_port} is not valid sitemap XML (no <urlset>...</urlset>)." >&2
+    return 1
+  fi
+
+  loc_count="$(printf '%s' "$sitemap_body" | grep -oE '<loc>[^<]+</loc>' | wc -l | tr -d ' ')"
+  if [ "$loc_count" -eq 0 ]; then
+    echo "SITEMAP_GATE_FAILED: /sitemap.xml on port ${candidate_port} has 0 URLs. Refusing to cut traffic to an empty sitemap." >&2
+    return 1
+  fi
+
+  uniq_count="$(printf '%s' "$sitemap_body" | grep -oE '<loc>[^<]+</loc>' | sort -u | wc -l | tr -d ' ')"
+  if [ "$uniq_count" -ne "$loc_count" ]; then
+    echo "SITEMAP_GATE_FAILED: /sitemap.xml on port ${candidate_port} contains duplicate <loc> entries (${loc_count} total, ${uniq_count} unique)." >&2
+    return 1
+  fi
+
+  if printf '%s' "$sitemap_body" | grep -qE '<loc>https?://(localhost|127\.0\.0\.1|[^<]*\.(local|test|invalid|internal)[^<]*)'; then
+    echo "SITEMAP_GATE_FAILED: /sitemap.xml on port ${candidate_port} leaks a localhost/staging URL." >&2
+    return 1
+  fi
+
+  if ! printf '%s' "$sitemap_body" | grep -q '<loc>https://bluediamondmedical\.ca/'; then
+    echo "SITEMAP_GATE_FAILED: /sitemap.xml on port ${candidate_port} does not use the canonical host bluediamondmedical.ca." >&2
+    return 1
+  fi
+
+  candidate_count="$loc_count"
+
+  # Compare against the slot that is CURRENTLY serving, not a hardcoded
+  # constant: the known-healthy baseline (~168 URLs today) will legitimately
+  # grow as routes are added, and a hardcoded number would either block every
+  # future healthy deploy or need editing on every release. A drastic,
+  # unexplained COLLAPSE relative to what is live right now is the actual
+  # signal worth failing on.
+  if curl -sS --max-time 5 -o /dev/null -w '' "http://127.0.0.1:${previous_port}/sitemap.xml" 2>/dev/null; then
+    previous_count="$(curl -sS --max-time 10 "http://127.0.0.1:${previous_port}/sitemap.xml" 2>/dev/null \
+      | grep -oE '<loc>[^<]+</loc>' | wc -l | tr -d ' ')"
+    if [ -n "$previous_count" ] && [ "$previous_count" -gt 0 ]; then
+      # Reject if the candidate is less than half the currently-live count.
+      if [ "$candidate_count" -lt "$((previous_count / 2))" ]; then
+        echo "SITEMAP_GATE_FAILED: candidate sitemap has ${candidate_count} URLs, live slot (port ${previous_port}) has ${previous_count} -- more than a 50% collapse. Refusing to cut over." >&2
+        return 1
+      fi
+    fi
+  fi
+
+  robots_body="$(curl -sS --max-time 15 -w '\n%{http_code}' "http://127.0.0.1:${candidate_port}/robots.txt" 2>/dev/null || true)"
+  local robots_status="${robots_body##*$'\n'}"
+  robots_body="${robots_body%$'\n'*}"
+
+  if [ "$robots_status" != "200" ]; then
+    echo "SITEMAP_GATE_FAILED: /robots.txt on port ${candidate_port} returned ${robots_status:-no response}, expected 200." >&2
+    return 1
+  fi
+
+  if printf '%s' "$robots_body" | grep -qE '^[[:space:]]*Disallow:[[:space:]]*/[[:space:]]*$'; then
+    echo "SITEMAP_GATE_FAILED: /robots.txt on port ${candidate_port} carries a blanket 'Disallow: /'." >&2
+    return 1
+  fi
+
+  if ! printf '%s' "$robots_body" | grep -q '^Sitemap: https://bluediamondmedical\.ca/sitemap\.xml'; then
+    echo "SITEMAP_GATE_FAILED: /robots.txt on port ${candidate_port} is missing the correct 'Sitemap:' line." >&2
+    return 1
+  fi
+
+  if printf '%s' "$robots_body" | grep -qiE 'localhost|127\.0\.0\.1|\.(local|test|invalid|internal)\b'; then
+    echo "SITEMAP_GATE_FAILED: /robots.txt on port ${candidate_port} leaks a localhost/staging URL." >&2
+    return 1
+  fi
+
+  echo "SITEMAP_GATE_OK: candidate port ${candidate_port} sitemap has ${candidate_count} URLs, robots.txt indexable and correct."
+  return 0
+}
+
 [ "$#" -eq 2 ] || usage
 
 ARTIFACT_INPUT="$1"
@@ -555,6 +657,9 @@ systemctl restart "$TARGET_SERVICE"
 # Gate on the inactive slot BEFORE any traffic is pointed at it.
 wait_for_http_200 "http://127.0.0.1:${TARGET_PORT}/api/version"
 verify_served_sha "http://127.0.0.1:${TARGET_PORT}" "$RELEASE_ID"
+
+STAGE="verify-candidate-sitemap"
+verify_candidate_sitemap_and_robots "$TARGET_PORT" "$CURRENT_PORT"
 
 if [ "$NGINX_MANAGED" -eq 1 ]; then
   write_active_slot_snippet "$TARGET_SLOT" "$TARGET_PORT" > "${NGINX_SNIPPET}.new"

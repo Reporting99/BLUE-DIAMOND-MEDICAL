@@ -163,16 +163,62 @@ jobs:
               ;;
           esac
 
-      # Built WITHOUT SITE_LAUNCHED. The indexing gate is read at request time
-      # (src/config/launch.ts), so the artifact carries no indexability of its
-      # own -- launching is a change to the slot's runtime env, never a
-      # property of the release that happens to be promoted.
+      # Production has already been launched: both slot runtime env files
+      # (/home/blue-diamond/shared/{blue,green}-runtime.env) carry
+      # SITE_LAUNCHED=true / INDEXING_ENABLED=true / SITE_URL=<production
+      # domain> today. The build must see the SAME state, for two reasons:
+      #
+      #   1. <meta name="robots"> is rendered into HTML during `next build`
+      #      (src/lib/seo/metadata.ts) and is fixed in the artifact from that
+      #      point on -- a runtime-only flag can never change it (see
+      #      docs/DEPLOYMENT.md §3, "Unlaunched build, launched runtime").
+      #      Building without these values means every page ships
+      #      `noindex, nofollow` regardless of what the running slot says.
+      #   2. src/app/sitemap.ts is a time-based ISR route (`revalidate =
+      #      1800`). Its FIRST rendered value is produced by the build-time
+      #      prerender, using the build's own env -- not the runtime env the
+      #      deployed process later starts with. A build without
+      #      INDEXING_ENABLED/SITE_URL bakes in isIndexingEnabled() === false
+      #      and therefore an EMPTY sitemap (`return []` in sitemap.ts), which
+      #      then serves for up to 30 minutes until the next revalidation.
+      #      That is a real post-deploy SEO blackout, not a cosmetic gap.
+      #
+      # This is not "launching" the site here -- launching already happened,
+      # as a runtime change to the live slots. This step only makes the build
+      # stop contradicting that already-made decision. It is scoped to THIS
+      # workflow only: ci.yml uses its own reserved https://seo-test.invalid
+      # origin (tests/support/seo-test-origin.ts) to validate the launched
+      # code path without ever asserting the real production domain, and
+      # nothing here touches that.
+      - name: Verify build-time indexing configuration
+        shell: bash
+        env:
+          SITE_URL: ${{ vars.SITE_URL }}
+          INDEXING_ENABLED: ${{ vars.INDEXING_ENABLED }}
+        run: |
+          set -euo pipefail
+
+          missing=()
+          [[ -n "${SITE_URL:-}" ]] || missing+=("SITE_URL")
+          [[ "${INDEXING_ENABLED:-}" == "true" ]] || missing+=("INDEXING_ENABLED=true")
+          if (( ${#missing[@]} > 0 )); then
+            echo "::error::Production build is missing: ${missing[*]}. Building without these bakes an empty sitemap and noindex pages into the artifact -- see the comment above this step."
+            exit 1
+          fi
+          case "$SITE_URL" in
+            https://*) ;;
+            *) echo "::error::SITE_URL must be an https origin, got '$SITE_URL'."; exit 1 ;;
+          esac
+          echo "build-time indexing configuration present (SITE_URL=${SITE_URL}, INDEXING_ENABLED=true)"
+
       - name: Build production application
         env:
           NODE_ENV: production
           FEELSTACK_API_URL: ${{ vars.FEELSTACK_API_URL }}
           FEELSTACK_SITE_KEY: ${{ vars.FEELSTACK_SITE_KEY }}
           FEELSTACK_CONTENT_MODE: hybrid
+          SITE_URL: ${{ vars.SITE_URL }}
+          INDEXING_ENABLED: ${{ vars.INDEXING_ENABLED }}
         run: npm run build
 
       - name: Package standalone release
