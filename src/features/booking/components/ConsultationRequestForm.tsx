@@ -1,10 +1,11 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
 import { submitConsultationRequest, type ConsultationFormState } from "@/app/[locale]/aesthetics/consultation/actions";
 import { Button } from "@/components/ui/button";
 import type { Locale } from "@/i18n/config";
 import { siteConfig } from "@/config/site";
+import { trackLeadEvent } from "@/lib/analytics/events";
 
 const copy = {
   en: {
@@ -42,6 +43,12 @@ const initialState: ConsultationFormState = { status: "idle" };
 export function ConsultationRequestForm({ locale }: { locale: Locale }) {
   const [state, formAction, isPending] = useActionState(submitConsultationRequest, initialState);
   const t = copy[locale];
+
+  useEffect(() => {
+    if (state.status === "success") {
+      trackLeadEvent("form_submit", { label: "consultation" });
+    }
+  }, [state.status]);
 
   if (state.status === "success") {
     return (

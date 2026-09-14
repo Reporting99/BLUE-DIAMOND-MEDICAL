@@ -51,6 +51,7 @@ const PUBLIC_ENV_KEYS = new Map([
   ["SITE_URL", "the public canonical origin — public by definition, never a secret"],
   ["FEELSTACK_SITE_KEY", "site identifier, not a credential; the frontend pins it"],
   ["FEELSTACK_CONTENT_MODE", "a mode name: static | hybrid | cms"],
+  ["NEXT_PUBLIC_GA_MEASUREMENT_ID", "GA4 Measurement ID; sent to every visitor's browser, not a secret"],
 ]);
 
 /**

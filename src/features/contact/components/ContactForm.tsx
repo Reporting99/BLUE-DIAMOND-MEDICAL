@@ -1,10 +1,11 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
 import { submitContactForm, type ContactFormState } from "@/app/[locale]/contact/actions";
 import { Button } from "@/components/ui/button";
 import type { Locale } from "@/i18n/config";
 import { siteConfig } from "@/config/site";
+import { trackLeadEvent } from "@/lib/analytics/events";
 
 const copy = {
   en: {
@@ -39,6 +40,15 @@ const initialState: ContactFormState = { status: "idle" };
 export function ContactForm({ locale, defaultMessage }: { locale: Locale; defaultMessage?: string }) {
   const [state, formAction, isPending] = useActionState(submitContactForm, initialState);
   const t = copy[locale];
+
+  // Fires once per successful submission (the effect only re-runs when
+  // `state.status` changes), and carries nothing but a static form
+  // identifier — no name, email, phone, or message content ever reaches GA4.
+  useEffect(() => {
+    if (state.status === "success") {
+      trackLeadEvent("form_submit", { label: "contact" });
+    }
+  }, [state.status]);
 
   if (state.status === "success") {
     return (

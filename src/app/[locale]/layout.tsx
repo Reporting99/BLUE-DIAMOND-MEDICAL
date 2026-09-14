@@ -1,17 +1,20 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import { ImageKitProvider } from "@imagekit/next";
 import { dirFor, isLocale, locales, type Locale } from "@/i18n/config";
 import { fontVariables } from "@/lib/fonts";
 import { siteConfig } from "@/config/site";
 import { siteUrlIsConfigured } from "@/config/site-url";
 import { imagekitConfig } from "@/config/imagekit";
+import { gaMeasurementId } from "@/config/analytics";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { ScrollReveal } from "@/components/layout/ScrollReveal";
 import { RouteScrollManager } from "@/components/layout/RouteScrollManager";
 import { ScrollProgress } from "@/components/layout/ScrollProgress";
 import { BackToTop } from "@/components/layout/BackToTop";
+import { LeadEventTracker } from "@/components/layout/LeadEventTracker";
 import "../globals.css";
 
 // This is the true root layout — see the note in the (removed) app/layout.tsx
@@ -102,6 +105,13 @@ export default async function LocaleLayout({
           <ScrollProgress />
           <BackToTop locale={locale} />
         </ImageKitProvider>
+        {/* Mounted once in the true root layout (see the note above) so EN
+            and AR both get exactly one GA4 tag — never per-locale, which
+            would double-fire page_view. next/third-parties' own script
+            handles SPA route-change page_view dispatch, so no manual
+            dataLayer push is needed anywhere else in the app. */}
+        {gaMeasurementId ? <GoogleAnalytics gaId={gaMeasurementId} /> : null}
+        <LeadEventTracker />
       </body>
     </html>
   );

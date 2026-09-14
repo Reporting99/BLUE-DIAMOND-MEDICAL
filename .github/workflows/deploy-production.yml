@@ -45,6 +45,10 @@ jobs:
       # remotePatterns empty and every image renders through the existing
       # fallback -- see docs/MEDIA.md.
       NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT: ${{ vars.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT }}
+      # GA4 Measurement ID is build-time (NEXT_PUBLIC_*, inlined into the
+      # bundle) -- see src/config/analytics.ts. Unset is a supported state:
+      # <GoogleAnalytics> in the root layout simply does not render.
+      NEXT_PUBLIC_GA_MEASUREMENT_ID: ${{ vars.NEXT_PUBLIC_GA_MEASUREMENT_ID }}
 
     steps:
       - name: Validate the requested SHA
@@ -219,6 +223,7 @@ jobs:
           FEELSTACK_CONTENT_MODE: hybrid
           SITE_URL: ${{ vars.SITE_URL }}
           INDEXING_ENABLED: ${{ vars.INDEXING_ENABLED }}
+          NEXT_PUBLIC_GA_MEASUREMENT_ID: ${{ vars.NEXT_PUBLIC_GA_MEASUREMENT_ID }}
         run: npm run build
 
       - name: Package standalone release
