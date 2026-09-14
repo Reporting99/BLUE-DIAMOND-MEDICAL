@@ -45,10 +45,6 @@ jobs:
       # remotePatterns empty and every image renders through the existing
       # fallback -- see docs/MEDIA.md.
       NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT: ${{ vars.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT }}
-      # GA4 Measurement ID is build-time (NEXT_PUBLIC_*, inlined into the
-      # bundle) -- see src/config/analytics.ts. Unset is a supported state:
-      # <GoogleAnalytics> in the root layout simply does not render.
-      NEXT_PUBLIC_GA_MEASUREMENT_ID: ${{ vars.NEXT_PUBLIC_GA_MEASUREMENT_ID }}
 
     steps:
       - name: Validate the requested SHA
@@ -223,7 +219,19 @@ jobs:
           FEELSTACK_CONTENT_MODE: hybrid
           SITE_URL: ${{ vars.SITE_URL }}
           INDEXING_ENABLED: ${{ vars.INDEXING_ENABLED }}
-          NEXT_PUBLIC_GA_MEASUREMENT_ID: ${{ vars.NEXT_PUBLIC_GA_MEASUREMENT_ID }}
+          # A literal, not `${{ vars.NEXT_PUBLIC_GA_MEASUREMENT_ID }}`, and
+          # deliberately so -- see the comment in src/config/analytics.ts. An
+          # unset GitHub Actions repo variable resolves to an EMPTY STRING,
+          # not "undefined", so a `vars.` reference here is indistinguishable
+          # from "explicitly disable analytics" the moment nobody has
+          # provisioned that variable -- which is exactly what shipped release
+          # e686076bcaa4754f025191defa1e5080aea50be9 with no GA tag at all.
+          # This workflow is itself the single source of "this build is the
+          # real production build"; the Measurement ID is public (not a
+          # secret, ships to every visitor's browser regardless), so pinning
+          # it here needs no separate out-of-band configuration step and
+          # cannot silently regress to disabled again.
+          NEXT_PUBLIC_GA_MEASUREMENT_ID: "G-7DV360JLG2"
         run: npm run build
 
       - name: Package standalone release
