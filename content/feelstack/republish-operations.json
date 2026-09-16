@@ -911,6 +911,54 @@
       "field": "summary",
       "from": "PRP used topically or via microinjections to smooth fine lines and wrinkles, improve tone and elasticity, and reduce acne scars and pigmentation — often called the \"vampire facial.\"",
       "to": "PRP used topically or via microinjections to smooth fine lines and wrinkles, improve tone and elasticity, and reduce the appearance of acne scars and pigmentation."
+    },
+    {
+      "opId": "OP-EN-REMEDIATION-01",
+      "applicable": true,
+      "kind": "entry.field.set",
+      "recordId": "d3aef8df-feb3-4965-97f9-28527e9e419c",
+      "route": "/aesthetics/treatments/laser-hair-removal",
+      "locale": "en",
+      "field": "summary",
+      "from": "Long-lasting hair reduction on suitable areas of the face and body using the Cynosure Elite+™ laser system. Treatment areas and suitability are assessed during consultation.",
+      "to": "Long-lasting hair reduction on suitable areas of the face and body using the Elite iQ™ laser system. Treatment areas and suitability are assessed during consultation.",
+      "reason": "CONF-005: Elite iQ™ is the canonical device name; Elite+™ is a legacy name variant. 2026-09-16 English remediation pass, commit 98e64d4."
+    },
+    {
+      "opId": "OP-EN-REMEDIATION-02",
+      "applicable": true,
+      "kind": "entry.field.set",
+      "recordId": "d30e1c87-d4a8-4c1f-ba2c-512c8711732a",
+      "route": "/aesthetics/treatments/prp-hair-restoration",
+      "locale": "en",
+      "field": "suggested_course",
+      "from": "Most people benefit from a series of 3–4 treatments spaced a few weeks apart; maintenance sessions may be recommended.",
+      "to": "A series of 3–4 treatments may be recommended, spaced a few weeks apart, depending on your assessment; maintenance sessions may also be suggested.",
+      "reason": "Soften blanket 'most people' claim to assessment-dependent wording. 2026-09-16 English remediation pass, commit 98e64d4."
+    },
+    {
+      "opId": "OP-EN-REMEDIATION-03",
+      "applicable": true,
+      "kind": "entry.field.set",
+      "recordId": "7a0a7423-0c3f-4123-936b-c716c11e2d66",
+      "route": "/aesthetics/treatments/rf-microneedling",
+      "locale": "en",
+      "field": "comfort_level",
+      "from": "A topical numbing agent removes most of the discomfort. Most patients say they can feel the needles working but do not find it painful. A member of the clinical team stays with you throughout, and treatment can be stopped at any point.",
+      "to": "A topical numbing cream is applied to help reduce discomfort. Most patients describe feeling the needles working but say it is not painful. A member of the clinical team stays with you throughout, and treatment can be stopped at any point.",
+      "reason": "Avoid promising pain elimination; medically responsible wording. 2026-09-16 English remediation pass, commit 98e64d4."
+    },
+    {
+      "opId": "OP-EN-REMEDIATION-04",
+      "applicable": true,
+      "kind": "entry.field.set",
+      "recordId": "a64fe8ed-aeef-4ddd-9ae3-06423d47f6d8",
+      "route": "/aesthetics/treatments/prp-skin-rejuvenation",
+      "locale": "en",
+      "field": "suggested_course",
+      "from": "Most people benefit from a series of 3–4 treatments spaced a few weeks apart; maintenance sessions may be recommended.",
+      "to": "A series of 3–4 treatments may be recommended, spaced a few weeks apart, depending on your assessment; maintenance sessions may also be suggested.",
+      "reason": "Soften blanket 'most people' claim to assessment-dependent wording. 2026-09-16 English remediation pass, commit 98e64d4."
     }
   ],
   "note": "Repository-controlled CMS correction set, read by scripts/feelstack-republish.mjs. Tracked: it used to live under the gitignored evidence/, so the script it drives could not run from a fresh checkout at all. Every from/to pair was captured from the PUBLIC resolver and is re-checked against the live value before any write."
