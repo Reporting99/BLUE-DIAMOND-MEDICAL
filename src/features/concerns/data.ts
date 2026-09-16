@@ -100,7 +100,7 @@ export const concerns: AestheticConcern[] = [
       {
         question: { en: "How many sessions will I need?", ar: "كم عدد الجلسات التي سأحتاجها؟" },
         answer: {
-          en: "Most people benefit from a series of 3–4 treatments spaced a few weeks apart; maintenance sessions may be recommended. Each session takes 30 to 60 minutes depending on the treatment area, with little to no downtime.",
+          en: "A series of 3–4 treatments may be recommended, spaced a few weeks apart, depending on your assessment; maintenance sessions may also be suggested. Each session takes 30 to 60 minutes depending on the treatment area, with little to no downtime.",
           ar: "يستفيد معظم الأشخاص من سلسلة من 3 إلى 4 جلسات بفاصل بضعة أسابيع؛ قد يُنصح بجلسات صيانة لاحقًا. وتستغرق كل جلسة من 30 إلى 60 دقيقة حسب المنطقة المعالجة، مع تعافٍ محدود أو معدوم.",
         },
       },

@@ -40,7 +40,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
       aestheticsHeading: "Our medical aesthetics department",
       aestheticsBody: [
         "Blue Diamond Medical has expanded its services to include physician-led medical aesthetics, in response to growing patient demand. Alongside our family medicine care, we now offer aesthetic treatments that support skin health, confidence, and overall well-being.",
-        "Our aesthetic services include laser hair removal, hair restoration using laser therapy and/or PRP, and skin-rejuvenation treatments that improve texture, tone, and vitality. Every one of them is medically supervised and provided here at the clinic, by the same clinical team that looks after our family medicine patients. Each treatment plan is set individually, after a consultation.",
+        "Our aesthetic services include laser hair removal, hair restoration using laser therapy and/or PRP, and skin-rejuvenation treatments that improve texture, tone, and vitality. All of our aesthetic services are medically supervised and provided by the same clinical team that looks after our family medicine patients. Each treatment plan is set individually, after a consultation.",
       ],
       storyHeading: "Our story",
       story:

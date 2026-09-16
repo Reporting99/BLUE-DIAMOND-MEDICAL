@@ -57,7 +57,7 @@ export default async function MedicalHubPage({ params }: { params: Promise<{ loc
     en: {
       title: "Medical Care",
       intro:
-        "Male and female family physicians, accepting new patients and walk-ins. We provide comprehensive AHS-insured family medicine, along with a listed set of uninsured services and forms.",
+        "Male and female family physicians, accepting new patients and walk-ins. We provide comprehensive AHCIP-insured family medicine, along with a listed set of uninsured services and forms.",
       servicesHeading: "Explore our services",
       uninsuredCta: "View uninsured service fees",
       registeredCta: "Book with your doctor",

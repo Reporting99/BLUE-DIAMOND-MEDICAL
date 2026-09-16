@@ -87,7 +87,7 @@ export const homepageCopy = {
       { t: "Choose a service", d: "Medical care or medical aesthetics — or explore both." },
       { t: "Review information", d: "Read what the service or treatment involves before you book." },
       { t: "Book your appointment", d: "Use Mikata, Skip the Waiting Room or Euclid, depending on your appointment, or book by phone or in person." },
-      { t: "Attend your consultation or appointment", d: "Every aesthetics treatment starts with a physician consultation." },
+      { t: "Attend your consultation or appointment", d: "Every aesthetic treatment starts with a physician consultation." },
     ],
     doctorsEyebrow: "OUR PHYSICIANS",
     productsEyebrow: "PROFESSIONAL SKINCARE",

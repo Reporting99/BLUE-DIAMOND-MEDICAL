@@ -108,7 +108,17 @@ const cmsEntries: CmsEntry[] = JSON.parse(
  * remaining-drift-proposals.json for the record of what each of those 11
  * actually turned out to be.
  */
-const KNOWN_CMS_DRIFT: ReadonlySet<string> = new Set<string>([]);
+const KNOWN_CMS_DRIFT: ReadonlySet<string> = new Set<string>([
+  // 2026-09-16 English remediation pass (branch content/en-remediation-*)
+  // edited these four records' repo copy — softened absolute claims,
+  // corrected the laser device name per CONF-005 — but has not published
+  // the change to FeelStack yet. Remove each entry once its repo copy is
+  // published and scripts/capture-cms-content.mjs is re-run.
+  "aesthetic-treatment:laser-hair-removal",
+  "aesthetic-treatment:prp-hair-restoration",
+  "aesthetic-treatment:prp-skin-rejuvenation",
+  "aesthetic-treatment:rf-microneedling",
+]);
 
 type Localized = { en: string; ar: string };
 const isLocalized = (v: unknown): v is Localized =>

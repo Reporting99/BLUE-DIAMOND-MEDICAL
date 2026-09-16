@@ -16,7 +16,7 @@ export const treatments: AestheticTreatment[] = [
     slugAr: "إزالة-الشعر-بالليزر",
     title: { en: "Laser Hair Removal", ar: "إزالة الشعر بالليزر" },
     summary: {
-      en: "Long-lasting hair reduction on suitable areas of the face and body using the Cynosure Elite+™ laser system. Treatment areas and suitability are assessed during consultation.",
+      en: "Long-lasting hair reduction on suitable areas of the face and body using the Elite iQ™ laser system. Treatment areas and suitability are assessed during consultation.",
       ar: "تقليل دائم لنمو الشعر في أي منطقة من الجسم باستخدام نظام ليزر Cynosure Elite+™.",
     },
     serviceLocationNote: {
@@ -237,7 +237,7 @@ export const treatments: AestheticTreatment[] = [
       ar: "نحو 30 دقيقة عادةً. يُطبَّق مخدر موضعي قد يستغرق حتى 45 دقيقة ليصبح فعالًا بالكامل.",
     },
     comfortLevel: {
-      en: "A topical numbing agent removes most of the discomfort. Most patients say they can feel the needles working but do not find it painful. A member of the clinical team stays with you throughout, and treatment can be stopped at any point.",
+      en: "A topical numbing cream is applied to help reduce discomfort. Most patients describe feeling the needles working but say it is not painful. A member of the clinical team stays with you throughout, and treatment can be stopped at any point.",
       ar: "يُزيل المخدر معظم الانزعاج — يشعر المرضى بوخز الإبر دون ألم حقيقي. يراقب مقدمو الرعاية الجلسة باستمرار، ويمكن إيقافها في أي وقت.",
     },
     resultTimeline: {
@@ -377,7 +377,7 @@ export const treatments: AestheticTreatment[] = [
     downtime: { en: "Sessions are quick with little to no downtime.", ar: "الجلسات سريعة وتتطلب تعافيًا محدودًا أو معدومًا." },
     duration: { en: "30 to 60 minutes depending on the treatment area.", ar: "من 30 إلى 60 دقيقة حسب المنطقة المعالجة." },
     suggestedCourse: {
-      en: "Most people benefit from a series of 3–4 treatments spaced a few weeks apart; maintenance sessions may be recommended.",
+      en: "A series of 3–4 treatments may be recommended, spaced a few weeks apart, depending on your assessment; maintenance sessions may also be suggested.",
       ar: "يستفيد معظم الأشخاص من سلسلة من 3 إلى 4 جلسات بفاصل بضعة أسابيع؛ قد يُنصح بجلسات صيانة لاحقًا.",
     },
     relatedTreatmentIds: ["prp-skin-rejuvenation"],
@@ -408,7 +408,7 @@ export const treatments: AestheticTreatment[] = [
     },
     duration: { en: "30 to 60 minutes depending on the treatment area.", ar: "من 30 إلى 60 دقيقة حسب المنطقة المعالجة." },
     suggestedCourse: {
-      en: "Most people benefit from a series of 3–4 treatments spaced a few weeks apart; maintenance sessions may be recommended.",
+      en: "A series of 3–4 treatments may be recommended, spaced a few weeks apart, depending on your assessment; maintenance sessions may also be suggested.",
       ar: "يستفيد معظم الأشخاص من سلسلة من 3 إلى 4 جلسات بفاصل بضعة أسابيع؛ قد يُنصح بجلسات صيانة لاحقًا.",
     },
     faqs: [
@@ -436,7 +436,7 @@ export const treatments: AestheticTreatment[] = [
       {
         question: { en: "How long does a session take, and how many will I need?", ar: "كم تستغرق الجلسة، وكم عدد الجلسات التي سأحتاجها؟" },
         answer: {
-          en: "30 to 60 minutes depending on the treatment area. Most people benefit from a series of 3–4 treatments spaced a few weeks apart, with maintenance sessions sometimes recommended.",
+          en: "30 to 60 minutes depending on the treatment area. A series of 3–4 treatments may be recommended, spaced a few weeks apart, with maintenance sessions sometimes suggested.",
           ar: "من 30 إلى 60 دقيقة حسب المنطقة المعالجة. يستفيد معظم الأشخاص من سلسلة من 3 إلى 4 جلسات بفاصل بضعة أسابيع، وقد يُنصح بجلسات صيانة لاحقًا.",
         },
       },
