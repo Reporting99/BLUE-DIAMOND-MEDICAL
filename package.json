@@ -17,6 +17,7 @@
     "content:sync": "node scripts/content-sync.mjs",
     "content:drift-gate": "node scripts/content-drift-gate.mjs",
     "feelstack:refresh-fixtures": "node scripts/feelstack-refresh-fixtures.mjs",
+    "validate:build-once": "bash scripts/assert-no-app-build.sh",
     "validate": "npm run typecheck && npm run lint && npm run validate:secrets && npm run build"
   },
   "dependencies": {

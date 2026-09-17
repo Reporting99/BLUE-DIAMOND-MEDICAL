@@ -20,7 +20,15 @@ import { SEO_TEST_ORIGIN } from "../support/seo-test-origin";
  * that the workflow which builds the deployed artifact now supplies it.
  */
 
-const WORKFLOW = ".github/workflows/deploy-production.yml";
+/**
+ * MOVED 2026-09-17. The deployable artifact is now built ONCE, by ci.yml's
+ * `release-artifact` job, and deploy-production.yml only downloads and verifies
+ * it (docs/RELEASE_ARCHITECTURE_AUDIT.md). The indexing environment therefore
+ * has to be supplied where the build actually happens; asserting it against the
+ * deploy workflow would now assert a build that no longer exists there, and
+ * would pass forever while proving nothing.
+ */
+const WORKFLOW = ".github/workflows/ci.yml";
 
 function withEnv<T>(vars: Record<string, string | undefined>, run: () => T): T {
   const previous = Object.fromEntries(Object.keys(vars).map((k) => [k, process.env[k]]));
@@ -64,7 +72,7 @@ test.describe("REGRESSION: production build must supply indexing env for the sit
     expect(source).not.toMatch(/force-dynamic/);
   });
 
-  test("deploy-production.yml's build step supplies SITE_URL and INDEXING_ENABLED from repo/environment vars", () => {
+  test("the release build step supplies SITE_URL and INDEXING_ENABLED from repo/environment vars", () => {
     const workflow = readFileSync(WORKFLOW, "utf8");
     const buildStepStart = workflow.indexOf("- name: Build production application");
     expect(buildStepStart, "Build production application step not found").toBeGreaterThan(-1);
