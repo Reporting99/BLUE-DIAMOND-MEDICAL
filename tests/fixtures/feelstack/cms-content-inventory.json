@@ -440,7 +440,7 @@
     "updatedAt": "2026-08-23T11:05:27.599Z",
     "title": "Laser Hair Removal",
     "fields": {
-      "summary": "Long-lasting hair reduction on suitable areas of the face and body using the Cynosure Elite+™ laser system. Treatment areas and suitability are assessed during consultation.",
+      "summary": "Long-lasting hair reduction on suitable areas of the face and body using the Elite iQ™ laser system. Treatment areas and suitability are assessed during consultation.",
       "preparation": "Shave the treatment area beforehand so the laser's energy is delivered effectively.",
       "how_it_works": "Hair grows in a three-phase cycle: anagen (active growth), catagen (a brief transition when the hair follicle regresses) and telogen (resting). The laser emits light energy absorbed by melanin in the hair follicle and shaft, damaging the follicle and reducing regrowth. Follicles in the anagen phase respond best, so multiple treatments are needed.",
       "treatment_id": "laser-hair-removal",
@@ -525,7 +525,7 @@
       "who_its_for": "Individuals noticing thinning hair or early hair loss.",
       "how_it_works": "Platelet-rich plasma (PRP) is prepared from the patient's own blood. After a blood draw, the blood is processed to concentrate platelets in plasma. The platelets release growth factors involved in tissue repair. PRP is injected into the scalp to support hair growth; results vary.",
       "treatment_id": "prp-hair-restoration",
-      "suggested_course": "Most people benefit from a series of 3–4 treatments spaced a few weeks apart; maintenance sessions may be recommended."
+      "suggested_course": "A series of 3–4 treatments may be recommended, spaced a few weeks apart, depending on your assessment; maintenance sessions may also be suggested."
     },
     "faqs": [
       {
@@ -546,7 +546,7 @@
       "duration": "30 to 60 minutes depending on the treatment area.",
       "how_it_works": "Platelet-rich plasma prepared from the patient's own blood is applied to the skin or delivered by microinjections. Platelet-derived growth factors may support collagen production and skin renewal; results vary.",
       "treatment_id": "prp-skin-rejuvenation",
-      "suggested_course": "Most people benefit from a series of 3–4 treatments spaced a few weeks apart; maintenance sessions may be recommended."
+      "suggested_course": "A series of 3–4 treatments may be recommended, spaced a few weeks apart, depending on your assessment; maintenance sessions may also be suggested."
     },
     "faqs": [
       {
@@ -627,7 +627,7 @@
       "duration": "Typically around 30 minutes. A topical anaesthetic is applied and can take up to 45 minutes to become fully effective.",
       "how_it_works": "RF energy is delivered through small needles into the dermis, heating the underlying layers to stimulate collagen and elastin production and support skin tightening. Treatments are not limited to the face and may help with skin laxity after weight loss. Results vary.",
       "treatment_id": "rf-microneedling",
-      "comfort_level": "A topical numbing agent removes most of the discomfort. Most patients say they can feel the needles working but do not find it painful. A member of the clinical team stays with you throughout, and treatment can be stopped at any point.",
+      "comfort_level": "A topical numbing cream is applied to help reduce discomfort. Most patients describe feeling the needles working but say it is not painful. A member of the clinical team stays with you throughout, and treatment can be stopped at any point.",
       "result_timeline": "Some changes may be noticeable soon after treatment, with gradual improvement over several weeks and treatments. More than one session is usually recommended.",
       "suggested_course": "Three- and five-session packages are recommended to build and maintain firmer, refreshed-looking skin."
     },

@@ -52,3 +52,21 @@ jobs:
             bash -n "$f"
           done
           shellcheck --severity=warning "${scripts[@]}"
+
+  # BUILD ONCE, DEPLOY ONCE -- enforced, not documented.
+  #
+  # A separate JOB rather than a step of the one above, so the failure reads as
+  # "the release architecture regressed" in the checks list rather than as a
+  # shell-lint failure. The rule it enforces has no other enforcement point:
+  # a reintroduced `npm run build` in deploy-production.yml is valid YAML, valid
+  # shell, and passes actionlint cleanly -- it is only wrong architecturally,
+  # and it would go unnoticed until the next transient CMS timeout failed a
+  # release that CI had already proven green.
+  build-once:
+    name: deploy workflow must not rebuild the app
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Assert the deploy workflow contains no application build
+        run: bash scripts/assert-no-app-build.sh

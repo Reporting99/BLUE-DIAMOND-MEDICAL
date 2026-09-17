@@ -14,6 +14,10 @@
     "test:e2e": "bash scripts/run-playwright.sh",
     "validate:secrets": "node scripts/validate-no-secrets.mjs",
     "capture:cms": "node scripts/capture-cms-content.mjs",
+    "content:sync": "node scripts/content-sync.mjs",
+    "content:drift-gate": "node scripts/content-drift-gate.mjs",
+    "feelstack:refresh-fixtures": "node scripts/feelstack-refresh-fixtures.mjs",
+    "validate:build-once": "bash scripts/assert-no-app-build.sh",
     "validate": "npm run typecheck && npm run lint && npm run validate:secrets && npm run build"
   },
   "dependencies": {

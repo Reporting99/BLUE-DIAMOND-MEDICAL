@@ -86,6 +86,38 @@ jobs:
           done
           test -d .next/static
 
+      # BEFORE Playwright, deliberately.
+      #
+      # A content-authority failure is not going to be fixed by a browser, and
+      # it is fully determined by three files and one public API call. Finding
+      # it after the full E2E suite costs that suite's entire runtime per
+      # attempt for information that was available in seconds.
+      #
+      # Soft on infrastructure, hard on content: the gate exits 3 when the CMS
+      # is unreachable and 1 when a field genuinely disagrees, and only the
+      # second one fails the job. A hermetic suite must never be able to go red
+      # because the CMS had a bad afternoon -- that is the rule every other
+      # capture-and-compare check in this repository follows, and it is what
+      # keeps a red run meaning "fix the content".
+      - name: Content drift gate
+        shell: bash
+        env:
+          FEELSTACK_API_URL: ${{ vars.FEELSTACK_API_URL }}
+          FEELSTACK_SITE_KEY: ${{ vars.FEELSTACK_SITE_KEY }}
+        run: |
+          set -uo pipefail
+          if [ -z "${FEELSTACK_API_URL:-}" ] || [ -z "${FEELSTACK_SITE_KEY:-}" ]; then
+            echo "::notice::FeelStack is not configured for this job; the drift gate needs the live public API. Skipping."
+            exit 0
+          fi
+          node scripts/content-drift-gate.mjs
+          status=$?
+          case "$status" in
+            0) echo "content drift gate: clean" ;;
+            3) echo "::warning::content drift gate could not reach the CMS; no content verdict." ;;
+            *) echo "::error::content drift gate failed."; exit "$status" ;;
+          esac
+
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
 
@@ -124,3 +156,183 @@ jobs:
           name: test-results
           path: test-results/
           retention-days: 7
+
+  # BUILD ONCE, DEPLOY ONCE.
+  #
+  # Deploy Production used to `npm ci && npm run build` a SHA that this
+  # workflow had already built and tested, with FEELSTACK_CONTENT_MODE=hybrid --
+  # so the deployable bytes were produced by a second, unvalidated build that
+  # re-resolved live CMS content and could fail on a transient FeelStack
+  # timeout minutes after CI had proven the exact same commit green. The
+  # artifact this job produces IS the release; the deploy workflow now only
+  # downloads, verifies and ships it.
+  #
+  # WHY A SEPARATE BUILD FROM `validate` RATHER THAN REUSING ITS OUTPUT.
+  # `validate` builds deliberately against the reserved https://seo-test.invalid
+  # origin with no FeelStack configuration, because that is what the Playwright
+  # suite must run against (tests/support/seo-test-origin.ts). Page metadata,
+  # canonical tags and the sitemap's first ISR snapshot are all BAKED at build
+  # time, so a test build is not a shippable build and never can be. What is
+  # shared is the packaging (scripts/package-standalone.sh, one copy) and the
+  # gate: this job runs only `needs: validate`, so no artifact can exist for a
+  # commit whose lint, typecheck, secret scan, build and Playwright suite did
+  # not all pass.
+  #
+  # Only on push to main: deploy-production.yml refuses any SHA that is not an
+  # ancestor of origin/main, so an artifact for anything else is unshippable by
+  # construction.
+  release-artifact:
+    name: Package release artifact
+    needs: validate
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    # The SAME environment deploy-production.yml used to build in, so
+    # `vars.SITE_URL`, `vars.FEELSTACK_*` and `vars.INDEXING_ENABLED` resolve to
+    # exactly the values that used to reach `next build`. Moving the build
+    # without moving its configuration would be the same defect in a new place.
+    environment: production
+
+    env:
+      NEXT_TELEMETRY_DISABLED: "1"
+      # Build-time (NEXT_PUBLIC_*, inlined into the bundle). Unset is a
+      # supported state -- next.config.ts keeps remotePatterns empty and every
+      # image renders through the existing fallback (docs/MEDIA.md).
+      NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT: ${{ vars.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      # CMS configuration must be present DURING the build, not only at
+      # runtime. Most entity pages are prerendered (generateStaticParams), and
+      # `getFeelstackContentMode()` is read while they render -- so a build
+      # without FEELSTACK_* silently resolves in `static` mode and bakes the
+      # static fallback into every page. The runtime `.env` symlink then
+      # correctly says `hybrid`, but the HTML is already fixed and no CMS media
+      # can ever appear. That is exactly how a release shipped with 0 rendered
+      # images while every loopback check passed.
+      - name: Verify build-time CMS configuration
+        shell: bash
+        env:
+          FEELSTACK_API_URL: ${{ vars.FEELSTACK_API_URL }}
+          FEELSTACK_SITE_KEY: ${{ vars.FEELSTACK_SITE_KEY }}
+          FEELSTACK_CONTENT_MODE: hybrid
+        run: |
+          set -euo pipefail
+
+          # A production build that ASKS for hybrid/cms must have somewhere to
+          # ask. Failing closed here is the whole point: a missing variable
+          # would otherwise degrade to `static` with a green build and an empty
+          # site, which is far harder to notice than a failed job.
+          case "${FEELSTACK_CONTENT_MODE:-static}" in
+            hybrid|cms)
+              missing=()
+              [[ -n "${FEELSTACK_API_URL:-}" ]]  || missing+=("FEELSTACK_API_URL")
+              [[ -n "${FEELSTACK_SITE_KEY:-}" ]] || missing+=("FEELSTACK_SITE_KEY")
+              if (( ${#missing[@]} > 0 )); then
+                echo "::error::FEELSTACK_CONTENT_MODE=${FEELSTACK_CONTENT_MODE} but ${missing[*]} is missing. A production hybrid build must never fall back to static."
+                exit 1
+              fi
+              echo "build-time CMS configuration present (mode=${FEELSTACK_CONTENT_MODE})"
+              ;;
+            *)
+              echo "::error::Production builds must run in hybrid mode; got '${FEELSTACK_CONTENT_MODE:-unset}'."
+              exit 1
+              ;;
+          esac
+
+      # <meta name="robots"> is rendered into HTML during `next build`
+      # (src/lib/seo/metadata.ts) and fixed in the artifact from that point on;
+      # src/app/sitemap.ts is a time-based ISR route whose FIRST value comes
+      # from the build-time prerender. A build without these bakes
+      # `noindex, nofollow` and an EMPTY sitemap into the release -- a real
+      # post-deploy SEO blackout, not a cosmetic gap. See docs/DEPLOYMENT.md §3.
+      - name: Verify build-time indexing configuration
+        shell: bash
+        env:
+          SITE_URL: ${{ vars.SITE_URL }}
+          INDEXING_ENABLED: ${{ vars.INDEXING_ENABLED }}
+        run: |
+          set -euo pipefail
+
+          missing=()
+          [[ -n "${SITE_URL:-}" ]] || missing+=("SITE_URL")
+          [[ "${INDEXING_ENABLED:-}" == "true" ]] || missing+=("INDEXING_ENABLED=true")
+          if (( ${#missing[@]} > 0 )); then
+            echo "::error::Production build is missing: ${missing[*]}. Building without these bakes an empty sitemap and noindex pages into the artifact -- see the comment above this step."
+            exit 1
+          fi
+          case "$SITE_URL" in
+            https://*) ;;
+            *) echo "::error::SITE_URL must be an https origin, got '$SITE_URL'."; exit 1 ;;
+          esac
+          echo "build-time indexing configuration present (SITE_URL=${SITE_URL}, INDEXING_ENABLED=true)"
+
+      - name: Build production application
+        env:
+          NODE_ENV: production
+          FEELSTACK_API_URL: ${{ vars.FEELSTACK_API_URL }}
+          FEELSTACK_SITE_KEY: ${{ vars.FEELSTACK_SITE_KEY }}
+          FEELSTACK_CONTENT_MODE: hybrid
+          SITE_URL: ${{ vars.SITE_URL }}
+          INDEXING_ENABLED: ${{ vars.INDEXING_ENABLED }}
+          # Bounded retry for TRANSIENT FeelStack failures during the
+          # content-acquisition phase of this build -- the failure mode that
+          # made the old deploy-time rebuild flaky. Integrity failures (locale
+          # mismatch, schema failure, wrong site) are never retried; see
+          # src/lib/feelstack/retry.ts.
+          FEELSTACK_RETRY_ATTEMPTS: "3"
+          # A literal, not `${{ vars.NEXT_PUBLIC_GA_MEASUREMENT_ID }}`, and
+          # deliberately so -- see the comment in src/config/analytics.ts. An
+          # unset GitHub Actions repo variable resolves to an EMPTY STRING, not
+          # "undefined", so a `vars.` reference here is indistinguishable from
+          # "explicitly disable analytics" the moment nobody has provisioned
+          # that variable -- which is exactly what shipped release
+          # e686076bcaa4754f025191defa1e5080aea50be9 with no GA tag at all.
+          NEXT_PUBLIC_GA_MEASUREMENT_ID: "G-7DV360JLG2"
+        run: npm run build
+
+      - name: Verify standalone output
+        shell: bash
+        run: |
+          set -euo pipefail
+          for path in .next/standalone/server.js .next/BUILD_ID; do
+            if [ ! -s "$path" ]; then
+              echo "::error::missing $path -- next build did not emit standalone output"
+              exit 1
+            fi
+          done
+          test -d .next/static
+
+      # Same script the deploy workflow used to call, in its new and only home.
+      # It now also writes the .sha256 sidecar that binds these bytes to this
+      # run.
+      - name: Package standalone release
+        id: package
+        shell: bash
+        env:
+          RELEASE_SHA: ${{ github.sha }}
+        run: scripts/package-standalone.sh "$RELEASE_SHA" "$RUNNER_TEMP"
+
+      # Named with the full SHA. deploy-production.yml asks for exactly this
+      # name for the SHA it was given, so a wrong-commit artifact cannot be
+      # downloaded by mistake -- the name would simply not exist.
+      - name: Upload release artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-${{ github.sha }}
+          path: |
+            ${{ steps.package.outputs.artifact_path }}
+            ${{ steps.package.outputs.checksum_path }}
+          if-no-files-found: error
+          retention-days: 30
+          # Already gzipped; re-compressing costs minutes and saves nothing.
+          compression-level: 0

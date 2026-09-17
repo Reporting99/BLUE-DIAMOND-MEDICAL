@@ -6,10 +6,6 @@
     "capturedAt": "2026-09-06T19:52:35.694Z",
     "source": "GET /public/v1/sites/blue-diamond-medical/resolve (public, unauthenticated)"
   },
-  "counts": {
-    "applicable": 70,
-    "excluded": 6
-  },
   "operations": [
     {
       "opId": "OP-001",
@@ -961,5 +957,6 @@
       "reason": "Soften blanket 'most people' claim to assessment-dependent wording. 2026-09-16 English remediation pass, commit 98e64d4."
     }
   ],
-  "note": "Repository-controlled CMS correction set, read by scripts/feelstack-republish.mjs. Tracked: it used to live under the gitignored evidence/, so the script it drives could not run from a fresh checkout at all. Every from/to pair was captured from the PUBLIC resolver and is re-checked against the live value before any write."
+  "note": "Repository-controlled CMS correction set, read by scripts/feelstack-republish.mjs. Tracked: it used to live under the gitignored evidence/, so the script it drives could not run from a fresh checkout at all. Every from/to pair was captured from the PUBLIC resolver and is re-checked against the live value before any write.",
+  "countsNote": "Operation counts are DERIVED, never stored. They lived here as a hand-maintained counts.applicable/counts.excluded pair and drifted twice: the file said 66 applicable while it held 70. Anything that needs the arithmetic computes it from `operations` (scripts/feelstack-republish.mjs does, and tests/contracts/republish-manifest-counts.spec.ts fails if a static labelled count is reintroduced here)."
 }

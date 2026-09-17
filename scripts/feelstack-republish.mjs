@@ -45,10 +45,14 @@
  *   FEELSTACK_ADMIN_USERNAME
  *   FEELSTACK_ADMIN_PASSWORD
  *   FEELSTACK_SITE_KEY            (public read, used by dry-run/verify)
- *   FEELSTACK_REVALIDATE_SECRET   (optional; skips ISR purge when unset)
+ *   FEELSTACK_REVALIDATE_SECRET   REQUIRED for apply/rollback
+ *   FEELSTACK_PROJECT_ID          REQUIRED for apply/rollback (tenant check)
+ *   SITE_URL                      REQUIRED for apply/rollback
  *
  * Write modes refuse to run when any admin variable is missing. There is no
- * flag to bypass that.
+ * flag to bypass that. Since 2026-09-17 the same is true of the revalidation
+ * variables for apply/rollback: updating the CMS without purging the route
+ * cache is a release that reports success and changes nothing a visitor reads.
  *
  * SAFETY PROPERTIES
  *   - Idempotent. A value already equal to its target is reported ALREADY_
@@ -65,6 +69,7 @@
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { dirname, resolve, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { createHmac, randomUUID } from "node:crypto";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 /**
@@ -105,7 +110,18 @@ const USERNAME = process.env.FEELSTACK_ADMIN_USERNAME ?? "";
 const PASSWORD = process.env.FEELSTACK_ADMIN_PASSWORD ?? "";
 const SITE_KEY = process.env.FEELSTACK_SITE_KEY ?? "";
 const REVALIDATE_SECRET = process.env.FEELSTACK_REVALIDATE_SECRET ?? "";
-const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? "").replace(/\/$/, "");
+/**
+ * SITE_URL wins over NEXT_PUBLIC_SITE_URL, matching .env.example and the rest
+ * of the app. Reading only the NEXT_PUBLIC_ alias meant a host that had
+ * correctly configured SITE_URL still took the "revalidation skipped" branch.
+ */
+const SITE_URL = (process.env.SITE_URL ?? process.env.NEXT_PUBLIC_SITE_URL ?? "").replace(/\/$/, "");
+/**
+ * The revalidate endpoint asserts the event's projectId against
+ * FEELSTACK_PROJECT_ID (tenant isolation — a valid signature proves the sender
+ * holds the secret, not that the event is Blue Diamond's).
+ */
+const REVALIDATE_PROJECT_ID = process.env.FEELSTACK_PROJECT_ID ?? process.env.FEELSTACK_ADMIN_PROJECT_ID ?? "";
 
 /** Every secret this process holds, longest first so overlaps redact fully. */
 const SECRETS = [PASSWORD, REVALIDATE_SECRET, USERNAME]
@@ -125,7 +141,12 @@ const log = (...parts) => { if (!AS_JSON) console.log(redact(parts.join(" "))); 
 const warn = (...parts) => console.error(redact(parts.join(" ")));
 
 /* ------------------------------------------------------------------ http -- */
-async function http(method, url, { body, auth = false, headers = {} } = {}) {
+/**
+ * `rawBody` sends a pre-serialised string verbatim. Required by the signed
+ * revalidation call: an HMAC is over bytes, and re-encoding an object here
+ * would sign one string and transmit another.
+ */
+async function http(method, url, { body, rawBody, auth = false, headers = {} } = {}) {
   const h = { ...headers };
   if (body !== undefined) h["Content-Type"] = "application/json";
   if (auth) {
@@ -135,7 +156,7 @@ async function http(method, url, { body, auth = false, headers = {} } = {}) {
   const res = await fetch(url, {
     method,
     headers: h,
-    body: body === undefined ? undefined : JSON.stringify(body),
+    body: rawBody !== undefined ? rawBody : body === undefined ? undefined : JSON.stringify(body),
   });
   const text = await res.text();
   let parsed = null;
@@ -240,6 +261,32 @@ function requireEnv(names) {
 requireEnv(["FEELSTACK_API_URL"]);
 if (NEEDS_ADMIN) requireEnv(["FEELSTACK_ADMIN_PROJECT_ID", "FEELSTACK_ADMIN_USERNAME", "FEELSTACK_ADMIN_PASSWORD"]);
 else requireEnv(["FEELSTACK_SITE_KEY"]);
+
+/**
+ * Modes that CHANGE published content must also be able to make the change
+ * visible. `backup` is exempt: it writes a snapshot and mutates nothing, so
+ * there is nothing to purge.
+ *
+ * This is a PRECONDITION, checked before the first write, not a warning after
+ * the last one. An apply that cannot revalidate is an incomplete release, and
+ * the time to find that out is before 70 published values have been changed.
+ * There is no flag to bypass it, for the same reason there is none for the
+ * admin credentials.
+ */
+const REVALIDATION_REQUIRED = MODE === "apply" || MODE === "rollback";
+if (REVALIDATION_REQUIRED) {
+  const missing = [];
+  if (!REVALIDATE_SECRET) missing.push("FEELSTACK_REVALIDATE_SECRET");
+  if (!SITE_URL) missing.push("SITE_URL (or NEXT_PUBLIC_SITE_URL)");
+  if (!REVALIDATE_PROJECT_ID) missing.push("FEELSTACK_PROJECT_ID (or FEELSTACK_ADMIN_PROJECT_ID)");
+  if (missing.length) {
+    warn(`\nMissing revalidation configuration: ${missing.join(", ")}`);
+    warn(`Mode "${MODE}" changes PUBLISHED content. Without revalidation the CMS would be`);
+    warn("updated while every page kept serving the old text — a release that reports success");
+    warn("and changes nothing a visitor reads. Refusing to run.\n");
+    process.exit(3);
+  }
+}
 
 /* ---------------------------------------------------------------- backup -- */
 function writeBackup(records) {
@@ -383,25 +430,101 @@ async function rollbackOne(op, backup, entryCache) {
 }
 
 /* ------------------------------------------------------------ revalidate -- */
-async function revalidate(routes) {
-  if (!REVALIDATE_SECRET || !SITE_URL) {
-    warn("revalidate: skipped — FEELSTACK_REVALIDATE_SECRET and/or NEXT_PUBLIC_SITE_URL unset.");
+/**
+ * A WRITE MODE'S REVALIDATION IS PART OF THE WRITE, NOT AN OPTIONAL EXTRA.
+ *
+ * Two defects lived in the previous version of this function, and both were
+ * silent by construction:
+ *
+ *  1. IT SKIPPED. Missing config logged a warning and returned success. An
+ *     apply run that changed 70 published values and invalidated nothing
+ *     exited 0 and reported APPLIED for every operation, while every page kept
+ *     serving the old text. "The CMS was updated" and "the site shows it" are
+ *     different claims, and only the second one matters to a patient reading
+ *     the page.
+ *
+ *  2. IT WAS UNAUTHENTICATED-BY-ACCIDENT. It sent `x-feelstack-secret` and a
+ *     `{ projectId, path }` body. The endpoint
+ *     (src/app/api/feelstack/revalidate/route.ts ->
+ *     processRevalidationRequest) has never accepted either: it requires
+ *     `x-feelstack-signature: sha256=<hex>` over `${timestamp}.${rawBody}`,
+ *     an `x-feelstack-timestamp` in unix SECONDS, and the canonical FeelStack
+ *     envelope. Every call this function ever made was rejected 401 before the
+ *     body was parsed — and `http()` throws on a non-2xx, so the error was
+ *     caught into `{ ok: false }` and then never checked by either caller.
+ *     Fire-and-forget hid a request that could not have worked.
+ *
+ * So: for a write mode, missing revalidation configuration is a precondition
+ * failure (see requireEnv below), and a route that does not come back
+ * `revalidated: true` marks the release INCOMPLETE and fails the run. Targeted
+ * per-route invalidation, never a global purge — the endpoint resolves each
+ * path to its own cache tags.
+ */
+function signedRevalidationRequest(cmsPath) {
+  const envelope = {
+    id: randomUUID(),
+    type: "content.page.published",
+    projectId: REVALIDATE_PROJECT_ID,
+    occurredAt: new Date().toISOString(),
+    path: cmsPath,
+    data: { path: cmsPath },
+  };
+  // The signature covers the EXACT bytes that are sent. Serialise once and
+  // transmit that string verbatim — re-stringifying the object for the request
+  // body would be a second serialisation that is only incidentally identical.
+  const rawBody = JSON.stringify(envelope);
+  const timestamp = String(Math.floor(Date.now() / 1000));
+  const signature = createHmac("sha256", REVALIDATE_SECRET).update(`${timestamp}.${rawBody}`).digest("hex");
+  return {
+    rawBody,
+    headers: {
+      "Content-Type": "application/json",
+      "x-feelstack-timestamp": timestamp,
+      "x-feelstack-signature": `sha256=${signature}`,
+    },
+  };
+}
+
+async function revalidate(routes, { required }) {
+  if (!REVALIDATE_SECRET || !SITE_URL || !REVALIDATE_PROJECT_ID) {
+    const missing = [
+      REVALIDATE_SECRET ? null : "FEELSTACK_REVALIDATE_SECRET",
+      SITE_URL ? null : "SITE_URL (or NEXT_PUBLIC_SITE_URL)",
+      REVALIDATE_PROJECT_ID ? null : "FEELSTACK_PROJECT_ID",
+    ].filter(Boolean);
+    if (required) {
+      // Reached only if requireEnv was bypassed; kept as a second gate because
+      // this is the branch that used to make an incomplete release look clean.
+      throw new Error(`revalidation is required for this mode but ${missing.join(", ")} is unset`);
+    }
+    warn(`revalidate: skipped — ${missing.join(", ")} unset.`);
     warn("           Pages will serve cached text until the route cache expires.");
-    return { skipped: true };
+    return { skipped: true, ok: true, results: [] };
   }
+
   const results = [];
   for (const path of routes) {
     try {
-      await http("POST", `${SITE_URL}/api/feelstack/revalidate`, {
-        headers: { "x-feelstack-secret": REVALIDATE_SECRET },
-        body: { projectId: PROJECT_ID, path },
+      const { rawBody, headers } = signedRevalidationRequest(path);
+      const body = await http("POST", `${SITE_URL}/api/feelstack/revalidate`, { rawBody, headers });
+      // 200 is not success. The endpoint answers 200 with
+      // `revalidated: false` for an event it understood and deliberately
+      // ignored (unsupported locale, companion-invalidated, backend event
+      // gap) — which for this tool means the page was NOT purged.
+      const ok = body?.revalidated === true;
+      results.push({
+        path,
+        ok,
+        tags: body?.tags,
+        reason: ok ? undefined : (body?.ignored ?? body?.backendEventGap ?? body?.companionInvalidated ?? "revalidated:false"),
       });
-      results.push({ path, ok: true });
+      if (!ok) warn(`  revalidate ${path}: NOT revalidated (${results.at(-1).reason})`);
     } catch (e) {
-      results.push({ path, ok: false, error: redact(e.message) });
+      results.push({ path, ok: false, reason: redact(e.message) });
+      warn(`  revalidate ${path}: ERROR ${redact(e.message)}`);
     }
   }
-  return { skipped: false, results };
+  return { skipped: false, ok: results.every((r) => r.ok), results };
 }
 
 /* ------------------------------------------------------------------ main -- */
@@ -465,8 +588,15 @@ try {
         }
       }
       const routes = [...new Set(ops.map((o) => o.route))];
-      const rv = await revalidate(routes);
-      log(rv.skipped ? "revalidation skipped" : `revalidated ${rv.results.filter((r) => r.ok).length}/${routes.length} routes`);
+      const rv = await revalidate(routes, { required: REVALIDATION_REQUIRED });
+      log(`revalidated ${rv.results.filter((r) => r.ok).length}/${routes.length} routes`);
+      for (const r of rv.results) {
+        results.push({ opId: `REVALIDATE:${r.path}`, route: r.path, status: r.ok ? "REVALIDATED" : "REVALIDATE_FAILED", error: r.reason });
+      }
+      if (!rv.ok) {
+        warn("\nRELEASE INCOMPLETE: the CMS was updated but one or more routes were not revalidated.");
+        warn("Visitors will keep seeing the previous text on those routes until the cache expires.");
+      }
       log(`\nbackup for rollback: ${backupFile}`);
     } else if (MODE === "rollback") {
       const file = args.get("backup-file");
@@ -483,7 +613,12 @@ try {
           warn(`  ${op.opId}  ERROR  ${redact(e.message)}`);
         }
       }
-      await revalidate([...new Set(ops.map((o) => o.route))]);
+      const rbRoutes = [...new Set(ops.map((o) => o.route))];
+      const rbRv = await revalidate(rbRoutes, { required: REVALIDATION_REQUIRED });
+      for (const r of rbRv.results) {
+        results.push({ opId: `REVALIDATE:${r.path}`, route: r.path, status: r.ok ? "REVALIDATED" : "REVALIDATE_FAILED", error: r.reason });
+      }
+      if (!rbRv.ok) warn("\nROLLBACK INCOMPLETE: values were restored but one or more routes were not revalidated.");
     }
   }
 
@@ -497,7 +632,11 @@ try {
       for (const e of excluded) log(`  ${e.opId}  ${e.kind.padEnd(18)} ${e.locale}  ${e.route}`);
     }
   }
-  const bad = results.filter((r) => r.status === "ERROR" || r.status === "CONFLICT").length;
+  // REVALIDATE_FAILED counts. A release whose content never became visible did
+  // not succeed, whatever the PATCHes reported.
+  const bad = results.filter(
+    (r) => r.status === "ERROR" || r.status === "CONFLICT" || r.status === "REVALIDATE_FAILED",
+  ).length;
   process.exit(bad ? 1 : 0);
 } catch (e) {
   warn(`\nfatal: ${redact(e.message)}`);

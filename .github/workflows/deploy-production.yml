@@ -33,18 +33,15 @@ concurrency:
 
 jobs:
   deploy:
-    name: Build and Deploy Production
+    name: Deploy Production
     runs-on: ubuntu-latest
     timeout-minutes: 40
     environment: production
 
-    env:
-      NEXT_TELEMETRY_DISABLED: "1"
-      # ImageKit endpoint is build-time (NEXT_PUBLIC_*, inlined into the
-      # bundle). Unset is a supported state: next.config.ts keeps
-      # remotePatterns empty and every image renders through the existing
-      # fallback -- see docs/MEDIA.md.
-      NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT: ${{ vars.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT }}
+    # No build-time environment here any more, deliberately. Every
+    # NEXT_PUBLIC_*/SITE_URL/FEELSTACK_* value is baked into the artifact by
+    # ci.yml's `release-artifact` job; repeating them here would suggest they
+    # still influence what ships, and they do not.
 
     steps:
       - name: Validate the requested SHA
@@ -93,7 +90,12 @@ jobs:
       # Not "for the branch", not "recently" -- for this SHA. A green branch
       # with a red commit in its history is exactly the situation where a
       # manual deploy of the wrong SHA ships an untested build.
-      - name: Verify CI passed for this SHA
+      # It also names the RUN that produced the deployable artifact. Those are
+      # the same fact -- "CI proved this commit" and "these are the bytes CI
+      # proved" -- and splitting them is what allowed a second, unvalidated
+      # build to exist at all.
+      - name: Verify CI passed for this SHA and locate its run
+        id: ci
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
@@ -101,150 +103,112 @@ jobs:
         run: |
           set -euo pipefail
 
-          CONCLUSION="$(
+          RUN_JSON="$(
             gh api \
               "repos/${GITHUB_REPOSITORY}/actions/workflows/ci.yml/runs?head_sha=${RELEASE_SHA}&status=completed&per_page=100" \
-              --jq '[.workflow_runs[] | select(.head_sha == env.RELEASE_SHA)] | sort_by(.created_at) | last | .conclusion // "none"'
+              --jq '[.workflow_runs[] | select(.head_sha == env.RELEASE_SHA)] | sort_by(.created_at) | last // {}'
           )"
 
-          echo "Latest completed CI conclusion for ${RELEASE_SHA}: ${CONCLUSION}"
+          CONCLUSION="$(printf '%s' "$RUN_JSON" | jq -r '.conclusion // "none"')"
+          RUN_ID="$(printf '%s' "$RUN_JSON" | jq -r '.id // empty')"
+
+          echo "Latest completed CI conclusion for ${RELEASE_SHA}: ${CONCLUSION} (run ${RUN_ID:-none})"
 
           if [ "$CONCLUSION" != "success" ]; then
             echo "::error::CI has not passed for ${RELEASE_SHA} (conclusion: ${CONCLUSION}). Refusing to deploy."
             exit 1
           fi
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20.19.5"
-          cache: npm
-          cache-dependency-path: package-lock.json
-
-      - name: Install dependencies
-        run: npm ci
-
-      # CMS configuration must be present DURING the build, not only at
-      # runtime. Most entity pages are prerendered (generateStaticParams), and
-      # `getFeelstackContentMode()` is read while they render -- so a build
-      # without FEELSTACK_* silently resolves in `static` mode and bakes the
-      # static fallback into every page. The runtime `.env` symlink then
-      # correctly says `hybrid`, but the HTML is already fixed and no CMS media
-      # can ever appear. That is exactly how a release shipped with 0 rendered
-      # images while every loopback check passed: the checks were built with
-      # the environment the pipeline lacked.
-      - name: Verify build-time CMS configuration
-        shell: bash
-        env:
-          FEELSTACK_API_URL: ${{ vars.FEELSTACK_API_URL }}
-          FEELSTACK_SITE_KEY: ${{ vars.FEELSTACK_SITE_KEY }}
-          FEELSTACK_CONTENT_MODE: hybrid
-        run: |
-          set -euo pipefail
-
-          # A production build that ASKS for hybrid/cms must have somewhere to
-          # ask. Failing closed here is the whole point: a missing variable
-          # would otherwise degrade to `static` with a green build and an empty
-          # site, which is far harder to notice than a failed job.
-          case "${FEELSTACK_CONTENT_MODE:-static}" in
-            hybrid|cms)
-              missing=()
-              [[ -n "${FEELSTACK_API_URL:-}" ]]  || missing+=("FEELSTACK_API_URL")
-              [[ -n "${FEELSTACK_SITE_KEY:-}" ]] || missing+=("FEELSTACK_SITE_KEY")
-              if (( ${#missing[@]} > 0 )); then
-                echo "::error::FEELSTACK_CONTENT_MODE=${FEELSTACK_CONTENT_MODE} but ${missing[*]} is missing. A production hybrid build must never fall back to static."
-                exit 1
-              fi
-              echo "build-time CMS configuration present (mode=${FEELSTACK_CONTENT_MODE})"
-              ;;
-            *)
-              echo "::error::Production builds must run in hybrid mode; got '${FEELSTACK_CONTENT_MODE:-unset}'."
-              exit 1
-              ;;
-          esac
-
-      # Production has already been launched: both slot runtime env files
-      # (/home/blue-diamond/shared/{blue,green}-runtime.env) carry
-      # SITE_LAUNCHED=true / INDEXING_ENABLED=true / SITE_URL=<production
-      # domain> today. The build must see the SAME state, for two reasons:
-      #
-      #   1. <meta name="robots"> is rendered into HTML during `next build`
-      #      (src/lib/seo/metadata.ts) and is fixed in the artifact from that
-      #      point on -- a runtime-only flag can never change it (see
-      #      docs/DEPLOYMENT.md §3, "Unlaunched build, launched runtime").
-      #      Building without these values means every page ships
-      #      `noindex, nofollow` regardless of what the running slot says.
-      #   2. src/app/sitemap.ts is a time-based ISR route (`revalidate =
-      #      1800`). Its FIRST rendered value is produced by the build-time
-      #      prerender, using the build's own env -- not the runtime env the
-      #      deployed process later starts with. A build without
-      #      INDEXING_ENABLED/SITE_URL bakes in isIndexingEnabled() === false
-      #      and therefore an EMPTY sitemap (`return []` in sitemap.ts), which
-      #      then serves for up to 30 minutes until the next revalidation.
-      #      That is a real post-deploy SEO blackout, not a cosmetic gap.
-      #
-      # This is not "launching" the site here -- launching already happened,
-      # as a runtime change to the live slots. This step only makes the build
-      # stop contradicting that already-made decision. It is scoped to THIS
-      # workflow only: ci.yml uses its own reserved https://seo-test.invalid
-      # origin (tests/support/seo-test-origin.ts) to validate the launched
-      # code path without ever asserting the real production domain, and
-      # nothing here touches that.
-      - name: Verify build-time indexing configuration
-        shell: bash
-        env:
-          SITE_URL: ${{ vars.SITE_URL }}
-          INDEXING_ENABLED: ${{ vars.INDEXING_ENABLED }}
-        run: |
-          set -euo pipefail
-
-          missing=()
-          [[ -n "${SITE_URL:-}" ]] || missing+=("SITE_URL")
-          [[ "${INDEXING_ENABLED:-}" == "true" ]] || missing+=("INDEXING_ENABLED=true")
-          if (( ${#missing[@]} > 0 )); then
-            echo "::error::Production build is missing: ${missing[*]}. Building without these bakes an empty sitemap and noindex pages into the artifact -- see the comment above this step."
+          if [[ ! "$RUN_ID" =~ ^[0-9]+$ ]]; then
+            echo "::error::Could not identify the CI run id for ${RELEASE_SHA}."
             exit 1
           fi
-          case "$SITE_URL" in
-            https://*) ;;
-            *) echo "::error::SITE_URL must be an https origin, got '$SITE_URL'."; exit 1 ;;
-          esac
-          echo "build-time indexing configuration present (SITE_URL=${SITE_URL}, INDEXING_ENABLED=true)"
 
-      - name: Build production application
+          echo "run_id=$RUN_ID" >> "$GITHUB_OUTPUT"
+
+      # BUILD ONCE, DEPLOY ONCE.
+      #
+      # This workflow no longer builds anything. It used to `npm ci` and
+      # `npm run build` the same SHA that ci.yml had already built and tested --
+      # a second build, in hybrid content mode, re-resolving live FeelStack
+      # content, whose only distinguishing property was that nobody had ever
+      # run a test against its output. A transient CMS timeout in that build
+      # failed a release that CI had proven green minutes earlier.
+      #
+      # The artifact below is the one `release-artifact` produced from this
+      # exact commit, in the same environment, after the full suite passed.
+      # scripts/assert-no-app-build.sh enforces that no build command comes
+      # back here (Workflow Lint), because the gap between "tested" and
+      # "shipped" reopens the moment one does.
+      - name: Download the CI-built release artifact
+        shell: bash
         env:
-          NODE_ENV: production
-          FEELSTACK_API_URL: ${{ vars.FEELSTACK_API_URL }}
-          FEELSTACK_SITE_KEY: ${{ vars.FEELSTACK_SITE_KEY }}
-          FEELSTACK_CONTENT_MODE: hybrid
-          SITE_URL: ${{ vars.SITE_URL }}
-          INDEXING_ENABLED: ${{ vars.INDEXING_ENABLED }}
-          # A literal, not `${{ vars.NEXT_PUBLIC_GA_MEASUREMENT_ID }}`, and
-          # deliberately so -- see the comment in src/config/analytics.ts. An
-          # unset GitHub Actions repo variable resolves to an EMPTY STRING,
-          # not "undefined", so a `vars.` reference here is indistinguishable
-          # from "explicitly disable analytics" the moment nobody has
-          # provisioned that variable -- which is exactly what shipped release
-          # e686076bcaa4754f025191defa1e5080aea50be9 with no GA tag at all.
-          # This workflow is itself the single source of "this build is the
-          # real production build"; the Measurement ID is public (not a
-          # secret, ships to every visitor's browser regardless), so pinning
-          # it here needs no separate out-of-band configuration step and
-          # cannot silently regress to disabled again.
-          NEXT_PUBLIC_GA_MEASUREMENT_ID: "G-7DV360JLG2"
-        run: npm run build
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_SHA: ${{ steps.release.outputs.release_sha }}
+          RUN_ID: ${{ steps.ci.outputs.run_id }}
+        run: |
+          set -euo pipefail
 
-      - name: Package standalone release
+          DEST="${RUNNER_TEMP}/release"
+          rm -rf "$DEST"
+          mkdir -p "$DEST"
+
+          # The artifact name carries the full SHA, so asking for it by name is
+          # itself an identity check: a wrong-commit artifact does not answer to
+          # this name and the download simply fails.
+          gh run download "$RUN_ID" \
+            --repo "$GITHUB_REPOSITORY" \
+            --name "release-${RELEASE_SHA}" \
+            --dir "$DEST"
+
+          ls -la "$DEST"
+
+      - name: Verify the artifact's checksum and SHA identity
         id: package
         shell: bash
         env:
           RELEASE_SHA: ${{ steps.release.outputs.release_sha }}
-        # The packaging logic lives in scripts/package-standalone.sh so it can
-        # be run and tested before pushing. Inline, it could only ever be
-        # validated by a failed production deployment -- which is exactly how a
-        # repository/workflow mismatch (asserting a public/ directory this app
-        # does not have) reached Deploy Production.
-        run: scripts/package-standalone.sh "$RELEASE_SHA" "$RUNNER_TEMP"
+        run: |
+          set -euo pipefail
+
+          DEST="${RUNNER_TEMP}/release"
+          ARTIFACT_NAME="blue-diamond-${RELEASE_SHA}.tar.gz"
+          CHECKSUM_NAME="${ARTIFACT_NAME}.sha256"
+          ARTIFACT_PATH="${DEST}/${ARTIFACT_NAME}"
+
+          # The FILENAME is part of the release identity chain
+          # (docs/RELEASE_SAFETY.md): origin/main SHA == CI run SHA == artifact
+          # filename SHA == .release-sha inside the tarball == deployed SHA ==
+          # /api/version. Checking only "the download succeeded" would leave the
+          # filename unverified after extraction.
+          test -f "$ARTIFACT_PATH" || { echo "::error::${ARTIFACT_NAME} is not in the downloaded artifact."; exit 1; }
+          test -f "${DEST}/${CHECKSUM_NAME}" || { echo "::error::${CHECKSUM_NAME} is missing -- CI did not publish a checksum."; exit 1; }
+
+          # sha256sum -c, from inside the directory, because the sidecar names
+          # the artifact by its bare name.
+          ( cd "$DEST" && sha256sum -c "$CHECKSUM_NAME" )
+
+          ARTIFACT_SHA256="$(sha256sum "$ARTIFACT_PATH" | awk '{print $1}')"
+          RECORDED_SHA256="$(awk '{print $1}' < "${DEST}/${CHECKSUM_NAME}")"
+          if [ "$ARTIFACT_SHA256" != "$RECORDED_SHA256" ]; then
+            echo "::error::Artifact checksum does not match the published checksum file."
+            exit 1
+          fi
+
+          # And the release identity the tarball carries must be the SHA that
+          # was requested -- the same assertion the server-side script makes
+          # again after extraction, made here before anything is uploaded.
+          EMBEDDED_SHA="$(tar -xzOf "$ARTIFACT_PATH" ./.release-sha | tr -d '\r\n')"
+          if [ "$EMBEDDED_SHA" != "$RELEASE_SHA" ]; then
+            echo "::error::Artifact .release-sha is ${EMBEDDED_SHA}, expected ${RELEASE_SHA}."
+            exit 1
+          fi
+
+          echo "ARTIFACT_IDENTITY_OK ${ARTIFACT_NAME} sha256=${ARTIFACT_SHA256}"
+          {
+            echo "artifact_path=$ARTIFACT_PATH"
+            echo "artifact_name=$ARTIFACT_NAME"
+            echo "artifact_sha256=$ARTIFACT_SHA256"
+          } >> "$GITHUB_OUTPUT"
 
 
       # Private path to the server, so the deploy key is never presented to a
