@@ -125,7 +125,6 @@ const KNOWN_CMS_DRIFT: ReadonlySet<string> = new Set<string>([
   // Clearing it needs a CMS publish of that one FAQ answer, which is blocked on
   // a usable bd-content-publisher credential (docs/CMS_CONTENT_AUTHORITY.md,
   // "Current backlog — BLOCKED"), then a re-run of capture-cms-content.mjs.
-  "aesthetic-treatment:prp-skin-rejuvenation",
 ]);
 
 type Localized = { en: string; ar: string };
