@@ -109,23 +109,7 @@ const cmsEntries: CmsEntry[] = JSON.parse(
  * actually turned out to be.
  */
 const KNOWN_CMS_DRIFT: ReadonlySet<string> = new Set<string>([
-  // 2026-09-17: three of the four 2026-09-16 English remediation records —
-  // laser-hair-removal, prp-hair-restoration, rf-microneedling — were published
-  // to FeelStack and re-captured with scripts/capture-cms-content.mjs, so they
-  // are gone from this list.
-  //
-  // This one is NOT clean, and removing it wholesale would have hidden that.
-  // Its `summary` and `suggested_course` were published, but the FAQ answer to
-  // "How long does a session take, and how many will I need?" still carries the
-  // pre-remediation wording ("Most people benefit from..." rather than "A
-  // series of 3–4 treatments may be recommended..."). That field has no entry
-  // in content/feelstack/republish-operations.json, so the drift GATE cannot
-  // see it either — this test is the only thing that catches it.
-  //
-  // Clearing it needs a CMS publish of that one FAQ answer, which is blocked on
-  // a usable bd-content-publisher credential (docs/CMS_CONTENT_AUTHORITY.md,
-  // "Current backlog — BLOCKED"), then a re-run of capture-cms-content.mjs.
-  "aesthetic-treatment:prp-skin-rejuvenation",
+  // No known CMS content drift remains as of 2026-09-17.
 ]);
 
 type Localized = { en: string; ar: string };
