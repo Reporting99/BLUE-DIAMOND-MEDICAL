@@ -1,4 +1,5 @@
 import type { JsonLdNode } from "@/lib/schema";
+import { serializeJsonLd } from "@/lib/schema";
 
 /**
  * The one place this codebase serialises a Schema.org node into the document.
@@ -9,7 +10,7 @@ export function JsonLd({ data }: { data: JsonLdNode }) {
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+      dangerouslySetInnerHTML={{ __html: serializeJsonLd(data) }}
     />
   );
 }

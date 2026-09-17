@@ -8,6 +8,7 @@ import { FaqPageSchema } from "@/components/shared/schema";
 import { Button } from "@/components/ui/button";
 import { formatPrice } from "@/types/pricing";
 import { getRoute, href } from "@/lib/routing";
+import { serializeJsonLd } from "@/lib/schema";
 import { imagekitConfig, imagekitIsConfigured, imagePresets } from "@/config/imagekit";
 // From @imagekit/javascript, not @imagekit/next: the latter's entrypoint is
 // marked "use client", and importing it from a Server Component throws
@@ -150,7 +151,7 @@ export function ProductTemplate({ product, locale }: { product: Product; locale:
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(productSchema) }} />
       <article className="section-y">
       <Container className="grid gap-10 lg:grid-cols-[5fr_7fr]">
         <div>

@@ -85,6 +85,7 @@ async function cmsOnlyEntries(
            * appear.
            */
           .filter((route) => !knownEnglishPaths.has(route.path))
+          .filter((route) => !hasUnsafeSlugCharacters(route.path))
           .map((route) => {
             // Same trailing-slash normalisation as absoluteRouteUrl: a CMS route
             // whose path is "/" would otherwise put a URL in the sitemap that
@@ -117,6 +118,21 @@ async function cmsOnlyEntries(
     });
     return [];
   }
+}
+
+/**
+ * Rejects a CMS-supplied route path that carries a raw control character or a
+ * Unicode bidi/formatting override (e.g. U+202E RIGHT-TO-LEFT OVERRIDE).
+ *
+ * The local route registry below is hand-curated — every `routes` entry is
+ * authored in this repo, not crawled — so this check exists only for
+ * `cmsOnlyEntries()`, whose `path` values come from FeelStack, an external
+ * write surface. A path containing one of these characters cannot be a real
+ * page route (none of Blue Diamond's real Arabic or English slugs need them)
+ * and is cheap to reject before it reaches the sitemap.
+ */
+function hasUnsafeSlugCharacters(path: string): boolean {
+  return /[\u0000-\u001f\u007f-\u009f\u200e\u200f\u202a-\u202e\u2066-\u2069]/.test(path);
 }
 
 /**

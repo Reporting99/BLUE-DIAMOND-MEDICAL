@@ -21,6 +21,21 @@ export function absoluteUrl(locale: Locale, path: string): string {
   return url.endsWith("/") ? url.slice(0, -1) : url;
 }
 
+/**
+ * Serialise a JSON-LD node for embedding via `dangerouslySetInnerHTML`.
+ *
+ * `JSON.stringify` never escapes `<`, so a string value containing
+ * `</script>` (attacker-controlled content that ends up in, say, a product
+ * name or FAQ answer) can close the script tag early and inject markup. The
+ * fix is the standard one for JSON-in-HTML: escape `<` to its Unicode escape
+ * after stringifying. This changes only how the JSON text is embedded in the
+ * document, not the JSON-LD content itself — `JSON.parse` on the escaped
+ * string round-trips to the exact same data.
+ */
+export function serializeJsonLd(data: unknown): string {
+  return JSON.stringify(data).replace(/</g, "\\u003c");
+}
+
 /** Stable JSON-LD `@id` for the single WebSite node declared on the homepage. */
 export const websiteId = `${siteConfig.url}/#website`;
 

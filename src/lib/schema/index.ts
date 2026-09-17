@@ -10,7 +10,7 @@ export type {
   JsonLdNode,
   PageSchemaType,
 } from "./types";
-export { absoluteUrl, schemaLanguage, websiteId } from "./shared";
+export { absoluteUrl, schemaLanguage, serializeJsonLd, websiteId } from "./shared";
 export { buildBreadcrumbSchema, buildBreadcrumbTrail } from "./breadcrumb";
 export { buildClinicGraph } from "./clinic";
 export { buildFaqPageSchema } from "./faq";
