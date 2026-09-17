@@ -108,17 +108,14 @@ const cmsEntries: CmsEntry[] = JSON.parse(
  * remaining-drift-proposals.json for the record of what each of those 11
  * actually turned out to be.
  */
-const KNOWN_CMS_DRIFT: ReadonlySet<string> = new Set<string>([
-  // 2026-09-16 English remediation pass (branch content/en-remediation-*)
-  // edited these four records' repo copy — softened absolute claims,
-  // corrected the laser device name per CONF-005 — but has not published
-  // the change to FeelStack yet. Remove each entry once its repo copy is
-  // published and scripts/capture-cms-content.mjs is re-run.
-  "aesthetic-treatment:laser-hair-removal",
-  "aesthetic-treatment:prp-hair-restoration",
-  "aesthetic-treatment:prp-skin-rejuvenation",
-  "aesthetic-treatment:rf-microneedling",
-]);
+// Empty, and that is the point: every record the repository owns now says the
+// same thing the CMS serves. The 2026-09-16 English remediation pass was the
+// last occupant of this list — its four records were published to FeelStack and
+// re-captured on 2026-09-17 via scripts/capture-cms-content.mjs, at which point
+// the test below ("contains no record that has since been fixed") failed until
+// they were removed. Anything added here must name the record and the specific
+// action that clears it.
+const KNOWN_CMS_DRIFT: ReadonlySet<string> = new Set<string>([]);
 
 type Localized = { en: string; ar: string };
 const isLocalized = (v: unknown): v is Localized =>
