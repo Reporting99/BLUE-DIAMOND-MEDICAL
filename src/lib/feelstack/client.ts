@@ -23,6 +23,7 @@ import { feelstackErr, feelstackOk, RETRYABLE_ERROR_CODES, type FeelStackResult 
 import { getFeelstackApiUrl, getFeelstackSiteKey, isFeelstackConfigured } from "./content-mode";
 import { cacheTags } from "./cache-tags";
 import { feelstackResolveEnvelopeSchema, type FeelstackResolveEnvelope } from "./transport";
+import { getRetryPolicy, isTransient, isTransientStatus, retryTransient } from "./retry";
 
 /**
  * Server-only typed adapter around the FeelStack CMS — brief §4/§7. Every
@@ -47,8 +48,12 @@ import { feelstackResolveEnvelopeSchema, type FeelstackResolveEnvelope } from ".
  */
 
 const REQUEST_TIMEOUT_MS = 5000;
-/** Retry GET requests at most once — brief §7. */
-const MAX_RETRIES = 1;
+/**
+ * Retry budget and backoff now live in `./retry` (`getRetryPolicy()`), which
+ * also owns the TRANSIENT/INTEGRITY split. The former `MAX_RETRIES = 1` is
+ * still the default at request time; only a production build raises it, via
+ * FEELSTACK_RETRY_ATTEMPTS.
+ */
 
 function isConfigured(): boolean {
   return isFeelstackConfigured();
@@ -110,61 +115,109 @@ async function readErrorCode(response: Response): Promise<string | undefined> {
   }
 }
 
+/**
+ * One attempt, plus whether THIS attempt is worth repeating.
+ *
+ * `retryable` is a separate flag rather than a property of `code` on purpose.
+ * An uncoded 404 classifies as UPSTREAM_ERROR — which is transient in general —
+ * but a 404 is an answer, not an outage, and retrying it would add seconds to
+ * every genuinely-absent page during a build for no possible change in outcome.
+ * The status gate decides retryability; `retry.ts` decides whether a code may
+ * ever be retried at all. Both must agree.
+ */
+interface Attempt {
+  result: FeelStackResult<unknown>;
+  retryable: boolean;
+}
+
+async function fetchAttempt(
+  url: string,
+  revalidateSeconds: number,
+  tags: readonly string[],
+): Promise<Attempt> {
+  try {
+    const { response, requestId } = await fetchOnce(url, revalidateSeconds, tags);
+    if (response.ok) {
+      try {
+        const json: unknown = await response.json();
+        return { result: feelstackOk(json, requestId), retryable: false };
+      } catch {
+        // A payload that failed to parse will fail identically next time —
+        // INTEGRITY, never retried. See retry.ts.
+        logFeelstackEvent({ category: "INVALID_RESPONSE", requestId, upstreamContext: "JSON parse failed" });
+        return {
+          result: feelstackErr("INVALID_RESPONSE", { requestId, message: "Malformed JSON from FeelStack" }),
+          retryable: false,
+        };
+      }
+    }
+
+    // Read the structured error envelope before classifying. A bare HTTP
+    // status is not enough: FeelStack answers 404 both for a genuinely
+    // missing page (CONTENT_NOT_FOUND) and for an unknown siteKey
+    // (SITE_NOT_FOUND). Treating the second as NOT_FOUND would 404 every
+    // page on the site the moment a wrong site key is deployed — the exact
+    // mass-404 failure the contract forbids.
+    //
+    // This matches on the envelope's `code` field, never on human-readable
+    // prose, so a reworded upstream message cannot change behaviour.
+    const upstreamCode = await readErrorCode(response);
+    const code = classifyHttpStatus(response.status, upstreamCode);
+
+    const retryable = isTransientStatus(response.status) && isTransient(code);
+    if (!retryable) {
+      logFeelstackEvent({ category: code, httpStatus: response.status, requestId, upstreamContext: upstreamCode });
+    }
+    return { result: feelstackErr(code, { status: response.status, requestId }), retryable };
+  } catch (thrown) {
+    // Timeout, reset connection, temporary DNS failure — all arrive here as a
+    // thrown error and all classify TRANSIENT.
+    const code = classifyThrown(thrown);
+    const retryable = RETRYABLE_ERROR_CODES.includes(code) && isTransient(code);
+    if (!retryable) {
+      logFeelstackEvent({ category: code, upstreamContext: thrown instanceof Error ? thrown.name : "unknown" });
+    }
+    return { result: feelstackErr(code), retryable };
+  }
+}
+
 async function fetchWithPolicy(
   url: string,
   revalidateSeconds: number,
   tags: readonly string[] = [],
 ): Promise<FeelStackResult<unknown>> {
-  let attempt = 0;
-  while (true) {
-    try {
-      const { response, requestId } = await fetchOnce(url, revalidateSeconds, tags);
-      if (response.ok) {
-        try {
-          const json: unknown = await response.json();
-          return feelstackOk(json, requestId);
-        } catch {
-          logFeelstackEvent({ category: "INVALID_RESPONSE", requestId, upstreamContext: "JSON parse failed" });
-          return feelstackErr("INVALID_RESPONSE", { requestId, message: "Malformed JSON from FeelStack" });
-        }
-      }
+  const policy = getRetryPolicy();
 
-      // Read the structured error envelope before classifying. A bare HTTP
-      // status is not enough: FeelStack answers 404 both for a genuinely
-      // missing page (CONTENT_NOT_FOUND) and for an unknown siteKey
-      // (SITE_NOT_FOUND). Treating the second as NOT_FOUND would 404 every
-      // page on the site the moment a wrong site key is deployed — the exact
-      // mass-404 failure the contract forbids.
-      //
-      // This matches on the envelope's `code` field, never on human-readable
-      // prose, so a reworded upstream message cannot change behaviour.
-      const upstreamCode = await readErrorCode(response);
-      const code = classifyHttpStatus(response.status, upstreamCode);
+  const final = await retryTransient<Attempt>({
+    policy,
+    run: () => fetchAttempt(url, revalidateSeconds, tags),
+    failureCode: (attempt) =>
+      attempt.retryable && !attempt.result.ok ? attempt.result.error : undefined,
+    // Each attempt is logged as it happens rather than only on final failure:
+    // a transient blip that recovered on attempt 2 still needs to be visible in
+    // the build log, or it becomes a mystery the next time it does not recover.
+    onAttempt: ({ attempt, attempts, code, classification, delayMs }) => {
+      logFeelstackEvent({
+        category: code,
+        upstreamContext:
+          `attempt ${attempt}/${attempts} ${classification}` +
+          (delayMs === undefined ? " exhausted" : ` retrying in ${delayMs}ms`),
+      });
+    },
+  });
 
-      // 429 is retried with the transient statuses: rate limiting is by
-      // definition temporary. It is classified UPSTREAM_ERROR either way, so
-      // an exhausted retry still surfaces as an outage and never as a 404.
-      const retryableStatus =
-        response.status === 429 ||
-        response.status === 502 ||
-        response.status === 503 ||
-        response.status === 504;
-      if (retryableStatus && attempt < MAX_RETRIES) {
-        attempt += 1;
-        continue;
-      }
-      logFeelstackEvent({ category: code, httpStatus: response.status, requestId, upstreamContext: upstreamCode });
-      return feelstackErr(code, { status: response.status, requestId });
-    } catch (thrown) {
-      const code = classifyThrown(thrown);
-      if (RETRYABLE_ERROR_CODES.includes(code) && attempt < MAX_RETRIES) {
-        attempt += 1;
-        continue;
-      }
-      logFeelstackEvent({ category: code, upstreamContext: thrown instanceof Error ? thrown.name : "unknown" });
-      return feelstackErr(code);
-    }
+  if (!final.result.ok && final.retryable) {
+    // Retries exhausted on a transient failure: log the terminal outcome, the
+    // way the non-retryable branches already do.
+    logFeelstackEvent({
+      category: final.result.error,
+      httpStatus: final.result.status,
+      requestId: final.result.requestId,
+      upstreamContext: "retries exhausted",
+    });
   }
+
+  return final.result;
 }
 
 /**

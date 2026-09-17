@@ -46,7 +46,6 @@ interface Operation {
 }
 
 const manifest = JSON.parse(readFileSync(MANIFEST, "utf8")) as {
-  counts: { applicable: number; excluded: number };
   operations: Operation[];
 };
 
@@ -141,21 +140,15 @@ test.describe("clinic-wide attribution", () => {
     }
   });
 
-  test("the manifest's own counts match its contents", () => {
-    // The published arithmetic for this correction set has been restated
-    // several times from summaries rather than from the file. It is derivable;
-    // derive it.
-    expect(manifest.counts.applicable).toBe(
-      manifest.operations.filter((o) => o.applicable).length,
-    );
-    expect(manifest.counts.excluded).toBe(
-      manifest.operations.filter((o) => !o.applicable).length,
-    );
-    expect(manifest.counts.applicable + manifest.counts.excluded).toBe(
-      manifest.operations.length,
-    );
+  test("operation ids are unique", () => {
     // Operation ids are the handle every report and runbook uses; a duplicate
     // makes --only=OP-0xx ambiguous.
+    //
+    // The count assertions that used to live here have moved to
+    // tests/contracts/republish-manifest-counts.spec.ts, along with the
+    // stored `counts` block they checked. Asserting that a hand-maintained
+    // number matched a derivable one only ever caught the drift AFTER someone
+    // had written the wrong number down; the number is no longer written down.
     const ids = manifest.operations.map((o) => o.opId);
     expect(new Set(ids).size, "duplicate operation id").toBe(ids.length);
   });

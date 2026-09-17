@@ -9,7 +9,16 @@
 # discovered by a failed production deployment.
 #
 # Usage:  scripts/package-standalone.sh <release-sha> <output-dir>
-# Emits:  <output-dir>/blue-diamond-<sha>.tar.gz  and prints artifact metadata.
+# Emits:  <output-dir>/blue-diamond-<sha>.tar.gz
+#         <output-dir>/blue-diamond-<sha>.tar.gz.sha256   (sha256sum format)
+#         and prints artifact metadata.
+#
+# BUILD ONCE, DEPLOY ONCE. This script is now run by CI (.github/workflows/ci.yml,
+# job `release-artifact`) and NOT by the deploy workflow. The checksum sidecar is
+# what lets Deploy Production verify, with `sha256sum -c`, that the bytes it
+# downloaded from that CI run are the bytes CI produced -- the artifact is the
+# release, so its identity has to travel with it rather than being recomputed by
+# whoever happens to be holding it.
 set -euo pipefail
 
 RELEASE_SHA="${1:?release sha required}"
@@ -18,9 +27,16 @@ OUT_DIR="${2:?output dir required}"
 RELEASE_DIR="${OUT_DIR}/blue-diamond-release"
 ARTIFACT_NAME="blue-diamond-${RELEASE_SHA}.tar.gz"
 ARTIFACT_PATH="${OUT_DIR}/${ARTIFACT_NAME}"
+CHECKSUM_NAME="${ARTIFACT_NAME}.sha256"
+CHECKSUM_PATH="${ARTIFACT_PATH}.sha256"
+
+if [[ ! "$RELEASE_SHA" =~ ^[0-9a-f]{40}$ ]]; then
+  echo "::error::release sha must be a lowercase 40-character commit SHA, got '${RELEASE_SHA}'." >&2
+  exit 1
+fi
 
 rm -rf "$RELEASE_DIR"
-rm -f "$ARTIFACT_PATH"
+rm -f "$ARTIFACT_PATH" "$CHECKSUM_PATH"
 mkdir -p "$RELEASE_DIR"
 
 test -d .next/standalone
@@ -90,11 +106,21 @@ if [ "$ARTIFACT_SIZE" -le 0 ] || [ "$ARTIFACT_SIZE" -gt 2147483648 ]; then
   exit 1
 fi
 
+# The sidecar is written with the BARE artifact name, not its path, so
+# `sha256sum -c` verifies correctly from whatever directory the consumer
+# extracted the pair into. A path here would bind the checksum to this runner's
+# temp directory and make verification on the deploy side impossible.
+printf '%s  %s\n' "$ARTIFACT_SHA256" "$ARTIFACT_NAME" > "$CHECKSUM_PATH"
+( cd "$OUT_DIR" && sha256sum -c "$CHECKSUM_NAME" >/dev/null )
+
 echo "Artifact: $ARTIFACT_NAME ($ARTIFACT_SIZE bytes, sha256 $ARTIFACT_SHA256)"
+echo "Checksum: $CHECKSUM_NAME"
 if [ -n "${GITHUB_OUTPUT:-}" ]; then
   {
     echo "artifact_path=$ARTIFACT_PATH"
     echo "artifact_name=$ARTIFACT_NAME"
     echo "artifact_sha256=$ARTIFACT_SHA256"
+    echo "checksum_path=$CHECKSUM_PATH"
+    echo "checksum_name=$CHECKSUM_NAME"
   } >> "$GITHUB_OUTPUT"
 fi

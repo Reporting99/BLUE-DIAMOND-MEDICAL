@@ -1,0 +1,119 @@
+{
+  "note": "Drift acknowledged by scripts/content-drift-gate.mjs. Modelled on KNOWN_CMS_DRIFT in tests/contracts/cms-content-drift.spec.ts and constrained the same way: it is NOT a mute. The gate fails when an acknowledged field stops drifting, so this list can only shrink, and every entry names a record and the specific action that clears it. A field that is not listed here fails CI the moment it drifts.",
+  "baselineTakenAt": "2026-09-17",
+  "baselineSource": "scripts/content-drift-gate.mjs --json against the live public resolve API",
+  "acknowledged": [
+    {
+      "opId": "OP-001",
+      "route": "/medical/minor-procedures",
+      "locale": "en",
+      "field": "summary",
+      "mismatch": "declared!=live, declared!=fixture",
+      "reason": "Declared target is not yet live in the CMS: the `--mode=apply` publish for this operation has never run. Blocked on a usable bd-content-publisher credential (docs/CMS_CONTENT_AUTHORITY.md, 'Current backlog - BLOCKED'). Remove this entry once `npm run content:sync` has applied and verified it."
+    },
+    {
+      "opId": "OP-002",
+      "route": "/medical/minor-procedures",
+      "locale": "en",
+      "field": "booking_channel",
+      "mismatch": "declared!=live, declared!=fixture",
+      "reason": "Declared target is not yet live in the CMS: the `--mode=apply` publish for this operation has never run. Blocked on a usable bd-content-publisher credential (docs/CMS_CONTENT_AUTHORITY.md, 'Current backlog - BLOCKED'). Remove this entry once `npm run content:sync` has applied and verified it."
+    },
+    {
+      "opId": "OP-003",
+      "route": "/medical/minor-procedures",
+      "locale": "en",
+      "field": "whats_included",
+      "mismatch": "declared!=live",
+      "reason": "Declared target is not yet live in the CMS: the `--mode=apply` publish for this operation has never run. Blocked on a usable bd-content-publisher credential (docs/CMS_CONTENT_AUTHORITY.md, 'Current backlog - BLOCKED'). Remove this entry once `npm run content:sync` has applied and verified it."
+    },
+    {
+      "opId": "OP-005",
+      "route": "/medical/minor-procedures",
+      "locale": "en",
+      "field": "answer",
+      "mismatch": "declared!=live, declared!=fixture",
+      "reason": "Declared target is not yet live in the CMS: the `--mode=apply` publish for this operation has never run. Blocked on a usable bd-content-publisher credential (docs/CMS_CONTENT_AUTHORITY.md, 'Current backlog - BLOCKED'). Remove this entry once `npm run content:sync` has applied and verified it."
+    },
+    {
+      "opId": "OP-012",
+      "route": "/الرعاية-الطبية/الإجراءات-البسيطة",
+      "locale": "ar",
+      "field": "booking_channel",
+      "mismatch": "declared!=live",
+      "reason": "Declared target is not yet live in the CMS: the `--mode=apply` publish for this operation has never run. Blocked on a usable bd-content-publisher credential (docs/CMS_CONTENT_AUTHORITY.md, 'Current backlog - BLOCKED'). Remove this entry once `npm run content:sync` has applied and verified it."
+    },
+    {
+      "opId": "OP-021",
+      "route": "/medical/chronic-disease-management",
+      "locale": "en",
+      "field": "summary",
+      "mismatch": "declared!=live, declared!=fixture",
+      "reason": "Declared target is not yet live in the CMS: the `--mode=apply` publish for this operation has never run. Blocked on a usable bd-content-publisher credential (docs/CMS_CONTENT_AUTHORITY.md, 'Current backlog - BLOCKED'). Remove this entry once `npm run content:sync` has applied and verified it."
+    },
+    {
+      "opId": "OP-024",
+      "route": "/medical/chronic-disease-management",
+      "locale": "en",
+      "field": "answer",
+      "mismatch": "declared!=live, declared!=fixture",
+      "reason": "Declared target is not yet live in the CMS: the `--mode=apply` publish for this operation has never run. Blocked on a usable bd-content-publisher credential (docs/CMS_CONTENT_AUTHORITY.md, 'Current backlog - BLOCKED'). Remove this entry once `npm run content:sync` has applied and verified it."
+    },
+    {
+      "opId": "OP-041",
+      "route": "/medical/preventive-care",
+      "locale": "en",
+      "field": "whats_included",
+      "mismatch": "declared!=live",
+      "reason": "Declared target is not yet live in the CMS: the `--mode=apply` publish for this operation has never run. Blocked on a usable bd-content-publisher credential (docs/CMS_CONTENT_AUTHORITY.md, 'Current backlog - BLOCKED'). Remove this entry once `npm run content:sync` has applied and verified it."
+    },
+    {
+      "opId": "OP-045",
+      "route": "/medical/pain-management",
+      "locale": "en",
+      "field": "answer",
+      "mismatch": "declared!=live, declared!=fixture",
+      "reason": "Declared target is not yet live in the CMS: the `--mode=apply` publish for this operation has never run. Blocked on a usable bd-content-publisher credential (docs/CMS_CONTENT_AUTHORITY.md, 'Current backlog - BLOCKED'). Remove this entry once `npm run content:sync` has applied and verified it."
+    },
+    {
+      "opId": "OP-051",
+      "route": "/our-team/mohamed-farhat",
+      "locale": "en",
+      "field": "biography",
+      "mismatch": "declared!=live, declared!=fixture",
+      "reason": "Declared target is not yet live in the CMS: the `--mode=apply` publish for this operation has never run. Blocked on a usable bd-content-publisher credential (docs/CMS_CONTENT_AUTHORITY.md, 'Current backlog - BLOCKED'). Remove this entry once `npm run content:sync` has applied and verified it."
+    },
+    {
+      "opId": "OP-053",
+      "route": "/our-team/omaima-saeed",
+      "locale": "en",
+      "field": "biography",
+      "mismatch": "declared!=live, declared!=fixture",
+      "reason": "Declared target is not yet live in the CMS: the `--mode=apply` publish for this operation has never run. Blocked on a usable bd-content-publisher credential (docs/CMS_CONTENT_AUTHORITY.md, 'Current backlog - BLOCKED'). Remove this entry once `npm run content:sync` has applied and verified it."
+    },
+    {
+      "opId": "OP-055",
+      "route": "/our-team/reem-hamdi",
+      "locale": "en",
+      "field": "biography",
+      "mismatch": "declared!=live, declared!=fixture",
+      "reason": "Declared target is not yet live in the CMS: the `--mode=apply` publish for this operation has never run. Blocked on a usable bd-content-publisher credential (docs/CMS_CONTENT_AUTHORITY.md, 'Current backlog - BLOCKED'). Remove this entry once `npm run content:sync` has applied and verified it."
+    },
+    {
+      "opId": "OP-056",
+      "route": "/our-team/omonijo",
+      "locale": "en",
+      "field": "biography",
+      "mismatch": "declared!=live, declared!=fixture",
+      "reason": "Declared target is not yet live in the CMS: the `--mode=apply` publish for this operation has never run. Blocked on a usable bd-content-publisher credential (docs/CMS_CONTENT_AUTHORITY.md, 'Current backlog - BLOCKED'). Remove this entry once `npm run content:sync` has applied and verified it."
+    },
+    {
+      "opId": "OP-058",
+      "route": "/our-team/ahmed-gwea",
+      "locale": "en",
+      "field": "biography",
+      "mismatch": "declared!=live, declared!=fixture",
+      "reason": "Declared target is not yet live in the CMS: the `--mode=apply` publish for this operation has never run. Blocked on a usable bd-content-publisher credential (docs/CMS_CONTENT_AUTHORITY.md, 'Current backlog - BLOCKED'). Remove this entry once `npm run content:sync` has applied and verified it."
+    }
+  ]
+}
